@@ -1,0 +1,27 @@
+# Node modules (we'll install fresh inside Docker)
+node_modules
+
+# Environment files with secrets
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+
+# Documentation
+*.md

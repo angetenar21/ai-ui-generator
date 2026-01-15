@@ -1,0 +1,241 @@
+[
+  {
+    "parsed": {
+      "name": "stack",
+      "templateProps": {
+        "direction": "vertical",
+        "spacing": 6,
+        "children": [
+          {
+            "name": "text",
+            "templateProps": {
+              "content": "# Manufacturing Operations Monitor",
+              "variant": "markdown",
+              "sectionHeader": true
+            }
+          },
+          {
+            "name": "grid",
+            "templateProps": {
+              "columns": 3,
+              "gap": 6,
+              "children": [
+                {
+                  "name": "gauge-chart",
+                  "templateProps": {
+                    "title": "Overall Equipment Efficiency (OEE)",
+                    "description": "Measures availability, performance, and quality.",
+                    "value": 78,
+                    "height": 250,
+                    "color": "#22C55E",
+                    "levels": [
+                      {
+                        "value": 40,
+                        "color": "#EF4444"
+                      },
+                      {
+                        "value": 70,
+                        "color": "#F59E0B"
+                      },
+                      {
+                        "value": 100,
+                        "color": "#22C55E"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "summary-card",
+                  "templateProps": {
+                    "title": "Production Metrics",
+                    "items": [
+                      {
+                        "label": "Units Produced",
+                        "value": "12,450",
+                        "change": "+5.2%",
+                        "changeType": "positive"
+                      },
+                      {
+                        "label": "Target Units",
+                        "value": "15,000"
+                      },
+                      {
+                        "label": "Uptime",
+                        "value": "96.5%",
+                        "change": "+1.1%",
+                        "changeType": "positive"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "summary-card",
+                  "templateProps": {
+                    "title": "Quality & Defects",
+                    "items": [
+                      {
+                        "label": "Defect Rate",
+                        "value": "2.1%",
+                        "change": "-0.3%",
+                        "changeType": "positive"
+                      },
+                      {
+                        "label": "Rework Rate",
+                        "value": "4.8%",
+                        "change": "+0.5%",
+                        "changeType": "negative"
+                      },
+                      {
+                        "label": "First Pass Yield",
+                        "value": "93.1%"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "insight-card",
+            "templateProps": {
+              "title": "Live Production Stages",
+              "description": "Current status of the production line from raw materials to final assembly.",
+              "children": [
+                {
+                  "name": "stepper",
+                  "templateProps": {
+                    "steps": [
+                      {
+                        "label": "Material Prep",
+                        "status": "completed"
+                      },
+                      {
+                        "label": "Component Machining",
+                        "status": "completed"
+                      },
+                      {
+                        "label": "Sub-assembly",
+                        "status": "in-progress"
+                      },
+                      {
+                        "label": "Final Assembly",
+                        "status": "pending"
+                      },
+                      {
+                        "label": "Quality Control",
+                        "status": "pending"
+                      }
+                    ],
+                    "activeStep": 2
+                  }
+                },
+                {
+                  "name": "stack",
+                  "templateProps": {
+                    "direction": "vertical",
+                    "spacing": 2,
+                    "children": [
+                      {
+                        "name": "text",
+                        "templateProps": {
+                          "content": "Current Stage Progress: **Sub-assembly**",
+                          "variant": "markdown"
+                        }
+                      },
+                      {
+                        "name": "linear-progress",
+                        "templateProps": {
+                          "value": 65,
+                          "label": "65% Complete"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "grid",
+            "templateProps": {
+              "columns": 2,
+              "gap": 6,
+              "children": [
+                {
+                  "name": "area-chart",
+                  "templateProps": {
+                    "title": "Daily Production Throughput (Units/Hour)",
+                    "description": "Hourly production volume over the last 24 hours.",
+                    "height": 300,
+                    "xAxis": {
+                      "data": [
+                        "00:00",
+                        "04:00",
+                        "08:00",
+                        "12:00",
+                        "16:00",
+                        "20:00"
+                      ],
+                      "label": "Time of Day"
+                    },
+                    "yAxis": {
+                      "label": "Units Produced"
+                    },
+                    "series": [
+                      {
+                        "name": "Units",
+                        "data": [
+                          450,
+                          510,
+                          820,
+                          760,
+                          810,
+                          650
+                        ],
+                        "color": "#3B82F6"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "bar-chart",
+                  "templateProps": {
+                    "title": "Top 5 Defect Types (This Week)",
+                    "description": "Breakdown of the most common production defects.",
+                    "height": 300,
+                    "xAxis": {
+                      "data": [
+                        "Scratch",
+                        "Dent",
+                        "Misalignment",
+                        "Faulty Weld",
+                        "Color Mismatch"
+                      ],
+                      "label": "Defect Type"
+                    },
+                    "yAxis": {
+                      "label": "Count"
+                    },
+                    "series": [
+                      {
+                        "name": "Defects",
+                        "data": [
+                          88,
+                          65,
+                          42,
+                          31,
+                          18
+                        ],
+                        "color": "#F97316"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+]

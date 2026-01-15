@@ -1,0 +1,4 @@
+Create a simple line chart showing traffic over time with the following data:
+- X-axis: ["Mon", "Tue", "Wed", "Thu", "Fri"]  
+- Y-axis: [100, 150, 120, 180, 200]
+- Title: "Daily Traffic"
