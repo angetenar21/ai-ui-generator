@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { ComponentSpec } from '../templates/core/types';
+import { generateUUID } from '../utils/uuid';
 
 interface AppState {
   // Current session
@@ -35,7 +36,7 @@ interface AppState {
 }
 
 export const useAppStore = create<AppState>((set) => ({
-  currentSessionId: crypto.randomUUID(),
+  currentSessionId: generateUUID(),
 
   inspectedComponent: null,
   setInspectedComponent: (component) => set({ inspectedComponent: component }),
@@ -48,7 +49,7 @@ export const useAppStore = create<AppState>((set) => ({
 
   sidebarOpen: true,
   setSidebarOpen: (open) => set({ sidebarOpen: open }),
-  
+
   sidebarCollapsed: false,
   setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
 

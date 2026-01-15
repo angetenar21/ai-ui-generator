@@ -10,6 +10,7 @@ import TypingIndicator from '../components/TypingIndicator';
 import ResponsiveComponentWrapper from '../components/ResponsiveComponentWrapper';
 import type { ComponentSpec } from '../templates/core/types';
 import type { JobStatus, QueueStatus } from '../types/api.types';
+import { generateUUID } from '../utils/uuid';
 
 interface ChatMessage {
   id: string;
@@ -81,7 +82,7 @@ const ChatPage: React.FC = () => {
     if (!input.trim() || isLoading) return;
 
     const userMessage: ChatMessage = {
-      id: crypto.randomUUID(),
+      id: generateUUID(),
       role: 'user',
       content: input,
       timestamp: Date.now(),
@@ -92,7 +93,7 @@ const ChatPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const threadId = currentThreadId || crypto.randomUUID();
+      const threadId = currentThreadId || generateUUID();
       if (!currentThreadId) {
         setCurrentThreadId(threadId);
       }
@@ -121,7 +122,7 @@ const ChatPage: React.FC = () => {
       );
 
       const assistantMessage: ChatMessage = {
-        id: crypto.randomUUID(),
+        id: generateUUID(),
         role: 'assistant',
         content: response,
         timestamp: Date.now(),
@@ -142,7 +143,7 @@ const ChatPage: React.FC = () => {
     } catch (error) {
       console.error('Error:', error);
       const errorMessage: ChatMessage = {
-        id: crypto.randomUUID(),
+        id: generateUUID(),
         role: 'assistant',
         content: {
           type: 'text',
