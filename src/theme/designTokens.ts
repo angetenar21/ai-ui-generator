@@ -384,16 +384,5 @@ export function getRandomPalette(): string[] {
 }
 
 // ============================================================================
-// TYPE EXPORTS
+// TYPE EXPORTS (types are already exported inline above)
 // ============================================================================
-
-export type {
-  SurfaceVariant,
-  ElevationLevel,
-  EmphasisLevel,
-  ToneVariant,
-  ChartPaletteType,
-  TypographyScale,
-  SpacingScale,
-  RadiusScale,
-};

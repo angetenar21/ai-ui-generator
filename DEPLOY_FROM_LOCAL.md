@@ -2,6 +2,53 @@
 
 This guide shows you how to upload your local application code to the GCP VM instance.
 
+## 🎯 Quick Visual Guide: Where to Run Commands
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  YOUR MAC (Local Machine)                                   │
+│  /Users/angetenar/Desktop/intern/gen-ui/ai-ui-generator    │
+│                                                             │
+│  🖥️  Run commands here that have:                          │
+│  • "From your local machine"                               │
+│  • "On your Mac"                                           │
+│  • Creating archives, uploading files                      │
+│  • git push, gcloud scp, etc.                             │
+└─────────────────────────────────────────────────────────────┘
+                            ↓
+                    (SSH Connection)
+                            ↓
+┌─────────────────────────────────────────────────────────────┐
+│  GCP VM (Remote Server)                                     │
+│  ai-ui-generator-vm                                         │
+│                                                             │
+│  🌩️  Run commands here that have:                          │
+│  • "Inside the VM"                                         │
+│  • "On the VM"                                             │
+│  • After SSH connection                                    │
+│  • Installing packages, running server, etc.               │
+│                                                             │
+│  Prompt looks like: username@ai-ui-generator-vm:~$         │
+└─────────────────────────────────────────────────────────────┘
+```
+
+## 📍 How to Tell Where You Are
+
+**On Your Mac:**
+```
+manish@Manishs-MacBook-Air ~ %
+# or
+manish@Manishs-MacBook-Air ai-ui-generator %
+```
+
+**Inside the VM (after SSH):**
+```
+your-username@ai-ui-generator-vm:~$
+# The VM hostname is in the prompt!
+```
+
+---
+
 ## Prerequisites
 
 1. GCP VM instance created and running (Ubuntu 22.04 LTS)
@@ -69,8 +116,8 @@ ls -lh ai-ui-generator.tar.gz
 # Upload the archive to your VM
 # Replace these values:
 # - ai-ui-generator-vm: your VM instance name
-# - us-central1-a: your VM's zone
-gcloud compute scp ai-ui-generator.tar.gz ai-ui-generator-vm:/tmp/ --zone=us-central1-a
+# - YOUR_VM_ZONE: your VM's zone (check with: gcloud compute instances list)
+gcloud compute scp ai-ui-generator.tar.gz ai-ui-generator-vm:/tmp/ --zone=YOUR_VM_ZONE
 
 # This will take a few minutes depending on your internet speed
 ```
@@ -78,8 +125,9 @@ gcloud compute scp ai-ui-generator.tar.gz ai-ui-generator-vm:/tmp/ --zone=us-cen
 ### Step 5: SSH into VM and Extract
 
 ```bash
-# SSH into your VM
-gcloud compute ssh ai-ui-generator-vm --zone=us-central1-a
+# SSH into your VM (replace the zone with your actual VM zone)
+# Check your VM's zone first with: gcloud compute instances list
+gcloud compute ssh ai-ui-generator-vm --zone=YOUR_VM_ZONE
 ```
 
 Once connected to the VM:
@@ -125,9 +173,9 @@ rsync --version
 ### Step 2: Get VM's External IP
 
 ```bash
-# Get your VM's external IP
+# Get your VM's external IP (replace YOUR_VM_ZONE with actual zone)
 gcloud compute instances describe ai-ui-generator-vm \
-  --zone=us-central1-a \
+  --zone=YOUR_VM_ZONE \
   --format='get(networkInterfaces[0].accessConfigs[0].natIP)'
 
 # Save this IP for next step
@@ -165,8 +213,8 @@ rsync -avz \
 ### Step 5: SSH and Complete Setup
 
 ```bash
-# SSH into VM
-gcloud compute ssh ai-ui-generator-vm --zone=us-central1-a
+# SSH into VM (replace YOUR_VM_ZONE with actual zone)
+gcloud compute ssh ai-ui-generator-vm --zone=YOUR_VM_ZONE
 
 # Install dependencies
 cd /var/www/ai-ui-generator
@@ -223,13 +271,33 @@ rm /tmp/ai-ui-generator.tar.gz
 
 The best long-term solution is to push your code to a Git repository first, then clone on the VM.
 
-### Step 1: Push to GitHub/GitLab
+### Step 1A: Create GitHub Repository
+
+**🌐 Do this in your WEB BROWSER:**
+
+1. Go to [GitHub.com](https://github.com)
+2. Click the **"+"** icon (top right) → **"New repository"**
+3. Fill in:
+   - **Repository name**: `ai-ui-generator`
+   - **Description**: AI UI Generator Application
+   - **Visibility**: Choose Private or Public
+   - **DO NOT** initialize with README, .gitignore, or license
+4. Click **"Create repository"**
+5. **Copy the repository URL** shown (e.g., `https://github.com/YOUR_USERNAME/ai-ui-generator.git`)
+
+---
+
+### Step 1B: Push Code to GitHub
+
+**🖥️ Run these commands on YOUR LOCAL MAC:**
+
+Open Terminal on your Mac and run:
 
 ```bash
-# From your local machine
+# Navigate to your project
 cd /Users/angetenar/Desktop/intern/gen-ui/ai-ui-generator
 
-# Initialize git (if not already)
+# Initialize git (if not already initialized)
 git init
 
 # Add all files
@@ -238,33 +306,96 @@ git add .
 # Commit
 git commit -m "Initial commit for deployment"
 
-# Add remote (create repo on GitHub first)
+# Add remote (replace YOUR_USERNAME with your GitHub username)
 git remote add origin https://github.com/YOUR_USERNAME/ai-ui-generator.git
 
-# Push
+# Push to GitHub
 git push -u origin main
 ```
 
-### Step 2: Clone on VM
+**If you get an error about authentication:**
+- GitHub may ask for your username and password
+- **Important:** You need to use a Personal Access Token instead of your password
+- Follow the prompts or see the authentication section below
+
+---
+
+### Step 1C: Verify Upload
+
+**🌐 In your WEB BROWSER:**
+
+1. Go to `https://github.com/YOUR_USERNAME/ai-ui-generator`
+2. You should see all your files uploaded
+3. Now you're ready to clone on the VM!
+
+### Step 2A: SSH into VM
+
+**🖥️ Run this on YOUR LOCAL MAC:**
 
 ```bash
-# SSH into VM
-gcloud compute ssh ai-ui-generator-vm --zone=us-central1-a
+# This command connects you from your Mac to the VM (replace YOUR_VM_ZONE with actual zone)
+gcloud compute ssh ai-ui-generator-vm --zone=YOUR_VM_ZONE
+```
 
+After running this, your terminal prompt will change to something like:
+```
+your-username@ai-ui-generator-vm:~$
+```
+
+This means you're now **inside the VM**!
+
+---
+
+### Step 2B: Clone and Setup on VM
+
+**🌩️ Run these commands INSIDE THE VM (after SSH connection):**
+
+Your terminal should show: `your-username@ai-ui-generator-vm:~$`
+
+```bash
 # Create directory
 sudo mkdir -p /var/www/ai-ui-generator
 sudo chown -R $USER:$USER /var/www/ai-ui-generator
 
-# Clone repository
+# Navigate to the directory
 cd /var/www/ai-ui-generator
+
+# Clone repository (replace YOUR_USERNAME with actual GitHub username)
 git clone https://github.com/YOUR_USERNAME/ai-ui-generator.git .
 
 # Install dependencies
 npm install
-cd backend && npm install && cd ..
+
+# Install backend dependencies
+cd backend
+npm install
+cd ..
 
 # Generate schema
 npm run generate-schema
+```
+
+---
+
+### Step 2C: Verify Everything Worked
+
+**🌩️ Still inside the VM, run:**
+
+```bash
+# Check files are there
+ls -la
+
+# You should see:
+# - package.json
+# - src/
+# - backend/
+# - etc.
+
+# Check Node.js is working
+node --version
+
+# Check schema was generated
+ls -la backend/docs/component-library-schema.json
 ```
 
 **Benefits of Git method:**
@@ -334,6 +465,24 @@ gcloud components update
 gcloud compute instances list
 
 # Use the exact instance name and zone from the list
+```
+
+### SSH Connection Timeout
+
+If you get "Connection timed out" error:
+
+```bash
+# Check if SSH firewall rule exists
+gcloud compute firewall-rules list --filter="name:default-allow-ssh"
+
+# If no SSH rule exists, create it
+gcloud compute firewall-rules create allow-ssh \
+  --allow tcp:22 \
+  --source-ranges 0.0.0.0/0 \
+  --description="Allow SSH from anywhere"
+
+# Wait 30 seconds, then retry SSH
+gcloud compute ssh ai-ui-generator-vm --zone=us-central1-f
 ```
 
 ### Large file upload timeout

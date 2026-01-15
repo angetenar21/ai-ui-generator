@@ -89,9 +89,9 @@ const BarChart: React.FC<BarChartProps> = ({
   margin = { top: 50, right: 30, bottom: 50, left: 60 },
   variant = 'default',
   elevation = 'raised',
-  emphasis = 'medium',
+  emphasis: _emphasis = 'medium',
   palette = 'default',
-  useGradient = false,
+  useGradient: _useGradient = false,
 }) => {
   // Get palette colors
   const paletteColors = getChartColors(palette);
