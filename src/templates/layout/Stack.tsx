@@ -69,6 +69,26 @@ const Stack: React.FC<StackProps> = ({
   const wrapClass = wrap ? 'flex-wrap' : '';
   const widthClass = fullWidth ? 'w-full' : '';
 
+  // Get divider classes based on direction
+  const getDividerClasses = () => {
+    if (direction === 'vertical') {
+      return 'h-[2px] w-full bg-gray-200 dark:bg-gray-700 my-1';
+    }
+    return 'w-[2px] self-stretch bg-gray-200 dark:bg-gray-700 mx-1';
+  };
+
+  // Get child wrapper classes
+  const getChildWrapperClasses = () => {
+    const classes = ['min-w-0', 'flex-shrink-0'];
+    if (fullWidth) {
+      classes.push('w-full');
+    }
+    if (direction === 'horizontal' && !fullWidth) {
+      classes.push('flex-1');
+    }
+    return classes.join(' ');
+  };
+
   return (
     <div
       className={`flex ${directionClass} ${spacingClasses[spacing]} ${alignClasses[align]} ${justifyClasses[justify]} ${wrapClass} ${widthClass}`}
@@ -76,23 +96,17 @@ const Stack: React.FC<StackProps> = ({
       {children && children.length > 0 && renderChild ? (
         children.map((child, index) => (
           <React.Fragment key={index}>
-            <div className={fullWidth && direction === 'vertical' ? 'w-full' : ''}>
+            <div className={getChildWrapperClasses()}>
               {renderChild(child)}
             </div>
             {divider && index < children.length - 1 && (
-              <div
-                className={
-                  direction === 'vertical'
-                    ? 'h-px w-full bg-border-primary'
-                    : 'w-px h-full bg-border-primary'
-                }
-              />
+              <div className={getDividerClasses()} />
             )}
           </React.Fragment>
         ))
       ) : (
         <div className="card rounded-card p-8 text-center w-full">
-          <p className="text-text-tertiary">
+          <p className="text-gray-500 dark:text-gray-400">
             Stack layout ({direction}) - Add child components
           </p>
         </div>

@@ -95,7 +95,7 @@ const Panel: React.FC<PanelProps> = ({
       {/* Content */}
       {!isCollapsed && (
         <>
-          <div className="px-6 py-4">
+          <div className="px-6 py-5">
             {content && (
               <div className="text-text-secondary leading-relaxed">
                 {content}
@@ -103,13 +103,13 @@ const Panel: React.FC<PanelProps> = ({
             )}
 
             {children && (
-              <div className="space-y-2">
+              <div className="space-y-4">
                 {children}
               </div>
             )}
 
             {!content && !children && (
-              <div className="text-text-tertiary text-sm text-center py-2">
+              <div className="text-text-tertiary text-sm text-center py-4">
                 No content
               </div>
             )}
@@ -117,7 +117,7 @@ const Panel: React.FC<PanelProps> = ({
 
           {/* Footer */}
           {footer && (
-            <div className="px-6 py-3 border-t border-border-main bg-bg-sub/30">
+            <div className="px-6 py-4 border-t border-border-main bg-bg-sub/30">
               <div className="text-text-tertiary text-sm">
                 {footer}
               </div>

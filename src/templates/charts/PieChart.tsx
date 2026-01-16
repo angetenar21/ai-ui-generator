@@ -48,29 +48,29 @@ const PieChart: React.FC<PieChartProps> = ({
   title,
   description,
   series,
-  width = 800,
-  height = 400,
+  width = 400,
+  height = 300,
   legend = true,
-  margin = { top: 50, right: 100, bottom: 50, left: 100 },
+  margin = { top: 20, right: 80, bottom: 20, left: 20 },
 }) => {
   return (
-    <div className="card rounded-card p-6 my-4 hover:shadow-hover transition-all duration-300">
+    <div className="w-full">
       {(title || description) && (
-        <div className="mb-6">
+        <div className="mb-4">
           {title && (
-            <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-sm text-text-secondary leading-relaxed">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
               {description}
             </p>
           )}
         </div>
       )}
 
-      <div className="flex justify-center items-center">
+      <div className="w-full flex justify-center">
         <MuiPieChart
           series={series}
           width={width}
@@ -79,14 +79,15 @@ const PieChart: React.FC<PieChartProps> = ({
           slotProps={{
             legend: legend
               ? {
-                  position: { vertical: 'middle', horizontal: 'end' },
+                  position: { vertical: 'middle', horizontal: 'right' },
+                  padding: { left: 20 },
                 }
               : undefined,
           }}
           sx={{
             '& .MuiChartsLegend-series text': {
               fill: '#374151 !important',
-              fontSize: '14px',
+              fontSize: '12px',
               fontWeight: 500,
             },
             '& .MuiChartsLegend-mark': {

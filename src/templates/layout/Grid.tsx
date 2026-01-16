@@ -101,18 +101,18 @@ const Grid: React.FC<GridProps> = ({
 
   return (
     <div
-      className={`grid ${getColumnClasses()} ${gapClasses[gap]} ${alignClasses[alignItems]} ${justifyClasses[justifyItems]}`}
+      className={`grid w-full ${getColumnClasses()} ${gapClasses[gap]} ${alignClasses[alignItems]} ${justifyClasses[justifyItems]}`}
       style={gridStyle}
     >
       {children && children.length > 0 && renderChild ? (
         children.map((child, index) => (
-          <div key={index} className="min-w-0">
+          <div key={index} className="min-w-0 w-full h-full flex flex-col">
             {renderChild(child)}
           </div>
         ))
       ) : (
-        <div className="col-span-full card rounded-card p-8 text-center">
-          <p className="text-text-tertiary">
+        <div className="col-span-full bg-gray-50 dark:bg-gray-800 rounded-lg p-6 text-center">
+          <p className="text-gray-500 dark:text-gray-400 text-sm">
             Grid layout ({columns} columns) - Add child components
           </p>
         </div>
