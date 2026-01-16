@@ -49,9 +49,9 @@ const PieChart: React.FC<PieChartProps> = ({
   description,
   series,
   width: propWidth,
-  height: propHeight = 200,
+  height: propHeight = 300,
   legend = true,
-  margin = { top: 5, right: 5, bottom: 40, left: 5 },
+  margin = { top: 10, right: 10, bottom: 50, left: 10 },
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [chartSize, setChartSize] = useState({ width: propWidth || 220, height: propHeight });
@@ -93,21 +93,21 @@ const PieChart: React.FC<PieChartProps> = ({
   return (
     <div className="w-full max-w-full overflow-hidden">
       {(title || description) && (
-        <div className="mb-2 px-1">
+        <div className="mb-4 px-2 text-center">
           {title && (
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5 line-clamp-2">
+            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
               {description}
             </p>
           )}
         </div>
       )}
 
-      <div ref={containerRef} className="w-full flex justify-center items-center overflow-hidden">
+      <div ref={containerRef} className="w-full flex flex-col justify-center items-center overflow-hidden py-2">
         <MuiPieChart
           series={series}
           width={chartSize.width}
