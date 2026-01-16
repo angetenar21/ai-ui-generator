@@ -112,13 +112,7 @@ const PieChart: React.FC<PieChartProps> = ({
           slotProps={{
             legend: legend
               ? {
-                direction: 'row',
-                position: { vertical: 'bottom', horizontal: 'middle' },
-                padding: { top: 5 },
-                itemMarkWidth: 8,
-                itemMarkHeight: 8,
-                markGap: 4,
-                itemGap: 8,
+                position: { vertical: 'bottom', horizontal: 'center' },
               }
               : undefined,
           }}

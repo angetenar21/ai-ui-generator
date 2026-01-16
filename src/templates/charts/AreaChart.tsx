@@ -242,26 +242,27 @@ const AreaChart: React.FC<AreaChartProps> = ({
           })()}
         </div>
       </div>
-      );
+    </div>
+  );
 };
 
-      export default AreaChart;
+export default AreaChart;
 
-      // Component metadata for auto-registration
-      export const metadata = {
-        name: 'area-chart',
-      category: 'charts' as const,
-      component: AreaChart,
-      description: 'Area chart for visualizing cumulative data and trends over time with filled regions',
-      tags: ['chart', 'area', 'trend', 'cumulative', 'stacked', 'data-visualization'],
-      propTypes: {
-        title: 'string',
-      xAxis: 'Array<{ data, label ?, scaleType ? }>',
-        series: 'Array<{ data, label ?, color ?, stack ?, curve ?, showMark ? }>',
-          width: 'number',
-          height: 'number',
-          grid: '{vertical ?: boolean, horizontal ?: boolean}',
-          legend: 'boolean',
-          margin: '{top ?, right ?, bottom ?, left ? }',
+// Component metadata for auto-registration
+export const metadata = {
+  name: 'area-chart',
+  category: 'charts' as const,
+  component: AreaChart,
+  description: 'Area chart for visualizing cumulative data and trends over time with filled regions',
+  tags: ['chart', 'area', 'trend', 'cumulative', 'stacked', 'data-visualization'],
+  propTypes: {
+    title: 'string',
+    xAxis: 'Array<{ data, label?, scaleType? }>',
+    series: 'Array<{ data, label?, color?, stack?, curve?, showMark? }>',
+    width: 'number',
+    height: 'number',
+    grid: '{ vertical?: boolean, horizontal?: boolean }',
+    legend: 'boolean',
+    margin: '{ top?, right?, bottom?, left? }',
   },
 };
