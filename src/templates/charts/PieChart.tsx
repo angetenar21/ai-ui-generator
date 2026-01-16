@@ -48,29 +48,29 @@ const PieChart: React.FC<PieChartProps> = ({
   title,
   description,
   series,
-  width = 400,
-  height = 300,
+  width = 280,
+  height = 250,
   legend = true,
-  margin = { top: 20, right: 80, bottom: 20, left: 20 },
+  margin = { top: 10, right: 10, bottom: 50, left: 10 },
 }) => {
   return (
-    <div className="w-full">
+    <div className="w-full overflow-hidden">
       {(title || description) && (
-        <div className="mb-4">
+        <div className="mb-3">
           {title && (
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
               {description}
             </p>
           )}
         </div>
       )}
 
-      <div className="w-full flex justify-center">
+      <div className="w-full flex flex-col items-center overflow-hidden">
         <MuiPieChart
           series={series}
           width={width}
@@ -79,15 +79,20 @@ const PieChart: React.FC<PieChartProps> = ({
           slotProps={{
             legend: legend
               ? {
-                  position: { vertical: 'middle', horizontal: 'right' },
-                  padding: { left: 20 },
+                  direction: 'row',
+                  position: { vertical: 'bottom', horizontal: 'middle' },
+                  padding: { top: 10 },
+                  itemMarkWidth: 10,
+                  itemMarkHeight: 10,
+                  markGap: 5,
+                  itemGap: 12,
                 }
               : undefined,
           }}
           sx={{
             '& .MuiChartsLegend-series text': {
               fill: '#374151 !important',
-              fontSize: '12px',
+              fontSize: '11px',
               fontWeight: 500,
             },
             '& .MuiChartsLegend-mark': {
