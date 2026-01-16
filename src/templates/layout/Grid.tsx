@@ -37,16 +37,16 @@ const Grid: React.FC<GridProps> = ({
   alignItems = 'stretch',
   justifyItems = 'stretch',
   autoFit = false,
-  minColumnWidth = '250px',
+  minColumnWidth = '180px',
   children,
   renderChild,
 }) => {
   const gapClasses = {
     none: 'gap-0',
     small: 'gap-2',
-    medium: 'gap-4',
-    large: 'gap-6',
-    xlarge: 'gap-8',
+    medium: 'gap-3',
+    large: 'gap-4',
+    xlarge: 'gap-6',
   };
 
   const alignClasses = {
@@ -101,17 +101,17 @@ const Grid: React.FC<GridProps> = ({
 
   return (
     <div
-      className={`grid w-full ${getColumnClasses()} ${gapClasses[gap]} ${alignClasses[alignItems]} ${justifyClasses[justifyItems]}`}
+      className={`grid w-full max-w-full ${getColumnClasses()} ${gapClasses[gap]} ${alignClasses[alignItems]} ${justifyClasses[justifyItems]}`}
       style={gridStyle}
     >
       {children && children.length > 0 && renderChild ? (
         children.map((child, index) => (
-          <div key={index} className="min-w-0 w-full h-full flex flex-col">
+          <div key={index} className="min-w-0 w-full h-full flex flex-col overflow-hidden">
             {renderChild(child)}
           </div>
         ))
       ) : (
-        <div className="col-span-full bg-gray-50 dark:bg-gray-800 rounded-lg p-6 text-center">
+        <div className="col-span-full bg-gray-50 dark:bg-gray-800 rounded-lg p-4 text-center">
           <p className="text-gray-500 dark:text-gray-400 text-sm">
             Grid layout ({columns} columns) - Add child components
           </p>

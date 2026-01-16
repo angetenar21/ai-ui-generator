@@ -54,43 +54,43 @@ const DataTable: React.FC<DataTableProps> = ({
   }
 
   return (
-    <div className="glass-dark border border-gray-700/50 rounded-2xl p-6 my-4">
+    <div className="w-full max-w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 my-2 overflow-hidden">
       {title && (
-        <h3 className="text-xl font-display font-semibold text-white mb-4">
+        <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3 truncate">
           {title}
         </h3>
       )}
 
       {searchable && (
-        <div className="mb-4">
+        <div className="mb-3">
           <input
             type="text"
             placeholder="Search table..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-600/50 rounded-lg
-                     bg-gray-800/50 text-white placeholder-gray-400
-                     focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent"
+            className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg
+                     bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400
+                     focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent"
           />
         </div>
       )}
 
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse">
+      <div className="overflow-x-auto overflow-y-hidden">
+        <table className="w-full border-collapse min-w-0">
           <thead>
-            <tr className="bg-gray-800/50">
+            <tr className="bg-gray-50 dark:bg-gray-900">
               {columns.map((column, index) => (
                 <th
                   key={index}
                   onClick={() => handleSort(index)}
-                  className={`px-4 py-3 text-left text-sm font-semibold text-gray-300
-                           border-b border-gray-700
-                           ${sortable ? 'cursor-pointer hover:bg-gray-700/50' : ''}`}
+                  className={`px-3 py-2 text-left text-xs font-semibold text-gray-700 dark:text-gray-300
+                           border-b border-gray-200 dark:border-gray-700 whitespace-nowrap
+                           ${sortable ? 'cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800' : ''}`}
                 >
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1">
                     {column}
                     {sortable && sortColumn === index && (
-                      <span className="text-xs text-blue-400">
+                      <span className="text-xs text-orange-500">
                         {sortDirection === 'asc' ? '↑' : '↓'}
                       </span>
                     )}
@@ -103,13 +103,13 @@ const DataTable: React.FC<DataTableProps> = ({
             {displayRows.map((row, rowIndex) => (
               <tr
                 key={rowIndex}
-                className="hover:bg-gray-800/30 transition-colors"
+                className="hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors"
               >
                 {row.map((cell, cellIndex) => (
                   <td
                     key={cellIndex}
-                    className="px-4 py-3 text-sm text-gray-200
-                             border-b border-gray-700/50"
+                    className="px-3 py-2 text-xs text-gray-700 dark:text-gray-300
+                             border-b border-gray-100 dark:border-gray-700/50 whitespace-nowrap"
                   >
                     {cell}
                   </td>
@@ -120,7 +120,7 @@ const DataTable: React.FC<DataTableProps> = ({
         </table>
 
         {displayRows.length === 0 && (
-          <div className="text-center py-8 text-gray-400">
+          <div className="text-center py-4 text-gray-400 text-sm">
             No data found
           </div>
         )}

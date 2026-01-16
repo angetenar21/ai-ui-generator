@@ -41,7 +41,7 @@ const RadialBarChart: React.FC<RadialBarChartProps> = ({
     return (
       <div className="card rounded-card p-6 my-4 hover:shadow-hover transition-all duration-300">
         {title && (
-          <h3 className="text-xl font-display font-semibold text-text-primary mb-2">
+          <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
             {title}
           </h3>
         )}
@@ -94,7 +94,7 @@ const RadialBarChart: React.FC<RadialBarChartProps> = ({
       {(title || description) && (
         <div className="mb-6">
           {title && (
-            <h3 className="text-xl font-display font-semibold text-text-primary mb-2">
+            <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
               {title}
             </h3>
           )}

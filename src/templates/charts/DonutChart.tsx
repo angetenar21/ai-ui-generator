@@ -53,34 +53,34 @@ const DonutChart: React.FC<DonutChartProps> = ({
   title,
   description,
   data,
-  innerRadius = 60,
-  outerRadius = 100,
+  innerRadius = 40,
+  outerRadius = 70,
   paddingAngle = 2,
-  cornerRadius = 4,
-  width = 500,
-  height = 400,
+  cornerRadius = 3,
+  width = 220,
+  height = 200,
   legend = true,
   centerLabel,
-  margin = { top: 20, right: 120, bottom: 20, left: 120 },
+  margin = { top: 5, right: 5, bottom: 40, left: 5 },
 }) => {
   return (
-    <div className="card rounded-card p-6 my-4 hover:shadow-hover transition-all duration-300">
+    <div className="w-full max-w-full overflow-hidden">
       {(title || description) && (
-        <div className="mb-6">
+        <div className="mb-2 px-1">
           {title && (
-            <h3 className="text-xl font-display font-semibold text-text-primary mb-2">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-sm text-text-secondary leading-relaxed">
+            <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5 line-clamp-2">
               {description}
             </p>
           )}
         </div>
       )}
 
-      <div className="flex justify-center items-center relative min-h-[350px]">
+      <div className="w-full flex justify-center items-center relative overflow-hidden">
         <PieChart
           series={[
             {
@@ -97,29 +97,31 @@ const DonutChart: React.FC<DonutChartProps> = ({
           slotProps={{
             legend: legend
               ? {
-                position: { vertical: 'middle', horizontal: 'right' },
-                padding: { left: 20 },
-                itemMarkWidth: 12,
-                itemMarkHeight: 12,
-                markGap: 6,
-                itemGap: 10,
-              }
+                  direction: 'row',
+                  position: { vertical: 'bottom', horizontal: 'middle' },
+                  padding: { top: 5 },
+                  itemMarkWidth: 8,
+                  itemMarkHeight: 8,
+                  markGap: 4,
+                  itemGap: 8,
+                }
               : undefined,
           }}
           sx={{
+            maxWidth: '100%',
             '& .MuiChartsLegend-series text': {
-              fill: 'currentColor',
-              fontSize: '13px',
+              fill: '#374151 !important',
+              fontSize: '10px',
               fontWeight: 500,
             },
             '& .MuiChartsLegend-mark': {
-              rx: 3,
+              rx: 2,
             },
           }}
         />
         {centerLabel && (
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none">
-            <span className="text-3xl font-display font-bold text-text-primary">{centerLabel}</span>
+          <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none">
+            <span className="text-sm font-bold text-gray-900 dark:text-gray-100">{centerLabel}</span>
           </div>
         )}
       </div>

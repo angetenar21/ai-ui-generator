@@ -63,10 +63,10 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
   valueMax = 100,
   startAngle = -90,
   endAngle = 90,
-  innerRadius = '65%',
-  outerRadius = '95%',
-  width = 200,
-  height = 160,
+  innerRadius = '60%',
+  outerRadius = '90%',
+  width = 120,
+  height = 90,
   text,
   color: propColor,
 }) => {
@@ -99,23 +99,23 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
   const displayText = text || seriesLabel || '';
 
   return (
-    <div className="card rounded-card p-6 hover:shadow-hover transition-all duration-300">
+    <div className="w-full max-w-full bg-white dark:bg-gray-800 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
       {(title || description) && (
-        <div className="mb-4 text-center">
+        <div className="mb-1 text-center">
           {title && (
-            <h3 className="text-base font-display font-semibold text-text-primary">
+            <h3 className="text-xs font-semibold text-gray-900 dark:text-gray-100 truncate">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-sm text-text-secondary mt-1">
+            <p className="text-[10px] text-gray-600 dark:text-gray-400 truncate">
               {description}
             </p>
           )}
         </div>
       )}
 
-      <div className="flex flex-col justify-center items-center min-h-[180px]">
+      <div className="flex flex-col justify-center items-center overflow-hidden">
         <Gauge
           value={gaugeValue}
           valueMin={valueMin}
@@ -129,20 +129,20 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
           text={`${gaugeValue}%`}
           sx={{
             '& .MuiGauge-valueText': {
-              fontSize: 20,
-              fill: 'currentColor',
+              fontSize: 14,
+              fill: '#111827',
               fontWeight: 600,
             },
             '& .MuiGauge-valueArc': {
               fill: gaugeColor,
             },
             '& .MuiGauge-referenceArc': {
-              fill: 'rgba(0, 0, 0, 0.1)',
+              fill: '#E5E7EB',
             },
           }}
         />
         {displayText && (
-          <p className="text-text-secondary text-sm mt-2 text-center font-medium">{displayText}</p>
+          <p className="text-gray-500 dark:text-gray-400 text-[10px] text-center truncate w-full">{displayText}</p>
         )}
       </div>
     </div>

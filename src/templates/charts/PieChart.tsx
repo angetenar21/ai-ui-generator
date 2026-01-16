@@ -48,29 +48,29 @@ const PieChart: React.FC<PieChartProps> = ({
   title,
   description,
   series,
-  width = 400,
-  height = 350,
+  width = 220,
+  height = 200,
   legend = true,
-  margin = { top: 20, right: 20, bottom: 60, left: 20 },
+  margin = { top: 5, right: 5, bottom: 40, left: 5 },
 }) => {
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full max-w-full overflow-hidden">
       {(title || description) && (
-        <div className="mb-4 px-2">
+        <div className="mb-2 px-1">
           {title && (
-            <h3 className="text-lg font-display font-semibold text-text-primary">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-sm text-text-secondary mt-1 leading-relaxed">
+            <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5 line-clamp-2">
               {description}
             </p>
           )}
         </div>
       )}
 
-      <div className="flex-1 w-full flex items-center justify-center min-h-[300px]">
+      <div className="w-full flex justify-center items-center overflow-hidden" style={{ maxWidth: '100%' }}>
         <MuiPieChart
           series={series}
           width={width}
@@ -79,24 +79,25 @@ const PieChart: React.FC<PieChartProps> = ({
           slotProps={{
             legend: legend
               ? {
-                direction: 'row',
-                position: { vertical: 'bottom', horizontal: 'middle' },
-                padding: { top: 20 },
-                itemMarkWidth: 12,
-                itemMarkHeight: 12,
-                markGap: 6,
-                itemGap: 16,
-              }
+                  direction: 'row',
+                  position: { vertical: 'bottom', horizontal: 'middle' },
+                  padding: { top: 5 },
+                  itemMarkWidth: 8,
+                  itemMarkHeight: 8,
+                  markGap: 4,
+                  itemGap: 8,
+                }
               : undefined,
           }}
           sx={{
+            maxWidth: '100%',
             '& .MuiChartsLegend-series text': {
-              fill: 'currentColor',
-              fontSize: '13px',
+              fill: '#374151 !important',
+              fontSize: '10px',
               fontWeight: 500,
             },
             '& .MuiChartsLegend-mark': {
-              rx: 3,
+              rx: 2,
             },
           }}
         />

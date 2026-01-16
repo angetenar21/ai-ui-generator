@@ -63,29 +63,29 @@ const Panel: React.FC<PanelProps> = ({
     : getSurfaceClasses(variant, elevation);
 
   return (
-    <div className={`${surfaceClasses} rounded-xl my-4 overflow-hidden transition-all duration-300`}>
+    <div className={`${surfaceClasses} rounded-xl my-2 overflow-hidden transition-all duration-300 w-full max-w-full`}>
       {/* Header */}
       <div
         className={`
-          px-6 py-4 border-b border-border-main
-          ${collapsible ? 'cursor-pointer hover:bg-bg-sub/50 transition-colors' : ''}
+          px-4 py-3 border-b border-gray-200 dark:border-gray-700
+          ${collapsible ? 'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors' : ''}
         `}
         onClick={() => collapsible && setIsCollapsed(!isCollapsed)}
       >
         <div className="flex items-center justify-between">
-          <h3 className="text-text-primary font-semibold text-lg">
+          <h3 className="text-gray-900 dark:text-gray-100 font-semibold text-sm truncate">
             {title}
           </h3>
 
           {collapsible && (
             <button
-              className="text-text-tertiary hover:text-text-primary transition-colors"
+              className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors flex-shrink-0 ml-2"
               aria-label={isCollapsed ? 'Expand' : 'Collapse'}
             >
               {isCollapsed ? (
-                <ChevronDown className="w-5 h-5" />
+                <ChevronDown className="w-4 h-4" />
               ) : (
-                <ChevronUp className="w-5 h-5" />
+                <ChevronUp className="w-4 h-4" />
               )}
             </button>
           )}
@@ -95,21 +95,21 @@ const Panel: React.FC<PanelProps> = ({
       {/* Content */}
       {!isCollapsed && (
         <>
-          <div className="px-6 py-5">
+          <div className="px-4 py-3 overflow-hidden">
             {content && (
-              <div className="text-text-secondary leading-relaxed">
+              <div className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
                 {content}
               </div>
             )}
 
             {children && (
-              <div className="space-y-4">
+              <div className="space-y-3 overflow-hidden">
                 {children}
               </div>
             )}
 
             {!content && !children && (
-              <div className="text-text-tertiary text-sm text-center py-4">
+              <div className="text-gray-400 dark:text-gray-500 text-xs text-center py-2">
                 No content
               </div>
             )}
@@ -117,8 +117,8 @@ const Panel: React.FC<PanelProps> = ({
 
           {/* Footer */}
           {footer && (
-            <div className="px-6 py-4 border-t border-border-main bg-bg-sub/30">
-              <div className="text-text-tertiary text-sm">
+            <div className="px-4 py-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/30">
+              <div className="text-gray-500 dark:text-gray-400 text-xs">
                 {footer}
               </div>
             </div>

@@ -37,16 +37,16 @@ const Stack: React.FC<StackProps> = ({
   justify = 'start',
   wrap = false,
   divider = false,
-  fullWidth = false,
+  fullWidth = true,
   children,
   renderChild,
 }) => {
   const spacingClasses = {
     none: 'gap-0',
     small: 'gap-2',
-    medium: 'gap-4',
-    large: 'gap-6',
-    xlarge: 'gap-8',
+    medium: 'gap-3',
+    large: 'gap-4',
+    xlarge: 'gap-6',
   };
 
   const alignClasses = {
@@ -91,12 +91,12 @@ const Stack: React.FC<StackProps> = ({
 
   return (
     <div
-      className={`flex ${directionClass} ${spacingClasses[spacing]} ${alignClasses[align]} ${justifyClasses[justify]} ${wrapClass} ${widthClass}`}
+      className={`flex ${directionClass} ${spacingClasses[spacing]} ${alignClasses[align]} ${justifyClasses[justify]} ${wrapClass} ${widthClass} max-w-full overflow-hidden`}
     >
       {children && children.length > 0 && renderChild ? (
         children.map((child, index) => (
           <React.Fragment key={index}>
-            <div className={getChildWrapperClasses()}>
+            <div className={`${getChildWrapperClasses()} overflow-hidden`}>
               {renderChild(child)}
             </div>
             {divider && index < children.length - 1 && (
@@ -105,8 +105,8 @@ const Stack: React.FC<StackProps> = ({
           </React.Fragment>
         ))
       ) : (
-        <div className="card rounded-card p-8 text-center w-full">
-          <p className="text-gray-500 dark:text-gray-400">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 text-center w-full">
+          <p className="text-gray-500 dark:text-gray-400 text-sm">
             Stack layout ({direction}) - Add child components
           </p>
         </div>

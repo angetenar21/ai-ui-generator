@@ -79,14 +79,14 @@ const BarChart: React.FC<BarChartProps> = ({
   description,
   xAxis,
   series,
-  width = 800,
-  height = 400,
+  width = 500,
+  height = 280,
   backgroundColor,
   cardBackgroundColor,
   layout = 'vertical',
   grid = { horizontal: true, vertical: false },
   legend = true,
-  margin = { top: 50, right: 30, bottom: 50, left: 60 },
+  margin = { top: 40, right: 20, bottom: 40, left: 50 },
   variant = 'default',
   elevation = 'raised',
   emphasis: _emphasis = 'medium',
@@ -145,19 +145,19 @@ const BarChart: React.FC<BarChartProps> = ({
 
   return (
     <div
-      className={`${surfaceClasses} rounded-xl p-6 my-4 transition-all duration-300`}
+      className={`${surfaceClasses} rounded-xl p-4 my-2 transition-all duration-300 w-full max-w-full overflow-hidden`}
       style={cardBgColor ? { backgroundColor: cardBgColor } : undefined}
     >
       {/* Header */}
       {(title || description) && (
-        <div className="mb-6">
+        <div className="mb-3">
           {title && (
-            <h3 className="text-xl font-display font-semibold text-text-primary mb-2">
+            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-sm text-text-secondary leading-relaxed">
+            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
               {description}
             </p>
           )}
@@ -165,8 +165,8 @@ const BarChart: React.FC<BarChartProps> = ({
       )}
 
       {/* Chart */}
-      <div className="w-full overflow-x-auto">
-        <div className="flex justify-center items-center min-h-[300px]">
+      <div className="w-full overflow-x-auto overflow-y-hidden">
+        <div className="flex justify-center items-center min-h-[200px]">
           <MuiBarChart
             xAxis={processedXAxis}
             yAxis={processedYAxis}

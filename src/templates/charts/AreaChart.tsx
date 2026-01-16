@@ -54,11 +54,11 @@ const AreaChart: React.FC<AreaChartProps> = ({
   description,
   xAxis,
   series,
-  width = 800,
-  height = 400,
+  width = 500,
+  height = 280,
   grid = { horizontal: true, vertical: false },
   legend = true,
-  margin = { top: 50, right: 30, bottom: 50, left: 60 },
+  margin = { top: 40, right: 20, bottom: 40, left: 50 },
 }) => {
   // Validation and error handling
   if (!series || series.length === 0 || !series[0].data || series[0].data.length === 0) {
@@ -131,17 +131,17 @@ const AreaChart: React.FC<AreaChartProps> = ({
   });
 
   return (
-    <div className="card rounded-card p-6 my-4 hover:shadow-hover transition-all duration-300">
+    <div className="w-full max-w-full bg-white dark:bg-gray-800 rounded-xl p-4 my-2 overflow-hidden">
       {/* Header */}
       {(title || description) && (
-        <div className="mb-6">
+        <div className="mb-3">
           {title && (
-            <h3 className="text-xl font-display font-semibold text-text-primary mb-2">
+            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-sm text-text-secondary leading-relaxed">
+            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
               {description}
             </p>
           )}
@@ -149,7 +149,8 @@ const AreaChart: React.FC<AreaChartProps> = ({
       )}
 
       {/* Chart */}
-      <div className="flex justify-center items-center min-h-[300px]">
+      <div className="w-full overflow-x-auto overflow-y-hidden">
+        <div className="flex justify-center items-center min-h-[200px]">
         {(() => {
           try {
             return (
