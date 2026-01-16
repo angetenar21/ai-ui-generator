@@ -64,26 +64,23 @@ const DonutChart: React.FC<DonutChartProps> = ({
   margin = { top: 10, right: 10, bottom: 50, left: 10 },
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [chartSize, setChartSize] = useState({ width: propWidth || 220, height: propHeight });
+  const [chartSize, setChartSize] = useState({ width: propWidth || 400, height: propHeight });
 
   useEffect(() => {
     const updateSize = () => {
       const measuredWidth = containerRef.current?.getBoundingClientRect().width || 0;
-      const maxWidth = measuredWidth > 0 ? measuredWidth - 16 : undefined;
-      const fallbackWidth = propWidth || 260;
 
-      let nextWidth = fallbackWidth;
-      if (typeof maxWidth === 'number') {
-        nextWidth = propWidth ? Math.min(propWidth, maxWidth) : maxWidth;
+      if (measuredWidth > 0) {
+        // Use 90% of container width for better fit
+        const availableWidth = measuredWidth - 32; // Account for padding
+        const chartWidth = propWidth || Math.min(availableWidth, 500);
+        const chartHeight = propHeight || Math.min(chartWidth * 0.85, 400); // Maintain aspect ratio
+
+        setChartSize({
+          width: Math.max(250, chartWidth),
+          height: Math.max(250, chartHeight)
+        });
       }
-
-      const minWidth = typeof maxWidth === 'number' ? Math.min(180, maxWidth) : 180;
-      const maxWidthClamp = typeof maxWidth === 'number' ? maxWidth : 640;
-
-      const resolvedWidth = Math.max(minWidth, Math.min(nextWidth, maxWidthClamp));
-      const resolvedHeight = propHeight ? Math.max(propHeight, resolvedWidth) : resolvedWidth;
-
-      setChartSize({ width: resolvedWidth, height: resolvedHeight });
     };
 
     updateSize();
@@ -100,11 +97,11 @@ const DonutChart: React.FC<DonutChartProps> = ({
   const legendTextColor = isDarkMode ? '#D1D5DB' : '#374151';
 
   return (
-    <div className="w-full max-w-full overflow-hidden">
+    <div className="w-full h-full flex flex-col">
       {(title || description) && (
-        <div className="mb-4 px-2 text-center">
+        <div className="mb-3 px-4 text-center">
           {title && (
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
               {title}
             </h3>
           )}
@@ -116,7 +113,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
         </div>
       )}
 
-      <div ref={containerRef} className="w-full flex flex-col justify-center items-center relative overflow-hidden py-2">
+      <div ref={containerRef} className="flex-1 flex justify-center items-center w-full px-4 relative">
         <PieChart
           series={[
             {
