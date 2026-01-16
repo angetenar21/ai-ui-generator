@@ -46,8 +46,8 @@ const Hero: React.FC<HeroProps> = ({
 }) => {
   if (!title) {
     return (
-      <div className="glass-dark border border-gray-700/50 rounded-lg p-6 my-2">
-        <div className="text-text-tertiary text-sm">Hero section requires a title</div>
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 my-2">
+        <div className="text-gray-500 dark:text-gray-400 text-sm">Hero section requires a title</div>
       </div>
     );
   }
@@ -67,16 +67,16 @@ const Hero: React.FC<HeroProps> = ({
       return 'bg-cover bg-center';
     }
     if (backgroundStyle === 'gradient') {
-      return 'bg-gradient-to-br from-primary-500/20 via-accent-purple/10 to-accent-cyan/20';
+      return 'bg-gradient-to-br from-orange-500/20 via-amber-500/10 to-yellow-500/20 dark:from-orange-900/30 dark:via-amber-900/20 dark:to-yellow-900/30';
     }
-    return 'bg-bg-sub';
+    return 'bg-gray-50 dark:bg-gray-800';
   };
 
   const getButtonVariantClass = (variant: string = 'primary') => {
     const variants = {
-      primary: 'bg-primary-500 hover:bg-primary-600 text-white',
-      secondary: 'bg-accent-cyan hover:bg-accent-cyan/80 text-white',
-      outline: 'border-2 border-primary-500 text-primary-500 hover:bg-primary-500 hover:text-white',
+      primary: 'bg-orange-500 hover:bg-orange-600 text-white',
+      secondary: 'bg-teal-500 hover:bg-teal-600 text-white',
+      outline: 'border-2 border-orange-500 text-orange-500 dark:text-orange-400 hover:bg-orange-500 hover:text-white',
     };
     return variants[variant as keyof typeof variants] || variants.primary;
   };
@@ -91,7 +91,7 @@ const Hero: React.FC<HeroProps> = ({
     <div
       className={`
         ${getBackgroundClass()}
-        border border-gray-700/50 rounded-2xl overflow-hidden my-4
+        border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden my-4
         relative
       `}
       style={
@@ -102,14 +102,14 @@ const Hero: React.FC<HeroProps> = ({
     >
       {/* Overlay for better text readability on images */}
       {backgroundStyle === 'image' && (
-        <div className="absolute inset-0 bg-bg-main/80 backdrop-blur-sm" />
+        <div className="absolute inset-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm" />
       )}
 
       <div className="relative z-10 px-6 py-16 md:py-24 lg:py-32">
         <div className={`max-w-4xl mx-auto flex flex-col gap-6 ${alignClasses[align]}`}>
           {/* Subtitle/Eyebrow */}
           {subtitle && (
-            <div className="text-accent-cyan font-semibold text-sm md:text-base uppercase tracking-wider">
+            <div className="text-teal-600 dark:text-teal-400 font-semibold text-sm md:text-base uppercase tracking-wider">
               {subtitle}
             </div>
           )}
@@ -117,7 +117,7 @@ const Hero: React.FC<HeroProps> = ({
           {/* Main Title */}
           <h1 className={`
             ${titleSizeClasses[size]}
-            font-display font-bold text-text-primary
+            font-display font-bold text-gray-900 dark:text-gray-100
             leading-tight
           `}>
             {title}
@@ -125,7 +125,7 @@ const Hero: React.FC<HeroProps> = ({
 
           {/* Description */}
           {description && (
-            <p className="text-text-secondary text-lg md:text-xl leading-relaxed max-w-2xl">
+            <p className="text-gray-600 dark:text-gray-400 text-lg md:text-xl leading-relaxed max-w-2xl">
               {description}
             </p>
           )}
@@ -141,7 +141,7 @@ const Hero: React.FC<HeroProps> = ({
                     px-6 py-3 rounded-lg font-semibold
                     flex items-center gap-2
                     transition-all transform hover:scale-105
-                    focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-bg-main
+                    focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-900
                   `}
                 >
                   {button.label}

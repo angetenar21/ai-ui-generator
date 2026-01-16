@@ -158,8 +158,18 @@ const BarChart: React.FC<BarChartProps> = ({
   }
 
   // Use theme-aware background colors
-  const plotBackgroundColor = backgroundColor || (variant === 'accent' || variant === 'gradient' ? 'transparent' : '#FFFFFF');
   const cardBgColor = cardBackgroundColor;
+
+  // Detect dark mode for chart styling
+  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  const chartColors = {
+    axisLine: isDarkMode ? '#6B7280' : '#6B7280',
+    axisTick: isDarkMode ? '#6B7280' : '#6B7280',
+    tickLabel: isDarkMode ? '#D1D5DB' : '#374151',
+    legendText: isDarkMode ? '#D1D5DB' : '#374151',
+    gridLine: isDarkMode ? '#374151' : '#E5E7EB',
+    background: backgroundColor || 'transparent',
+  };
 
   // Build classes using design tokens
   const surfaceClasses = getSurfaceClasses(variant, elevation);
@@ -205,28 +215,27 @@ const BarChart: React.FC<BarChartProps> = ({
                 : undefined,
             }}
             sx={{
-              backgroundColor: plotBackgroundColor,
+              backgroundColor: chartColors.background,
               borderRadius: '8px',
-              padding: '16px',
               '& .MuiChartsAxis-line': {
-                stroke: '#6B7280',
+                stroke: chartColors.axisLine,
                 strokeWidth: 1.5,
               },
               '& .MuiChartsAxis-tick': {
-                stroke: '#6B7280',
+                stroke: chartColors.axisTick,
                 strokeWidth: 1,
               },
               '& .MuiChartsAxis-tickLabel': {
-                fill: '#374151',
+                fill: chartColors.tickLabel,
                 fontSize: '13px',
                 fontWeight: 500,
               },
               '& .MuiChartsLegend-series text': {
-                fill: '#374151 !important',
+                fill: `${chartColors.legendText} !important`,
                 fontSize: '14px',
               },
               '& .MuiChartsGrid-line': {
-                stroke: '#E5E7EB',
+                stroke: chartColors.gridLine,
                 strokeDasharray: '4 4',
                 opacity: 0.8,
               },

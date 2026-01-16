@@ -31,47 +31,47 @@ const Callout: React.FC<CalloutProps> = ({
 
   if (!content) {
     return (
-      <div className="glass-dark border border-gray-700/50 rounded-lg p-4 my-2">
-        <div className="text-text-tertiary text-sm">No content provided</div>
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 my-2">
+        <div className="text-gray-500 dark:text-gray-400 text-sm">No content provided</div>
       </div>
     );
   }
 
   const variantConfig = {
     info: {
-      bgClass: 'bg-info/10 border-info/30',
-      textClass: 'text-info',
-      iconClass: 'text-info',
+      bgClass: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800',
+      textClass: 'text-blue-700 dark:text-blue-300',
+      iconClass: 'text-blue-600 dark:text-blue-400',
       Icon: Info,
     },
     warning: {
-      bgClass: 'bg-warning/10 border-warning/30',
-      textClass: 'text-warning',
-      iconClass: 'text-warning',
+      bgClass: 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800',
+      textClass: 'text-yellow-700 dark:text-yellow-300',
+      iconClass: 'text-yellow-600 dark:text-yellow-400',
       Icon: AlertTriangle,
     },
     success: {
-      bgClass: 'bg-success/10 border-success/30',
-      textClass: 'text-success',
-      iconClass: 'text-success',
+      bgClass: 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800',
+      textClass: 'text-green-700 dark:text-green-300',
+      iconClass: 'text-green-600 dark:text-green-400',
       Icon: CheckCircle,
     },
     error: {
-      bgClass: 'bg-error/10 border-error/30',
-      textClass: 'text-error',
-      iconClass: 'text-error',
+      bgClass: 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800',
+      textClass: 'text-red-700 dark:text-red-300',
+      iconClass: 'text-red-600 dark:text-red-400',
       Icon: XCircle,
     },
     tip: {
-      bgClass: 'bg-accent-cyan/10 border-accent-cyan/30',
-      textClass: 'text-accent-cyan',
-      iconClass: 'text-accent-cyan',
+      bgClass: 'bg-teal-50 dark:bg-teal-900/20 border-teal-200 dark:border-teal-800',
+      textClass: 'text-teal-700 dark:text-teal-300',
+      iconClass: 'text-teal-600 dark:text-teal-400',
       Icon: Lightbulb,
     },
     note: {
-      bgClass: 'bg-accent-purple/10 border-accent-purple/30',
-      textClass: 'text-accent-purple',
-      iconClass: 'text-accent-purple',
+      bgClass: 'bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800',
+      textClass: 'text-purple-700 dark:text-purple-300',
+      iconClass: 'text-purple-600 dark:text-purple-400',
       Icon: AlertCircle,
     },
   };
@@ -100,8 +100,8 @@ const Callout: React.FC<CalloutProps> = ({
               {title}
             </div>
           )}
-          
-          <div className="text-text-secondary text-sm leading-relaxed">
+
+          <div className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
             {content}
           </div>
         </div>

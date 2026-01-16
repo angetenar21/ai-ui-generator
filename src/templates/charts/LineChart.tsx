@@ -178,8 +178,18 @@ const LineChart: React.FC<LineChartProps> = ({
   }
 
   // Use theme-aware background colors
-  const plotBackgroundColor = backgroundColor || (variant === 'accent' || variant === 'gradient' ? 'transparent' : '#FFFFFF');
   const cardBgColor = cardBackgroundColor;
+
+  // Detect dark mode for chart styling
+  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  const chartColors = {
+    axisLine: isDarkMode ? '#6B7280' : '#6B7280',
+    axisTick: isDarkMode ? '#6B7280' : '#6B7280',
+    tickLabel: isDarkMode ? '#D1D5DB' : '#374151',
+    legendText: isDarkMode ? '#D1D5DB' : '#374151',
+    gridLine: isDarkMode ? '#374151' : '#E5E7EB',
+    background: backgroundColor || (isDarkMode ? 'transparent' : (variant === 'accent' || variant === 'gradient' ? 'transparent' : 'transparent')),
+  };
 
   return (
     <div
@@ -223,28 +233,27 @@ const LineChart: React.FC<LineChartProps> = ({
                       : undefined,
                   }}
                   sx={{
-                    backgroundColor: plotBackgroundColor,
+                    backgroundColor: chartColors.background,
                     borderRadius: '8px',
-                    padding: '16px',
                     '& .MuiChartsAxis-line': {
-                      stroke: '#6B7280',
+                      stroke: chartColors.axisLine,
                       strokeWidth: 1.5,
                     },
                     '& .MuiChartsAxis-tick': {
-                      stroke: '#6B7280',
+                      stroke: chartColors.axisTick,
                       strokeWidth: 1,
                     },
                     '& .MuiChartsAxis-tickLabel': {
-                      fill: '#374151',
+                      fill: chartColors.tickLabel,
                       fontSize: '13px',
                       fontWeight: 500,
                     },
                     '& .MuiChartsLegend-series text': {
-                      fill: '#374151 !important',
+                      fill: `${chartColors.legendText} !important`,
                       fontSize: '14px',
                     },
                     '& .MuiChartsGrid-line': {
-                      stroke: '#E5E7EB',
+                      stroke: chartColors.gridLine,
                       strokeDasharray: '4 4',
                       opacity: 0.8,
                     },
@@ -254,7 +263,7 @@ const LineChart: React.FC<LineChartProps> = ({
             } catch (error) {
               console.error('[LineChart] Rendering error:', error);
               return (
-                <div className="text-center text-text-secondary">
+                <div className="text-center text-gray-500 dark:text-gray-400">
                   <div className="text-4xl mb-2">⚠️</div>
                   <div>Chart rendering error</div>
                   <div className="text-xs mt-1 text-red-500">{String(error)}</div>

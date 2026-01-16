@@ -75,6 +75,10 @@ const PieChart: React.FC<PieChartProps> = ({
     return () => resizeObserver.disconnect();
   }, [propWidth, propHeight]);
 
+  // Detect dark mode for chart styling
+  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  const legendTextColor = isDarkMode ? '#D1D5DB' : '#374151';
+
   return (
     <div className="w-full max-w-full overflow-hidden">
       {(title || description) && (
@@ -114,7 +118,7 @@ const PieChart: React.FC<PieChartProps> = ({
           sx={{
             maxWidth: '100%',
             '& .MuiChartsLegend-series text': {
-              fill: '#374151 !important',
+              fill: `${legendTextColor} !important`,
               fontSize: '10px',
               fontWeight: 500,
             },

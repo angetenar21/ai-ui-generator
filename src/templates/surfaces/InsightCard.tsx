@@ -32,33 +32,33 @@ const InsightCard: React.FC<InsightCardProps> = ({
 }) => {
   const variantConfig = {
     info: {
-      bgClass: 'bg-info/10 border-info/30',
-      textClass: 'text-info',
-      iconClass: 'text-info',
+      bgClass: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800',
+      textClass: 'text-blue-700 dark:text-blue-300',
+      iconClass: 'text-blue-600 dark:text-blue-400',
       Icon: Info,
     },
     success: {
-      bgClass: 'bg-success/10 border-success/30',
-      textClass: 'text-success',
-      iconClass: 'text-success',
+      bgClass: 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800',
+      textClass: 'text-green-700 dark:text-green-300',
+      iconClass: 'text-green-600 dark:text-green-400',
       Icon: CheckCircle,
     },
     warning: {
-      bgClass: 'bg-warning/10 border-warning/30',
-      textClass: 'text-warning',
-      iconClass: 'text-warning',
+      bgClass: 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800',
+      textClass: 'text-yellow-700 dark:text-yellow-300',
+      iconClass: 'text-yellow-600 dark:text-yellow-400',
       Icon: AlertTriangle,
     },
     error: {
-      bgClass: 'bg-error/10 border-error/30',
-      textClass: 'text-error',
-      iconClass: 'text-error',
+      bgClass: 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800',
+      textClass: 'text-red-700 dark:text-red-300',
+      iconClass: 'text-red-600 dark:text-red-400',
       Icon: XCircle,
     },
     neutral: {
-      bgClass: 'bg-bg-surface/50 border-border-default',
-      textClass: 'text-text-primary',
-      iconClass: 'text-primary-500',
+      bgClass: 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700',
+      textClass: 'text-gray-900 dark:text-gray-100',
+      iconClass: 'text-orange-500 dark:text-orange-400',
       Icon: Info,
     },
   };
@@ -71,18 +71,18 @@ const InsightCard: React.FC<InsightCardProps> = ({
 
     switch (metric.trend) {
       case 'up':
-        return <TrendingUp className="w-4 h-4 text-success" />;
+        return <TrendingUp className="w-4 h-4 text-green-600 dark:text-green-400" />;
       case 'down':
-        return <TrendingDown className="w-4 h-4 text-error" />;
+        return <TrendingDown className="w-4 h-4 text-red-600 dark:text-red-400" />;
       case 'neutral':
-        return <Minus className="w-4 h-4 text-text-tertiary" />;
+        return <Minus className="w-4 h-4 text-gray-500 dark:text-gray-400" />;
       default:
         return null;
     }
   };
 
   return (
-    <div className={`card rounded-card p-6 my-4 border ${config.bgClass} hover:shadow-hover transition-all duration-200`}>
+    <div className={`bg-white dark:bg-gray-800 rounded-xl p-6 my-4 border ${config.bgClass} hover:shadow-lg transition-all duration-200`}>
       <div className="flex items-start gap-4">
         {/* Icon */}
         {showIcon && (
@@ -96,18 +96,18 @@ const InsightCard: React.FC<InsightCardProps> = ({
           <h4 className={`text-lg font-display font-semibold ${config.textClass} mb-2`}>
             {title}
           </h4>
-          <p className="text-text-secondary text-sm leading-relaxed mb-4">
+          <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">
             {description}
           </p>
 
           {/* Metric */}
           {metric && (
-            <div className="flex items-end gap-4 pt-3 border-t border-border-subtle">
+            <div className="flex items-end gap-4 pt-3 border-t border-gray-200 dark:border-gray-700">
               <div>
-                <div className="text-3xl font-bold text-text-primary mb-1">
+                <div className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">
                   {metric.value}
                 </div>
-                <div className="text-xs text-text-muted uppercase tracking-wide">
+                <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                   {metric.label}
                 </div>
               </div>
@@ -116,9 +116,9 @@ const InsightCard: React.FC<InsightCardProps> = ({
                 <div className="flex items-center gap-1.5 mb-1">
                   {getTrendIcon()}
                   <span className={`text-sm font-semibold ${
-                    metric.trend === 'up' ? 'text-success' :
-                    metric.trend === 'down' ? 'text-error' :
-                    'text-text-muted'
+                    metric.trend === 'up' ? 'text-green-600 dark:text-green-400' :
+                    metric.trend === 'down' ? 'text-red-600 dark:text-red-400' :
+                    'text-gray-500 dark:text-gray-400'
                   }`}>
                     {metric.trendValue}
                   </span>

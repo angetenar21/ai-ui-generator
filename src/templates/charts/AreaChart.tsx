@@ -141,14 +141,15 @@ const AreaChart: React.FC<AreaChartProps> = ({
     area: true, // This makes it an area chart
   }));
 
-  // Debug logging
-  console.log('[AreaChart] Rendering with data:', {
-    title,
-    xAxis: processedXAxis,
-    series: areaSeriesData,
-    chartWidth,
-    height
-  });
+  // Detect dark mode for chart styling
+  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  const chartColors = {
+    axisLine: isDarkMode ? '#6B7280' : '#6B7280',
+    axisTick: isDarkMode ? '#6B7280' : '#6B7280',
+    tickLabel: isDarkMode ? '#D1D5DB' : '#374151',
+    legendText: isDarkMode ? '#D1D5DB' : '#374151',
+    gridLine: isDarkMode ? '#374151' : '#E5E7EB',
+  };
 
   return (
     <div className="w-full max-w-full bg-white dark:bg-gray-800 rounded-xl p-4 my-2 overflow-hidden">
@@ -190,25 +191,25 @@ const AreaChart: React.FC<AreaChartProps> = ({
                 }}
                 sx={{
                   '& .MuiChartsAxis-line': {
-                    stroke: '#6B7280',
+                    stroke: chartColors.axisLine,
                     strokeWidth: 1.5,
                   },
                   '& .MuiChartsAxis-tick': {
-                    stroke: '#6B7280',
+                    stroke: chartColors.axisTick,
                     strokeWidth: 1,
                   },
                   '& .MuiChartsAxis-tickLabel': {
-                    fill: '#374151',
+                    fill: chartColors.tickLabel,
                     fontSize: '13px',
                     fontWeight: 500,
                   },
                   '& .MuiChartsLegend-series text': {
-                    fill: '#374151 !important',
+                    fill: `${chartColors.legendText} !important`,
                     fontSize: '14px',
                     fontWeight: 500,
                   },
                   '& .MuiChartsGrid-line': {
-                    stroke: '#E5E7EB',
+                    stroke: chartColors.gridLine,
                     strokeDasharray: '4 4',
                     opacity: 0.8,
                   },
@@ -221,7 +222,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
           } catch (error) {
             console.error('[AreaChart] Error rendering chart:', error);
             return (
-              <div className="flex justify-center items-center min-h-[300px] text-text-secondary">
+              <div className="flex justify-center items-center min-h-[300px] text-gray-500 dark:text-gray-400">
                 <div className="text-center">
                   <div className="text-4xl mb-2">⚠️</div>
                   <div>Error rendering chart</div>

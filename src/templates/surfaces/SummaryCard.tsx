@@ -80,12 +80,12 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
   return (
     <div className={`${surfaceClasses} rounded-xl p-6 my-4 transition-all duration-300`}>
       {/* Header */}
-      <div className="mb-6 pb-4 border-b border-border-subtle">
-        <h3 className="text-xl font-display font-semibold text-text-primary mb-2">
+      <div className="mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+        <h3 className="text-xl font-display font-semibold text-gray-900 dark:text-gray-100 mb-2">
           {title}
         </h3>
         {description && (
-          <p className="text-sm text-text-secondary">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
             {description}
           </p>
         )}
@@ -104,14 +104,14 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
           >
             <div className="flex items-start justify-between">
               <div className="flex-1">
-                <div className="text-xs text-text-muted uppercase tracking-wide mb-2">
+                <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
                   {item.label}
                 </div>
-                <div className="text-2xl font-bold text-text-primary mb-1 group-hover:text-accent-solid transition-colors">
+                <div className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1 group-hover:text-orange-500 transition-colors">
                   {item.value}
                 </div>
                 {item.subtext && (
-                  <div className="text-xs text-text-muted mt-1">
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     {item.subtext}
                   </div>
                 )}
@@ -120,9 +120,9 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
               {item.change && (
                 <div className={`
                   flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium
-                  ${item.changeType === 'positive' ? 'bg-success/10 text-success' : ''}
-                  ${item.changeType === 'negative' ? 'bg-error/10 text-error' : ''}
-                  ${item.changeType === 'neutral' ? 'bg-bg-sub text-text-muted' : ''}
+                  ${item.changeType === 'positive' ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400' : ''}
+                  ${item.changeType === 'negative' ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400' : ''}
+                  ${item.changeType === 'neutral' ? 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400' : ''}
                 `}>
                   {getChangeIcon(item.changeType)}
                   <span>{item.change}</span>

@@ -120,6 +120,13 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
 
   const displayText = text || seriesLabel || '';
 
+  // Detect dark mode for chart styling
+  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  const gaugeStyles = {
+    valueText: isDarkMode ? '#F3F4F6' : '#111827',
+    referenceArc: isDarkMode ? '#374151' : '#E5E7EB',
+  };
+
   return (
     <div className="w-full max-w-full bg-white dark:bg-gray-800 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
       {(title || description) && (
@@ -152,14 +159,14 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
           sx={{
             '& .MuiGauge-valueText': {
               fontSize: 14,
-              fill: '#111827',
+              fill: gaugeStyles.valueText,
               fontWeight: 600,
             },
             '& .MuiGauge-valueArc': {
               fill: gaugeColor,
             },
             '& .MuiGauge-referenceArc': {
-              fill: '#E5E7EB',
+              fill: gaugeStyles.referenceArc,
             },
           }}
         />
