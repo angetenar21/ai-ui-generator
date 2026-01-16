@@ -75,13 +75,21 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
 
   useEffect(() => {
     const updateSize = () => {
-      if (containerRef.current) {
-        const containerWidth = containerRef.current.clientWidth;
-        // For gauge charts, scale proportionally but keep compact
-        const width = Math.min(Math.max(100, containerWidth - 24), 200);
-        const height = Math.round(width * 0.75); // Maintain aspect ratio
-        setChartSize({ width, height: Math.min(height, propHeight) });
+      const measuredWidth = containerRef.current?.getBoundingClientRect().width || 0;
+      const maxWidth = measuredWidth > 0 ? measuredWidth - 24 : undefined;
+      const fallbackWidth = propWidth || 180;
+
+      let nextWidth = fallbackWidth;
+      if (typeof maxWidth === 'number') {
+        nextWidth = propWidth ? Math.min(propWidth, maxWidth) : maxWidth;
       }
+
+      const minWidth = typeof maxWidth === 'number' ? Math.min(120, maxWidth) : 120;
+      const maxWidthClamp = typeof maxWidth === 'number' ? maxWidth : 520;
+
+      const resolvedWidth = Math.max(minWidth, Math.min(nextWidth, maxWidthClamp));
+      const resolvedHeight = Math.max(propHeight, Math.round(resolvedWidth * 0.7));
+      setChartSize({ width: resolvedWidth, height: resolvedHeight });
     };
 
     updateSize();

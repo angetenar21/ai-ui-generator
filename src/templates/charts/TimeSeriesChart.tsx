@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { LineChart as MuiLineChart } from '@mui/x-charts/LineChart';
 
 interface TimeSeriesChartProps {
@@ -55,6 +55,35 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   legend = true,
   margin = { top: 50, right: 30, bottom: 50, left: 60 },
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [chartWidth, setChartWidth] = useState(width);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      const measuredWidth = containerRef.current?.getBoundingClientRect().width || 0;
+      const maxWidth = measuredWidth > 0 ? measuredWidth - 16 : undefined;
+      const fallbackWidth = width;
+
+      let nextWidth = fallbackWidth;
+      if (typeof maxWidth === 'number') {
+        nextWidth = Math.min(fallbackWidth, maxWidth);
+      }
+
+      const minWidth = typeof maxWidth === 'number' ? Math.min(240, maxWidth) : 240;
+      const maxWidthClamp = typeof maxWidth === 'number' ? maxWidth : 1800;
+
+      setChartWidth(Math.max(minWidth, Math.min(nextWidth, maxWidthClamp)));
+    };
+
+    updateWidth();
+    const resizeObserver = new ResizeObserver(updateWidth);
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => resizeObserver.disconnect();
+  }, [width]);
+
   // Validate
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
@@ -132,7 +161,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
       )}
 
       {/* Chart */}
-      <div className="flex justify-center items-center min-h-[300px]">
+      <div ref={containerRef} className="flex justify-center items-center min-h-[300px] w-full">
         <MuiLineChart
           xAxis={[
             {
@@ -142,7 +171,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
             },
           ]}
           series={transformedSeries}
-          width={width}
+          width={chartWidth}
           height={height}
           grid={grid}
           margin={margin}

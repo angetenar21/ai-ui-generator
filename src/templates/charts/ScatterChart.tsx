@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ScatterChart as MuiScatterChart } from '@mui/x-charts/ScatterChart';
 
 interface ScatterChartProps {
@@ -70,6 +70,35 @@ const ScatterChart: React.FC<ScatterChartProps> = ({
   legend = true,
   margin = { top: 50, right: 30, bottom: 50, left: 60 },
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [chartWidth, setChartWidth] = useState(width);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      const measuredWidth = containerRef.current?.getBoundingClientRect().width || 0;
+      const maxWidth = measuredWidth > 0 ? measuredWidth - 16 : undefined;
+      const fallbackWidth = width;
+
+      let nextWidth = fallbackWidth;
+      if (typeof maxWidth === 'number') {
+        nextWidth = Math.min(fallbackWidth, maxWidth);
+      }
+
+      const minWidth = typeof maxWidth === 'number' ? Math.min(220, maxWidth) : 220;
+      const maxWidthClamp = typeof maxWidth === 'number' ? maxWidth : 1600;
+
+      setChartWidth(Math.max(minWidth, Math.min(nextWidth, maxWidthClamp)));
+    };
+
+    updateWidth();
+    const resizeObserver = new ResizeObserver(updateWidth);
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => resizeObserver.disconnect();
+  }, [width]);
+
   // Validation and error handling
   if (!series || series.length === 0 || !series[0].data || series[0].data.length === 0) {
     console.warn('[ScatterChart] No valid series data provided:', { series });
@@ -175,18 +204,15 @@ const ScatterChart: React.FC<ScatterChartProps> = ({
       )}
 
       {/* Chart */}
-      <div className="flex justify-center items-center min-h-[200px] w-full">
+      <div ref={containerRef} className="flex justify-center items-center min-h-[200px] w-full">
         {(() => {
           try {
-            // Constrain width to be responsive
-            const constrainedWidth = Math.min(width, 800);
-
             return (
               <MuiScatterChart
                 xAxis={processedXAxis}
                 yAxis={processedYAxis}
                 series={processedSeries}
-                width={constrainedWidth}
+                width={chartWidth}
                 height={height}
                 grid={grid}
                 margin={margin}

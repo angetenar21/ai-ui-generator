@@ -98,11 +98,19 @@ const BarChart: React.FC<BarChartProps> = ({
 
   useEffect(() => {
     const updateWidth = () => {
-      if (containerRef.current) {
-        const containerWidth = containerRef.current.clientWidth;
-        // Use container width minus padding, or prop width if larger container
-        setChartWidth(Math.max(300, containerWidth - 16));
+      const measuredWidth = containerRef.current?.getBoundingClientRect().width || 0;
+      const maxWidth = measuredWidth > 0 ? measuredWidth - 16 : undefined;
+      const fallbackWidth = propWidth || 360;
+
+      let nextWidth = fallbackWidth;
+      if (typeof maxWidth === 'number') {
+        nextWidth = propWidth ? Math.min(propWidth, maxWidth) : maxWidth;
       }
+
+      const minWidth = typeof maxWidth === 'number' ? Math.min(200, maxWidth) : 200;
+      const maxWidthClamp = typeof maxWidth === 'number' ? maxWidth : 1600;
+
+      setChartWidth(Math.max(minWidth, Math.min(nextWidth, maxWidthClamp)));
     };
 
     updateWidth();

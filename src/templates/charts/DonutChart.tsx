@@ -68,12 +68,22 @@ const DonutChart: React.FC<DonutChartProps> = ({
 
   useEffect(() => {
     const updateSize = () => {
-      if (containerRef.current) {
-        const containerWidth = containerRef.current.clientWidth;
-        // For donut charts, maintain aspect ratio and fit container
-        const size = Math.min(Math.max(180, containerWidth - 16), 400);
-        setChartSize({ width: size, height: Math.min(size, propHeight) });
+      const measuredWidth = containerRef.current?.getBoundingClientRect().width || 0;
+      const maxWidth = measuredWidth > 0 ? measuredWidth - 16 : undefined;
+      const fallbackWidth = propWidth || 260;
+
+      let nextWidth = fallbackWidth;
+      if (typeof maxWidth === 'number') {
+        nextWidth = propWidth ? Math.min(propWidth, maxWidth) : maxWidth;
       }
+
+      const minWidth = typeof maxWidth === 'number' ? Math.min(180, maxWidth) : 180;
+      const maxWidthClamp = typeof maxWidth === 'number' ? maxWidth : 640;
+
+      const resolvedWidth = Math.max(minWidth, Math.min(nextWidth, maxWidthClamp));
+      const resolvedHeight = propHeight ? Math.max(propHeight, resolvedWidth) : resolvedWidth;
+
+      setChartSize({ width: resolvedWidth, height: resolvedHeight });
     };
 
     updateSize();
