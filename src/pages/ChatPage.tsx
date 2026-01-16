@@ -175,7 +175,7 @@ const ChatPage: React.FC = () => {
   ];
 
   return (
-    <div className="h-screen flex flex-col relative overflow-hidden bg-gradient-to-br from-gray-50 via-orange-50/30 to-amber-50/40 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
+    <div className="h-screen flex flex-col relative overflow-hidden bg-[#f9fafb] dark:bg-gray-900">
       {/* Hero Section */}
       {messages.length === 0 && (
         <div className="flex-1 flex flex-col items-center justify-center px-4 pb-40 overflow-y-auto">

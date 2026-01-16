@@ -2,6 +2,9 @@
 
 @import "tailwindcss";
 
+/* Tailwind 4 dark mode configuration - use class strategy */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Base reset + page styling */
 @layer base {
   * {
