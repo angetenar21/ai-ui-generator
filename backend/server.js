@@ -989,9 +989,9 @@ app.get('/api/queue/status', (_, res) => {
   return res.json(buildQueueStats());
 });
 
-// For local development, start server with app.listen()
-// For Vercel serverless, export the app
-if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+// For local development and VM production, start server with app.listen()
+// For Vercel serverless, export the app (check VERCEL env var specifically)
+if (!process.env.VERCEL) {
   app.listen(APP_PORT, () => {
     Logger.info(`Backend server running on http://localhost:${APP_PORT}`);
     Logger.info('API Endpoints:', {
@@ -1009,19 +1009,18 @@ if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
     console.log(`  GET  /api/queue/status - Queue statistics`);
     console.log(`\nLogs are being written to: logs/backend.log`);
 
-    // Start worker process (only in local dev)
+    // Start worker process
     worker().catch(err => {
       Logger.error('Worker fatal error', { error: err.message, stack: err.stack });
       process.exit(1);
     });
 
-    // Start cleanup interval (only in local dev)
+    // Start cleanup interval
     setInterval(cleanupOldJobs, CLEANUP_INTERVAL_MS);
   });
 } else {
-  // Serverless mode - start worker immediately but note it won't persist
+  // Serverless mode (Vercel only)
   // WARNING: Background workers don't work in serverless!
-  // Consider using Vercel Cron Jobs or external queue services
   Logger.warn('Running in serverless mode - background worker and intervals are not supported');
   Logger.info('Background job processing will NOT work. Consider migrating to Vercel Cron or external queue.');
 }
