@@ -61,7 +61,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
   height: propHeight = 300,
   legend = true,
   centerLabel,
-  margin = { top: 10, right: 10, bottom: 50, left: 10 },
+  margin = { top: 10, right: 10, bottom: legend ? 80 : 10, left: 10 },
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [chartSize, setChartSize] = useState({ width: propWidth || 400, height: propHeight });
@@ -74,7 +74,9 @@ const DonutChart: React.FC<DonutChartProps> = ({
         // Use 90% of container width for better fit
         const availableWidth = measuredWidth - 32; // Account for padding
         const chartWidth = propWidth || Math.min(availableWidth, 500);
-        const chartHeight = propHeight || Math.min(chartWidth * 0.85, 400); // Maintain aspect ratio
+        // Add extra height for legend space
+        const baseHeight = Math.min(chartWidth * 0.85, 400);
+        const chartHeight = propHeight || (legend ? baseHeight + 60 : baseHeight);
 
         setChartSize({
           width: Math.max(250, chartWidth),
@@ -113,7 +115,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
         </div>
       )}
 
-      <div ref={containerRef} className="flex-1 flex justify-center items-center w-full px-4 relative">
+      <div ref={containerRef} className="flex-1 flex justify-center items-center w-full px-4 relative min-h-[300px]">
         <PieChart
           series={[
             {
