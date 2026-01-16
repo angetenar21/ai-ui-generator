@@ -196,7 +196,7 @@ const SankeyChart: React.FC<SankeyChartProps> = ({
                         backgroundColor: color,
                       }}
                     />
-                    <div className="absolute inset-0 flex items-center justify-center text-xs font-medium text-gray-700">
+                    <div className="absolute inset-0 flex items-center justify-center text-xs font-medium text-gray-700 dark:text-gray-200">
                       {percentage.toFixed(1)}%
                     </div>
                   </div>

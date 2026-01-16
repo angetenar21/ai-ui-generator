@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { LineChart as MuiLineChart } from '@mui/x-charts/LineChart';
 import { processSeriesColors } from '../core/utils';
 import { getSurfaceClasses, getChartColors } from '@/theme/designTokens';
+import { getTextColorForBackground, getSecondaryTextColorForBackground } from '../core/colorUtils';
 import type { SurfaceVariant, ElevationLevel, EmphasisLevel, ChartPaletteType } from '../core/types';
 
 interface LineChartProps {
@@ -124,6 +125,10 @@ const LineChart: React.FC<LineChartProps> = ({
   const paletteColors = getChartColors(palette);
   const surfaceClasses = getSurfaceClasses(variant, elevation);
 
+  // Determine text colors based on card background
+  const titleTextColor = getTextColorForBackground(cardBackgroundColor);
+  const descriptionTextColor = getSecondaryTextColorForBackground(cardBackgroundColor);
+
   // Validation and error handling
   if (!series || series.length === 0 || !series[0].data || series[0].data.length === 0) {
     console.warn('[LineChart] No valid series data provided:', { series });
@@ -209,12 +214,12 @@ const LineChart: React.FC<LineChartProps> = ({
       {(title || description) && (
         <div className="mb-3">
           {title && (
-            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+            <h3 className={`text-base font-semibold ${titleTextColor}`}>
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+            <p className={`text-xs ${descriptionTextColor} mt-1`}>
               {description}
             </p>
           )}

@@ -61,7 +61,7 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
               stroke="currentColor"
               strokeWidth={thickness}
               fill="none"
-              className="text-gray-700"
+              className="text-gray-700 dark:text-gray-600"
             />
             {/* Progress circle */}
             {!indeterminate ? (

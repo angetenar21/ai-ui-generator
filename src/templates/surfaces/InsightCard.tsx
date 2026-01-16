@@ -82,7 +82,7 @@ const InsightCard: React.FC<InsightCardProps> = ({
   };
 
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-xl p-6 my-4 border ${config.bgClass} hover:shadow-lg transition-all duration-200`}>
+    <div className={`bg-white dark:bg-gray-800 rounded-xl p-6 my-4 border ${config.bgClass} hover:shadow-lg transition-all duration-200 text-gray-900 dark:text-white`}>
       <div className="flex items-start gap-4">
         {/* Icon */}
         {showIcon && (
@@ -96,7 +96,7 @@ const InsightCard: React.FC<InsightCardProps> = ({
           <h4 className={`text-lg font-display font-semibold ${config.textClass} mb-2`}>
             {title}
           </h4>
-          <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">
+          <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4">
             {description}
           </p>
 
@@ -104,10 +104,10 @@ const InsightCard: React.FC<InsightCardProps> = ({
           {metric && (
             <div className="flex items-end gap-4 pt-3 border-t border-gray-200 dark:border-gray-700">
               <div>
-                <div className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">
+                <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">
                   {metric.value}
                 </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                <div className="text-xs text-gray-500 dark:text-gray-300 uppercase tracking-wide">
                   {metric.label}
                 </div>
               </div>
@@ -115,11 +115,10 @@ const InsightCard: React.FC<InsightCardProps> = ({
               {metric.trend && metric.trendValue && (
                 <div className="flex items-center gap-1.5 mb-1">
                   {getTrendIcon()}
-                  <span className={`text-sm font-semibold ${
-                    metric.trend === 'up' ? 'text-green-600 dark:text-green-400' :
-                    metric.trend === 'down' ? 'text-red-600 dark:text-red-400' :
-                    'text-gray-500 dark:text-gray-400'
-                  }`}>
+                  <span className={`text-sm font-semibold ${metric.trend === 'up' ? 'text-green-600 dark:text-green-400' :
+                      metric.trend === 'down' ? 'text-red-600 dark:text-red-400' :
+                        'text-gray-500 dark:text-gray-400'
+                    }`}>
                     {metric.trendValue}
                   </span>
                 </div>

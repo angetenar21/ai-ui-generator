@@ -62,8 +62,12 @@ const Panel: React.FC<PanelProps> = ({
     ? getToneClasses(tone, emphasis)
     : getSurfaceClasses(variant, elevation);
 
+  // Force text to be readable - add text color classes as important overrides for inline styles
+  const textColorClass = 'text-gray-900 dark:text-white';
+  const secondaryTextClass = 'text-gray-600 dark:text-gray-300';
+
   return (
-    <div className={`${surfaceClasses} rounded-xl my-2 overflow-hidden transition-all duration-300 w-full max-w-full`}>
+    <div className={`${surfaceClasses} rounded-xl my-2 overflow-hidden transition-all duration-300 w-full max-w-full ${textColorClass}`}>
       {/* Header */}
       <div
         className={`
@@ -73,7 +77,7 @@ const Panel: React.FC<PanelProps> = ({
         onClick={() => collapsible && setIsCollapsed(!isCollapsed)}
       >
         <div className="flex items-center justify-between">
-          <h3 className="text-gray-900 dark:text-gray-100 font-semibold text-sm truncate">
+          <h3 className={`${textColorClass} font-semibold text-sm truncate`}>
             {title}
           </h3>
 
@@ -97,7 +101,7 @@ const Panel: React.FC<PanelProps> = ({
         <>
           <div className="px-4 py-3 overflow-hidden">
             {content && (
-              <div className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+              <div className={`${secondaryTextClass} text-sm leading-relaxed`}>
                 {content}
               </div>
             )}
@@ -118,7 +122,7 @@ const Panel: React.FC<PanelProps> = ({
           {/* Footer */}
           {footer && (
             <div className="px-4 py-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/30">
-              <div className="text-gray-500 dark:text-gray-400 text-xs">
+              <div className={`${secondaryTextClass} text-xs`}>
                 {footer}
               </div>
             </div>

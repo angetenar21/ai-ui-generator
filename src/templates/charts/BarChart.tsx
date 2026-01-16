@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { BarChart as MuiBarChart } from '@mui/x-charts/BarChart';
 import { processSeriesColors } from '../core/utils';
 import { getSurfaceClasses, getChartColors } from '@/theme/designTokens';
+import { getTextColorForBackground, getSecondaryTextColorForBackground } from '../core/colorUtils';
 import type { SurfaceVariant, ElevationLevel, EmphasisLevel, ChartPaletteType } from '../core/types';
 
 interface BarChartProps {
@@ -182,6 +183,10 @@ const BarChart: React.FC<BarChartProps> = ({
   // Build classes using design tokens
   const surfaceClasses = getSurfaceClasses(variant, elevation);
 
+  // Determine text colors based on card background
+  const titleTextColor = getTextColorForBackground(cardBackgroundColor);
+  const descriptionTextColor = getSecondaryTextColorForBackground(cardBackgroundColor);
+
   return (
     <div
       className={`${surfaceClasses} rounded-xl p-4 my-2 transition-all duration-300 w-full max-w-full overflow-hidden`}
@@ -191,12 +196,12 @@ const BarChart: React.FC<BarChartProps> = ({
       {(title || description) && (
         <div className="mb-3">
           {title && (
-            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+            <h3 className={`text-base font-semibold ${titleTextColor}`}>
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+            <p className={`text-xs ${descriptionTextColor} mt-1`}>
               {description}
             </p>
           )}

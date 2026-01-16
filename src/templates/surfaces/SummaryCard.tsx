@@ -81,11 +81,11 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
     <div className={`${surfaceClasses} rounded-xl p-6 my-4 transition-all duration-300`}>
       {/* Header */}
       <div className="mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
-        <h3 className="text-xl font-display font-semibold text-gray-900 dark:text-gray-100 mb-2">
+        <h3 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-2">
           {title}
         </h3>
         {description && (
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-sm text-gray-600 dark:text-gray-300">
             {description}
           </p>
         )}
@@ -104,10 +104,10 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
           >
             <div className="flex items-start justify-between">
               <div className="flex-1">
-                <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
+                <div className="text-xs text-gray-500 dark:text-gray-300 uppercase tracking-wide mb-2">
                   {item.label}
                 </div>
-                <div className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1 group-hover:text-orange-500 transition-colors">
+                <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1 group-hover:text-orange-500 transition-colors">
                   {item.value}
                 </div>
                 {item.subtext && (
