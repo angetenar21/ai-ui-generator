@@ -78,7 +78,7 @@ const ScatterChart: React.FC<ScatterChartProps> = ({
         {(title || description) && (
           <div className="mb-6">
             {title && (
-              <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
+              <h3 className="text-xl font-display font-semibold text-text-primary mb-2">
                 {title}
               </h3>
             )}
@@ -113,7 +113,7 @@ const ScatterChart: React.FC<ScatterChartProps> = ({
   // Transform series data to handle different formats
   const processedSeries = series.map((s, index) => {
     let processedData: Array<{ x: number; y: number; id: string | number }>;
-    
+
     // Check if data is in [x, y] array format or {x, y} object format
     if (s.data && s.data.length > 0) {
       const firstItem = s.data[0];
@@ -147,13 +147,13 @@ const ScatterChart: React.FC<ScatterChartProps> = ({
   });
 
   // Debug logging
-  console.log('[ScatterChart] Rendering with data:', { 
-    title, 
-    xAxis: processedXAxis, 
+  console.log('[ScatterChart] Rendering with data:', {
+    title,
+    xAxis: processedXAxis,
     yAxis: processedYAxis,
-    series: processedSeries, 
-    width, 
-    height 
+    series: processedSeries,
+    width,
+    height
   });
 
   return (
@@ -162,7 +162,7 @@ const ScatterChart: React.FC<ScatterChartProps> = ({
       {(title || description) && (
         <div className="mb-6">
           {title && (
-            <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
+            <h3 className="text-xl font-display font-semibold text-text-primary mb-2">
               {title}
             </h3>
           )}
@@ -180,7 +180,7 @@ const ScatterChart: React.FC<ScatterChartProps> = ({
           try {
             // Constrain width to be responsive
             const constrainedWidth = Math.min(width, 800);
-            
+
             return (
               <MuiScatterChart
                 xAxis={processedXAxis}
@@ -193,8 +193,8 @@ const ScatterChart: React.FC<ScatterChartProps> = ({
                 slotProps={{
                   legend: legend
                     ? {
-                        position: { vertical: 'top', horizontal: 'center' },
-                      }
+                      position: { vertical: 'top', horizontal: 'center' },
+                    }
                     : undefined,
                 }}
                 sx={{

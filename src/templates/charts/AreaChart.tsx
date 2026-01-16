@@ -95,7 +95,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
     label?: string;
     scaleType: 'band' | 'linear' | 'log' | 'time' | 'utc' | 'point' | 'sqrt' | 'symlog';
   }>;
-  
+
   if (xAxis && xAxis.length > 0) {
     processedXAxis = xAxis.map(axis => {
       const hasStringData = axis.data && axis.data.some(val => typeof val === 'string');
@@ -122,12 +122,12 @@ const AreaChart: React.FC<AreaChartProps> = ({
   }));
 
   // Debug logging
-  console.log('[AreaChart] Rendering with data:', { 
-    title, 
-    xAxis: processedXAxis, 
-    series: areaSeriesData, 
-    width, 
-    height 
+  console.log('[AreaChart] Rendering with data:', {
+    title,
+    xAxis: processedXAxis,
+    series: areaSeriesData,
+    width,
+    height
   });
 
   return (
@@ -136,7 +136,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
       {(title || description) && (
         <div className="mb-6">
           {title && (
-            <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
+            <h3 className="text-xl font-display font-semibold text-text-primary mb-2">
               {title}
             </h3>
           )}
@@ -163,8 +163,8 @@ const AreaChart: React.FC<AreaChartProps> = ({
                 slotProps={{
                   legend: legend
                     ? {
-                        position: { vertical: 'top', horizontal: 'center' },
-                      }
+                      position: { vertical: 'top', horizontal: 'center' },
+                    }
                     : undefined,
                 }}
                 sx={{

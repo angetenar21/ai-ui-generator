@@ -103,7 +103,7 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
       {(title || description) && (
         <div className="mb-6">
           {title && (
-            <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
+            <h3 className="text-xl font-display font-semibold text-text-primary mb-2">
               {title}
             </h3>
           )}

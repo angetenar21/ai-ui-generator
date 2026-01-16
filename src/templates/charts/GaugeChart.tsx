@@ -65,8 +65,8 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
   endAngle = 90,
   innerRadius = '65%',
   outerRadius = '95%',
-  width = 150,
-  height = 120,
+  width = 200,
+  height = 160,
   text,
   color: propColor,
 }) => {
@@ -99,23 +99,23 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
   const displayText = text || seriesLabel || '';
 
   return (
-    <div className="card rounded-card p-4 hover:shadow-hover transition-all duration-300 overflow-hidden">
+    <div className="card rounded-card p-6 hover:shadow-hover transition-all duration-300">
       {(title || description) && (
-        <div className="mb-2 text-center">
+        <div className="mb-4 text-center">
           {title && (
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+            <h3 className="text-base font-display font-semibold text-text-primary">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-xs text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-text-secondary mt-1">
               {description}
             </p>
           )}
         </div>
       )}
 
-      <div className="flex flex-col justify-center items-center overflow-hidden">
+      <div className="flex flex-col justify-center items-center min-h-[180px]">
         <Gauge
           value={gaugeValue}
           valueMin={valueMin}
@@ -129,20 +129,20 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
           text={`${gaugeValue}%`}
           sx={{
             '& .MuiGauge-valueText': {
-              fontSize: 18,
-              fill: '#111827',
+              fontSize: 20,
+              fill: 'currentColor',
               fontWeight: 600,
             },
             '& .MuiGauge-valueArc': {
               fill: gaugeColor,
             },
             '& .MuiGauge-referenceArc': {
-              fill: '#E5E7EB',
+              fill: 'rgba(0, 0, 0, 0.1)',
             },
           }}
         />
         {displayText && (
-          <p className="text-gray-500 dark:text-gray-400 text-xs mt-1 text-center">{displayText}</p>
+          <p className="text-text-secondary text-sm mt-2 text-center font-medium">{displayText}</p>
         )}
       </div>
     </div>

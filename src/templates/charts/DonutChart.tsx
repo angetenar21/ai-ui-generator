@@ -57,18 +57,18 @@ const DonutChart: React.FC<DonutChartProps> = ({
   outerRadius = 100,
   paddingAngle = 2,
   cornerRadius = 4,
-  width = 800,
+  width = 500,
   height = 400,
   legend = true,
   centerLabel,
-  margin = { top: 50, right: 100, bottom: 50, left: 100 },
+  margin = { top: 20, right: 120, bottom: 20, left: 120 },
 }) => {
   return (
     <div className="card rounded-card p-6 my-4 hover:shadow-hover transition-all duration-300">
       {(title || description) && (
         <div className="mb-6">
           {title && (
-            <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
+            <h3 className="text-xl font-display font-semibold text-text-primary mb-2">
               {title}
             </h3>
           )}
@@ -80,7 +80,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
         </div>
       )}
 
-      <div className="flex justify-center items-center relative">
+      <div className="flex justify-center items-center relative min-h-[350px]">
         <PieChart
           series={[
             {
@@ -97,24 +97,29 @@ const DonutChart: React.FC<DonutChartProps> = ({
           slotProps={{
             legend: legend
               ? {
-                  position: { vertical: 'middle', horizontal: 'end' },
-                }
+                position: { vertical: 'middle', horizontal: 'right' },
+                padding: { left: 20 },
+                itemMarkWidth: 12,
+                itemMarkHeight: 12,
+                markGap: 6,
+                itemGap: 10,
+              }
               : undefined,
           }}
           sx={{
             '& .MuiChartsLegend-series text': {
-              fill: '#374151 !important',
-              fontSize: '14px',
+              fill: 'currentColor',
+              fontSize: '13px',
               fontWeight: 500,
             },
             '& .MuiChartsLegend-mark': {
-              rx: 2,
+              rx: 3,
             },
           }}
         />
         {centerLabel && (
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none">
-            <span className="text-2xl font-bold text-text-primary">{centerLabel}</span>
+            <span className="text-3xl font-display font-bold text-text-primary">{centerLabel}</span>
           </div>
         )}
       </div>

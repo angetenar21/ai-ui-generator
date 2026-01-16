@@ -30,13 +30,13 @@ const BubbleChart: React.FC<BubbleChartProps> = ({
   width = 800,
   height = 400,
 }) => {
-  void(width); // Width prop available for future use
+  void (width); // Width prop available for future use
   // Validate
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
       <div className="card rounded-card p-6 my-4 hover:shadow-hover transition-all duration-300">
         {title && (
-          <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
+          <h3 className="text-xl font-display font-semibold text-text-primary mb-2">
             {title}
           </h3>
         )}
@@ -84,7 +84,7 @@ const BubbleChart: React.FC<BubbleChartProps> = ({
     return (
       <div className="card rounded-card p-6 my-4 hover:shadow-hover transition-all duration-300">
         {title && (
-          <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
+          <h3 className="text-xl font-display font-semibold text-text-primary mb-2">
             {title}
           </h3>
         )}
@@ -125,7 +125,7 @@ const BubbleChart: React.FC<BubbleChartProps> = ({
       {(title || description) && (
         <div className="mb-6">
           {title && (
-            <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
+            <h3 className="text-xl font-display font-semibold text-text-primary mb-2">
               {title}
             </h3>
           )}
