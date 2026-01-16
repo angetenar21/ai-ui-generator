@@ -612,12 +612,13 @@ function extractJsonObject(text) {
     });
   }
 
-  // Try to extract JSON from markdown code blocks
+  // Try to extract JSON from markdown code blocks (greedy match for nested objects)
   if (!parsed) {
-    const codeBlockMatch = trimmed.match(/```(?:json)?\s*(\{[\s\S]+?\})\s*```/);
-    if (codeBlockMatch) {
+    const codeBlockMatch = trimmed.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+    if (codeBlockMatch && codeBlockMatch[1]) {
+      const jsonContent = codeBlockMatch[1].trim();
       try {
-        parsed = JSON.parse(codeBlockMatch[1]);
+        parsed = JSON.parse(jsonContent);
         Logger.debug('Successfully parsed JSON from code block');
       } catch (e) {
         Logger.debug('Code block JSON parse failed', { error: e.message });
@@ -625,15 +626,18 @@ function extractJsonObject(text) {
     }
   }
 
-  // Try to find JSON object in text
+  // Try to find JSON object in text - find the outermost braces
   if (!parsed) {
-    const jsonMatch = trimmed.match(/\{[\s\S]+\}/);
-    if (jsonMatch) {
+    // Find first { and last }
+    const firstBrace = trimmed.indexOf('{');
+    const lastBrace = trimmed.lastIndexOf('}');
+    if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+      const jsonContent = trimmed.substring(firstBrace, lastBrace + 1);
       try {
-        parsed = JSON.parse(jsonMatch[0]);
-        Logger.debug('Successfully parsed JSON from pattern match');
+        parsed = JSON.parse(jsonContent);
+        Logger.debug('Successfully parsed JSON from brace extraction');
       } catch (e) {
-        Logger.debug('Pattern match JSON parse failed', { error: e.message });
+        Logger.debug('Brace extraction JSON parse failed', { error: e.message });
       }
     }
   }
