@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Gauge } from '@mui/x-charts/Gauge';
 
 interface ColorStop {
@@ -65,11 +65,33 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
   endAngle = 90,
   innerRadius = '60%',
   outerRadius = '90%',
-  width = 120,
-  height = 90,
+  width: propWidth,
+  height: propHeight = 90,
   text,
   color: propColor,
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [chartSize, setChartSize] = useState({ width: propWidth || 120, height: propHeight });
+
+  useEffect(() => {
+    const updateSize = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.clientWidth;
+        // For gauge charts, scale proportionally but keep compact
+        const width = Math.min(Math.max(100, containerWidth - 24), 200);
+        const height = Math.round(width * 0.75); // Maintain aspect ratio
+        setChartSize({ width, height: Math.min(height, propHeight) });
+      }
+    };
+
+    updateSize();
+    const resizeObserver = new ResizeObserver(updateSize);
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => resizeObserver.disconnect();
+  }, [propWidth, propHeight]);
   // Extract value from series if available, otherwise use direct prop
   let gaugeValue = propValue || 0;
   let seriesLabel = '';
@@ -115,7 +137,7 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
         </div>
       )}
 
-      <div className="flex flex-col justify-center items-center overflow-hidden">
+      <div ref={containerRef} className="flex flex-col justify-center items-center overflow-hidden w-full">
         <Gauge
           value={gaugeValue}
           valueMin={valueMin}
@@ -124,8 +146,8 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
           endAngle={endAngle}
           innerRadius={innerRadius}
           outerRadius={outerRadius}
-          width={width}
-          height={height}
+          width={chartSize.width}
+          height={chartSize.height}
           text={`${gaugeValue}%`}
           sx={{
             '& .MuiGauge-valueText': {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 
 interface AreaChartProps {
@@ -54,12 +54,32 @@ const AreaChart: React.FC<AreaChartProps> = ({
   description,
   xAxis,
   series,
-  width = 500,
+  width: propWidth,
   height = 280,
   grid = { horizontal: true, vertical: false },
   legend = true,
   margin = { top: 40, right: 20, bottom: 40, left: 50 },
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [chartWidth, setChartWidth] = useState(propWidth || 500);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.clientWidth;
+        setChartWidth(Math.max(300, containerWidth - 16));
+      }
+    };
+
+    updateWidth();
+    const resizeObserver = new ResizeObserver(updateWidth);
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => resizeObserver.disconnect();
+  }, [propWidth]);
+
   // Validation and error handling
   if (!series || series.length === 0 || !series[0].data || series[0].data.length === 0) {
     console.warn('[AreaChart] No valid series data provided:', { series });
@@ -126,7 +146,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
     title,
     xAxis: processedXAxis,
     series: areaSeriesData,
-    width,
+    chartWidth,
     height
   });
 
@@ -149,7 +169,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
       )}
 
       {/* Chart */}
-      <div className="w-full overflow-x-auto overflow-y-hidden">
+      <div ref={containerRef} className="w-full overflow-x-auto overflow-y-hidden">
         <div className="flex justify-center items-center min-h-[200px]">
         {(() => {
           try {
@@ -157,7 +177,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
               <LineChart
                 xAxis={processedXAxis}
                 series={areaSeriesData}
-                width={width}
+                width={chartWidth}
                 height={height}
                 grid={grid}
                 margin={margin}

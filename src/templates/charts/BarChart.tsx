@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { BarChart as MuiBarChart } from '@mui/x-charts/BarChart';
 import { processSeriesColors } from '../core/utils';
 import { getSurfaceClasses, getChartColors } from '@/theme/designTokens';
@@ -79,7 +79,7 @@ const BarChart: React.FC<BarChartProps> = ({
   description,
   xAxis,
   series,
-  width = 500,
+  width: propWidth,
   height = 280,
   backgroundColor,
   cardBackgroundColor,
@@ -93,6 +93,27 @@ const BarChart: React.FC<BarChartProps> = ({
   palette = 'default',
   useGradient: _useGradient = false,
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [chartWidth, setChartWidth] = useState(propWidth || 500);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.clientWidth;
+        // Use container width minus padding, or prop width if larger container
+        setChartWidth(Math.max(300, containerWidth - 16));
+      }
+    };
+
+    updateWidth();
+    const resizeObserver = new ResizeObserver(updateWidth);
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => resizeObserver.disconnect();
+  }, [propWidth]);
+
   // Get palette colors
   const paletteColors = getChartColors(palette);
 
@@ -165,13 +186,13 @@ const BarChart: React.FC<BarChartProps> = ({
       )}
 
       {/* Chart */}
-      <div className="w-full overflow-x-auto overflow-y-hidden">
+      <div ref={containerRef} className="w-full overflow-x-auto overflow-y-hidden">
         <div className="flex justify-center items-center min-h-[200px]">
           <MuiBarChart
             xAxis={processedXAxis}
             yAxis={processedYAxis}
             series={processedSeries}
-            width={width}
+            width={chartWidth}
             height={height}
             layout={layout}
             grid={grid}

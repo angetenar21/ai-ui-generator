@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { LineChart as MuiLineChart } from '@mui/x-charts/LineChart';
 import { processSeriesColors } from '../core/utils';
 import { getSurfaceClasses, getChartColors } from '@/theme/designTokens';
@@ -78,7 +78,7 @@ const LineChart: React.FC<LineChartProps> = ({
   description,
   xAxis,
   series,
-  width = 500,
+  width: propWidth,
   height = 280,
   backgroundColor,
   cardBackgroundColor,
@@ -91,6 +91,26 @@ const LineChart: React.FC<LineChartProps> = ({
   palette = 'default',
   useGradient: _useGradient = false,
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [chartWidth, setChartWidth] = useState(propWidth || 500);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.clientWidth;
+        setChartWidth(Math.max(300, containerWidth - 16));
+      }
+    };
+
+    updateWidth();
+    const resizeObserver = new ResizeObserver(updateWidth);
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => resizeObserver.disconnect();
+  }, [propWidth]);
+
   // Get palette colors
   const paletteColors = getChartColors(palette);
   const surfaceClasses = getSurfaceClasses(variant, elevation);
@@ -183,7 +203,7 @@ const LineChart: React.FC<LineChartProps> = ({
       )}
 
       {/* Chart */}
-      <div className="w-full overflow-x-auto overflow-y-hidden">
+      <div ref={containerRef} className="w-full overflow-x-auto overflow-y-hidden">
         <div className="flex justify-center items-center min-h-[200px]">
           {(() => {
             try {
@@ -191,7 +211,7 @@ const LineChart: React.FC<LineChartProps> = ({
                 <MuiLineChart
                   xAxis={processedXAxis}
                   series={processedSeries}
-                  width={width}
+                  width={chartWidth}
                   height={height}
                   grid={grid}
                   margin={margin}

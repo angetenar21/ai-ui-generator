@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { PieChart } from '@mui/x-charts/PieChart';
 
 interface DonutChartProps {
@@ -57,12 +57,34 @@ const DonutChart: React.FC<DonutChartProps> = ({
   outerRadius = 70,
   paddingAngle = 2,
   cornerRadius = 3,
-  width = 220,
-  height = 200,
+  width: propWidth,
+  height: propHeight = 200,
   legend = true,
   centerLabel,
   margin = { top: 5, right: 5, bottom: 40, left: 5 },
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [chartSize, setChartSize] = useState({ width: propWidth || 220, height: propHeight });
+
+  useEffect(() => {
+    const updateSize = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.clientWidth;
+        // For donut charts, maintain aspect ratio and fit container
+        const size = Math.min(Math.max(180, containerWidth - 16), 400);
+        setChartSize({ width: size, height: Math.min(size, propHeight) });
+      }
+    };
+
+    updateSize();
+    const resizeObserver = new ResizeObserver(updateSize);
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => resizeObserver.disconnect();
+  }, [propWidth, propHeight]);
+
   return (
     <div className="w-full max-w-full overflow-hidden">
       {(title || description) && (
@@ -80,7 +102,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
         </div>
       )}
 
-      <div className="w-full flex justify-center items-center relative overflow-hidden">
+      <div ref={containerRef} className="w-full flex justify-center items-center relative overflow-hidden">
         <PieChart
           series={[
             {
@@ -91,8 +113,8 @@ const DonutChart: React.FC<DonutChartProps> = ({
               cornerRadius,
             },
           ]}
-          width={width}
-          height={height}
+          width={chartSize.width}
+          height={chartSize.height}
           margin={margin}
           slotProps={{
             legend: legend
