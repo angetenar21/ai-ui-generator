@@ -181,87 +181,87 @@ const AreaChart: React.FC<AreaChartProps> = ({
       {/* Chart */}
       <div ref={containerRef} className="w-full overflow-x-auto overflow-y-hidden">
         <div className="flex justify-center items-center min-h-[200px]">
-        {(() => {
-          try {
-            return (
-              <LineChart
-                xAxis={processedXAxis}
-                series={areaSeriesData}
-                width={chartWidth}
-                height={height}
-                grid={grid}
-                margin={margin}
-                slotProps={{
-                  legend: legend
-                    ? {
-                      position: { vertical: 'top', horizontal: 'center' },
-                    }
-                    : undefined,
-                }}
-                sx={{
-                  '& .MuiChartsAxis-line': {
-                    stroke: chartColors.axisLine,
-                    strokeWidth: 1.5,
-                  },
-                  '& .MuiChartsAxis-tick': {
-                    stroke: chartColors.axisTick,
-                    strokeWidth: 1,
-                  },
-                  '& .MuiChartsAxis-tickLabel': {
-                    fill: chartColors.tickLabel,
-                    fontSize: '13px',
-                    fontWeight: 500,
-                  },
-                  '& .MuiChartsLegend-series text': {
-                    fill: `${chartColors.legendText} !important`,
-                    fontSize: '14px',
-                    fontWeight: 500,
-                  },
-                  '& .MuiChartsGrid-line': {
-                    stroke: chartColors.gridLine,
-                    strokeDasharray: '4 4',
-                    opacity: 0.8,
-                  },
-                  '& .MuiAreaElement-root': {
-                    fillOpacity: 0.3,
-                  },
-                }}
-              />
-            );
-          } catch (error) {
-            console.error('[AreaChart] Error rendering chart:', error);
-            return (
-              <div className="flex justify-center items-center min-h-[300px] text-gray-500 dark:text-gray-400">
-                <div className="text-center">
-                  <div className="text-4xl mb-2">⚠️</div>
-                  <div>Error rendering chart</div>
+          {(() => {
+            try {
+              return (
+                <LineChart
+                  xAxis={processedXAxis}
+                  series={areaSeriesData}
+                  width={chartWidth}
+                  height={height}
+                  grid={grid}
+                  margin={margin}
+                  slotProps={{
+                    legend: legend
+                      ? {
+                        position: { vertical: 'top', horizontal: 'center' },
+                      }
+                      : undefined,
+                  }}
+                  sx={{
+                    '& .MuiChartsAxis-line': {
+                      stroke: chartColors.axisLine,
+                      strokeWidth: 1.5,
+                    },
+                    '& .MuiChartsAxis-tick': {
+                      stroke: chartColors.axisTick,
+                      strokeWidth: 1,
+                    },
+                    '& .MuiChartsAxis-tickLabel': {
+                      fill: chartColors.tickLabel,
+                      fontSize: '13px',
+                      fontWeight: 500,
+                    },
+                    '& .MuiChartsLegend-series text': {
+                      fill: `${chartColors.legendText} !important`,
+                      fontSize: '14px',
+                      fontWeight: 500,
+                    },
+                    '& .MuiChartsGrid-line': {
+                      stroke: chartColors.gridLine,
+                      strokeDasharray: '4 4',
+                      opacity: 0.8,
+                    },
+                    '& .MuiAreaElement-root': {
+                      fillOpacity: 0.3,
+                    },
+                  }}
+                />
+              );
+            } catch (error) {
+              console.error('[AreaChart] Error rendering chart:', error);
+              return (
+                <div className="flex justify-center items-center min-h-[300px] text-gray-500 dark:text-gray-400">
+                  <div className="text-center">
+                    <div className="text-4xl mb-2">⚠️</div>
+                    <div>Error rendering chart</div>
+                  </div>
                 </div>
-              </div>
-            );
-          }
-        })()}
+              );
+            }
+          })()}
+        </div>
       </div>
-    </div>
-  );
+      );
 };
 
-export default AreaChart;
+      export default AreaChart;
 
-// Component metadata for auto-registration
-export const metadata = {
-  name: 'area-chart',
-  category: 'charts' as const,
-  component: AreaChart,
-  description: 'Area chart for visualizing cumulative data and trends over time with filled regions',
-  tags: ['chart', 'area', 'trend', 'cumulative', 'stacked', 'data-visualization'],
-  propTypes: {
-    title: 'string',
-    xAxis: 'Array<{ data, label?, scaleType? }>',
-    series: 'Array<{ data, label?, color?, stack?, curve?, showMark? }>',
-    width: 'number',
-    height: 'number',
-    grid: '{ vertical?: boolean, horizontal?: boolean }',
-    legend: 'boolean',
-    margin: '{ top?, right?, bottom?, left? }',
+      // Component metadata for auto-registration
+      export const metadata = {
+        name: 'area-chart',
+      category: 'charts' as const,
+      component: AreaChart,
+      description: 'Area chart for visualizing cumulative data and trends over time with filled regions',
+      tags: ['chart', 'area', 'trend', 'cumulative', 'stacked', 'data-visualization'],
+      propTypes: {
+        title: 'string',
+      xAxis: 'Array<{ data, label ?, scaleType ? }>',
+        series: 'Array<{ data, label ?, color ?, stack ?, curve ?, showMark ? }>',
+          width: 'number',
+          height: 'number',
+          grid: '{vertical ?: boolean, horizontal ?: boolean}',
+          legend: 'boolean',
+          margin: '{top ?, right ?, bottom ?, left ? }',
   },
 };

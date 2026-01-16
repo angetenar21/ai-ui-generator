@@ -24,6 +24,15 @@ const DEFAULT_POLL_INTERVAL = 500; // 500ms - faster polling for quicker respons
 const DEFAULT_MAX_DURATION = 5 * 60 * 1000; // 5 minutes
 
 class ApiService {
+  /** Detect raw React elements to avoid treating them as component specs */
+  private static isReactElement(data: unknown): boolean {
+    return Boolean(
+      data &&
+      typeof data === 'object' &&
+      // React elements carry a $$typeof symbol
+      '$$typeof' in (data as Record<string, unknown>)
+    );
+  }
   /**
    * Send a message and wait for completion using async polling
    */
@@ -321,6 +330,9 @@ class ApiService {
   private static isValidComponentData(data: unknown): boolean {
     if (!data || typeof data !== 'object') return false;
 
+    // Ignore already-rendered React elements
+    if (this.isReactElement(data)) return false;
+
     const obj = data as Record<string, unknown>;
 
     // Must have either 'name' or 'type'
@@ -361,6 +373,11 @@ class ApiService {
    * Normalize any format to standard ComponentSpec
    */
   private static normalizeToComponentSpec(data: Record<string, unknown>): ComponentSpec {
+    // Safeguard against React elements sneaking through
+    if (this.isReactElement(data)) {
+      throw new Error('Received React element instead of component spec');
+    }
+
     // Extract component identifier
     const type = (data.type || data.name) as string;
 
