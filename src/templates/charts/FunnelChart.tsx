@@ -1,5 +1,5 @@
 import React from 'react';
-import { Funnel, Tooltip, ResponsiveContainer, FunnelChart as RechartsFunnelChart, Cell, LabelList, Legend } from 'recharts';
+import { Funnel, Tooltip, ResponsiveContainer, FunnelChart as RechartsFunnelChart, Cell, LabelList } from 'recharts';
 
 interface FunnelChartProps {
   title?: string;
@@ -29,7 +29,7 @@ const FunnelChart: React.FC<FunnelChartProps> = ({
   title,
   description,
   data,
-  height = 360,
+  height = 420,
   colors = DEFAULT_COLORS,
   legend = true,
 }) => {
@@ -81,27 +81,18 @@ const FunnelChart: React.FC<FunnelChartProps> = ({
   }));
 
   // Custom legend renderer for proper alignment
-  const renderLegend = (props: any) => {
-    const { payload } = props;
-    return (
-      <div className="flex flex-wrap justify-center items-center gap-3 mt-4">
-        {payload.map((entry: any, index: number) => (
-          <div key={`legend-${index}`} className="flex items-center gap-2">
-            <div
-              className="w-3 h-3 rounded-sm"
-              style={{ backgroundColor: entry.color }}
-            />
-            <span
-              className="text-sm font-medium"
-              style={{ color: textColor }}
-            >
-              {entry.value}
-            </span>
-          </div>
-        ))}
-      </div>
-    );
-  };
+  const renderLegendItems = (items: typeof labeledData) => (
+    <div className="flex flex-wrap justify-center items-center gap-3 mt-4 px-2">
+      {items.map((entry, index) => (
+        <div key={`legend-${index}`} className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: entry.fill }} />
+          <span className="text-sm font-medium" style={{ color: textColor }}>
+            {entry.name}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <div className="w-full bg-white dark:bg-gray-800 rounded-xl p-4 my-2 border border-gray-200 dark:border-gray-700">
@@ -121,8 +112,8 @@ const FunnelChart: React.FC<FunnelChartProps> = ({
         </div>
       )}
 
-      <ResponsiveContainer width="100%" height={height} minHeight={320}>
-        <RechartsFunnelChart data={labeledData} margin={{ top: 8, right: 12, bottom: 8, left: 12 }}>
+      <ResponsiveContainer width="100%" height={height} minHeight={360}>
+        <RechartsFunnelChart data={labeledData} margin={{ top: 16, right: 64, bottom: 24, left: 16 }}>
           <Tooltip
             contentStyle={{
               backgroundColor: isDarkMode ? '#1f2937' : '#ffffff',
@@ -134,20 +125,14 @@ const FunnelChart: React.FC<FunnelChartProps> = ({
             labelStyle={{ color: secondaryText, fontWeight: 600 }}
             formatter={(value: number, name: string) => [value, name]}
           />
-          {legend && (
-            <Legend
-              content={renderLegend}
-              verticalAlign="bottom"
-              align="center"
-            />
-          )}
           <Funnel dataKey="value" data={labeledData} isAnimationActive>
             <LabelList
-              position="insideRight"
+              position="right"
               fill={textColor}
               stroke="none"
               dataKey="label"
-              style={{ fontSize: '13px', fontWeight: 600 }}
+              offset={8}
+              style={{ fontSize: '11px', fontWeight: 600 }}
             />
             {labeledData.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.fill} stroke={entry.fill} />
@@ -155,6 +140,7 @@ const FunnelChart: React.FC<FunnelChartProps> = ({
           </Funnel>
         </RechartsFunnelChart>
       </ResponsiveContainer>
+      {legend && renderLegendItems(labeledData)}
     </div>
   );
 };
