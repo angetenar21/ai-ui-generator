@@ -29,18 +29,55 @@ const FunnelChart: React.FC<FunnelChartProps> = ({
   title,
   description,
   data,
-  height = 400,
+  height = 360,
   colors = DEFAULT_COLORS,
   legend = true,
 }) => {
   // Detect dark mode
   const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
   const textColor = isDarkMode ? '#D1D5DB' : '#374151';
+  const secondaryText = isDarkMode ? '#9CA3AF' : '#6B7280';
+
+  // Defensive: handle empty or invalid data
+  const validData = Array.isArray(data)
+    ? data
+      .filter((d) => typeof d?.value === 'number' && !Number.isNaN(d.value))
+      .map((d) => ({ ...d, value: Math.max(d.value, 0) }))
+    : [];
+
+  if (!validData.length) {
+    return (
+      <div className="w-full bg-white dark:bg-gray-800 rounded-xl p-4 my-2 border border-gray-200 dark:border-gray-700">
+        {(title || description) && (
+          <div className="mb-3 text-center">
+            {title && (
+              <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
+            )}
+            {description && (
+              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{description}</p>
+            )}
+          </div>
+        )}
+        <div className="flex items-center justify-center min-h-[220px] text-sm text-gray-600 dark:text-gray-300">
+          No data available
+        </div>
+      </div>
+    );
+  }
+
+  // Ensure descending values for a smooth funnel shape
+  const sortedData = [...validData].sort((a, b) => b.value - a.value);
 
   // Add colors to data if not provided
-  const coloredData = data.map((item, index) => ({
+  const coloredData = sortedData.map((item, index) => ({
     ...item,
     fill: item.color || colors[index % colors.length],
+  }));
+
+  // Precompute display labels that include value for clearer readability
+  const labeledData = coloredData.map((item) => ({
+    ...item,
+    label: `${item.name} — ${item.value}`,
   }));
 
   // Custom legend renderer for proper alignment
@@ -84,8 +121,8 @@ const FunnelChart: React.FC<FunnelChartProps> = ({
         </div>
       )}
 
-      <ResponsiveContainer width="100%" height={height}>
-        <RechartsFunnelChart data={coloredData}>
+      <ResponsiveContainer width="100%" height={height} minHeight={320}>
+        <RechartsFunnelChart data={labeledData} margin={{ top: 8, right: 12, bottom: 8, left: 12 }}>
           <Tooltip
             contentStyle={{
               backgroundColor: isDarkMode ? '#1f2937' : '#ffffff',
@@ -94,7 +131,8 @@ const FunnelChart: React.FC<FunnelChartProps> = ({
               color: textColor,
             }}
             itemStyle={{ color: textColor }}
-            labelStyle={{ color: textColor, fontWeight: 'bold' }}
+            labelStyle={{ color: secondaryText, fontWeight: 600 }}
+            formatter={(value: number, name: string) => [value, name]}
           />
           {legend && (
             <Legend
@@ -103,15 +141,15 @@ const FunnelChart: React.FC<FunnelChartProps> = ({
               align="center"
             />
           )}
-          <Funnel dataKey="value" isAnimationActive>
+          <Funnel dataKey="value" data={labeledData} isAnimationActive>
             <LabelList
-              position="right"
+              position="insideRight"
               fill={textColor}
               stroke="none"
-              dataKey="name"
-              style={{ fontSize: '13px', fontWeight: 500 }}
+              dataKey="label"
+              style={{ fontSize: '13px', fontWeight: 600 }}
             />
-            {coloredData.map((entry, index) => (
+            {labeledData.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.fill} stroke={entry.fill} />
             ))}
           </Funnel>

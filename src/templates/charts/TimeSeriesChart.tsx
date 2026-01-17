@@ -191,6 +191,8 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     showMark: true,
     area: area,
     connectNulls: true,
+    // Force straight line segments unless a specific curve is requested
+    curve: (s as any).curve || 'linear',
   }));
 
   // Chart colors based on theme
@@ -238,9 +240,9 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
           slotProps={{
             legend: legend
               ? {
-                  direction: 'horizontal' as const,
-                  position: { vertical: 'top', horizontal: 'center' } as const,
-                }
+                direction: 'horizontal' as const,
+                position: { vertical: 'top', horizontal: 'center' } as const,
+              }
               : undefined,
           }}
           sx={{

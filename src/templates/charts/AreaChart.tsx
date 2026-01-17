@@ -55,13 +55,13 @@ const AreaChart: React.FC<AreaChartProps> = ({
   xAxis,
   series,
   width: propWidth,
-  height = 280,
+  height: propHeight,
   grid = { horizontal: true, vertical: false },
   legend = true,
-  margin = { top: 40, right: 20, bottom: 40, left: 50 },
+  margin,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [chartWidth, setChartWidth] = useState(propWidth || 500);
+  const [chartSize, setChartSize] = useState({ width: propWidth || 500, height: propHeight ?? 320 });
 
   useEffect(() => {
     const updateWidth = () => {
@@ -74,10 +74,15 @@ const AreaChart: React.FC<AreaChartProps> = ({
         nextWidth = propWidth ? Math.min(propWidth, maxWidth) : maxWidth;
       }
 
-      const minWidth = typeof maxWidth === 'number' ? Math.min(200, maxWidth) : 200;
-      const maxWidthClamp = typeof maxWidth === 'number' ? maxWidth : 1600;
+      const minWidth = typeof maxWidth === 'number' ? Math.min(260, maxWidth) : 260;
+      const maxWidthClamp = typeof maxWidth === 'number' ? maxWidth : 1400;
+      const width = Math.max(minWidth, Math.min(nextWidth, maxWidthClamp));
 
-      setChartWidth(Math.max(minWidth, Math.min(nextWidth, maxWidthClamp)));
+      const autoHeight = Math.max(240, Math.min(420, width * 0.6));
+      const legendOffset = legend ? 40 : 0;
+      const height = propHeight ?? autoHeight + legendOffset;
+
+      setChartSize({ width, height });
     };
 
     updateWidth();
@@ -153,25 +158,33 @@ const AreaChart: React.FC<AreaChartProps> = ({
   // Detect dark mode for chart styling
   const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
   const chartColors = {
-    axisLine: isDarkMode ? '#6B7280' : '#6B7280',
-    axisTick: isDarkMode ? '#6B7280' : '#6B7280',
-    tickLabel: isDarkMode ? '#D1D5DB' : '#374151',
-    legendText: isDarkMode ? '#D1D5DB' : '#374151',
+    axisLine: isDarkMode ? '#6B7280' : '#9CA3AF',
+    axisTick: isDarkMode ? '#6B7280' : '#9CA3AF',
+    tickLabel: isDarkMode ? '#E5E7EB' : '#1F2937',
+    legendText: isDarkMode ? '#E5E7EB' : '#1F2937',
     gridLine: isDarkMode ? '#374151' : '#E5E7EB',
+    areaOpacity: isDarkMode ? 0.35 : 0.28,
+  };
+
+  const resolvedMargin = {
+    top: margin?.top ?? (legend ? 56 : 32),
+    right: margin?.right ?? 20,
+    bottom: margin?.bottom ?? 36,
+    left: margin?.left ?? 48,
   };
 
   return (
-    <div className="w-full max-w-full bg-white dark:bg-gray-800 rounded-xl p-4 my-2 overflow-hidden">
+    <div className="w-full h-full max-w-full bg-white dark:bg-gray-900 rounded-xl p-4 my-2 shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col">
       {/* Header */}
       {(title || description) && (
-        <div className="mb-3">
+        <div className="mb-3 px-1">
           {title && (
-            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+            <h3 className="text-base font-semibold text-gray-900 dark:text-white">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+            <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">
               {description}
             </p>
           )}
@@ -179,24 +192,24 @@ const AreaChart: React.FC<AreaChartProps> = ({
       )}
 
       {/* Chart */}
-      <div ref={containerRef} className="w-full overflow-x-auto overflow-y-hidden">
-        <div className="flex justify-center items-center min-h-[200px]">
+      <div ref={containerRef} className="w-full flex-1 overflow-x-auto overflow-y-hidden">
+        <div className="flex justify-center items-center min-h-[260px]">
           {(() => {
             try {
               return (
                 <LineChart
                   xAxis={processedXAxis}
                   series={areaSeriesData}
-                  width={chartWidth}
-                  height={height}
+                  width={chartSize.width}
+                  height={chartSize.height}
                   grid={grid}
-                  margin={margin}
+                  margin={resolvedMargin}
                   slotProps={{
                     legend: legend
                       ? {
-                          direction: 'horizontal' as const,
-                          position: { vertical: 'top', horizontal: 'center' } as const,
-                        }
+                        direction: 'horizontal' as const,
+                        position: { vertical: 'top', horizontal: 'center' } as const,
+                      }
                       : undefined,
                   }}
                   sx={{
@@ -213,12 +226,15 @@ const AreaChart: React.FC<AreaChartProps> = ({
                       fontSize: '13px',
                       fontWeight: 500,
                     },
+                    '& .MuiLineElement-root': {
+                      strokeWidth: 2,
+                    },
                     '& .MuiChartsLegend-root': {
                       display: 'flex',
                       justifyContent: 'center',
                       alignItems: 'center',
                       flexWrap: 'wrap',
-                      gap: '12px',
+                      gap: '10px',
                     },
                     '& .MuiChartsLegend-series': {
                       display: 'flex',
@@ -241,7 +257,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
                       opacity: 0.8,
                     },
                     '& .MuiAreaElement-root': {
-                      fillOpacity: 0.3,
+                      fillOpacity: chartColors.areaOpacity,
                     },
                   }}
                 />
