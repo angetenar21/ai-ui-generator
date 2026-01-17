@@ -74,8 +74,21 @@ const FunnelChart: React.FC<FunnelChartProps> = ({
     fill: item.color || colors[index % colors.length],
   }));
 
-  // Precompute display labels that include value for clearer readability
-  const labeledData = coloredData.map((item) => ({
+  // Build tapered shape values to keep the funnel silhouette even when values are close.
+  const maxValue = Math.max(...coloredData.map(d => d.value), 1);
+  const epsilon = Math.max(maxValue * 0.01, 0.1); // minimum step-down per row
+  const minBand = Math.max(maxValue * 0.02, 0.5); // avoid collapsing to a line
+
+  const taperedData = coloredData.map((item, idx) => {
+    const adjusted = Math.max(item.value - idx * epsilon, minBand);
+    return {
+      ...item,
+      shapeValue: adjusted,
+    };
+  });
+
+  // Precompute display labels that include the original value for readability
+  const labeledData = taperedData.map((item) => ({
     ...item,
     label: `${item.name} — ${item.value}`,
   }));
@@ -123,9 +136,9 @@ const FunnelChart: React.FC<FunnelChartProps> = ({
             }}
             itemStyle={{ color: textColor }}
             labelStyle={{ color: secondaryText, fontWeight: 600 }}
-            formatter={(value: number, name: string) => [value, name]}
+            formatter={(_value: number, name: string, props: any) => [props?.payload?.value, props?.payload?.name || name]}
           />
-          <Funnel dataKey="value" data={labeledData} isAnimationActive>
+          <Funnel dataKey="shapeValue" data={labeledData} isAnimationActive>
             <LabelList
               position="right"
               fill={textColor}
