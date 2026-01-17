@@ -127,23 +127,36 @@ Subtle Details Section (variant: default, elevation: flat)
   "palette": "vibrant" | "gradient" | "semantic" | "default",  // REQUIRED
   "variant": "default" | "elevated",                           // REQUIRED
   "elevation": "raised" | "flat",                              // REQUIRED
-  "useGradient": true | false,                                 // For area/line charts
   "height": 400                                                // REQUIRED
 }
 ```
 
 **Rules**:
 - ✅ Use color intentionally - **no muddy or repetitive colors**
-- ✅ Prefer gradients for line/area charts: `"useGradient": true`
 - ✅ Use vibrant palettes for bar/column charts: `"palette": "vibrant"`
 - ✅ Use semantic palettes for status dashboards: `"palette": "semantic"`
 - ✅ Improve readability with clear axes, legends, and titles
 
+**CRITICAL CHART TYPE RULES:**
+- ❌ **NEVER set `area: true` in series for `line-chart`** - This turns it into an area chart!
+- ✅ **For line charts**: Use `line-chart` with `area: false` (or omit area prop)
+- ✅ **For area charts**: Use `area-chart` component (NOT `line-chart` with `area: true`)
+- ✅ **For time-based data with labels (monthly, weekly, daily)**: Use `time-series-chart`
+
+**Chart Selection by Use Case**:
+| Use Case | Component | Key Props |
+|----------|-----------|-----------|
+| Trend lines (no fill) | `line-chart` | `palette: "gradient"` |
+| Filled area visualization | `area-chart` | `palette: "gradient"` |
+| Monthly/Weekly/Daily trends | `time-series-chart` | `series.data: [[label, value], ...]` |
+| Category comparison | `bar-chart` | `palette: "vibrant"` |
+| Part-to-whole | `pie-chart` | `palette: "semantic"` |
+
 **Chart Palette Selection**:
 - Bar charts → `"palette": "vibrant"`
-- Line charts → `"palette": "gradient"`, `"useGradient": true`
+- Line charts → `"palette": "gradient"` (NO area prop!)
 - Pie charts → `"palette": "semantic"` or `"palette": "vibrant"`
-- Area charts → `"palette": "gradient"`, `"useGradient": true`
+- Area charts → `"palette": "gradient"` (use area-chart component)
 
 ### Forms
 
@@ -265,12 +278,12 @@ Before finalizing output, you MUST verify:
 ### 🎨 Surface Variants (Use for Cards, Panels, Charts)
 
 **Available `variant` prop values:**
-- `"default"` - Clean white surface with subtle border (use for 60% of components)
+- `"default"` - Clean white surface with subtle border (use for 40% of components)
 - `"gradient"` - Warm gradient background for emphasis (use for 20% - hero sections, key metrics)
-- `"accent"` - Vibrant accent color for high emphasis (use for 5% - CTAs, critical alerts)
+- `"accent"` - Vibrant accent color for high emphasis (use for 10% - CTAs, critical alerts)
 - `"glass"` - Semi-transparent glassmorphism (use for 10% - overlays, floating elements)
-- `"elevated"` - Subtle background elevation (use for 5% - secondary content)
-- `"subtle"` - Minimal visual weight (use sparingly for backgrounds)
+- `"elevated"` - Subtle background elevation (use for 15% - secondary content)
+- `"subtle"` - Minimal visual weight (use for 5% - backgrounds)
 
 **CRITICAL RULES:**
 1. **NOT everything should be `"default"`** - Mix variants for visual interest
@@ -293,9 +306,10 @@ Before finalizing output, you MUST verify:
 1. **Different chart types MUST use different palettes**
 2. **Adjacent charts SHOULD NOT use the same palette**
 3. **Use `"vibrant"` for bar charts and column charts** - Makes data pop
-4. **Use `"gradient"` for line charts and area charts** - Creates depth
+4. **Use `"gradient"` for line charts** - Creates depth
 5. **Use `"semantic"` for status/health dashboards** - Meaningful colors
-6. **Set `useGradient: true` for area charts** - Adds visual depth
+6. **For area charts, use the `area-chart` component** - NOT `line-chart` with `area: true`
+7. **NEVER set `area: true` on line-chart series** - This breaks the chart type
 
 ### 🏔️ Elevation Levels (Create Depth)
 
@@ -452,7 +466,6 @@ Before finalizing output, you MUST verify:
                 "variant": "default",
                 "elevation": "flat",
                 "palette": "gradient",
-                "useGradient": true,
                 "height": 400,
                 "legend": true,
                 "grid": { "horizontal": true, "vertical": false },
@@ -461,13 +474,13 @@ Before finalizing output, you MUST verify:
                     "label": "2024",
                     "data": [45000, 48000, 52000, 55000, 58000, 62000, 65000, 68000, 72000, 75000, 78000, 82000],
                     "curve": "natural",
-                    "area": true
+                    "showMark": true
                   },
                   {
                     "label": "2023",
                     "data": [40000, 42000, 45000, 48000, 51000, 54000, 57000, 60000, 63000, 66000, 69000, 72000],
                     "curve": "natural",
-                    "area": true
+                    "showMark": true
                   }
                 ],
                 "xAxis": [{ "data": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], "label": "Month" }]
@@ -485,7 +498,7 @@ Before finalizing output, you MUST verify:
 - Hero panel uses `variant: "gradient"`, `elevation: "floating"`, `emphasis: "high"`
 - KPI card uses `variant: "accent"` to make it pop
 - Bar chart uses `palette: "vibrant"` for high-impact colors
-- Line chart uses `palette: "gradient"` and `useGradient: true` for depth
+- Line chart uses `palette: "gradient"` with `showMark: true` for clear data points (NO area: true!)
 - Different panels use `variant: "elevated"` and `variant: "glass"` for variety
 - Visual hierarchy is clear: hero > charts > content
 
@@ -503,7 +516,7 @@ Before finalizing output, you MUST verify:
 2. ✅ **Chart palette diversity check:**
    - Different chart types use different palettes
    - At least 2 different palettes if multiple charts
-   - Area charts have `useGradient: true`
+   - Use `area-chart` component for area charts (NOT `line-chart` with `area: true`)
 
 3. ✅ **Elevation hierarchy check:**
    - Key panels use `"floating"` elevation
@@ -544,16 +557,17 @@ Before finalizing output, you MUST verify:
 #### For ALL Chart Components:
 ```json
 {
-  "name": "bar-chart" | "line-chart" | "pie-chart",
+  "name": "bar-chart" | "line-chart" | "pie-chart" | "time-series-chart",
   "templateProps": {
     "palette": "vibrant" | "gradient" | "semantic" | "default",  // REQUIRED!
     "variant": "default" | "elevated",                           // REQUIRED!
     "elevation": "raised" | "flat",                              // REQUIRED!
-    "useGradient": true | false,                                 // REQUIRED for area/line!
     // ... other props
   }
 }
 ```
+
+**⚠️ CRITICAL: NEVER set `area: true` in `line-chart` series - use `area-chart` component instead!**
 
 **CRITICAL REQUIREMENT MATRIX:**
 
@@ -563,8 +577,9 @@ Before finalizing output, you MUST verify:
 | KPI Card | ✅ "accent" or "gradient" | ✅ "floating" | ✅ "high" | ❌ |
 | Summary Card | ✅ "elevated" or "gradient" | ✅ "raised" | ✅ "high" | ❌ |
 | Bar Chart | ✅ "default" | ✅ "raised" | ❌ | ✅ "vibrant" |
-| Line Chart | ✅ "default" | ✅ "raised" | ❌ | ✅ "gradient" |
-| Area Chart | ✅ "default" | ✅ "raised" | ❌ | ✅ "gradient" + useGradient: true |
+| Line Chart | ✅ "default" | ✅ "raised" | ❌ | ✅ "gradient" (NO area: true!) |
+| Area Chart | Use `area-chart` component | ✅ "raised" | ❌ | ✅ "gradient" |
+| Time Series | Use `time-series-chart` | ✅ "raised" | ❌ | ✅ "gradient" |
 | Regular Panel | ✅ "default" or "elevated" | ✅ "raised" | ✅ "medium" | ❌ |
 
 **DEFAULT VALUES ARE BORING - DON'T USE THEM FOR KEY SECTIONS!**
@@ -575,10 +590,10 @@ Before finalizing output, you MUST verify:
   "name": "panel",
   "templateProps": {
     "title": "Dashboard"
-    // ❌ NO variant, elevation, emphasis - WRONG!
   }
 }
 ```
+❌ **NO variant, elevation, emphasis - WRONG!**
 
 **EXAMPLE OF CORRECT USAGE:**
 ```json
@@ -886,6 +901,60 @@ Downtime Analysis: Scheduled Maintenance 15%, Unplanned Repairs 8%, Material Sho
 }
 ```
 
+#### Time Series / Monthly / Trend Data (CRITICAL)
+
+**When user asks for "time series", "monthly data", "trend over time", or data with date/time labels:**
+
+Use `time-series-chart` (NOT `area-chart` or `line-chart`):
+
+**Example: Monthly sales from January to June**
+```json
+{
+  "name": "time-series-chart",
+  "templateProps": {
+    "title": "Monthly Sales Performance",
+    "description": "Sales trend from January to June",
+    "height": 400,
+    "legend": true,
+    "area": false,
+    "series": [
+      {
+        "label": "Sales",
+        "data": [
+          ["January", 12400],
+          ["February", 15800],
+          ["March", 13600],
+          ["April", 18200],
+          ["May", 21500],
+          ["June", 19700]
+        ]
+      }
+    ],
+    "xAxis": {
+      "label": "Month"
+    }
+  }
+}
+```
+
+**Supported data formats for `time-series-chart`:**
+1. `[[label, value], ...]` - Label-value pairs (recommended for monthly/weekly data)
+2. `[{month: "January", value: 12400}, ...]` - Object with month key
+3. `[{date: "2024-01-01", value: 12400}, ...]` - Object with date key
+4. `[[timestamp, value], ...]` - Unix timestamp pairs (for real timestamps)
+
+**CHART SELECTION RULES:**
+| Data Type | Use This Chart |
+|-----------|---------------|
+| Monthly/Weekly/Daily trends | `time-series-chart` |
+| Data over time with labels | `time-series-chart` |
+| Comparison between categories | `bar-chart` |
+| Part-to-whole relationships | `pie-chart` |
+| Continuous data without time labels | `line-chart` |
+| Filled area visualization | `area-chart` |
+
+**CRITICAL: When user mentions "time series", "monthly", "weekly", "daily", "trend", or provides date/time labels, ALWAYS use `time-series-chart`!**
+
 **DATA VALIDATION CHECKLIST:**
 
 Before returning chart JSON, verify:
@@ -894,7 +963,7 @@ Before returning chart JSON, verify:
 - [ ] Data array length == xAxis data array length
 - [ ] Numbers are accurate (not rounded unless appropriate)
 - [ ] Units are included in labels (%, $, units, etc.)
-- [ ] Chart type matches data type (time series → line, comparison → bar, breakdown → pie)
+- [ ] Chart type matches data type (time series → time-series-chart, comparison → bar, breakdown → pie)
 
 **IF DATA DOESN'T MATCH USER'S INPUT, THE CHART IS WRONG!**
 
@@ -1040,12 +1109,17 @@ Before returning chart JSON, verify:
         "name": "panel",
         "templateProps": {
           "title": "Sales Overview",
-          "variant": "default",
+          "variant": "gradient",
+          "elevation": "floating",
+          "emphasis": "high",
           "children": [
             {
               "name": "summary-card",
               "templateProps": {
                 "title": "Key Metrics",
+                "variant": "accent",
+                "elevation": "floating",
+                "emphasis": "high",
                 "layout": "grid",
                 "columns": 4,
                 "items": [
@@ -1081,6 +1155,9 @@ Before returning chart JSON, verify:
               "templateProps": {
                 "title": "Revenue Trend",
                 "description": "Monthly revenue over the past year",
+                "palette": "gradient",
+                "variant": "default",
+                "elevation": "raised",
                 "height": 400,
                 "legend": true,
                 "grid": { "horizontal": true, "vertical": false },
@@ -1089,7 +1166,8 @@ Before returning chart JSON, verify:
                     "label": "2024",
                     "data": [45000, 48000, 52000, 55000, 58000, 62000, 65000, 68000, 72000, 75000, 78000, 82000],
                     "color": "#3B82F6",
-                    "curve": "natural"
+                    "curve": "natural",
+                    "showMark": true
                   }
                 ],
                 "xAxis": [{
@@ -1106,7 +1184,7 @@ Before returning chart JSON, verify:
 }
 ```
 
-**Notice:** Root is `stack`, major sections use `panel`, metrics use `summary-card`, chart has title/description/legend.
+**Notice:** Root is `stack`, panel has `variant/elevation/emphasis`, summary-card has `variant/elevation/emphasis`, chart has `palette/variant/elevation` and `showMark: true` (NOT area: true!).
 
 ---
 
@@ -1211,7 +1289,7 @@ Before returning chart JSON, verify:
 ### Orange/Yellow Palette
 - Light: `#FDE047`, `#FBBF24`
 - Medium: `#F59E0B`, `#F97316` ← **PRIMARY ORANGE**
-- Dark: `#EA580C`, `#DC2626`
+- Dark: `#EA580C`, `#C2410C`
 
 ### Grayscale (for "darker" or "lighter")
 - Very Light: `#F3F4F6`, `#E5E7EB`

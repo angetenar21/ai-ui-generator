@@ -8,16 +8,19 @@ interface TimeSeriesChartProps {
   /** Optional description text */
   description?: string;
 
-  /** Series data with time-based data points */
+  /** Series data with time-based data points - supports multiple formats */
   series: Array<{
     name?: string;
+    label?: string;
     color?: string;
-    data: Array<[number, number]>; // [timestamp, value] pairs
+    data: Array<[number | string, number]> | Array<{ x: number | string; y: number }> | Array<{ date: string; value: number }> | Array<{ month: string; value: number }> | number[];
   }>;
 
   /** X-axis configuration */
   xAxis?: {
-    type: 'time';
+    type?: 'time' | 'category';
+    data?: (string | number | Date)[];
+    label?: string;
   };
 
   /** Chart width */
@@ -42,6 +45,9 @@ interface TimeSeriesChartProps {
     bottom?: number;
     left?: number;
   };
+
+  /** Show area fill under the line */
+  area?: boolean;
 }
 
 const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
@@ -54,9 +60,13 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   grid = { horizontal: true, vertical: false },
   legend = true,
   margin = { top: 50, right: 30, bottom: 50, left: 60 },
+  area = false,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [chartWidth, setChartWidth] = useState(width);
+
+  // Detect dark mode
+  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
 
   useEffect(() => {
     const updateWidth = () => {
@@ -100,47 +110,97 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     );
   }
 
-  // Transform [[timestamp, value]] format to MUI X-Charts format
-  // Extract all unique timestamps and sort them
-  const allTimestamps = new Set<number>();
-  series.forEach(s => {
-    if (Array.isArray(s.data)) {
-      s.data.forEach(point => {
-        if (Array.isArray(point) && point.length >= 2) {
-          allTimestamps.add(point[0]);
-        }
-      });
-    }
-  });
-
-  const sortedTimestamps = Array.from(allTimestamps).sort((a, b) => a - b);
-
-  // Convert timestamps to Date objects for proper time axis
-  const xAxisData = sortedTimestamps.map(ts => new Date(ts));
-
-  // Transform each series data to match timestamps
-  const transformedSeries = series.map(s => {
-    // Create a map of timestamp -> value for quick lookup
-    const dataMap = new Map<number, number>();
-    if (Array.isArray(s.data)) {
-      s.data.forEach(point => {
-        if (Array.isArray(point) && point.length >= 2) {
-          dataMap.set(point[0], point[1]);
-        }
-      });
+  // Helper to normalize different data formats
+  const normalizeSeriesData = (s: typeof series[0]) => {
+    const data = s.data;
+    if (!Array.isArray(data) || data.length === 0) {
+      return { labels: [] as string[], values: [] as number[] };
     }
 
-    // Create data array aligned with sorted timestamps
-    const alignedData = sortedTimestamps.map(ts => dataMap.get(ts) ?? null);
+    const firstItem = data[0];
 
-    return {
-      data: alignedData,
-      label: s.name || 'Series',
-      color: s.color,
-      showMark: true,
-      connectNulls: true, // Connect points even if some are null
-    };
-  });
+    // Format: [value1, value2, ...] - plain number array
+    if (typeof firstItem === 'number') {
+      return {
+        labels: (data as number[]).map((_, i) => `Point ${i + 1}`),
+        values: data as number[],
+      };
+    }
+
+    // Format: [[label/timestamp, value], ...]
+    if (Array.isArray(firstItem)) {
+      const pairs = data as Array<[number | string, number]>;
+      return {
+        labels: pairs.map(p => String(p[0])),
+        values: pairs.map(p => p[1]),
+      };
+    }
+
+    // Format: [{ x, y }, ...]
+    if (typeof firstItem === 'object' && 'x' in firstItem && 'y' in firstItem) {
+      const points = data as Array<{ x: number | string; y: number }>;
+      return {
+        labels: points.map(p => String(p.x)),
+        values: points.map(p => p.y),
+      };
+    }
+
+    // Format: [{ date, value }, ...]
+    if (typeof firstItem === 'object' && 'date' in firstItem && 'value' in firstItem) {
+      const points = data as Array<{ date: string; value: number }>;
+      return {
+        labels: points.map(p => p.date),
+        values: points.map(p => p.value),
+      };
+    }
+
+    // Format: [{ month, value }, ...]
+    if (typeof firstItem === 'object' && 'month' in firstItem && 'value' in firstItem) {
+      const points = data as Array<{ month: string; value: number }>;
+      return {
+        labels: points.map(p => p.month),
+        values: points.map(p => p.value),
+      };
+    }
+
+    return { labels: [] as string[], values: [] as number[] };
+  };
+
+  // Process all series to extract data
+  const processedData = series.map(s => normalizeSeriesData(s));
+
+  // Use labels from first series or from xAxis if provided
+  let xAxisLabels: (string | number | Date)[] = xAxis?.data || processedData[0]?.labels || [];
+
+  // Check if labels look like timestamps (all numbers > 1000000000)
+  const looksLikeTimestamps = xAxisLabels.length > 0 &&
+    xAxisLabels.every(l => typeof l === 'number' || (!isNaN(Number(l)) && Number(l) > 1000000000));
+
+  // Determine scale type
+  let scaleType: 'time' | 'point' | 'band' = 'point';
+  if (xAxis?.type === 'time' || looksLikeTimestamps) {
+    scaleType = 'time';
+    xAxisLabels = xAxisLabels.map(l => new Date(Number(l)));
+  }
+
+  // Transform series for MUI Charts
+  const transformedSeries = series.map((s, idx) => ({
+    data: processedData[idx].values,
+    label: s.label || s.name || `Series ${idx + 1}`,
+    color: s.color,
+    showMark: true,
+    area: area,
+    connectNulls: true,
+  }));
+
+  // Chart colors based on theme
+  const chartColors = {
+    axisLine: isDarkMode ? '#6B7280' : '#6B7280',
+    axisTick: isDarkMode ? '#6B7280' : '#6B7280',
+    tickLabel: isDarkMode ? '#D1D5DB' : '#374151',
+    legendText: isDarkMode ? '#D1D5DB' : '#374151',
+    gridLine: isDarkMode ? '#374151' : '#E5E7EB',
+  };
 
   return (
     <div className="card rounded-card p-6 my-4 hover:shadow-hover transition-all duration-300">
@@ -165,9 +225,9 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
         <MuiLineChart
           xAxis={[
             {
-              data: xAxisData,
-              scaleType: 'time',
-              label: xAxis?.type === 'time' ? 'Time' : undefined,
+              data: xAxisLabels,
+              scaleType: scaleType,
+              label: xAxis?.label,
             },
           ]}
           series={transformedSeries}
@@ -178,33 +238,38 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
           slotProps={{
             legend: legend
               ? {
-                position: { vertical: 'top', horizontal: 'center' },
-              }
+                  position: { vertical: 'top', horizontal: 'center' } as const,
+                }
               : undefined,
           }}
           sx={{
             '& .MuiChartsAxis-line': {
-              stroke: '#6B7280',
+              stroke: chartColors.axisLine,
               strokeWidth: 1.5,
             },
             '& .MuiChartsAxis-tick': {
-              stroke: '#6B7280',
+              stroke: chartColors.axisTick,
               strokeWidth: 1,
             },
             '& .MuiChartsAxis-tickLabel': {
-              fill: '#374151',
+              fill: chartColors.tickLabel,
               fontSize: '13px',
               fontWeight: 500,
             },
             '& .MuiChartsLegend-series text': {
-              fill: '#374151 !important',
+              fill: `${chartColors.legendText} !important`,
               fontSize: '14px',
             },
             '& .MuiChartsGrid-line': {
-              stroke: '#E5E7EB',
+              stroke: chartColors.gridLine,
               strokeDasharray: '4 4',
               opacity: 0.8,
             },
+            ...(area && {
+              '& .MuiAreaElement-root': {
+                fillOpacity: 0.2,
+              },
+            }),
           }}
         />
       </div>
@@ -219,17 +284,18 @@ export const metadata = {
   name: 'time-series-chart',
   category: 'charts' as const,
   component: TimeSeriesChart,
-  description: 'Time series line chart for visualizing data over time with multiple series support',
-  tags: ['chart', 'time-series', 'line', 'temporal', 'data-visualization'],
+  description: 'Time series line chart for visualizing data over time. Supports multiple data formats: [[label, value]], [{month, value}], [{date, value}], [{x, y}], or plain number arrays.',
+  tags: ['chart', 'time-series', 'line', 'temporal', 'data-visualization', 'monthly', 'trend'],
   propTypes: {
     title: 'string',
     description: 'string',
-    series: 'Array<{ name?, color?, data: [[timestamp, value], ...] }>',
-    xAxis: "{ type: 'time' }",
+    series: 'Array<{ name?, label?, color?, data: [[label, value], ...] | [{month, value}, ...] | [{date, value}, ...] | number[] }>',
+    xAxis: "{ type?: 'time' | 'category', data?: string[], label?: string }",
     width: 'number',
     height: 'number',
     grid: '{ vertical?: boolean, horizontal?: boolean }',
     legend: 'boolean',
     margin: '{ top?, right?, bottom?, left? }',
+    area: 'boolean - Show area fill under the line (default: false)',
   },
 };
