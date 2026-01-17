@@ -138,10 +138,27 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
               fontSize: '13px',
               fontWeight: 500,
             },
+            '& .MuiChartsLegend-root': {
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '12px',
+            },
+            '& .MuiChartsLegend-series': {
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+            },
             '& .MuiChartsLegend-series text': {
               fill: '#374151 !important',
-              fontSize: '14px',
+              fontSize: '12px',
               fontWeight: 500,
+            },
+            '& .MuiChartsLegend-mark': {
+              rx: 2,
+              width: '12px',
+              height: '12px',
             },
             '& .MuiChartsGrid-line': {
               stroke: '#E5E7EB',

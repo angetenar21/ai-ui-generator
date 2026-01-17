@@ -73,6 +73,9 @@ const ScatterChart: React.FC<ScatterChartProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const [chartWidth, setChartWidth] = useState(width);
 
+  // Detect dark mode
+  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+
   useEffect(() => {
     const updateWidth = () => {
       const measuredWidth = containerRef.current?.getBoundingClientRect().width || 0;
@@ -219,32 +222,50 @@ const ScatterChart: React.FC<ScatterChartProps> = ({
                 slotProps={{
                   legend: legend
                     ? {
-                      position: { vertical: 'top', horizontal: 'center' },
-                    }
+                        direction: 'horizontal' as const,
+                        position: { vertical: 'top', horizontal: 'center' } as const,
+                      }
                     : undefined,
                 }}
                 sx={{
                   maxWidth: '100%',
                   '& .MuiChartsAxis-line': {
-                    stroke: '#6B7280',
+                    stroke: isDarkMode ? '#6B7280' : '#6B7280',
                     strokeWidth: 1.5,
                   },
                   '& .MuiChartsAxis-tick': {
-                    stroke: '#6B7280',
+                    stroke: isDarkMode ? '#6B7280' : '#6B7280',
                     strokeWidth: 1,
                   },
                   '& .MuiChartsAxis-tickLabel': {
-                    fill: '#374151',
+                    fill: isDarkMode ? '#D1D5DB' : '#374151',
                     fontSize: '13px',
                     fontWeight: 500,
                   },
+                  '& .MuiChartsLegend-root': {
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexWrap: 'wrap',
+                    gap: '12px',
+                  },
+                  '& .MuiChartsLegend-series': {
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                  },
                   '& .MuiChartsLegend-series text': {
-                    fill: '#374151 !important',
-                    fontSize: '14px',
+                    fill: `${isDarkMode ? '#D1D5DB' : '#374151'} !important`,
+                    fontSize: '12px',
                     fontWeight: 500,
                   },
+                  '& .MuiChartsLegend-mark': {
+                    rx: 2,
+                    width: '12px',
+                    height: '12px',
+                  },
                   '& .MuiChartsGrid-line': {
-                    stroke: '#E5E7EB',
+                    stroke: isDarkMode ? '#374151' : '#E5E7EB',
                     strokeDasharray: '4 4',
                     opacity: 0.8,
                   },

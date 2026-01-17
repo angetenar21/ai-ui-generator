@@ -40,7 +40,23 @@ const StackedBarChart: React.FC<StackedBarChartProps> = ({ title, description, d
           labelStyle={{ color: '#111827', fontWeight: 600 }}
           itemStyle={{ color: '#374151' }}
         />
-        <Legend wrapperStyle={{ color: '#374151', fontSize: 14, fontWeight: 500 }} />
+        <Legend
+          layout="horizontal"
+          verticalAlign="top"
+          align="center"
+          wrapperStyle={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '12px',
+            paddingBottom: '8px',
+          }}
+          formatter={(value) => (
+            <span style={{ color: '#374151', fontSize: '12px', fontWeight: 500 }}>{value}</span>
+          )}
+          iconSize={10}
+        />
         <Bar dataKey="value" fill="#F97316" />
       </BarChart>
     </ResponsiveContainer>

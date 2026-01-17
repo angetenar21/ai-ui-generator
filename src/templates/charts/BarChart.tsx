@@ -223,8 +223,9 @@ const BarChart: React.FC<BarChartProps> = ({
             slotProps={{
               legend: legend
                 ? {
-                  position: { vertical: 'top', horizontal: 'center' },
-                }
+                    direction: 'horizontal' as const,
+                    position: { vertical: 'top', horizontal: 'center' } as const,
+                  }
                 : undefined,
             }}
             sx={{
@@ -243,9 +244,27 @@ const BarChart: React.FC<BarChartProps> = ({
                 fontSize: '13px',
                 fontWeight: 500,
               },
+              '& .MuiChartsLegend-root': {
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '12px',
+              },
+              '& .MuiChartsLegend-series': {
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+              },
               '& .MuiChartsLegend-series text': {
                 fill: `${chartColors.legendText} !important`,
-                fontSize: '14px',
+                fontSize: '12px',
+                fontWeight: 500,
+              },
+              '& .MuiChartsLegend-mark': {
+                rx: 2,
+                width: '12px',
+                height: '12px',
               },
               '& .MuiChartsGrid-line': {
                 stroke: chartColors.gridLine,

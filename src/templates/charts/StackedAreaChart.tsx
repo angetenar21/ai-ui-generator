@@ -17,7 +17,23 @@ const StackedAreaChart: React.FC<StackedAreaChartProps> = ({ title, data, height
         <XAxis tick={{ fill: '#374151' }} />
         <YAxis tick={{ fill: '#374151' }} />
         <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151' }} />
-        <Legend wrapperStyle={{ color: '#d1d5db' }} />
+        <Legend
+          layout="horizontal"
+          verticalAlign="top"
+          align="center"
+          wrapperStyle={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '12px',
+            paddingBottom: '8px',
+          }}
+          formatter={(value) => (
+            <span style={{ color: '#374151', fontSize: '12px', fontWeight: 500 }}>{value}</span>
+          )}
+          iconSize={10}
+        />
         <Bar dataKey="value" fill="#8b5cf6" />
       </BarChart>
     </ResponsiveContainer>

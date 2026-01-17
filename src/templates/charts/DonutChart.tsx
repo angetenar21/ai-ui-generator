@@ -132,19 +132,35 @@ const DonutChart: React.FC<DonutChartProps> = ({
           slotProps={{
             legend: legend
               ? {
-                position: { vertical: 'bottom', horizontal: 'center' },
-              }
+                  direction: 'horizontal' as const,
+                  position: { vertical: 'bottom', horizontal: 'center' } as const,
+                }
               : undefined,
           }}
           sx={{
             maxWidth: '100%',
+            '& .MuiChartsLegend-root': {
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '12px',
+              marginTop: '16px',
+            },
+            '& .MuiChartsLegend-series': {
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+            },
             '& .MuiChartsLegend-series text': {
               fill: `${legendTextColor} !important`,
-              fontSize: '10px',
+              fontSize: '12px',
               fontWeight: 500,
             },
             '& .MuiChartsLegend-mark': {
               rx: 2,
+              width: '12px',
+              height: '12px',
             },
           }}
         />

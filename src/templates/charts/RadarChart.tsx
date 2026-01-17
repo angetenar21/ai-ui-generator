@@ -117,6 +117,9 @@ const RadarChart: React.FC<RadarChartProps> = (props) => {
     showGrid = true,
   } = props;
 
+  // Detect dark mode
+  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+
   // Transform new format (axes + series) to Recharts format (data + dataKeys)
   let data: Array<{ subject: string; [key: string]: string | number }>;
   let dataKeys: Array<{ key: string; name?: string; color?: string }>;
@@ -295,8 +298,24 @@ const RadarChart: React.FC<RadarChartProps> = (props) => {
 
           {legend && (
             <Legend
-              wrapperStyle={{ color: '#d1d5db', fontSize: '14px' }}
+              layout="horizontal"
+              verticalAlign="bottom"
+              align="center"
+              wrapperStyle={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '12px',
+                paddingTop: '16px',
+              }}
+              formatter={(value) => (
+                <span style={{ color: isDarkMode ? '#D1D5DB' : '#374151', fontSize: '12px', fontWeight: 500 }}>
+                  {value}
+                </span>
+              )}
               iconType="circle"
+              iconSize={10}
             />
           )}
 
