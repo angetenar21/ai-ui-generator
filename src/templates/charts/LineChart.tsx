@@ -158,11 +158,12 @@ const LineChart: React.FC<LineChartProps> = ({
     );
   }
 
-  // Process series colors with palette
+  // Process series colors with palette and force linear curve by default
   const processedSeries = processSeriesColors(
     series.map((s, index) => ({
       ...s,
       color: s.color || paletteColors[index % paletteColors.length],
+      curve: s.curve || 'linear', // Default to linear (sharp corners) instead of smooth curves
     }))
   );
 
@@ -242,9 +243,9 @@ const LineChart: React.FC<LineChartProps> = ({
                   slotProps={{
                     legend: legend
                       ? {
-                          direction: 'horizontal' as const,
-                          position: { vertical: 'top', horizontal: 'center' } as const,
-                        }
+                        direction: 'horizontal' as const,
+                        position: { vertical: 'top', horizontal: 'center' } as const,
+                      }
                       : undefined,
                   }}
                   sx={{

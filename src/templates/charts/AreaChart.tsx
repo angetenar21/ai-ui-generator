@@ -25,6 +25,12 @@ interface AreaChartProps {
     showMark?: boolean;
   }>;
 
+  /** Stack areas (default: true for area charts) */
+  stack?: boolean;
+
+  /** Gradient opacity for area fills: [startOpacity, endOpacity] */
+  gradientOpacity?: [number, number];
+
   /** Chart width */
   width?: number;
 
@@ -59,6 +65,8 @@ const AreaChart: React.FC<AreaChartProps> = ({
   grid = { horizontal: true, vertical: false },
   legend = true,
   margin,
+  stack = true,
+  gradientOpacity = [0.8, 0.2],
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [chartSize, setChartSize] = useState({ width: propWidth || 500, height: propHeight ?? 320 });
@@ -148,12 +156,28 @@ const AreaChart: React.FC<AreaChartProps> = ({
     }];
   }
 
-  // Transform series to include area property and handle both 'label' and 'name' fields
+  // Transform series to include area property, default to smooth curves, and handle stacking
   const areaSeriesData = series.map((s) => ({
     ...s,
     label: s.label || (s as any).name || 'Series',
     area: true, // This makes it an area chart
+    curve: s.curve || 'natural', // Default to smooth Bézier curves instead of linear
+    stack: stack ? 'total' : undefined, // Stack all areas when enabled
+    showMark: s.showMark !== false, // Show marks by default
   }));
+
+  // Calculate Y-axis bounds for proper scaling with stacked data
+  let maxStackedValue = 0;
+  if (stack && series.length > 0) {
+    const dataLength = series[0].data.length;
+    for (let i = 0; i < dataLength; i++) {
+      const sum = series.reduce((acc, s) => acc + (s.data[i] || 0), 0);
+      maxStackedValue = Math.max(maxStackedValue, sum);
+    }
+  } else {
+    maxStackedValue = Math.max(...series.flatMap(s => s.data || []));
+  }
+  const yAxisMax = Math.ceil(maxStackedValue * 1.1); // Add 10% padding at top
 
   // Detect dark mode for chart styling
   const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
@@ -167,10 +191,10 @@ const AreaChart: React.FC<AreaChartProps> = ({
   };
 
   const resolvedMargin = {
-    top: margin?.top ?? (legend ? 56 : 32),
-    right: margin?.right ?? 20,
-    bottom: margin?.bottom ?? 36,
-    left: margin?.left ?? 20,
+    top: margin?.top ?? (legend ? 60 : 40),
+    right: margin?.right ?? 24,
+    bottom: margin?.bottom ?? 40,
+    left: margin?.left ?? 60,
   };
 
   return (
@@ -199,6 +223,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
               return (
                 <LineChart
                   xAxis={processedXAxis}
+                  yAxis={[{ min: 0, max: yAxisMax }]}
                   series={areaSeriesData}
                   width={chartSize.width}
                   height={chartSize.height}
@@ -258,6 +283,23 @@ const AreaChart: React.FC<AreaChartProps> = ({
                     },
                     '& .MuiAreaElement-root': {
                       fillOpacity: chartColors.areaOpacity,
+                      // Create gradient opacity effect from top to bottom
+                      opacity: 1,
+                    },
+                    '& .MuiAreaElement-root[data-series-id="0"]': {
+                      fillOpacity: gradientOpacity[0],
+                    },
+                    '& .MuiAreaElement-root[data-series-id="1"]': {
+                      fillOpacity: Math.max(gradientOpacity[0] - 0.12, gradientOpacity[1]),
+                    },
+                    '& .MuiAreaElement-root[data-series-id="2"]': {
+                      fillOpacity: Math.max(gradientOpacity[0] - 0.24, gradientOpacity[1]),
+                    },
+                    '& .MuiAreaElement-root[data-series-id="3"]': {
+                      fillOpacity: Math.max(gradientOpacity[0] - 0.36, gradientOpacity[1]),
+                    },
+                    '& .MuiAreaElement-root[data-series-id="4"]': {
+                      fillOpacity: Math.max(gradientOpacity[0] - 0.48, gradientOpacity[1]),
                     },
                   }}
                 />
