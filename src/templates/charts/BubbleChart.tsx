@@ -96,11 +96,17 @@ const BubbleChart: React.FC<BubbleChartProps> = ({
   }
 
   // Custom tooltip
+  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
+  const textColor = isDarkMode ? '#D1D5DB' : '#374151';
+  const axisColor = isDarkMode ? '#6B7280' : '#6B7280';
+  const legendColor = isDarkMode ? '#D1D5DB' : '#374151';
+
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length > 0) {
       const data = payload[0].payload;
       return (
-        <div className="bg-white border border-gray-200 rounded-lg p-3 shadow-lg">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 shadow-lg">
           {data.name && (
             <p className="font-semibold text-text-primary mb-1">{data.name}</p>
           )}
@@ -141,23 +147,23 @@ const BubbleChart: React.FC<BubbleChartProps> = ({
       <div className="flex justify-center items-center min-h-[300px]">
         <ResponsiveContainer width="100%" height={height}>
           <ScatterChart margin={{ top: 20, right: 30, bottom: 20, left: 20 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" opacity={0.8} />
+            <CartesianGrid strokeDasharray="3 3" stroke={gridColor} opacity={0.8} />
             <XAxis
               dataKey="x"
               type="number"
-              tick={{ fill: '#374151', fontSize: 13, fontWeight: 500 }}
-              stroke="#6B7280"
+              tick={{ fill: textColor, fontSize: 13, fontWeight: 500 }}
+              stroke={axisColor}
               strokeWidth={1.5}
             />
             <YAxis
               dataKey="y"
               type="number"
-              tick={{ fill: '#374151', fontSize: 13, fontWeight: 500 }}
-              stroke="#6B7280"
+              tick={{ fill: textColor, fontSize: 13, fontWeight: 500 }}
+              stroke={axisColor}
               strokeWidth={1.5}
             />
             <Tooltip content={<CustomTooltip />} />
-            <Legend wrapperStyle={{ color: '#374151', fontSize: '14px' }} />
+            <Legend wrapperStyle={{ color: legendColor, fontSize: '14px' }} />
             <Scatter name="Data Points" data={transformedData}>
               {transformedData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} r={Math.max(5, entry.z * 2)} />

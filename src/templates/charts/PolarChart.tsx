@@ -47,7 +47,7 @@ const PolarChart: React.FC<PolarChartProps> = ({
   width = 800,
   height = 400,
 }) => {
-  void(width); // Width prop available for future use
+  void (width); // Width prop available for future use
   // Validate
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
@@ -94,45 +94,56 @@ const PolarChart: React.FC<PolarChartProps> = ({
       {description && (
         <p className="text-sm text-gray-400 mb-4 text-center">{description}</p>
       )}
-      <ResponsiveContainer width="100%" height={height}>
-        <RadialBarChart
-          cx="50%"
-          cy="50%"
-          innerRadius="10%"
-          outerRadius="90%"
-          data={chartData}
-          startAngle={90}
-          endAngle={-270}
-        >
-          <PolarAngleAxis
-            type="category"
-            dataKey="name"
-            tick={{ fill: '#9ca3af', fontSize: 12 }}
-            stroke="#9ca3af"
-          />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: '#1f2937',
-              border: '1px solid #374151',
-              borderRadius: '8px',
-              color: '#d1d5db',
-            }}
-          />
-          <Legend
-            wrapperStyle={{ color: '#d1d5db' }}
-            iconType="circle"
-          />
-          {series.map((s, index) => (
-            <RadialBar
-              key={s.name || index}
-              dataKey={s.name || 'value'}
-              fill={s.color || `hsl(${(index * 360) / series.length}, 70%, 60%)`}
-              background={{ fill: '#1f2937' }}
-              cornerRadius={10}
-            />
-          ))}
-        </RadialBarChart>
-      </ResponsiveContainer>
+      {(() => {
+        const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+        const textColor = isDarkMode ? '#D1D5DB' : '#9CA3AF';
+        const tooltipBg = isDarkMode ? '#1F2937' : '#FFFFFF';
+        const tooltipBorder = isDarkMode ? '#374151' : '#E5E7EB';
+        const tooltipText = isDarkMode ? '#E5E7EB' : '#1F2937';
+        const bgFill = isDarkMode ? '#111827' : '#F3F4F6';
+
+        return (
+          <ResponsiveContainer width="100%" height={height}>
+            <RadialBarChart
+              cx="50%"
+              cy="50%"
+              innerRadius="10%"
+              outerRadius="90%"
+              data={chartData}
+              startAngle={90}
+              endAngle={-270}
+            >
+              <PolarAngleAxis
+                type="category"
+                dataKey="name"
+                tick={{ fill: textColor, fontSize: 12 }}
+                stroke={textColor}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: tooltipBg,
+                  border: `1px solid ${tooltipBorder}`,
+                  borderRadius: '8px',
+                  color: tooltipText,
+                }}
+              />
+              <Legend
+                wrapperStyle={{ color: textColor }}
+                iconType="circle"
+              />
+              {series.map((s, index) => (
+                <RadialBar
+                  key={s.name || index}
+                  dataKey={s.name || 'value'}
+                  fill={s.color || `hsl(${(index * 360) / series.length}, 70%, 60%)`}
+                  background={{ fill: bgFill }}
+                  cornerRadius={10}
+                />
+              ))}
+            </RadialBarChart>
+          </ResponsiveContainer>
+        );
+      })()}
       <div className="text-xs text-gray-400 text-center mt-2">
         Polar chart displayed as radial bars
       </div>

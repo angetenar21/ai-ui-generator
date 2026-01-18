@@ -73,11 +73,14 @@ const RadialBarChart: React.FC<RadialBarChartProps> = ({
   }));
 
   // Custom tooltip
+  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  const legendColor = isDarkMode ? '#D1D5DB' : '#374151';
+
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length > 0) {
       const data = payload[0].payload;
       return (
-        <div className="bg-white border border-gray-200 rounded-lg p-3 shadow-lg">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 shadow-lg">
           <p className="font-semibold text-text-primary mb-1">{data.name}</p>
           <p className="text-sm text-text-secondary">
             Value: <span className="font-medium text-text-primary">{data.value.toFixed(2)}</span>
@@ -130,7 +133,7 @@ const RadialBarChart: React.FC<RadialBarChartProps> = ({
               align="right"
               wrapperStyle={{
                 fontSize: '14px',
-                color: '#374151',
+                color: legendColor,
               }}
             />
             <Tooltip content={<CustomTooltip />} />

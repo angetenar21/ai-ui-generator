@@ -33,7 +33,7 @@ const BoxPlotChart: React.FC<BoxPlotChartProps> = ({
   width = 800,
   height = 400,
 }) => {
-  void(width); // Width prop available for future use
+  void (width); // Width prop available for future use
   // Validate
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
@@ -82,26 +82,38 @@ const BoxPlotChart: React.FC<BoxPlotChartProps> = ({
       {description && (
         <p className="text-sm text-gray-400 mb-4 text-center">{description}</p>
       )}
-      <ResponsiveContainer width="100%" height={height}>
-        <ComposedChart data={chartData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-          <XAxis dataKey="name" tick={{ fill: '#9ca3af' }} />
-          <YAxis tick={{ fill: '#9ca3af' }} />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: '#1f2937',
-              border: '1px solid #374151',
-              borderRadius: '8px',
-              color: '#d1d5db',
-            }}
-          />
-          <Legend wrapperStyle={{ color: '#d1d5db' }} />
-          <Bar dataKey="iqr" fill="#8b5cf6" fillOpacity={0.6} stackId="a" name="IQR (Q1-Q3)" />
-          <Line dataKey="median" stroke="#10b981" strokeWidth={3} dot={{ r: 4 }} name="Median" />
-          <Line dataKey="min" stroke="#ef4444" strokeWidth={1} strokeDasharray="3 3" name="Min" />
-          <Line dataKey="max" stroke="#3b82f6" strokeWidth={1} strokeDasharray="3 3" name="Max" />
-        </ComposedChart>
-      </ResponsiveContainer>
+      {(() => {
+        const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+        const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
+        const textColor = isDarkMode ? '#D1D5DB' : '#9CA3AF';
+        const tooltipBg = isDarkMode ? '#1F2937' : '#FFFFFF';
+        const tooltipBorder = isDarkMode ? '#374151' : '#E5E7EB';
+        const tooltipText = isDarkMode ? '#E5E7EB' : '#1F2937';
+        const legendColor = isDarkMode ? '#D1D5DB' : '#374151';
+
+        return (
+          <ResponsiveContainer width="100%" height={height}>
+            <ComposedChart data={chartData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+              <XAxis dataKey="name" tick={{ fill: textColor }} />
+              <YAxis tick={{ fill: textColor }} />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: tooltipBg,
+                  border: `1px solid ${tooltipBorder}`,
+                  borderRadius: '8px',
+                  color: tooltipText,
+                }}
+              />
+              <Legend wrapperStyle={{ color: legendColor }} />
+              <Bar dataKey="iqr" fill="#8b5cf6" fillOpacity={0.6} stackId="a" name="IQR (Q1-Q3)" />
+              <Line dataKey="median" stroke="#10b981" strokeWidth={3} dot={{ r: 4 }} name="Median" />
+              <Line dataKey="min" stroke="#ef4444" strokeWidth={1} strokeDasharray="3 3" name="Min" />
+              <Line dataKey="max" stroke="#3b82f6" strokeWidth={1} strokeDasharray="3 3" name="Max" />
+            </ComposedChart>
+          </ResponsiveContainer>
+        );
+      })()}
       <div className="text-xs text-gray-400 text-center mt-2">
         Box plot showing Min, Q1, Median, Q3, Max and IQR
       </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
@@ -46,6 +46,37 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
   height = 400,
   legend = true,
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [chartWidth, setChartWidth] = useState(width);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      const measuredWidth = containerRef.current?.getBoundingClientRect().width || 0;
+      const maxWidth = measuredWidth > 0 ? measuredWidth - 16 : undefined;
+      const fallbackWidth = width;
+
+      let nextWidth = fallbackWidth;
+      if (typeof maxWidth === 'number') {
+        nextWidth = Math.min(fallbackWidth, maxWidth);
+      }
+
+      const minWidth = typeof maxWidth === 'number' ? Math.min(320, maxWidth) : 320;
+      const maxWidthClamp = typeof maxWidth === 'number' ? maxWidth : 1600;
+
+      setChartWidth(Math.max(minWidth, Math.min(nextWidth, maxWidthClamp)));
+    };
+
+    updateWidth();
+    const resizeObserver = new ResizeObserver(updateWidth);
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => resizeObserver.disconnect();
+  }, [width]);
+
+  // Detect dark mode
+  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
   // Separate bar and line series
   const barSeries = series.filter(s => s.type === 'bar').map(s => ({
     type: 'bar' as const,
@@ -115,26 +146,26 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
         </div>
       )}
 
-      <div className="flex justify-center items-center">
+      <div ref={containerRef} className="flex justify-center items-center w-full overflow-x-auto">
         <ChartContainer
           series={allSeries}
           xAxis={xAxisConfig}
           yAxis={yAxisConfig}
-          width={width}
+          width={chartWidth}
           height={height}
           colors={colorPalette}
           margin={{ top: 50, right: 30, bottom: 50, left: 30 }}
           sx={{
             '& .MuiChartsAxis-line': {
-              stroke: '#6B7280',
+              stroke: isDarkMode ? '#6B7280' : '#6B7280',
               strokeWidth: 1.5,
             },
             '& .MuiChartsAxis-tick': {
-              stroke: '#6B7280',
+              stroke: isDarkMode ? '#6B7280' : '#6B7280',
               strokeWidth: 1,
             },
             '& .MuiChartsAxis-tickLabel': {
-              fill: '#374151',
+              fill: isDarkMode ? '#D1D5DB' : '#374151',
               fontSize: '13px',
               fontWeight: 500,
             },
@@ -151,7 +182,7 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
               gap: '6px',
             },
             '& .MuiChartsLegend-series text': {
-              fill: '#374151 !important',
+              fill: `${isDarkMode ? '#D1D5DB' : '#374151'} !important`,
               fontSize: '12px',
               fontWeight: 500,
             },
@@ -161,12 +192,12 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
               height: '12px',
             },
             '& .MuiChartsGrid-line': {
-              stroke: '#E5E7EB',
+              stroke: isDarkMode ? '#374151' : '#E5E7EB',
               strokeDasharray: '4 4',
               opacity: 0.8,
             },
             '& .MuiChartsAxis-label': {
-              fill: '#374151',
+              fill: isDarkMode ? '#D1D5DB' : '#374151',
               fontSize: '13px',
               fontWeight: 500,
             },

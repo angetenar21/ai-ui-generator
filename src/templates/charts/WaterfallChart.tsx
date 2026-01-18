@@ -110,6 +110,15 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
   });
 
   // Custom shape renderer for waterfall bars
+  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
+  const textColor = isDarkMode ? '#D1D5DB' : '#9CA3AF';
+  const tooltipBg = isDarkMode ? '#1F2937' : '#FFFFFF';
+  const tooltipBorder = isDarkMode ? '#374151' : '#E5E7EB';
+  const tooltipText = isDarkMode ? '#E5E7EB' : '#1F2937';
+  const strokeColor = isDarkMode ? '#374151' : '#E5E7EB';
+  const labelColor = isDarkMode ? '#D1D5DB' : '#9CA3AF';
+
   const WaterfallBar = (props: any) => {
     const { x, y, width, height, payload } = props;
 
@@ -129,14 +138,14 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
           width={width}
           height={height}
           fill={fill}
-          stroke="#1f2937"
+          stroke={strokeColor}
           strokeWidth={1}
           opacity={0.9}
         />
         <text
           x={x + width / 2}
           y={y - 5}
-          fill="#9ca3af"
+          fill={labelColor}
           textAnchor="middle"
           fontSize={11}
           fontWeight="500"
@@ -161,15 +170,15 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
         <>
           <ResponsiveContainer width="100%" height={height}>
             <BarChart data={chartData} margin={{ top: 30, right: 20, bottom: 20, left: 20 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-              <XAxis dataKey="name" tick={{ fill: '#9ca3af' }} />
-              <YAxis tick={{ fill: '#9ca3af' }} />
+              <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+              <XAxis dataKey="name" tick={{ fill: textColor }} />
+              <YAxis tick={{ fill: textColor }} />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#1f2937',
-                  border: '1px solid #374151',
+                  backgroundColor: tooltipBg,
+                  border: `1px solid ${tooltipBorder}`,
                   borderRadius: '8px',
-                  color: '#d1d5db',
+                  color: tooltipText,
                 }}
                 formatter={(_value: any, _name: string, props: any) => {
                   const { payload } = props;
@@ -180,7 +189,7 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
                 }}
                 labelFormatter={(label) => `Category: ${label}`}
               />
-              <Legend wrapperStyle={{ color: '#d1d5db', paddingTop: '10px' }} />
+              <Legend wrapperStyle={{ color: textColor, paddingTop: '10px' }} />
               <Bar
                 dataKey="displayValue"
                 fill="#8b5cf6"

@@ -132,47 +132,59 @@ const HistogramChart: React.FC<HistogramChartProps> = (props) => {
       {description && (
         <p className="text-sm text-gray-400 mb-4 text-center">{description}</p>
       )}
-      <ResponsiveContainer width="100%" height={height}>
-        <BarChart
-          data={chartData}
-          margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
-          barCategoryGap={0}
-          barGap={0}
-        >
-          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-          <XAxis
-            dataKey="name"
-            tick={{ fill: '#9ca3af' }}
-            label={{ value: 'Bins', position: 'insideBottom', offset: -10, fill: '#9ca3af' }}
-          />
-          <YAxis
-            tick={{ fill: '#9ca3af' }}
-            label={{ value: 'Frequency', angle: -90, position: 'insideLeft', fill: '#9ca3af' }}
-          />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: '#1f2937',
-              border: '1px solid #374151',
-              borderRadius: '8px',
-              color: '#d1d5db',
-            }}
-            labelStyle={{ color: '#d1d5db' }}
-            formatter={(value: any) => [`Frequency: ${value}`, '']}
-          />
-          <Legend wrapperStyle={{ color: '#d1d5db' }} />
-          {seriesKeys.map((sk, index) => (
-            <Bar
-              key={sk.key}
-              dataKey={sk.key}
-              name={sk.name}
-              fill={sk.color || `hsl(${(index * 360) / seriesKeys.length}, 70%, 60%)`}
-              stroke="#374151"
-              strokeWidth={1}
-              radius={0}
-            />
-          ))}
-        </BarChart>
-      </ResponsiveContainer>
+      {(() => {
+        // Detect dark mode
+        const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+        const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
+        const textColor = isDarkMode ? '#D1D5DB' : '#9CA3AF';
+        const tooltipBg = isDarkMode ? '#1F2937' : '#FFFFFF';
+        const tooltipBorder = isDarkMode ? '#374151' : '#E5E7EB';
+        const tooltipText = isDarkMode ? '#E5E7EB' : '#1F2937';
+
+        return (
+          <ResponsiveContainer width="100%" height={height}>
+            <BarChart
+              data={chartData}
+              margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+              barCategoryGap={0}
+              barGap={0}
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+              <XAxis
+                dataKey="name"
+                tick={{ fill: textColor }}
+                label={{ value: 'Bins', position: 'insideBottom', offset: -10, fill: textColor }}
+              />
+              <YAxis
+                tick={{ fill: textColor }}
+                label={{ value: 'Frequency', angle: -90, position: 'insideLeft', fill: textColor }}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: tooltipBg,
+                  border: `1px solid ${tooltipBorder}`,
+                  borderRadius: '8px',
+                  color: tooltipText,
+                }}
+                labelStyle={{ color: tooltipText, fontWeight: 600 }}
+                formatter={(value: any) => [`Frequency: ${value}`, '']}
+              />
+              <Legend wrapperStyle={{ color: textColor }} />
+              {seriesKeys.map((sk, index) => (
+                <Bar
+                  key={sk.key}
+                  dataKey={sk.key}
+                  name={sk.name}
+                  fill={sk.color || `hsl(${(index * 360) / seriesKeys.length}, 70%, 60%)`}
+                  stroke={gridColor}
+                  strokeWidth={1}
+                  radius={0}
+                />
+              ))}
+            </BarChart>
+          </ResponsiveContainer>
+        );
+      })()}
     </div>
   );
 };
