@@ -170,7 +170,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
     top: margin?.top ?? (legend ? 56 : 32),
     right: margin?.right ?? 20,
     bottom: margin?.bottom ?? 36,
-    left: margin?.left ?? 48,
+    left: margin?.left ?? 20,
   };
 
   return (

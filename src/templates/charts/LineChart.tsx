@@ -85,7 +85,7 @@ const LineChart: React.FC<LineChartProps> = ({
   cardBackgroundColor,
   grid = { horizontal: true, vertical: false },
   legend = true,
-  margin = { top: 40, right: 20, bottom: 40, left: 50 },
+  margin = { top: 40, right: 20, bottom: 40, left: 20 },
   variant = 'default',
   elevation = 'raised',
   emphasis: _emphasis = 'medium',

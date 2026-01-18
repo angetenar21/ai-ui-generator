@@ -123,7 +123,7 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
           width={width}
           height={height}
           colors={colorPalette}
-          margin={{ top: 50, right: 80, bottom: 50, left: 80 }}
+          margin={{ top: 50, right: 30, bottom: 50, left: 30 }}
           sx={{
             '& .MuiChartsAxis-line': {
               stroke: '#6B7280',
