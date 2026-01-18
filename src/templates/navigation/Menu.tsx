@@ -91,46 +91,45 @@ const Menu: React.FC<MenuProps> = ({
         <>
           {/* Backdrop */}
           <div
-            className="fixed inset-0 z-40"
+            className="fixed inset-0 z-[9998]"
             onClick={() => setIsOpen(false)}
           />
 
           {/* Menu */}
-          <div className={`absolute ${positionClasses[position]} z-50 min-w-[200px] shadow-xl`}>
+          <div className={`absolute ${positionClasses[position]} z-[9999] min-w-[200px] shadow-xl`}>
             <div className={variantClasses[variant]}>
               {title && trigger && (
                 <div className="px-3 py-2 text-sm font-semibold text-gray-400 uppercase tracking-wide border-b border-gray-700">
                   {title}
                 </div>
               )}
-              <div className="space-y-1 py-1">
-                {menuItemsList.map((item, index) => {
-                  if (item.divider) {
-                    return <div key={index} className="border-t border-gray-700 my-1" />;
-                  }
+              <div className="space-y-1 py-1">{menuItemsList.map((item, index) => {
+                if (item.divider) {
+                  return <div key={index} className="border-t border-gray-700 my-1" />;
+                }
 
-                  return (
-                    <button
-                      key={index}
-                      className={`
+                return (
+                  <button
+                    key={index}
+                    className={`
                         w-full text-left px-3 py-2 rounded-lg
                         flex items-center gap-3
                         transition-colors
                         ${item.disabled
-                          ? 'text-gray-600 cursor-not-allowed'
-                          : item.variant === 'danger'
-                            ? 'text-red-400 hover:bg-red-500/10 hover:text-red-300'
-                            : 'text-gray-300 hover:bg-gray-700/50 hover:text-white cursor-pointer'
-                        }
+                        ? 'text-gray-600 cursor-not-allowed'
+                        : item.variant === 'danger'
+                          ? 'text-red-400 hover:bg-red-500/10 hover:text-red-300'
+                          : 'text-gray-300 hover:bg-gray-700/50 hover:text-white cursor-pointer'
+                      }
                       `.trim().replace(/\s+/g, ' ')}
-                      onClick={() => handleItemClick(item)}
-                      disabled={item.disabled}
-                    >
-                      {item.icon && <span className="flex-shrink-0">{item.icon}</span>}
-                      <span className="flex-1">{item.label}</span>
-                    </button>
-                  );
-                })}
+                    onClick={() => handleItemClick(item)}
+                    disabled={item.disabled}
+                  >
+                    {item.icon && <span className="flex-shrink-0">{item.icon}</span>}
+                    <span className="flex-1">{item.label}</span>
+                  </button>
+                );
+              })}
               </div>
             </div>
           </div>

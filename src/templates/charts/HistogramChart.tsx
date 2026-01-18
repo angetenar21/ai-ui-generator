@@ -146,14 +146,15 @@ const HistogramChart: React.FC<HistogramChartProps> = (props) => {
             <BarChart
               data={chartData}
               margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
-              barCategoryGap={0}
+              barCategoryGap="0%"
               barGap={0}
             >
               <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
               <XAxis
                 dataKey="name"
-                tick={{ fill: textColor }}
+                tick={{ fill: textColor, fontSize: 12 }}
                 label={{ value: 'Bins', position: 'insideBottom', offset: -10, fill: textColor }}
+                interval={0}
               />
               <YAxis
                 tick={{ fill: textColor }}
@@ -176,9 +177,8 @@ const HistogramChart: React.FC<HistogramChartProps> = (props) => {
                   dataKey={sk.key}
                   name={sk.name}
                   fill={sk.color || `hsl(${(index * 360) / seriesKeys.length}, 70%, 60%)`}
-                  stroke={gridColor}
-                  strokeWidth={1}
-                  radius={0}
+                  radius={[0, 0, 0, 0]}
+                  isAnimationActive={false}
                 />
               ))}
             </BarChart>
