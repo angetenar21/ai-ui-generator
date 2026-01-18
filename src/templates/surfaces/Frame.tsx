@@ -66,7 +66,7 @@ const Frame: React.FC<FrameProps> = ({
         ${borderStyleClasses[borderStyle]}
         ${borderWidthClasses[borderWidth]}
         ${paddingClasses[padding]}
-        rounded-lg my-2
+        rounded-lg my-1
         transition-all
       `}
     >

@@ -98,7 +98,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
   if (!series || series.length === 0 || !series[0].data || series[0].data.length === 0) {
     console.warn('[AreaChart] No valid series data provided:', { series });
     return (
-      <div className="card rounded-card p-6 my-4 hover:shadow-hover transition-all duration-300">
+      <div className="card rounded-card p-6 my-1 hover:shadow-hover transition-all duration-300">
         {(title || description) && (
           <div className="mb-6">
             {title && (
@@ -174,7 +174,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
   };
 
   return (
-    <div className="w-full h-full max-w-full bg-white dark:bg-gray-900 rounded-xl p-4 my-2 shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col">
+    <div className="w-full h-full max-w-full bg-white dark:bg-gray-900 rounded-xl p-4 my-1 shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col">
       {/* Header */}
       {(title || description) && (
         <div className="mb-3 px-1">

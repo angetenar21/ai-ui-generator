@@ -87,7 +87,7 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
   // Don't render if no data
   if (!chartData || chartData.length === 0) {
     return (
-      <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-4">
+      <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-1">
         {title && (
           <h3 className="text-xl font-display font-semibold text-text-primary mb-4">
             {title}
@@ -154,7 +154,7 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
   };
 
   return (
-    <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-4">
+    <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-1">
       {title && (
         <h3 className="text-xl font-display font-semibold text-text-primary mb-4">
           {title}

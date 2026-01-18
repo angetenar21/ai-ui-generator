@@ -33,7 +33,7 @@ const SankeyChart: React.FC<SankeyChartProps> = ({
   // Validate
   if (!nodes || !Array.isArray(nodes) || nodes.length === 0) {
     return (
-      <div className="card rounded-card p-6 my-4 hover:shadow-hover transition-all duration-300">
+      <div className="card rounded-card p-6 my-1 hover:shadow-hover transition-all duration-300">
         {title && (
           <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
             {title}
@@ -48,7 +48,7 @@ const SankeyChart: React.FC<SankeyChartProps> = ({
 
   if (!links || !Array.isArray(links) || links.length === 0) {
     return (
-      <div className="card rounded-card p-6 my-4 hover:shadow-hover transition-all duration-300">
+      <div className="card rounded-card p-6 my-1 hover:shadow-hover transition-all duration-300">
         {title && (
           <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
             {title}
@@ -107,7 +107,7 @@ const SankeyChart: React.FC<SankeyChartProps> = ({
   ];
 
   return (
-    <div className="card rounded-card p-6 my-4 hover:shadow-hover transition-all duration-300">
+    <div className="card rounded-card p-6 my-1 hover:shadow-hover transition-all duration-300">
       {/* Header */}
       {(title || description) && (
         <div className="mb-6">

@@ -10,7 +10,7 @@ interface GroupedBarChartProps {
 }
 
 const GroupedBarChart: React.FC<GroupedBarChartProps> = ({ title, description, data, height = 400 }) => (
-  <div className="card border hover:shadow-hover transition-all duration-300 rounded-card p-6 my-4">
+  <div className="card border hover:shadow-hover transition-all duration-300 rounded-card p-6 my-1">
     {(title || description) && (
       <div className="mb-6">
         {title && (

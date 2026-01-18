@@ -43,10 +43,10 @@ const Stack: React.FC<StackProps> = ({
 }) => {
   const spacingClasses = {
     none: 'gap-0',
-    small: 'gap-2',
-    medium: 'gap-3',
-    large: 'gap-4',
-    xlarge: 'gap-6',
+    small: 'gap-1',
+    medium: 'gap-2',
+    large: 'gap-3',
+    xlarge: 'gap-4',
   };
 
   const alignClasses = {

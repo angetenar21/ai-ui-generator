@@ -106,7 +106,7 @@ const ScatterChart: React.FC<ScatterChartProps> = ({
   if (!series || series.length === 0 || !series[0].data || series[0].data.length === 0) {
     console.warn('[ScatterChart] No valid series data provided:', { series });
     return (
-      <div className="card rounded-card p-6 my-4 hover:shadow-hover transition-all duration-300">
+      <div className="card rounded-card p-6 my-1 hover:shadow-hover transition-all duration-300">
         {(title || description) && (
           <div className="mb-6">
             {title && (
@@ -189,7 +189,7 @@ const ScatterChart: React.FC<ScatterChartProps> = ({
   });
 
   return (
-    <div className="card rounded-card p-6 my-4 hover:shadow-hover transition-all duration-300">
+    <div className="card rounded-card p-6 my-1 hover:shadow-hover transition-all duration-300">
       {/* Header */}
       {(title || description) && (
         <div className="mb-6">

@@ -236,7 +236,7 @@ const ChatPage: React.FC = () => {
       {/* Messages Area */}
       {messages.length > 0 && (
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 pb-40 pt-8 scrollbar-thin">
-          <div className="w-full max-w-5xl mx-auto space-y-6">
+          <div className="w-full max-w-5xl mx-auto space-y-3">
             {/* Status Badge */}
             {jobStatus && (
               <div className="flex justify-center animate-slide-up">

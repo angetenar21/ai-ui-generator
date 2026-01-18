@@ -49,7 +49,7 @@ const Text: React.FC<TextProps> = ({
   const isSectionHeader = markdown && content.trim().startsWith('##');
   const containerClasses = isSectionHeader
     ? "p-2 my-1"  // Minimal padding for headers
-    : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 my-4";  // Normal padding for content
+    : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 my-1";  // Normal padding for content
 
   return (
     <div className={containerClasses}>

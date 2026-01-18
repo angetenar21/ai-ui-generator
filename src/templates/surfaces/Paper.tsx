@@ -64,7 +64,7 @@ const Paper: React.FC<PaperProps> = ({
         ${elevationClasses[elevation]}
         ${paddingClasses[padding]}
         ${roundedClasses[rounded]}
-        my-2
+        my-1
         transition-all duration-200
         hover:shadow-2xl
       `}

@@ -35,7 +35,7 @@ const ChordChart: React.FC<ChordChartProps> = ({
   // Validate
   if (!nodes || !Array.isArray(nodes) || nodes.length === 0) {
     return (
-      <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-4">
+      <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-1">
         {title && <h3 className="text-xl font-semibold text-text-primary mb-4">{title}</h3>}
         <div className="text-center text-gray-400">
           <p className="text-sm">No nodes data for chord chart</p>
@@ -46,7 +46,7 @@ const ChordChart: React.FC<ChordChartProps> = ({
 
   if (!matrix || !Array.isArray(matrix) || matrix.length === 0) {
     return (
-      <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-4">
+      <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-1">
         {title && <h3 className="text-xl font-semibold text-text-primary mb-4">{title}</h3>}
         <div className="text-center text-gray-400">
           <p className="text-sm">No matrix data for chord chart</p>
@@ -66,7 +66,7 @@ const ChordChart: React.FC<ChordChartProps> = ({
   const maxValue = Math.max(...matrix.flat());
 
   return (
-    <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-4">
+    <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-1">
       {title && <h3 className="text-xl font-semibold text-text-primary mb-4 text-center">{title}</h3>}
       {description && (
         <p className="text-sm text-gray-400 mb-4 text-center">{description}</p>

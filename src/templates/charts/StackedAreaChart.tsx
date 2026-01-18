@@ -9,7 +9,7 @@ interface StackedAreaChartProps {
 }
 
 const StackedAreaChart: React.FC<StackedAreaChartProps> = ({ title, data, height = 400 }) => (
-  <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-4">
+  <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-1">
     {title && <h3 className="text-xl font-semibold text-text-primary mb-4">{title}</h3>}
     <ResponsiveContainer width="100%" height={height}>
       <BarChart data={data} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>

@@ -97,7 +97,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   // Validate
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
-      <div className="card rounded-card p-6 my-4 hover:shadow-hover transition-all duration-300">
+      <div className="card rounded-card p-6 my-1 hover:shadow-hover transition-all duration-300">
         {title && (
           <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
             {title}
@@ -205,7 +205,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   };
 
   return (
-    <div className="card rounded-card p-6 my-4 hover:shadow-hover transition-all duration-300">
+    <div className="card rounded-card p-6 my-1 hover:shadow-hover transition-all duration-300">
       {/* Header */}
       {(title || description) && (
         <div className="mb-6">

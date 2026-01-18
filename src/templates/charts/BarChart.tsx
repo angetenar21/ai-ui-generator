@@ -189,7 +189,7 @@ const BarChart: React.FC<BarChartProps> = ({
 
   return (
     <div
-      className={`${surfaceClasses} rounded-xl p-4 my-2 transition-all duration-300 w-full max-w-full overflow-hidden`}
+      className={`${surfaceClasses} rounded-xl p-4 my-1 transition-all duration-300 w-full max-w-full overflow-hidden`}
       style={cardBgColor ? { backgroundColor: cardBgColor } : undefined}
     >
       {/* Header */}

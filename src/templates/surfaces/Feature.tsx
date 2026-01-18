@@ -35,7 +35,7 @@ const Feature: React.FC<FeatureProps> = ({
 }) => {
   if (!title || !description) {
     return (
-      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 my-2">
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 my-1">
         <div className="text-gray-500 dark:text-gray-400 text-sm">Feature card requires title and description</div>
       </div>
     );
@@ -65,7 +65,7 @@ const Feature: React.FC<FeatureProps> = ({
   const isVertical = orientation === 'vertical';
 
   return (
-    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 my-2 hover:border-gray-300 dark:hover:border-gray-600 transition-all group">
+    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 my-1 hover:border-gray-300 dark:hover:border-gray-600 transition-all group">
       <div className={`flex ${isVertical ? 'flex-col' : 'flex-row'} gap-4`}>
         {/* Icon */}
         <div className={`

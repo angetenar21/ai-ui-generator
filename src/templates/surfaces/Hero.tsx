@@ -46,7 +46,7 @@ const Hero: React.FC<HeroProps> = ({
 }) => {
   if (!title) {
     return (
-      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 my-2">
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 my-1">
         <div className="text-gray-500 dark:text-gray-400 text-sm">Hero section requires a title</div>
       </div>
     );
@@ -91,7 +91,7 @@ const Hero: React.FC<HeroProps> = ({
     <div
       className={`
         ${getBackgroundClass()}
-        border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden my-4
+        border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden my-1
         relative
       `}
       style={

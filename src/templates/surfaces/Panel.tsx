@@ -51,7 +51,7 @@ const Panel: React.FC<PanelProps> = ({
 
   if (!title) {
     return (
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-4 my-2">
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-4 my-1">
         <div className="text-gray-500 dark:text-gray-400 text-sm">Panel requires a title</div>
       </div>
     );
@@ -67,7 +67,7 @@ const Panel: React.FC<PanelProps> = ({
   const secondaryTextClass = 'text-gray-600 dark:text-gray-300';
 
   return (
-    <div className={`${surfaceClasses} rounded-xl my-2 overflow-hidden transition-all duration-300 w-full max-w-full ${textColorClass}`}>
+    <div className={`${surfaceClasses} rounded-xl my-1 overflow-hidden transition-all duration-300 w-full max-w-full ${textColorClass}`}>
       {/* Header */}
       <div
         className={`

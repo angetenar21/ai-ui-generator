@@ -134,7 +134,7 @@ const RadarChart: React.FC<RadarChartProps> = (props) => {
     // Validate indicator format
     if (!indicator || !Array.isArray(indicator) || indicator.length === 0) {
       return (
-        <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-4">
+        <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-1">
           <div className="text-center text-gray-400">
             <p className="text-sm">No indicators defined for radar chart</p>
           </div>
@@ -144,7 +144,7 @@ const RadarChart: React.FC<RadarChartProps> = (props) => {
 
     if (!series || !Array.isArray(series) || series.length === 0) {
       return (
-        <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-4">
+        <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-1">
           <div className="text-center text-gray-400">
             <p className="text-sm">No series data for radar chart</p>
           </div>
@@ -181,7 +181,7 @@ const RadarChart: React.FC<RadarChartProps> = (props) => {
     // Validate new format
     if (!axes || !Array.isArray(axes) || axes.length === 0) {
       return (
-        <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-4">
+        <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-1">
           <div className="text-center text-gray-400">
             <p className="text-sm">No axes defined for radar chart</p>
           </div>
@@ -191,7 +191,7 @@ const RadarChart: React.FC<RadarChartProps> = (props) => {
 
     if (!series || !Array.isArray(series) || series.length === 0) {
       return (
-        <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-4">
+        <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-1">
           <div className="text-center text-gray-400">
             <p className="text-sm">No series data for radar chart</p>
           </div>
@@ -227,7 +227,7 @@ const RadarChart: React.FC<RadarChartProps> = (props) => {
     // Validate old format
     if (!data || !Array.isArray(data) || data.length === 0) {
       return (
-        <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-4">
+        <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-1">
           <div className="text-center text-gray-400">
             <p className="text-sm">No data available for radar chart</p>
           </div>
@@ -237,7 +237,7 @@ const RadarChart: React.FC<RadarChartProps> = (props) => {
 
     if (!dataKeys || !Array.isArray(dataKeys) || dataKeys.length === 0) {
       return (
-        <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-4">
+        <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-1">
           <div className="text-center text-gray-400">
             <p className="text-sm">No data keys specified for radar chart</p>
           </div>
@@ -247,7 +247,7 @@ const RadarChart: React.FC<RadarChartProps> = (props) => {
   } else {
     // Invalid format
     return (
-      <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-4">
+      <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-1">
         <div className="text-center text-gray-400">
           <p className="text-sm">Invalid radar chart configuration</p>
           <p className="text-xs mt-2">Expected either (data + dataKeys), (axes + series), or (indicator + series)</p>
@@ -257,7 +257,7 @@ const RadarChart: React.FC<RadarChartProps> = (props) => {
   }
 
   return (
-    <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-4">
+    <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-1">
       {title && (
         <h3 className="text-xl font-display font-semibold text-text-primary mb-4 text-center">
           {title}

@@ -42,7 +42,7 @@ const SparklineChart: React.FC<SparklineChartProps> = ({
   curve = 'linear',
 }) => {
   return (
-    <div className="card border hover:shadow-hover transition-all duration-300 rounded-card p-4 my-2 inline-block">
+    <div className="card border hover:shadow-hover transition-all duration-300 rounded-card p-4 my-1 inline-block">
       {(title || description) && (
         <div className="mb-2">
           {title && (

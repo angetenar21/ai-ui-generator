@@ -82,7 +82,7 @@ const InsightCard: React.FC<InsightCardProps> = ({
   };
 
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-xl p-6 my-4 border ${config.bgClass} hover:shadow-lg transition-all duration-200 text-gray-900 dark:text-white`}>
+    <div className={`bg-white dark:bg-gray-800 rounded-xl p-6 my-1 border ${config.bgClass} hover:shadow-lg transition-all duration-200 text-gray-900 dark:text-white`}>
       <div className="flex items-start gap-4">
         {/* Icon */}
         {showIcon && (
