@@ -41,7 +41,7 @@ const RadialBarChart: React.FC<RadialBarChartProps> = ({
     return (
       <div className="card rounded-card p-6 my-1 hover:shadow-hover transition-all duration-300">
         {title && (
-          <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
+          <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
             {title}
           </h3>
         )}
@@ -81,9 +81,9 @@ const RadialBarChart: React.FC<RadialBarChartProps> = ({
       const data = payload[0].payload;
       return (
         <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 shadow-lg">
-          <p className="font-semibold text-text-primary mb-1">{data.name}</p>
-          <p className="text-sm text-text-secondary">
-            Value: <span className="font-medium text-text-primary">{data.value.toFixed(2)}</span>
+          <p className="font-semibold text-gray-900 dark:text-white mb-1">{data.name}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-300">
+            Value: <span className="font-medium text-gray-900 dark:text-white">{data.value.toFixed(2)}</span>
           </p>
         </div>
       );
@@ -97,12 +97,12 @@ const RadialBarChart: React.FC<RadialBarChartProps> = ({
       {(title || description) && (
         <div className="mb-6">
           {title && (
-            <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
+            <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-sm text-text-secondary leading-relaxed">
+            <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
               {description}
             </p>
           )}

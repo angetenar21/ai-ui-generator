@@ -82,7 +82,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
               {item.href && !isLast && !isCollapsed ? (
                 <a
                   href={item.href}
-                  className="flex items-center gap-1.5 text-text-secondary hover:text-text-primary transition-colors"
+                  className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:text-white transition-colors"
                 >
                   {item.icon && <span>{item.icon}</span>}
                   <span>{item.label}</span>
@@ -91,10 +91,10 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
                 <span
                   className={`flex items-center gap-1.5 ${
                     isLast
-                      ? 'text-text-primary font-medium'
+                      ? 'text-gray-900 dark:text-white font-medium'
                       : isCollapsed
                       ? 'text-text-tertiary'
-                      : 'text-text-secondary'
+                      : 'text-gray-600 dark:text-gray-300'
                   }`}
                 >
                   {item.icon && <span>{item.icon}</span>}

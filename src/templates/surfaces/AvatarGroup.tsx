@@ -100,7 +100,7 @@ const AvatarGroup: React.FC<AvatarGroupProps> = ({
   return (
     <div className="glass-dark border border-gray-700/50 rounded-lg p-4 my-1">
       {label && (
-        <div className="text-text-secondary text-sm font-medium mb-3">{label}</div>
+        <div className="text-gray-600 dark:text-gray-300 text-sm font-medium mb-3">{label}</div>
       )}
       
       <div className="flex items-center -space-x-2">
@@ -147,7 +147,7 @@ const AvatarGroup: React.FC<AvatarGroupProps> = ({
               ${sizeClasses[size]}
               rounded-full border-2 border-bg-main
               bg-bg-sub flex items-center justify-center
-              font-semibold text-text-secondary
+              font-semibold text-gray-600 dark:text-gray-300
               hover:z-10 hover:scale-110 transition-transform cursor-pointer
             `}
             title={`${remainingCount} more`}

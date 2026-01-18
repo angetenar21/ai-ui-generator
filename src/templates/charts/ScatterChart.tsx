@@ -110,18 +110,18 @@ const ScatterChart: React.FC<ScatterChartProps> = ({
         {(title || description) && (
           <div className="mb-6">
             {title && (
-              <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
+              <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
                 {title}
               </h3>
             )}
             {description && (
-              <p className="text-sm text-text-secondary leading-relaxed">
+              <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
                 {description}
               </p>
             )}
           </div>
         )}
-        <div className="flex justify-center items-center min-h-[300px] text-text-secondary">
+        <div className="flex justify-center items-center min-h-[300px] text-gray-600 dark:text-gray-300">
           <div className="text-center">
             <div className="text-4xl mb-2">📊</div>
             <div>No data available</div>
@@ -194,12 +194,12 @@ const ScatterChart: React.FC<ScatterChartProps> = ({
       {(title || description) && (
         <div className="mb-6">
           {title && (
-            <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
+            <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-sm text-text-secondary leading-relaxed">
+            <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
               {description}
             </p>
           )}
@@ -275,7 +275,7 @@ const ScatterChart: React.FC<ScatterChartProps> = ({
           } catch (error) {
             console.error('[ScatterChart] Error rendering chart:', error);
             return (
-              <div className="flex justify-center items-center min-h-[300px] text-text-secondary">
+              <div className="flex justify-center items-center min-h-[300px] text-gray-600 dark:text-gray-300">
                 <div className="text-center">
                   <div className="text-4xl mb-2">⚠️</div>
                   <div>Error rendering chart</div>

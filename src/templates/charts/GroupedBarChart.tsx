@@ -22,12 +22,12 @@ const GroupedBarChart: React.FC<GroupedBarChartProps> = ({ title, description, d
       {(title || description) && (
         <div className="mb-6">
           {title && (
-            <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
+            <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-sm text-text-secondary leading-relaxed">
+            <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
               {description}
             </p>
           )}
@@ -48,7 +48,14 @@ const GroupedBarChart: React.FC<GroupedBarChartProps> = ({ title, description, d
             labelStyle={{ color: tooltipText, fontWeight: 600 }}
             itemStyle={{ color: tooltipText }}
           />
-          <Legend wrapperStyle={{ color: textColor, fontSize: 14, fontWeight: 500 }} />
+          <Legend
+            wrapperStyle={{ paddingTop: '16px' }}
+            formatter={(value) => (
+              <span style={{ color: textColor, fontSize: '12px', fontWeight: 500 }}>
+                {value}
+              </span>
+            )}
+          />
           <Bar dataKey="value" fill="#F97316" />
         </BarChart>
       </ResponsiveContainer>

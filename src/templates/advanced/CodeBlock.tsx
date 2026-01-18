@@ -84,7 +84,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
       <div className="flex items-center justify-between px-4 py-2 border-b border-border-main bg-bg-sub/50">
         <div className="flex items-center gap-3">
           {title && (
-            <span className="text-text-primary text-sm font-medium">{title}</span>
+            <span className="text-gray-900 dark:text-white text-sm font-medium">{title}</span>
           )}
           <span className={`text-xs font-mono uppercase ${languageColors[language]}`}>
             {language}
@@ -96,7 +96,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
             onClick={handleCopy}
             className="
               flex items-center gap-1 px-2 py-1 rounded
-              text-text-tertiary hover:text-text-primary
+              text-text-tertiary hover:text-gray-900 dark:text-white
               hover:bg-bg-main transition-colors
               text-sm
             "

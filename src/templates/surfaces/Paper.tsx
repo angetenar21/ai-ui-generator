@@ -70,7 +70,7 @@ const Paper: React.FC<PaperProps> = ({
       `}
     >
       {content && (
-        <div className="text-text-secondary leading-relaxed">
+        <div className="text-gray-600 dark:text-gray-300 leading-relaxed">
           {content}
         </div>
       )}

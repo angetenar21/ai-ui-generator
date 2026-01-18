@@ -71,13 +71,13 @@ const Frame: React.FC<FrameProps> = ({
       `}
     >
       {title && (
-        <div className="text-text-primary font-semibold text-lg mb-4 pb-3 border-b border-border-main">
+        <div className="text-gray-900 dark:text-white font-semibold text-lg mb-4 pb-3 border-b border-border-main">
           {title}
         </div>
       )}
 
       {content && (
-        <div className="text-text-secondary leading-relaxed">
+        <div className="text-gray-600 dark:text-gray-300 leading-relaxed">
           {content}
         </div>
       )}

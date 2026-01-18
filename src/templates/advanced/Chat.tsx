@@ -71,7 +71,7 @@ const Chat: React.FC<ChatProps> = ({
   const getMessageBg = (sender: string) => {
     if (sender === 'user') return 'bg-primary-500 text-white';
     if (sender === 'system') return 'bg-bg-sub text-text-tertiary text-center';
-    return 'bg-bg-sub text-text-primary';
+    return 'bg-bg-sub text-gray-900 dark:text-white';
   };
 
   const formatTimestamp = (timestamp?: string) => {
@@ -89,7 +89,7 @@ const Chat: React.FC<ChatProps> = ({
       {/* Header */}
       {title && (
         <div className="px-6 py-4 border-b border-border-main bg-bg-sub/30">
-          <h3 className="text-text-primary font-semibold">{title}</h3>
+          <h3 className="text-gray-900 dark:text-white font-semibold">{title}</h3>
         </div>
       )}
 
@@ -174,7 +174,7 @@ const Chat: React.FC<ChatProps> = ({
               className="
                 flex-1 px-4 py-2 rounded-lg
                 bg-bg-main border border-border-main
-                text-text-primary placeholder-text-tertiary
+                text-gray-900 dark:text-white placeholder-text-tertiary
                 focus:outline-none focus:ring-2 focus:ring-primary-500
               "
             />

@@ -12,24 +12,24 @@ const Markdown: React.FC<MarkdownProps> = ({ content, className = '', ...props }
     <div className="prose prose-invert max-w-none">
       <ReactMarkdown
         components={{
-          h1: ({ children }) => <h1 className="text-3xl font-display font-bold text-text-primary mb-4 mt-6">{children}</h1>,
-          h2: ({ children }) => <h2 className="text-2xl font-display font-bold text-text-primary mb-3 mt-5">{children}</h2>,
-          h3: ({ children }) => <h3 className="text-xl font-semibold text-text-primary mb-2 mt-4">{children}</h3>,
-          h4: ({ children }) => <h4 className="text-lg font-semibold text-text-primary mb-2 mt-3">{children}</h4>,
-          p: ({ children }) => <p className="text-text-secondary mb-3 leading-relaxed">{children}</p>,
-          strong: ({ children }) => <strong className="font-bold text-text-primary">{children}</strong>,
+          h1: ({ children }) => <h1 className="text-3xl font-display font-bold text-gray-900 dark:text-white mb-4 mt-6">{children}</h1>,
+          h2: ({ children }) => <h2 className="text-2xl font-display font-bold text-gray-900 dark:text-white mb-3 mt-5">{children}</h2>,
+          h3: ({ children }) => <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2 mt-4">{children}</h3>,
+          h4: ({ children }) => <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 mt-3">{children}</h4>,
+          p: ({ children }) => <p className="text-gray-600 dark:text-gray-300 mb-3 leading-relaxed">{children}</p>,
+          strong: ({ children }) => <strong className="font-bold text-gray-900 dark:text-white">{children}</strong>,
           em: ({ children }) => <em className="italic">{children}</em>,
           code: ({ children }) => <code className="bg-bg-surface px-1.5 py-0.5 rounded text-accent-cyan font-mono text-sm">{children}</code>,
           pre: ({ children }) => <pre className="bg-bg-surface rounded-lg p-4 overflow-x-auto my-3">{children}</pre>,
-          ul: ({ children }) => <ul className="list-disc list-inside mb-3 space-y-1 text-text-secondary">{children}</ul>,
-          ol: ({ children }) => <ol className="list-decimal list-inside mb-3 space-y-1 text-text-secondary">{children}</ol>,
+          ul: ({ children }) => <ul className="list-disc list-inside mb-3 space-y-1 text-gray-600 dark:text-gray-300">{children}</ul>,
+          ol: ({ children }) => <ol className="list-decimal list-inside mb-3 space-y-1 text-gray-600 dark:text-gray-300">{children}</ol>,
           li: ({ children }) => <li className="leading-relaxed">{children}</li>,
           blockquote: ({ children }) => <blockquote className="border-l-4 border-accent-from pl-4 italic my-3 text-text-tertiary">{children}</blockquote>,
           a: ({ href, children }) => <a href={href} className="text-accent-from hover:text-accent-to underline" target="_blank" rel="noopener noreferrer">{children}</a>,
           hr: () => <hr className="border-border-main my-4" />,
           table: ({ children }) => <table className="w-full border-collapse my-3">{children}</table>,
-          th: ({ children }) => <th className="border border-border-main px-3 py-2 bg-bg-sub text-text-primary font-semibold text-left">{children}</th>,
-          td: ({ children }) => <td className="border border-border-main px-3 py-2 text-text-secondary">{children}</td>,
+          th: ({ children }) => <th className="border border-border-main px-3 py-2 bg-bg-sub text-gray-900 dark:text-white font-semibold text-left">{children}</th>,
+          td: ({ children }) => <td className="border border-border-main px-3 py-2 text-gray-600 dark:text-gray-300">{children}</td>,
         }}
       >
         {content}

@@ -105,7 +105,7 @@ const Dashboard: React.FC<DashboardProps> = ({
       {/* Dashboard Header */}
       {title && (
         <div className="mb-6">
-          <h2 className="text-text-primary text-2xl font-bold">{title}</h2>
+          <h2 className="text-gray-900 dark:text-white text-2xl font-bold">{title}</h2>
         </div>
       )}
 
@@ -129,7 +129,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                   <div className="text-text-tertiary text-sm font-medium mb-1">
                     {widget.title}
                   </div>
-                  <div className="text-text-primary text-2xl font-bold">
+                  <div className="text-gray-900 dark:text-white text-2xl font-bold">
                     {widget.value}
                   </div>
                 </div>

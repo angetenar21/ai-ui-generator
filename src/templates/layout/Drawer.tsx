@@ -116,10 +116,10 @@ const Drawer: React.FC<DrawerProps> = ({
         className={`fixed ${positionClasses[position]} ${sizeClasses[position][size]} ${variantClasses[variant]} ${borderClasses[position]} ${transformClasses[position]} transition-transform duration-300 z-50 overflow-y-auto`}
       >
         <div className="flex items-center justify-between p-4 border-b border-border-primary">
-          <h2 className="text-lg font-semibold text-text-primary">{title}</h2>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h2>
           <button
             onClick={() => setIsOpen(false)}
-            className="text-text-tertiary hover:text-text-primary transition-colors p-1"
+            className="text-text-tertiary hover:text-gray-900 dark:text-white transition-colors p-1"
           >
             <svg
               className="w-6 h-6"

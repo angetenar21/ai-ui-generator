@@ -38,7 +38,7 @@ const Well: React.FC<WellProps> = ({
   };
 
   const variantTextClasses = {
-    default: 'text-text-secondary',
+    default: 'text-gray-600 dark:text-gray-300',
     info: 'text-info',
     warning: 'text-warning',
     success: 'text-success',
@@ -56,7 +56,7 @@ const Well: React.FC<WellProps> = ({
       {title && (
         <div className={`
           font-semibold mb-3 pb-2 border-b
-          ${variant === 'default' ? 'text-text-primary border-border-main' : `${variantTextClasses[variant]} border-current/20`}
+          ${variant === 'default' ? 'text-gray-900 dark:text-white border-border-main' : `${variantTextClasses[variant]} border-current/20`}
         `}>
           {title}
         </div>

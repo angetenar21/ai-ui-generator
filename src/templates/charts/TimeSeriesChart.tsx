@@ -99,7 +99,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     return (
       <div className="card rounded-card p-6 my-1 hover:shadow-hover transition-all duration-300">
         {title && (
-          <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
+          <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
             {title}
           </h3>
         )}
@@ -210,12 +210,12 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
       {(title || description) && (
         <div className="mb-6">
           {title && (
-            <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
+            <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-sm text-text-secondary leading-relaxed">
+            <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
               {description}
             </p>
           )}

@@ -77,7 +77,7 @@ const AppBar: React.FC<AppBarProps> = ({
       <div className="flex items-center gap-4">
         {logo && <span className="text-2xl">{logo}</span>}
         <div>
-          <h1 className="text-text-primary font-semibold text-lg">{title}</h1>
+          <h1 className="text-gray-900 dark:text-white font-semibold text-lg">{title}</h1>
           {subtitle && (
             <p className="text-text-tertiary text-sm">{subtitle}</p>
           )}
@@ -96,7 +96,7 @@ const AppBar: React.FC<AppBarProps> = ({
             <button
               key={index}
               onClick={action.onClick}
-              className="px-4 py-2 rounded-lg hover:bg-bg-elevated transition-colors text-text-secondary hover:text-text-primary flex items-center gap-2"
+              className="px-4 py-2 rounded-lg hover:bg-bg-elevated transition-colors text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:text-white flex items-center gap-2"
             >
               {action.icon && <span>{action.icon}</span>}
               <span>{action.label}</span>

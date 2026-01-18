@@ -59,7 +59,12 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
   showLabels = true,
 }) => {
   void(width); // Width prop available for future use
-  
+
+  // Detect dark mode
+  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  const textColor = isDarkMode ? '#FFFFFF' : '#000000';
+  const strokeColor = isDarkMode ? '#1F2937' : '#FFFFFF';
+
   // Transform data to ensure consistent format
   const transformData = (inputData: any): any[] => {
     if (!inputData) return [];
@@ -89,7 +94,7 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
     return (
       <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-1">
         {title && (
-          <h3 className="text-xl font-display font-semibold text-text-primary mb-4">
+          <h3 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-4">
             {title}
           </h3>
         )}
@@ -109,7 +114,7 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
           height={height}
           style={{
             fill: colors[index % colors.length],
-            stroke: '#ffffff',
+            stroke: strokeColor,
             strokeWidth: 2,
             fillOpacity: 1,
           }}
@@ -119,7 +124,7 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
             x={x + width / 2}
             y={y + height / 2}
             textAnchor="middle"
-            fill="#000000ff"
+            fill={textColor}
             // fontSize={Math.round(Math.min(width / 8, height / 4, 14))}
             fontWeight={depth === 1 ? 600 : 500}
             fontFamily="Inter, system-ui, -apple-system, sans-serif"
@@ -156,7 +161,7 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
   return (
     <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-1">
       {title && (
-        <h3 className="text-xl font-display font-semibold text-text-primary mb-4">
+        <h3 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-4">
           {title}
         </h3>
       )}

@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
+import { LineChart } from '@mui/x-charts/LineChart';
 
 interface SparklineChartProps {
   /** Chart title */
@@ -46,49 +46,45 @@ const SparklineChart: React.FC<SparklineChartProps> = ({
   title,
   description,
   data,
-  width = 120,
-  height = 60,
+  width = 400,
+  height = 250,
   color,
   area = true,
-  showTooltip = true,
   metric,
   value,
   trend,
   trendPositive = true,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({ width, height });
+  const [chartWidth, setChartWidth] = useState(width);
 
   // Detect dark mode
   const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
 
   // Set default color based on dark mode if not provided
   const chartColor = color || (isDarkMode ? '#60A5FA' : '#3B82F6');
-  const textColor = isDarkMode ? '#E5E7EB' : '#1F2937';
   const trendColor = trendPositive
     ? (isDarkMode ? '#10B981' : '#059669')
     : (isDarkMode ? '#EF4444' : '#DC2626');
 
   // Responsive sizing
   useEffect(() => {
-    const updateSize = () => {
+    const updateWidth = () => {
       if (containerRef.current) {
         const rect = containerRef.current.getBoundingClientRect();
-        setDimensions({
-          width: Math.max(width, rect.width - 16),
-          height,
-        });
+        const measuredWidth = rect.width - 32; // Account for padding
+        setChartWidth(Math.max(250, measuredWidth));
       }
     };
 
-    updateSize();
-    const observer = new ResizeObserver(updateSize);
+    updateWidth();
+    const observer = new ResizeObserver(updateWidth);
     if (containerRef.current) {
       observer.observe(containerRef.current);
     }
 
     return () => observer.disconnect();
-  }, [width, height]);
+  }, [width]);
 
   // Validate data
   const validData = Array.isArray(data)
@@ -99,7 +95,7 @@ const SparklineChart: React.FC<SparklineChartProps> = ({
     return (
       <div
         ref={containerRef}
-        className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 inline-flex flex-col items-center justify-center min-w-[180px]"
+        className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 flex flex-col items-center justify-center min-h-[250px]"
       >
         {title && (
           <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
@@ -115,14 +111,19 @@ const SparklineChart: React.FC<SparklineChartProps> = ({
 
   const minValue = Math.min(...validData);
   const maxValue = Math.max(...validData);
+  const xAxisData = Array.from({ length: validData.length }, (_, i) => i + 1);
+
+  // Calculate proper Y-axis bounds with padding
+  const yAxisMax = Math.ceil(maxValue * 1.1);
+  const yAxisMin = Math.max(0, Math.floor(minValue * 0.9));
 
   return (
     <div
       ref={containerRef}
-      className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md dark:hover:shadow-lg transition-all duration-200 inline-block"
+      className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md dark:hover:shadow-lg transition-all duration-200"
     >
       {/* Header Section */}
-      <div className="flex flex-col gap-2 mb-3">
+      <div className="flex flex-col gap-2 mb-4">
         {title && (
           <h4 className="text-sm font-semibold text-gray-900 dark:text-white leading-tight">
             {title}
@@ -157,34 +158,57 @@ const SparklineChart: React.FC<SparklineChartProps> = ({
       </div>
 
       {/* Chart */}
-      <div className="flex justify-center items-center">
+      <div className="w-full overflow-x-auto">
         {(() => {
           try {
+            const isDark = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+
             return (
-              <SparkLineChart
-                data={validData}
-                width={Math.max(100, dimensions.width - 24)}
-                height={dimensions.height}
-                color={chartColor}
-                area={area}
-                showTooltip={showTooltip}
-                plotType="line"
-                margin={{ top: 4, right: 4, bottom: 4, left: 4 }}
+              <LineChart
+                xAxis={[{
+                  data: xAxisData,
+                  scaleType: 'linear' as const,
+                }]}
+                series={[{
+                  data: validData,
+                  label: metric || title || 'Value',
+                  color: chartColor,
+                  area: area,
+                  curve: 'linear' as const,
+                  showMark: false,
+                }]}
+                width={chartWidth}
+                height={height}
+                margin={{ top: 20, right: 20, bottom: 30, left: 50 }}
+                yAxis={[{
+                  min: yAxisMin,
+                  max: yAxisMax,
+                }]}
                 sx={{
-                  '& .MuiSparkLineChart-root': {
-                    fontFamily: 'inherit',
+                  '& .MuiChartsAxis-line': {
+                    stroke: isDark ? '#6B7280' : '#D1D5DB',
+                    strokeWidth: 1,
                   },
-                  '& .MuiLineElement-root': {
-                    strokeWidth: 1.5,
-                    stroke: chartColor,
+                  '& .MuiChartsAxis-tick': {
+                    stroke: isDark ? '#6B7280' : '#D1D5DB',
+                    strokeWidth: 1,
+                  },
+                  '& .MuiChartsAxis-tickLabel': {
+                    fill: isDark ? '#9CA3AF' : '#6B7280',
+                    fontSize: '11px',
+                    fontWeight: 500,
+                  },
+                  '& .MuiChartsGrid-line': {
+                    stroke: isDark ? '#374151' : '#E5E7EB',
+                    opacity: 0.5,
                   },
                   '& .MuiAreaElement-root': {
-                    fillOpacity: area ? 0.25 : 0,
+                    fillOpacity: area ? 0.2 : 0,
                     fill: chartColor,
                   },
-                  '& .MuiTooltip-root': {
-                    backgroundColor: isDarkMode ? '#1F2937' : '#FFFFFF',
-                    color: textColor,
+                  '& .MuiLineElement-root': {
+                    strokeWidth: 2,
+                    stroke: chartColor,
                   },
                 }}
               />
@@ -192,21 +216,29 @@ const SparklineChart: React.FC<SparklineChartProps> = ({
           } catch (error) {
             console.warn('[SparklineChart] Render error:', error);
             return (
-              <div className="w-full h-[60px] flex items-center justify-center">
-                <span className="text-xs text-gray-500 dark:text-gray-400">Unable to render</span>
+              <div className="w-full h-[250px] flex items-center justify-center">
+                <span className="text-xs text-gray-500 dark:text-gray-400">Unable to render chart</span>
               </div>
             );
           }
         })()}
       </div>
 
-      {/* Footer Stats (optional) */}
-      {(minValue !== undefined || maxValue !== undefined) && (
-        <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
-          <span>Low: {minValue.toFixed(1)}</span>
-          <span>High: {maxValue.toFixed(1)}</span>
+      {/* Footer Stats */}
+      <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+        <div className="text-center">
+          <p className="text-xs text-gray-600 dark:text-gray-400">Min</p>
+          <p className="text-sm font-semibold text-gray-900 dark:text-white">{minValue.toFixed(1)}</p>
         </div>
-      )}
+        <div className="text-center">
+          <p className="text-xs text-gray-600 dark:text-gray-400">Max</p>
+          <p className="text-sm font-semibold text-gray-900 dark:text-white">{maxValue.toFixed(1)}</p>
+        </div>
+        <div className="text-center">
+          <p className="text-xs text-gray-600 dark:text-gray-400">Avg</p>
+          <p className="text-sm font-semibold text-gray-900 dark:text-white">{(validData.reduce((a, b) => a + b, 0) / validData.length).toFixed(1)}</p>
+        </div>
+      </div>
     </div>
   );
 };

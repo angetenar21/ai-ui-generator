@@ -50,7 +50,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
   const activeColorClasses = {
     primary: 'text-primary-500',
     accent: 'text-accent-from',
-    secondary: 'text-text-primary',
+    secondary: 'text-gray-900 dark:text-white',
   };
 
   if (items.length === 0) {
@@ -78,7 +78,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
               className={`flex flex-col items-center justify-center gap-1 min-w-[64px] h-full transition-colors ${
                 isActive
                   ? activeColorClasses[activeColor]
-                  : 'text-text-tertiary hover:text-text-secondary'
+                  : 'text-text-tertiary hover:text-gray-600 dark:text-gray-300'
               }`}
             >
               <div className="relative">

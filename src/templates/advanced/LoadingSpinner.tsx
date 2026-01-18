@@ -38,7 +38,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 
   const colorClasses = {
     primary: 'text-primary-500',
-    secondary: 'text-text-secondary',
+    secondary: 'text-gray-600 dark:text-gray-300',
     accent: 'text-accent-cyan',
     success: 'text-success',
     warning: 'text-warning',
@@ -109,7 +109,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     >
       {renderSpinner()}
       {label && (
-        <div className="text-text-secondary text-sm font-medium">
+        <div className="text-gray-600 dark:text-gray-300 text-sm font-medium">
           {label}
         </div>
       )}

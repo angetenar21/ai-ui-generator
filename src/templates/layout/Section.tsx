@@ -81,12 +81,12 @@ const Section: React.FC<SectionProps> = ({
               )}
               <div className="flex-1">
                 {title && (
-                  <h2 className="text-2xl font-display font-bold text-text-primary">
+                  <h2 className="text-2xl font-display font-bold text-gray-900 dark:text-white">
                     {title}
                   </h2>
                 )}
                 {subtitle && (
-                  <p className="text-text-secondary mt-1">{subtitle}</p>
+                  <p className="text-gray-600 dark:text-gray-300 mt-1">{subtitle}</p>
                 )}
               </div>
             </div>

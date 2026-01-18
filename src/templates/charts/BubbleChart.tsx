@@ -36,7 +36,7 @@ const BubbleChart: React.FC<BubbleChartProps> = ({
     return (
       <div className="card rounded-card p-6 my-1 hover:shadow-hover transition-all duration-300">
         {title && (
-          <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
+          <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
             {title}
           </h3>
         )}
@@ -84,7 +84,7 @@ const BubbleChart: React.FC<BubbleChartProps> = ({
     return (
       <div className="card rounded-card p-6 my-1 hover:shadow-hover transition-all duration-300">
         {title && (
-          <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
+          <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
             {title}
           </h3>
         )}
@@ -108,16 +108,16 @@ const BubbleChart: React.FC<BubbleChartProps> = ({
       return (
         <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 shadow-lg">
           {data.name && (
-            <p className="font-semibold text-text-primary mb-1">{data.name}</p>
+            <p className="font-semibold text-gray-900 dark:text-white mb-1">{data.name}</p>
           )}
-          <p className="text-sm text-text-secondary">
-            X: <span className="font-medium text-text-primary">{data.x.toFixed(2)}</span>
+          <p className="text-sm text-gray-600 dark:text-gray-300">
+            X: <span className="font-medium text-gray-900 dark:text-white">{data.x.toFixed(2)}</span>
           </p>
-          <p className="text-sm text-text-secondary">
-            Y: <span className="font-medium text-text-primary">{data.y.toFixed(2)}</span>
+          <p className="text-sm text-gray-600 dark:text-gray-300">
+            Y: <span className="font-medium text-gray-900 dark:text-white">{data.y.toFixed(2)}</span>
           </p>
-          <p className="text-sm text-text-secondary">
-            Size: <span className="font-medium text-text-primary">{data.z.toFixed(2)}</span>
+          <p className="text-sm text-gray-600 dark:text-gray-300">
+            Size: <span className="font-medium text-gray-900 dark:text-white">{data.z.toFixed(2)}</span>
           </p>
         </div>
       );
@@ -131,12 +131,12 @@ const BubbleChart: React.FC<BubbleChartProps> = ({
       {(title || description) && (
         <div className="mb-6">
           {title && (
-            <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
+            <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-sm text-text-secondary leading-relaxed">
+            <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
               {description}
             </p>
           )}

@@ -259,7 +259,7 @@ const RadarChart: React.FC<RadarChartProps> = (props) => {
   return (
     <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-1">
       {title && (
-        <h3 className="text-xl font-display font-semibold text-text-primary mb-4 text-center">
+        <h3 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-4 text-center">
           {title}
         </h3>
       )}
@@ -271,17 +271,17 @@ const RadarChart: React.FC<RadarChartProps> = (props) => {
 
       <ResponsiveContainer width="100%" height={height}>
         <RechartsRadarChart data={data} margin={{ top: 20, right: 30, bottom: 20, left: 30 }}>
-          {showGrid && <PolarGrid stroke="#374151" />}
+          {showGrid && <PolarGrid stroke={isDarkMode ? '#4B5563' : '#374151'} />}
           <PolarAngleAxis
             dataKey="subject"
-            tick={{ fill: '#374151', fontSize: 13 }}
-            stroke="#9ca3af"
+            tick={{ fill: isDarkMode ? '#D1D5DB' : '#374151', fontSize: 13 }}
+            stroke={isDarkMode ? '#6B7280' : '#9ca3af'}
           />
           <PolarRadiusAxis
             angle={90}
             domain={[0, 'auto']}
-            tick={{ fill: '#374151', fontSize: 10 }}
-            stroke="#9ca3af"
+            tick={{ fill: isDarkMode ? '#D1D5DB' : '#374151', fontSize: 10 }}
+            stroke={isDarkMode ? '#6B7280' : '#9ca3af'}
           />
 
           {dataKeys.map((dk, index) => (

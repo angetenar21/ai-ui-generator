@@ -109,7 +109,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors ${
             item.active
               ? 'bg-primary-500/10 text-primary-500'
-              : 'text-text-secondary hover:bg-bg-elevated hover:text-text-primary'
+              : 'text-gray-600 dark:text-gray-300 hover:bg-bg-elevated hover:text-gray-900 dark:text-white'
           } ${depth > 0 ? 'pl-8' : ''}`}
         >
           {item.icon && (
@@ -164,14 +164,14 @@ const Sidebar: React.FC<SidebarProps> = ({
         {!isCollapsed && (
           <div className="flex items-center gap-3">
             {logo && <span className="text-2xl">{logo}</span>}
-            <h2 className="text-lg font-semibold text-text-primary">{title}</h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h2>
           </div>
         )}
         {logo && isCollapsed && <span className="text-2xl mx-auto">{logo}</span>}
         {collapsible && (
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="text-text-tertiary hover:text-text-primary transition-colors p-1"
+            className="text-text-tertiary hover:text-gray-900 dark:text-white transition-colors p-1"
           >
             <svg
               className={`w-5 h-5 transition-transform ${

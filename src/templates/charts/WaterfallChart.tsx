@@ -1,5 +1,5 @@
 import React from 'react';
-import { ResponsiveContainer, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar } from 'recharts';
+import { ResponsiveContainer, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar, Cell } from 'recharts';
 
 interface WaterfallChartProps {
   /** Chart title */
@@ -36,12 +36,21 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
   height = 400,
 }) => {
   void (width); // Width prop available for future use
+
+  // Dark mode detection
+  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
+  const textColor = isDarkMode ? '#D1D5DB' : '#374151';
+  const tooltipBg = isDarkMode ? '#1F2937' : '#FFFFFF';
+  const tooltipBorder = isDarkMode ? '#374151' : '#E5E7EB';
+  const tooltipText = isDarkMode ? '#E5E7EB' : '#1F2937';
+
   // Validate
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
       <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-1">
-        {title && <h3 className="text-xl font-semibold text-text-primary mb-4">{title}</h3>}
-        <div className="text-center text-gray-400">
+        {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>}
+        <div className="text-center text-gray-600 dark:text-gray-400">
           <p className="text-sm">No series data for waterfall chart</p>
         </div>
       </div>
@@ -54,8 +63,8 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
   if (!firstSeries || !firstSeries.data || firstSeries.data.length === 0) {
     return (
       <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-1">
-        {title && <h3 className="text-xl font-semibold text-text-primary mb-4">{title}</h3>}
-        <div className="text-center text-gray-400">
+        {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>}
+        <div className="text-center text-gray-600 dark:text-gray-400">
           <p className="text-sm">No data values in series</p>
         </div>
       </div>
@@ -67,8 +76,9 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
   if (categories.length === 0) {
     // Auto-generate category names if not provided
     categories = firstSeries.data.map((_, index) => {
-      const labels = ['Start', 'Q1', 'Q2', 'Q3', 'Q4', 'Total'];
-      return labels[index] || `Category ${index + 1}`;
+      if (index === 0) return 'Start';
+      if (index === firstSeries.data.length - 1) return 'Total';
+      return `Step ${index}`;
     });
   }
 
@@ -85,6 +95,7 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
     let value: number;
     let isTotal = false;
 
+    // Parse the data item
     if (typeof item === 'object' && item !== null && 'value' in item) {
       value = Number(item.value) || 0;
       isTotal = item.isTotal || false;
@@ -92,87 +103,132 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
       value = Number(item) || 0;
     }
 
-    const start = cumulative;
+    // Determine if this is the last item and should be treated as total
+    const isLast = index === categories.length - 1;
+    if (isLast && !isTotal) {
+      isTotal = true;
+    }
+
+    const previousCumulative = cumulative;
+
+    // For total bars, show the full cumulative value
+    if (isTotal) {
+      return {
+        name: category,
+        value,
+        start: 0,
+        end: cumulative,
+        displayValue: cumulative,
+        actualChange: value,
+        isTotal: true,
+        positive: cumulative >= 0,
+        // For stacked bar chart
+        invisible: 0,
+        visible: cumulative,
+      };
+    }
+
+    // For regular bars, show the change from previous
     cumulative += value;
-    const end = cumulative;
 
     return {
       name: category,
       value,
-      start,
-      end,
-      isTotal,
-      positive: value >= 0,
+      start: previousCumulative,
+      end: cumulative,
       displayValue: Math.abs(value),
-      absoluteStart: isTotal ? 0 : start,
-      absoluteEnd: end,
+      actualChange: value,
+      isTotal: false,
+      positive: value >= 0,
+      // For stacked bar chart
+      invisible: Math.min(previousCumulative, cumulative),
+      visible: Math.abs(value),
     };
   });
 
-  // Custom shape renderer for waterfall bars
-  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
-  const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
-  const textColor = isDarkMode ? '#D1D5DB' : '#9CA3AF';
-  const tooltipBg = isDarkMode ? '#1F2937' : '#FFFFFF';
-  const tooltipBorder = isDarkMode ? '#374151' : '#E5E7EB';
-  const tooltipText = isDarkMode ? '#E5E7EB' : '#1F2937';
-  const strokeColor = isDarkMode ? '#374151' : '#E5E7EB';
-  const labelColor = isDarkMode ? '#D1D5DB' : '#9CA3AF';
-
+  // Custom bar shape for waterfall effect
   const WaterfallBar = (props: any) => {
-    const { x, y, width, height, payload } = props;
+    const { x, y, width, height, fill, payload } = props;
 
-    if (!payload) return null;
-
-    const fill = payload.isTotal
-      ? '#3b82f6'
-      : payload.positive
-        ? '#10b981'
-        : '#ef4444';
+    if (!payload || height === 0) return null;
 
     return (
-      <g>
-        <rect
-          x={x}
-          y={y}
-          width={width}
-          height={height}
-          fill={fill}
-          stroke={strokeColor}
-          strokeWidth={1}
-          opacity={0.9}
-        />
-        <text
-          x={x + width / 2}
-          y={y - 5}
-          fill={labelColor}
-          textAnchor="middle"
-          fontSize={11}
-          fontWeight="500"
-        >
-          {payload.end.toFixed(1)}
-        </text>
-      </g>
+      <rect
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        fill={fill}
+        stroke={isDarkMode ? '#1F2937' : '#FFFFFF'}
+        strokeWidth={2}
+        opacity={0.9}
+        rx={2}
+      />
     );
   };
 
+  // Custom label to show values above bars
+  const renderLabel = (props: any) => {
+    const { x, y, width, payload } = props;
+    if (!payload) return null;
+
+    const value = payload.isTotal ? payload.displayValue : payload.actualChange;
+    const displayText = payload.isTotal
+      ? value.toFixed(0)
+      : (value >= 0 ? '+' : '') + value.toFixed(0);
+
+    return (
+      <text
+        x={x + width / 2}
+        y={payload.positive || payload.isTotal ? y - 5 : y + 15}
+        fill={textColor}
+        textAnchor="middle"
+        fontSize={11}
+        fontWeight="600"
+      >
+        {displayText}
+      </text>
+    );
+  };
+
+  // Calculate Y-axis domain
+  const allValues = chartData.flatMap(d => [d.start, d.end]);
+  const minValue = Math.min(...allValues, 0);
+  const maxValue = Math.max(...allValues, 0);
+  const padding = (maxValue - minValue) * 0.1;
+  const yDomain = [
+    Math.floor(minValue - padding),
+    Math.ceil(maxValue + padding)
+  ];
+
   return (
     <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-1">
-      {title && <h3 className="text-xl font-semibold text-text-primary mb-4 text-center">{title}</h3>}
+      {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 text-center">{title}</h3>}
       {description && (
-        <p className="text-sm text-gray-400 mb-4 text-center">{description}</p>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 text-center">{description}</p>
       )}
       {chartData.length === 0 ? (
-        <div className="text-center text-gray-400 py-8">
+        <div className="text-center text-gray-600 dark:text-gray-400 py-8">
           <p className="text-sm">No data available</p>
         </div>
       ) : (
         <>
           <ResponsiveContainer width="100%" height={height}>
-            <BarChart data={chartData} margin={{ top: 30, right: 20, bottom: 20, left: 20 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-              <XAxis dataKey="name" tick={{ fill: textColor }} />
-              <YAxis tick={{ fill: textColor }} />
+            <BarChart
+              data={chartData}
+              margin={{ top: 30, right: 30, bottom: 20, left: 30 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke={gridColor} opacity={0.5} />
+              <XAxis
+                dataKey="name"
+                tick={{ fill: textColor, fontSize: 12 }}
+                axisLine={{ stroke: gridColor }}
+              />
+              <YAxis
+                tick={{ fill: textColor, fontSize: 12 }}
+                axisLine={{ stroke: gridColor }}
+                domain={yDomain}
+              />
               <Tooltip
                 contentStyle={{
                   backgroundColor: tooltipBg,
@@ -182,35 +238,95 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
                 }}
                 formatter={(_value: any, _name: string, props: any) => {
                   const { payload } = props;
+                  if (!payload) return ['', ''];
+
                   return [
-                    `${payload.positive ? '+' : ''}${payload.value.toFixed(2)}`,
-                    payload.isTotal ? 'Total' : 'Change',
+                    payload.isTotal
+                      ? `Total: ${payload.displayValue.toFixed(2)}`
+                      : `${payload.positive ? 'Increase' : 'Decrease'}: ${payload.positive ? '+' : ''}${payload.actualChange.toFixed(2)}`,
+                    payload.isTotal ? '' : `Running Total: ${payload.end.toFixed(2)}`
                   ];
                 }}
-                labelFormatter={(label) => `Category: ${label}`}
+                labelFormatter={(label) => `${label}`}
               />
-              <Legend wrapperStyle={{ color: textColor, paddingTop: '10px' }} />
+              <Legend
+                wrapperStyle={{ paddingTop: '10px' }}
+                formatter={(value) => (
+                  <span style={{ color: textColor, fontSize: '12px', fontWeight: 500 }}>
+                    {value}
+                  </span>
+                )}
+              />
+
+              {/* Invisible bars to create the waterfall offset */}
               <Bar
-                dataKey="displayValue"
-                fill="#8b5cf6"
-                name="Value"
-                shape={<WaterfallBar />}
-                isAnimationActive={true}
+                dataKey="invisible"
+                stackId="stack"
+                fill="transparent"
+                isAnimationActive={false}
               />
+
+              {/* Visible bars with colors based on type */}
+              <Bar
+                dataKey="visible"
+                stackId="stack"
+                shape={<WaterfallBar />}
+                label={renderLabel}
+                isAnimationActive={true}
+                animationDuration={800}
+              >
+                {chartData.map((entry, index) => {
+                  const fill = entry.isTotal
+                    ? '#3B82F6' // Blue for totals
+                    : entry.positive
+                    ? '#10B981' // Green for increases
+                    : '#EF4444'; // Red for decreases
+
+                  return <Cell key={`cell-${index}`} fill={fill} />;
+                })}
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
-          <div className="flex items-center justify-center gap-4 mt-4 text-xs text-gray-400">
-            <div className="flex items-center gap-1">
-              <div className="w-3 h-3 bg-green-500 rounded-sm" />
-              <span>Increase</span>
+
+          {/* Legend */}
+          <div className="flex items-center justify-center gap-6 mt-4 text-xs">
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 bg-green-500 rounded" />
+              <span className="text-gray-700 dark:text-gray-300 font-medium">Increase</span>
             </div>
-            <div className="flex items-center gap-1">
-              <div className="w-3 h-3 bg-red-500 rounded-sm" />
-              <span>Decrease</span>
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 bg-red-500 rounded" />
+              <span className="text-gray-700 dark:text-gray-300 font-medium">Decrease</span>
             </div>
-            <div className="flex items-center gap-1">
-              <div className="w-3 h-3 bg-blue-500 rounded-sm" />
-              <span>Total</span>
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 bg-blue-500 rounded" />
+              <span className="text-gray-700 dark:text-gray-300 font-medium">Total</span>
+            </div>
+          </div>
+
+          {/* Summary */}
+          <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-gray-600 dark:text-gray-400">Starting Value:</span>
+              <span className="font-semibold text-gray-900 dark:text-white">
+                {chartData[0]?.start.toFixed(2) || '0.00'}
+              </span>
+            </div>
+            <div className="flex justify-between items-center text-sm mt-1">
+              <span className="text-gray-600 dark:text-gray-400">Final Value:</span>
+              <span className="font-semibold text-gray-900 dark:text-white">
+                {chartData[chartData.length - 1]?.end.toFixed(2) || '0.00'}
+              </span>
+            </div>
+            <div className="flex justify-between items-center text-sm mt-1">
+              <span className="text-gray-600 dark:text-gray-400">Net Change:</span>
+              <span className={`font-semibold ${
+                (chartData[chartData.length - 1]?.end || 0) >= (chartData[0]?.start || 0)
+                  ? 'text-green-600 dark:text-green-400'
+                  : 'text-red-600 dark:text-red-400'
+              }`}>
+                {((chartData[chartData.length - 1]?.end || 0) - (chartData[0]?.start || 0)).toFixed(2)}
+              </span>
             </div>
           </div>
         </>
@@ -225,14 +341,30 @@ export const metadata = {
   name: 'waterfall-chart',
   category: 'charts' as const,
   component: WaterfallChart,
-  description: 'Waterfall chart for cumulative impact visualization. Shows increases, decreases, and totals.',
-  tags: ['chart', 'waterfall', 'cumulative', 'financial'],
+  description: 'Waterfall chart for cumulative impact visualization. Shows increases, decreases, and totals with proper stacking and positioning.',
+  tags: ['chart', 'waterfall', 'cumulative', 'financial', 'variance'],
   propTypes: {
     title: 'string',
     description: 'string',
-    xAxis: '{ data: string[] }',
-    series: 'Array<{ data: (number | { value, isTotal? })[] }>',
+    xAxis: '{ data: string[] } - Category labels',
+    series: 'Array<{ data: (number | { value: number, isTotal?: boolean })[] }> - Values for each category',
     width: 'number',
     height: 'number',
   },
+  exampleUsage: `
+    <WaterfallChart
+      title="Quarterly Revenue Analysis"
+      series={[{
+        data: [
+          100,    // Starting value
+          20,     // Q1 increase
+          -15,    // Q2 decrease
+          30,     // Q3 increase
+          -10,    // Q4 decrease
+          { value: 125, isTotal: true }  // Final total
+        ]
+      }]}
+      xAxis={{ data: ['Start', 'Q1', 'Q2', 'Q3', 'Q4', 'Total'] }}
+    />
+  `,
 };

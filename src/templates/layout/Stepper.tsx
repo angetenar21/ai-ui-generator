@@ -117,9 +117,9 @@ const Stepper: React.FC<StepperProps> = ({
                 )}
               </div>
               <div className="flex-1 pb-4">
-                <div className="font-semibold text-text-primary">{step.label}</div>
+                <div className="font-semibold text-gray-900 dark:text-white">{step.label}</div>
                 {step.description && (
-                  <div className="text-text-secondary mt-1">{step.description}</div>
+                  <div className="text-gray-600 dark:text-gray-300 mt-1">{step.description}</div>
                 )}
               </div>
             </div>
@@ -146,7 +146,7 @@ const Stepper: React.FC<StepperProps> = ({
                 {status === 'completed' && !step.icon && '✓'}
               </div>
               <div className="text-center max-w-24">
-                <div className="font-semibold text-text-primary truncate">
+                <div className="font-semibold text-gray-900 dark:text-white truncate">
                   {step.label}
                 </div>
                 {step.description && variant !== 'simple' && (

@@ -103,7 +103,7 @@ const Accordion: React.FC<AccordionProps> = ({
                 {item.icon && (
                   <span className="text-text-tertiary text-xl">{item.icon}</span>
                 )}
-                <span className="font-semibold text-text-primary">
+                <span className="font-semibold text-gray-900 dark:text-white">
                   {item.title}
                 </span>
               </div>
@@ -127,7 +127,7 @@ const Accordion: React.FC<AccordionProps> = ({
             {isExpanded && (
               <div className="px-4 pb-4 pt-2 border-t border-border-primary">
                 {item.content && (
-                  <p className="text-text-secondary leading-relaxed">
+                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
                     {item.content}
                   </p>
                 )}
