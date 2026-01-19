@@ -6,6 +6,7 @@ import {
   PolarAngleAxis,
   Legend,
   Tooltip,
+  PolarRadiusAxis,
 } from 'recharts';
 
 interface PolarChartProps {
@@ -18,7 +19,7 @@ interface PolarChartProps {
   /** Angle axis configuration */
   angleAxis?: {
     data: string[];
-  };
+  } | string[];
 
   /** Radius axis configuration */
   radiusAxis?: any;
@@ -39,6 +40,34 @@ interface PolarChartProps {
   height?: number;
 }
 
+// Color palette - semantic colors that work well in both light and dark modes
+const COLOR_PALETTE = [
+  '#F97316', // Orange
+  '#10B981', // Emerald
+  '#3B82F6', // Blue
+  '#8B5CF6', // Violet
+  '#EC4899', // Pink
+  '#06B6D4', // Cyan
+  '#F59E0B', // Amber
+  '#14B8A6', // Teal
+  '#6366F1', // Indigo
+  '#D946EF', // Fuchsia
+];
+
+// Validate if a color is a valid hex color
+const isValidColor = (color: string | undefined): color is string => {
+  if (!color) return false;
+  return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color);
+};
+
+// Get color from palette or validate provided color
+const getColor = (providedColor: string | undefined, index: number): string => {
+  if (isValidColor(providedColor)) {
+    return providedColor;
+  }
+  return COLOR_PALETTE[index % COLOR_PALETTE.length];
+};
+
 const PolarChart: React.FC<PolarChartProps> = ({
   title,
   description,
@@ -48,7 +77,8 @@ const PolarChart: React.FC<PolarChartProps> = ({
   height = 400,
 }) => {
   void (width); // Width prop available for future use
-  // Validate
+
+  // Validate series
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
       <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-1">
@@ -60,64 +90,125 @@ const PolarChart: React.FC<PolarChartProps> = ({
     );
   }
 
-  const categories = angleAxis?.data || [];
+  // Normalize angleAxis to array format
+  let categories: string[] = [];
+  if (angleAxis) {
+    if (Array.isArray(angleAxis)) {
+      // Direct array format
+      categories = angleAxis.filter((item): item is string => typeof item === 'string');
+    } else if (angleAxis.data && Array.isArray(angleAxis.data)) {
+      // Object format with data property
+      categories = angleAxis.data.filter((item): item is string => typeof item === 'string');
+    }
+  }
+
+  // Validate series data
+  const validSeries = series.filter(
+    (s) => s.data && Array.isArray(s.data) && s.data.length > 0
+  );
+
+  if (validSeries.length === 0) {
+    return (
+      <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-1">
+        {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>}
+        <div className="text-center text-gray-400">
+          <p className="text-sm">Invalid series data format</p>
+        </div>
+      </div>
+    );
+  }
 
   // Transform data for radial bar chart
-  const chartData = categories.map((category, index) => {
-    const dataPoint: any = {
-      name: category,
-    };
+  let chartData: any[] = [];
 
-    series.forEach((s) => {
-      const value = s.data[index];
-      dataPoint[s.name || 'value'] = typeof value === 'number' ? value : 0;
-    });
+  if (categories.length > 0) {
+    // Use provided categories
+    chartData = categories.map((category, index) => {
+      const dataPoint: any = {
+        name: category,
+      };
 
-    return dataPoint;
-  });
-
-  // If no categories, create data from first series
-  if (categories.length === 0 && series.length > 0) {
-    const firstSeries = series[0];
-    chartData.length = 0;
-    firstSeries.data.forEach((value, index) => {
-      chartData.push({
-        name: `Item ${index + 1}`,
-        [firstSeries.name || 'value']: typeof value === 'number' ? value : 0,
+      validSeries.forEach((s) => {
+        const value = s.data[index];
+        dataPoint[s.name || `series_${s.name || validSeries.indexOf(s)}`] =
+          typeof value === 'number' ? Math.max(0, value) : 0;
       });
+
+      return dataPoint;
+    });
+  } else {
+    // Generate categories from data length
+    const dataLength = Math.max(...validSeries.map((s) => s.data.length));
+    chartData = Array.from({ length: dataLength }, (_, index) => {
+      const dataPoint: any = {
+        name: `Category ${index + 1}`,
+      };
+
+      validSeries.forEach((s) => {
+        const value = s.data[index];
+        dataPoint[s.name || `series_${s.name || validSeries.indexOf(s)}`] =
+          typeof value === 'number' ? Math.max(0, value) : 0;
+      });
+
+      return dataPoint;
     });
   }
 
   return (
     <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-1">
-      {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 text-center">{title}</h3>}
+      {title && (
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 text-center">
+          {title}
+        </h3>
+      )}
       {description && (
-        <p className="text-sm text-gray-400 mb-4 text-center">{description}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 text-center">{description}</p>
       )}
       {(() => {
-        const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
-        const textColor = isDarkMode ? '#E5E7EB' : '#9CA3AF';
+        const isDarkMode =
+          typeof window !== 'undefined' &&
+          document.documentElement.classList.contains('dark');
+
+        // Theme colors
+        const textColor = isDarkMode ? '#E5E7EB' : '#6B7280';
         const tooltipBg = isDarkMode ? '#1F2937' : '#FFFFFF';
         const tooltipBorder = isDarkMode ? '#374151' : '#E5E7EB';
         const tooltipText = isDarkMode ? '#E5E7EB' : '#1F2937';
-        const bgFill = isDarkMode ? '#111827' : '#F3F4F6';
+        const bgFill = isDarkMode ? '#111827' : '#F9FAFB';
+        const axisFill = isDarkMode ? '#6B7280' : '#9CA3AF';
 
         return (
           <ResponsiveContainer width="100%" height={height}>
             <RadialBarChart
               cx="50%"
               cy="50%"
-              innerRadius="10%"
-              outerRadius="90%"
+              innerRadius="15%"
+              outerRadius="85%"
               data={chartData}
               startAngle={90}
               endAngle={-270}
+              margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
             >
               <PolarAngleAxis
                 type="category"
                 dataKey="name"
-                tick={{ fill: textColor, fontSize: 12 }}
-                stroke={textColor}
+                tick={{
+                  fill: textColor,
+                  fontSize: 12,
+                  fontWeight: 500,
+                }}
+                stroke={axisFill}
+                strokeOpacity={0.5}
+              />
+              <PolarRadiusAxis
+                angle={90}
+                domain={[0, 'auto']}
+                tick={{
+                  fill: axisFill,
+                  fontSize: 11,
+                }}
+                stroke={axisFill}
+                strokeOpacity={0.3}
               />
               <Tooltip
                 contentStyle={{
@@ -125,27 +216,39 @@ const PolarChart: React.FC<PolarChartProps> = ({
                   border: `1px solid ${tooltipBorder}`,
                   borderRadius: '8px',
                   color: tooltipText,
+                  fontSize: '12px',
+                  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
                 }}
+                cursor={{ fill: 'rgba(0, 0, 0, 0.05)' }}
               />
               <Legend
-                wrapperStyle={{ color: textColor }}
+                wrapperStyle={{
+                  color: textColor,
+                  fontSize: '12px',
+                  paddingTop: '20px',
+                }}
                 iconType="circle"
               />
-              {series.map((s, index) => (
+              {validSeries.map((s, index) => (
                 <RadialBar
-                  key={s.name || index}
-                  dataKey={s.name || 'value'}
-                  fill={s.color || `hsl(${(index * 360) / series.length}, 70%, 60%)`}
-                  background={{ fill: bgFill }}
-                  cornerRadius={10}
+                  key={s.name || `series_${index}`}
+                  name={s.name || `Series ${index + 1}`}
+                  dataKey={s.name || `series_${s.name || index}`}
+                  fill={getColor(s.color, index)}
+                  background={{
+                    fill: bgFill,
+                    opacity: 0.3,
+                  }}
+                  cornerRadius={6}
+                  isAnimationActive={true}
                 />
               ))}
             </RadialBarChart>
           </ResponsiveContainer>
         );
       })()}
-      <div className="text-xs text-gray-400 text-center mt-2">
-        Polar chart displayed as radial bars
+      <div className="text-xs text-gray-400 dark:text-gray-500 text-center mt-2">
+        Polar area chart with {validSeries.length} series
       </div>
     </div>
   );
