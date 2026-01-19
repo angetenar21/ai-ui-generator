@@ -121,6 +121,9 @@ const PolarChart: React.FC<PolarChartProps> = ({
   // Transform data for radial bar chart
   let chartData: any[] = [];
 
+  // Create consistent series keys
+  const seriesKeys = validSeries.map((s, idx) => s.name || `Series ${idx + 1}`);
+
   if (categories.length > 0) {
     // Use provided categories
     chartData = categories.map((category, index) => {
@@ -128,10 +131,10 @@ const PolarChart: React.FC<PolarChartProps> = ({
         name: category,
       };
 
-      validSeries.forEach((s) => {
+      validSeries.forEach((s, seriesIdx) => {
         const value = s.data[index];
-        dataPoint[s.name || `series_${s.name || validSeries.indexOf(s)}`] =
-          typeof value === 'number' ? Math.max(0, value) : 0;
+        const numValue = typeof value === 'number' && !isNaN(value) ? Math.max(0, value) : 0;
+        dataPoint[seriesKeys[seriesIdx]] = numValue;
       });
 
       return dataPoint;
@@ -144,10 +147,10 @@ const PolarChart: React.FC<PolarChartProps> = ({
         name: `Category ${index + 1}`,
       };
 
-      validSeries.forEach((s) => {
+      validSeries.forEach((s, seriesIdx) => {
         const value = s.data[index];
-        dataPoint[s.name || `series_${s.name || validSeries.indexOf(s)}`] =
-          typeof value === 'number' ? Math.max(0, value) : 0;
+        const numValue = typeof value === 'number' && !isNaN(value) ? Math.max(0, value) : 0;
+        dataPoint[seriesKeys[seriesIdx]] = numValue;
       });
 
       return dataPoint;
@@ -229,20 +232,23 @@ const PolarChart: React.FC<PolarChartProps> = ({
                 }}
                 iconType="circle"
               />
-              {validSeries.map((s, index) => (
-                <RadialBar
-                  key={s.name || `series_${index}`}
-                  name={s.name || `Series ${index + 1}`}
-                  dataKey={s.name || `series_${s.name || index}`}
-                  fill={getColor(s.color, index)}
-                  background={{
-                    fill: bgFill,
-                    opacity: 0.3,
-                  }}
-                  cornerRadius={6}
-                  isAnimationActive={true}
-                />
-              ))}
+              {validSeries.map((s, index) => {
+                const seriesKey = s.name || `Series ${index + 1}`;
+                return (
+                  <RadialBar
+                    key={`radial-${index}`}
+                    name={seriesKey}
+                    dataKey={seriesKey}
+                    fill={getColor(s.color, index)}
+                    background={{
+                      fill: bgFill,
+                      opacity: 0.3,
+                    }}
+                    cornerRadius={6}
+                    isAnimationActive={true}
+                  />
+                );
+              })}
             </RadialBarChart>
           </ResponsiveContainer>
         );
