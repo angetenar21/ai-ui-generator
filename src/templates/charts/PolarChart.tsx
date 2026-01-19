@@ -1,12 +1,13 @@
 import React from 'react';
 import {
   ResponsiveContainer,
-  RadialBarChart,
-  RadialBar,
+  RadarChart,
+  PolarGrid,
   PolarAngleAxis,
+  PolarRadiusAxis,
+  Radar,
   Legend,
   Tooltip,
-  PolarRadiusAxis,
 } from 'recharts';
 
 interface PolarChartProps {
@@ -118,7 +119,7 @@ const PolarChart: React.FC<PolarChartProps> = ({
     );
   }
 
-  // Transform data for radial bar chart
+  // Transform data for polar area chart (radar chart)
   let chartData: any[] = [];
 
   // Create consistent series keys
@@ -128,11 +129,12 @@ const PolarChart: React.FC<PolarChartProps> = ({
     // Use provided categories
     chartData = categories.map((category, index) => {
       const dataPoint: any = {
-        name: category,
+        subject: category, // Radar chart uses 'subject' for category names
       };
 
       validSeries.forEach((s, seriesIdx) => {
         const value = s.data[index];
+        // Ensure we have a valid number, default to 0 if NaN or undefined
         const numValue = typeof value === 'number' && !isNaN(value) ? Math.max(0, value) : 0;
         dataPoint[seriesKeys[seriesIdx]] = numValue;
       });
@@ -144,7 +146,7 @@ const PolarChart: React.FC<PolarChartProps> = ({
     const dataLength = Math.max(...validSeries.map((s) => s.data.length));
     chartData = Array.from({ length: dataLength }, (_, index) => {
       const dataPoint: any = {
-        name: `Category ${index + 1}`,
+        subject: `Category ${index + 1}`,
       };
 
       validSeries.forEach((s, seriesIdx) => {
@@ -156,6 +158,19 @@ const PolarChart: React.FC<PolarChartProps> = ({
       return dataPoint;
     });
   }
+
+  // Calculate max value for domain
+  const allValues: number[] = [];
+  chartData.forEach((point) => {
+    seriesKeys.forEach((key) => {
+      const val = point[key];
+      if (typeof val === 'number' && !isNaN(val)) {
+        allValues.push(val);
+      }
+    });
+  });
+  const maxValue = allValues.length > 0 ? Math.max(...allValues) : 100;
+  const domainMax = Math.ceil(maxValue * 1.1); // Add 10% padding
 
   return (
     <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-1">
@@ -173,45 +188,40 @@ const PolarChart: React.FC<PolarChartProps> = ({
           document.documentElement.classList.contains('dark');
 
         // Theme colors
-        const textColor = isDarkMode ? '#E5E7EB' : '#6B7280';
+        const gridStroke = isDarkMode ? '#374151' : '#E5E7EB';
+        const textColor = isDarkMode ? '#D1D5DB' : '#6B7280';
+        const axisStroke = isDarkMode ? '#6B7280' : '#9CA3AF';
         const tooltipBg = isDarkMode ? '#1F2937' : '#FFFFFF';
         const tooltipBorder = isDarkMode ? '#374151' : '#E5E7EB';
         const tooltipText = isDarkMode ? '#E5E7EB' : '#1F2937';
-        const bgFill = isDarkMode ? '#111827' : '#F9FAFB';
-        const axisFill = isDarkMode ? '#6B7280' : '#9CA3AF';
 
         return (
           <ResponsiveContainer width="100%" height={height}>
-            <RadialBarChart
+            <RadarChart
               cx="50%"
               cy="50%"
-              innerRadius="15%"
-              outerRadius="85%"
+              outerRadius="75%"
               data={chartData}
-              startAngle={90}
-              endAngle={-270}
-              margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+              margin={{ top: 20, right: 30, bottom: 20, left: 30 }}
             >
+              <PolarGrid stroke={gridStroke} strokeWidth={1} />
               <PolarAngleAxis
-                type="category"
-                dataKey="name"
+                dataKey="subject"
                 tick={{
                   fill: textColor,
-                  fontSize: 12,
+                  fontSize: 13,
                   fontWeight: 500,
                 }}
-                stroke={axisFill}
-                strokeOpacity={0.5}
+                stroke={axisStroke}
               />
               <PolarRadiusAxis
                 angle={90}
-                domain={[0, 'auto']}
+                domain={[0, domainMax]}
                 tick={{
-                  fill: axisFill,
+                  fill: textColor,
                   fontSize: 11,
                 }}
-                stroke={axisFill}
-                strokeOpacity={0.3}
+                stroke={axisStroke}
               />
               <Tooltip
                 contentStyle={{
@@ -222,34 +232,35 @@ const PolarChart: React.FC<PolarChartProps> = ({
                   fontSize: '12px',
                   boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
                 }}
-                cursor={{ fill: 'rgba(0, 0, 0, 0.05)' }}
               />
               <Legend
                 wrapperStyle={{
-                  color: textColor,
-                  fontSize: '12px',
-                  paddingTop: '20px',
+                  paddingTop: '16px',
                 }}
+                formatter={(value) => (
+                  <span style={{ color: textColor, fontSize: '12px', fontWeight: 500 }}>
+                    {value}
+                  </span>
+                )}
                 iconType="circle"
               />
               {validSeries.map((s, index) => {
-                const seriesKey = s.name || `Series ${index + 1}`;
+                const seriesKey = seriesKeys[index];
+                const fillColor = getColor(s.color, index);
+
                 return (
-                  <RadialBar
-                    key={`radial-${index}`}
+                  <Radar
+                    key={`radar-${index}`}
                     name={seriesKey}
                     dataKey={seriesKey}
-                    fill={getColor(s.color, index)}
-                    background={{
-                      fill: bgFill,
-                      opacity: 0.3,
-                    }}
-                    cornerRadius={6}
-                    isAnimationActive={true}
+                    stroke={fillColor}
+                    fill={fillColor}
+                    fillOpacity={0.6}
+                    strokeWidth={2}
                   />
                 );
               })}
-            </RadialBarChart>
+            </RadarChart>
           </ResponsiveContainer>
         );
       })()}
