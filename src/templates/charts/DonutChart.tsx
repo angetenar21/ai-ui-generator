@@ -96,7 +96,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
 
   // Detect dark mode for chart styling
   const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
-  const legendTextColor = isDarkMode ? '#D1D5DB' : '#374151';
+  const legendTextColor = isDarkMode ? '#E5E7EB' : '#374151';
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -132,9 +132,9 @@ const DonutChart: React.FC<DonutChartProps> = ({
           slotProps={{
             legend: legend
               ? {
-                  direction: 'horizontal' as const,
-                  position: { vertical: 'bottom', horizontal: 'center' } as const,
-                }
+                direction: 'horizontal' as const,
+                position: { vertical: 'bottom', horizontal: 'center' } as const,
+              }
               : undefined,
           }}
           sx={{

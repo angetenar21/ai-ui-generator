@@ -98,9 +98,9 @@ const BubbleChart: React.FC<BubbleChartProps> = ({
   // Custom tooltip
   const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
   const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
-  const textColor = isDarkMode ? '#D1D5DB' : '#374151';
-  const axisColor = isDarkMode ? '#6B7280' : '#6B7280';
-  const legendColor = isDarkMode ? '#D1D5DB' : '#374151';
+  const textColor = isDarkMode ? '#E5E7EB' : '#374151';
+  const axisColor = isDarkMode ? '#9CA3AF' : '#6B7280';
+  const legendColor = isDarkMode ? '#E5E7EB' : '#374151';
 
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length > 0) {

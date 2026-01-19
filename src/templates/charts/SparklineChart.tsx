@@ -186,15 +186,15 @@ const SparklineChart: React.FC<SparklineChartProps> = ({
                 }]}
                 sx={{
                   '& .MuiChartsAxis-line': {
-                    stroke: isDark ? '#6B7280' : '#D1D5DB',
+                    stroke: isDark ? '#9CA3AF' : '#D1D5DB',
                     strokeWidth: 1,
                   },
                   '& .MuiChartsAxis-tick': {
-                    stroke: isDark ? '#6B7280' : '#D1D5DB',
+                    stroke: isDark ? '#9CA3AF' : '#D1D5DB',
                     strokeWidth: 1,
                   },
                   '& .MuiChartsAxis-tickLabel': {
-                    fill: isDark ? '#9CA3AF' : '#6B7280',
+                    fill: isDark ? '#E5E7EB' : '#6B7280',
                     fontSize: '11px',
                     fontWeight: 500,
                   },

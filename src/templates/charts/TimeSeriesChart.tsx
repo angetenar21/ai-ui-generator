@@ -197,10 +197,10 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
 
   // Chart colors based on theme
   const chartColors = {
-    axisLine: isDarkMode ? '#6B7280' : '#6B7280',
-    axisTick: isDarkMode ? '#6B7280' : '#6B7280',
-    tickLabel: isDarkMode ? '#D1D5DB' : '#374151',
-    legendText: isDarkMode ? '#D1D5DB' : '#374151',
+    axisLine: isDarkMode ? '#9CA3AF' : '#6B7280',
+    axisTick: isDarkMode ? '#9CA3AF' : '#6B7280',
+    tickLabel: isDarkMode ? '#E5E7EB' : '#374151',
+    legendText: isDarkMode ? '#E5E7EB' : '#374151',
     gridLine: isDarkMode ? '#374151' : '#E5E7EB',
   };
 

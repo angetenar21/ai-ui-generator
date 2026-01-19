@@ -11,7 +11,7 @@ interface MultiLineChartProps {
 const MultiLineChart: React.FC<MultiLineChartProps> = ({ title, data, height = 400 }) => {
   const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
   const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
-  const textColor = isDarkMode ? '#D1D5DB' : '#374151';
+  const textColor = isDarkMode ? '#E5E7EB' : '#374151';
   const tooltipBg = isDarkMode ? '#1F2937' : '#FFFFFF';
   const tooltipBorder = isDarkMode ? '#374151' : '#E5E7EB';
 

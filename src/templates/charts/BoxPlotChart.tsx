@@ -85,11 +85,11 @@ const BoxPlotChart: React.FC<BoxPlotChartProps> = ({
       {(() => {
         const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
         const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
-        const textColor = isDarkMode ? '#D1D5DB' : '#9CA3AF';
+        const textColor = isDarkMode ? '#E5E7EB' : '#9CA3AF';
         const tooltipBg = isDarkMode ? '#1F2937' : '#FFFFFF';
         const tooltipBorder = isDarkMode ? '#374151' : '#E5E7EB';
         const tooltipText = isDarkMode ? '#E5E7EB' : '#1F2937';
-        const legendColor = isDarkMode ? '#D1D5DB' : '#374151';
+        const legendColor = isDarkMode ? '#E5E7EB' : '#374151';
 
         return (
           <ResponsiveContainer width="100%" height={height}>

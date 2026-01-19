@@ -40,7 +40,7 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
   // Dark mode detection
   const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
   const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
-  const textColor = isDarkMode ? '#D1D5DB' : '#374151';
+  const textColor = isDarkMode ? '#E5E7EB' : '#374151';
   const tooltipBg = isDarkMode ? '#1F2937' : '#FFFFFF';
   const tooltipBorder = isDarkMode ? '#374151' : '#E5E7EB';
   const tooltipText = isDarkMode ? '#E5E7EB' : '#1F2937';
@@ -279,8 +279,8 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
                   const fill = entry.isTotal
                     ? '#3B82F6' // Blue for totals
                     : entry.positive
-                    ? '#10B981' // Green for increases
-                    : '#EF4444'; // Red for decreases
+                      ? '#10B981' // Green for increases
+                      : '#EF4444'; // Red for decreases
 
                   return <Cell key={`cell-${index}`} fill={fill} />;
                 })}
@@ -320,11 +320,10 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
             </div>
             <div className="flex justify-between items-center text-sm mt-1">
               <span className="text-gray-600 dark:text-gray-400">Net Change:</span>
-              <span className={`font-semibold ${
-                (chartData[chartData.length - 1]?.end || 0) >= (chartData[0]?.start || 0)
+              <span className={`font-semibold ${(chartData[chartData.length - 1]?.end || 0) >= (chartData[0]?.start || 0)
                   ? 'text-green-600 dark:text-green-400'
                   : 'text-red-600 dark:text-red-400'
-              }`}>
+                }`}>
                 {((chartData[chartData.length - 1]?.end || 0) - (chartData[0]?.start || 0)).toFixed(2)}
               </span>
             </div>

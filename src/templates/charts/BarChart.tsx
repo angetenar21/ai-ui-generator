@@ -172,10 +172,10 @@ const BarChart: React.FC<BarChartProps> = ({
   // Detect dark mode for chart styling
   const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
   const chartColors = {
-    axisLine: isDarkMode ? '#6B7280' : '#6B7280',
-    axisTick: isDarkMode ? '#6B7280' : '#6B7280',
-    tickLabel: isDarkMode ? '#D1D5DB' : '#374151',
-    legendText: isDarkMode ? '#D1D5DB' : '#374151',
+    axisLine: isDarkMode ? '#9CA3AF' : '#6B7280',
+    axisTick: isDarkMode ? '#9CA3AF' : '#6B7280',
+    tickLabel: isDarkMode ? '#E5E7EB' : '#374151',
+    legendText: isDarkMode ? '#E5E7EB' : '#374151',
     gridLine: isDarkMode ? '#374151' : '#E5E7EB',
     background: backgroundColor || 'transparent',
   };
@@ -223,9 +223,9 @@ const BarChart: React.FC<BarChartProps> = ({
             slotProps={{
               legend: legend
                 ? {
-                    direction: 'horizontal' as const,
-                    position: { vertical: 'top', horizontal: 'center' } as const,
-                  }
+                  direction: 'horizontal' as const,
+                  position: { vertical: 'top', horizontal: 'center' } as const,
+                }
                 : undefined,
             }}
             sx={{

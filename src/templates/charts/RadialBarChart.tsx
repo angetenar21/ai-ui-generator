@@ -74,7 +74,7 @@ const RadialBarChart: React.FC<RadialBarChartProps> = ({
 
   // Custom tooltip
   const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
-  const legendColor = isDarkMode ? '#D1D5DB' : '#374151';
+  const legendColor = isDarkMode ? '#E5E7EB' : '#374151';
 
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length > 0) {
