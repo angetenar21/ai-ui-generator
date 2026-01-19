@@ -59,6 +59,12 @@ const Timeline: React.FC<TimelineProps> = ({
     return align as 'left' | 'right';
   };
 
+  // Safe status getter with fallback
+  const getStatusStyles = (status?: ItemStatus) => {
+    const validStatus = status && statusStyles[status] ? status : 'pending';
+    return statusStyles[validStatus];
+  };
+
   if (orientation === 'horizontal') {
     return (
       <div className="glass-dark border border-gray-700/50 rounded-2xl p-6 my-4 overflow-x-auto">
@@ -69,8 +75,7 @@ const Timeline: React.FC<TimelineProps> = ({
         )}
         <div className="flex items-start gap-0 min-w-max pb-4">
           {items.map((item, index) => {
-            const status = item.status || 'pending';
-            const styles = statusStyles[status];
+            const styles = getStatusStyles(item.status);
 
             return (
               <div key={item.id} className="flex items-center">
@@ -127,8 +132,7 @@ const Timeline: React.FC<TimelineProps> = ({
       )}
       <div className="relative">
         {items.map((item, index) => {
-          const status = item.status || 'pending';
-          const styles = statusStyles[status];
+          const styles = getStatusStyles(item.status);
           const itemAlign = getItemAlign(index);
           const isLast = index === items.length - 1;
 
