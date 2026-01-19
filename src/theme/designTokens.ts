@@ -20,10 +20,10 @@ export const surfaces: Record<SurfaceVariant, string> = {
   default: 'bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800',
 
   // Gradient: Warm gradient background for emphasis
-  gradient: 'bg-gradient-to-br from-orange-50 via-amber-50 to-orange-100 dark:from-orange-950 dark:via-amber-950 dark:to-orange-900 border border-orange-200 dark:border-orange-800',
+  gradient: 'bg-gradient-to-br from-orange-50 via-amber-50 to-orange-100 dark:bg-[#697565] border border-orange-200 dark:border-[#697565]',
 
   // Accent: Vibrant accent color for high emphasis
-  accent: 'bg-gradient-to-br from-orange-500 to-amber-600 text-white border border-orange-600',
+  accent: 'bg-gradient-to-br from-orange-500 to-amber-600 dark:bg-[#697565] text-white dark:text-white border border-orange-600 dark:border-[#697565]',
 
   // Glass: Semi-transparent glassmorphism effect
   glass: 'bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl border border-white/20 dark:border-gray-800/20',
@@ -89,14 +89,14 @@ export const tones: Record<ToneVariant, { bg: string; border: string; text: stri
     text: 'text-gray-900 dark:text-gray-100',
   },
   primary: {
-    bg: 'bg-orange-50 dark:bg-orange-950',
-    border: 'border-orange-200 dark:border-orange-800',
-    text: 'text-orange-900 dark:text-orange-100',
+    bg: 'bg-orange-50 dark:bg-[#697565]',
+    border: 'border-orange-200 dark:border-[#697565]',
+    text: 'text-orange-900 dark:text-white',
   },
   accent: {
-    bg: 'bg-amber-50 dark:bg-amber-950',
-    border: 'border-amber-200 dark:border-amber-800',
-    text: 'text-amber-900 dark:text-amber-100',
+    bg: 'bg-amber-50 dark:bg-[#697565]',
+    border: 'border-amber-200 dark:border-[#697565]',
+    text: 'text-amber-900 dark:text-white',
   },
   success: {
     bg: 'bg-green-50 dark:bg-green-950',

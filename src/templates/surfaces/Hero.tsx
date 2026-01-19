@@ -67,7 +67,7 @@ const Hero: React.FC<HeroProps> = ({
       return 'bg-cover bg-center';
     }
     if (backgroundStyle === 'gradient') {
-      return 'bg-gradient-to-br from-orange-500/20 via-amber-500/10 to-yellow-500/20 dark:from-orange-900/30 dark:via-amber-900/20 dark:to-yellow-900/30';
+      return 'bg-gradient-to-br from-orange-500/20 via-amber-500/10 to-yellow-500/20 dark:bg-[#697565]/20';
     }
     return 'bg-gray-50 dark:bg-gray-800';
   };

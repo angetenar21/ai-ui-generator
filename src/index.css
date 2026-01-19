@@ -145,8 +145,16 @@
     background: linear-gradient(135deg, #F59E0B, #EA580C);
   }
 
+  .dark .gradient-primary {
+    background: #697565;
+  }
+
   .gradient-accent {
     background: linear-gradient(to right, #F59E0B, #EA580C);
+  }
+
+  .dark .gradient-accent {
+    background: #697565;
   }
 
   .gradient-text {
@@ -156,7 +164,12 @@
     background-clip: text;
     color: transparent;
   }
-
+  .dark .gradient-text {
+    background: #697565;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
   .gradient-border {
     position: relative;
   }
@@ -183,6 +196,14 @@
     pointer-events: none;
   }
 
+  .dark .gradient-border::before {
+    background: linear-gradient(
+      180deg,
+      rgba(105, 117, 101, 0.3),
+      rgba(105, 117, 101, 0.1)
+    );
+  }
+
   /* Animation utilities */
   .animate-glow {
     animation: glow 2s ease-in-out infinite alternate;
@@ -199,6 +220,23 @@
         0 0 30px rgba(245, 158, 11, 0.3),
         0 0 60px rgba(234, 88, 12, 0.18);
     }
+  }
+
+  @keyframes glow-dark {
+    from {
+      box-shadow:
+        0 0 20px rgba(105, 117, 101, 0.25),
+        0 0 40px rgba(105, 117, 101, 0.15);
+    }
+    to {
+      box-shadow:
+        0 0 30px rgba(105, 117, 101, 0.35),
+        0 0 60px rgba(105, 117, 101, 0.25);
+    }
+  }
+
+  .dark .animate-glow {
+    animation: glow-dark 2s ease-in-out infinite alternate;
   }
 
   .animate-fade-in {
