@@ -51,7 +51,7 @@ const TypingIndicator: React.FC<TypingIndicatorProps> = ({ status }) => {
         <span className="text-sm">{stage.icon}</span>
       </div>
       <div className="flex flex-col gap-1">
-        <span className="text-sm font-medium animate-fade-in">
+        <span className="text-sm font-medium text-gray-900 dark:text-gray-100 animate-fade-in">
           {stage.text}
         </span>
         <div className="flex gap-1">

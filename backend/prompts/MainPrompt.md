@@ -102,6 +102,155 @@ Subtle Details Section (variant: default, elevation: flat)
 
 ## 📦 COMPONENT DESIGN RULES
 
+### ⚠️ CRITICAL: LAYOUT COMPONENT PRIORITY RULES
+
+**THESE RULES SUPERSEDE ALL OTHER RULES**
+
+When user requests ANY of these patterns, use the EXACT component structure shown:
+
+**Pattern Recognition → Required Component**:
+| User Says | Use This | NOT This | Why |
+|-----------|----------|----------|-----|
+| "Two column layout" | `grid` | `panel` | Panel requires title |
+| "Image on left, text on right" | `grid` + `image` + `stack` | `panel` + bare text | Proper structure |
+| "Side by side layout" | `grid` | `panel` | Grid handles responsive columns |
+| "Hero section with image" | `grid` + `image` + `stack` | `panel` | Panel is for content boxes, not layout |
+| "Layout with columns" | `grid` | `panel` | Grid is purpose-built for columns |
+| "Image and description" | `grid` + `image` + `stack` | `panel` without structure | Stack provides proper grouping |
+
+**❌ ANTI-PATTERNS (WILL CAUSE ERRORS)**:
+```
+❌ WRONG: <panel><text>Description</text></panel>
+   Error: "Panel requires a title"
+
+❌ WRONG: <panel variant="gradient"><image/></panel>
+   Error: Panel is not for layout, missing title
+
+✅ CORRECT: <grid columns={2}><image/><stack><text/></stack></grid>
+   Result: Proper two-column layout
+```
+
+**MANDATORY Structure for Any Layout Request**:
+```json
+{
+  "name": "grid",
+  "templateProps": {
+    "columns": { "xs": 1, "sm": 2, "md": 2, "lg": 2 },
+    "gap": "large",
+    "alignItems": "center",
+    "children": [
+      { "name": "image", ... },
+      { "name": "stack", "templateProps": { ... } }
+    ]
+  }
+}
+```
+
+**IF USER SAYS "LAYOUT" OR "COLUMNS" OR "SIDE BY SIDE"**:
+1. ✅ **ALWAYS use `grid`** (not `panel`)
+2. ✅ **Configure responsive columns** (xs, sm, md, lg)
+3. ✅ **Wrap text/content in `stack`** (not bare in grid)
+4. ✅ **Set `gap: "large"`** for breathing room
+5. ✅ **Use `alignItems: "center"`** for vertical alignment
+
+---
+
+### Feature Cards / Benefit Cards / Service Cards
+
+**When user requests "feature cards", "benefit cards", "service cards", or similar:**
+
+**ALWAYS use `summary-card` component, NOT `panel`**
+
+**MANDATORY Structure**:
+```json
+{
+  "name": "grid",
+  "templateProps": {
+    "columns": { "xs": 1, "sm": 2, "md": 2, "lg": 4 },
+    "gap": "medium",
+    "children": [
+      {
+        "name": "summary-card",
+        "templateProps": {
+          "title": "Feature Name",
+          "description": "Brief description of the feature/benefit",
+          "variant": "elevated",
+          "elevation": "raised",
+          "emphasis": "medium",
+          "items": [
+            {
+              "label": "Key Metric or Detail",
+              "value": "✓ Available" 
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+```
+
+**Rules for Feature Cards**:
+- ✅ **ALWAYS use `summary-card`** for feature/benefit showcases
+- ✅ **Include meaningful `title`** (e.g., "Fast Performance", "24/7 Support")
+- ✅ **Include `description`** explaining the benefit
+- ✅ **Use varied `variant` values** - mix "elevated", "accent", "gradient" for visual interest
+- ✅ **Place in a `grid` layout** with responsive columns
+- ❌ **NEVER use `panel` without a title** - it will show error message
+
+**Example: 4 Feature Cards**
+```json
+{
+  "name": "grid",
+  "templateProps": {
+    "columns": { "xs": 1, "sm": 2, "md": 2, "lg": 4 },
+    "gap": "medium",
+    "children": [
+      {
+        "name": "summary-card",
+        "templateProps": {
+          "title": "Fast Performance",
+          "description": "Lightning-fast load times and instant response",
+          "variant": "elevated",
+          "elevation": "raised",
+          "items": [{ "label": "Speed", "value": "< 100ms" }]
+        }
+      },
+      {
+        "name": "summary-card",
+        "templateProps": {
+          "title": "Secure",
+          "description": "Enterprise-grade security and encryption",
+          "variant": "accent",
+          "elevation": "raised",
+          "items": [{ "label": "Protection", "value": "256-bit SSL" }]
+        }
+      },
+      {
+        "name": "summary-card",
+        "templateProps": {
+          "title": "Easy to Use",
+          "description": "Intuitive interface designed for everyone",
+          "variant": "gradient",
+          "elevation": "floating",
+          "items": [{ "label": "Learning Curve", "value": "< 5 minutes" }]
+        }
+      },
+      {
+        "name": "summary-card",
+        "templateProps": {
+          "title": "24/7 Support",
+          "description": "Round-the-clock expert assistance",
+          "variant": "elevated",
+          "elevation": "raised",
+          "items": [{ "label": "Availability", "value": "Always On" }]
+        }
+      }
+    ]
+  }
+}
+```
+
 ### Cards / Panels / Summary Cards
 
 **MANDATORY Props**:
@@ -118,6 +267,119 @@ Subtle Details Section (variant: default, elevation: flat)
 - ✅ Hero sections: `variant: "gradient"`, `elevation: "floating"`, `emphasis: "high"`
 - ✅ KPI cards: `variant: "accent"`, `elevation: "floating"`, `emphasis: "high"`
 - ✅ Chart containers: `variant: "elevated"`, `elevation: "raised"`, `emphasis: "medium"`
+
+### Two-Column / Multi-Column Layouts (Hero, Feature Section, etc.)
+
+**When user requests layout patterns like:**
+- "Two column layout with image on left and text on right"
+- "Image and text side-by-side"
+- "Hero section with image and CTA"
+- "Left-right balanced layout"
+
+**ALWAYS use a `grid` with explicit column structure:**
+
+```json
+{
+  "name": "grid",
+  "templateProps": {
+    "columns": { "xs": 1, "sm": 1, "md": 2, "lg": 2 },
+    "gap": "large",
+    "alignItems": "center",
+    "children": [
+      {
+        "name": "image",
+        "templateProps": {
+          "src": "https://via.placeholder.com/500x400?text=Feature+Image",
+          "alt": "Feature illustration",
+          "aspectRatio": "16:9",
+          "rounded": "lg",
+          "shadow": true
+        }
+      },
+      {
+        "name": "stack",
+        "templateProps": {
+          "direction": "vertical",
+          "spacing": "medium",
+          "children": [
+            {
+              "name": "text",
+              "templateProps": {
+                "variant": "heading-2",
+                "content": "Compelling Headline"
+              }
+            },
+            {
+              "name": "text",
+              "templateProps": {
+                "variant": "body",
+                "content": "Supporting description with key benefits and details"
+              }
+            },
+            {
+              "name": "button",
+              "templateProps": {
+                "label": "Call to Action",
+                "variant": "primary",
+                "size": "large"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+```
+
+**Rules for two-column layouts:**
+- ✅ **Use `grid` with `columns: { xs: 1, sm: 1, md: 2, lg: 2 }`** for responsive behavior
+- ✅ **Set `gap: "large"`** for breathing room
+- ✅ **Use `alignItems: "center"`** to vertically center content
+- ✅ **Left side (image)**: Use `image` component with `rounded`, `shadow`, `aspectRatio`
+- ✅ **Right side (text)**: Wrap in `stack` with text, description, and button
+- ❌ **NEVER use `panel` without a title** - use `stack` instead for layout containers
+- ❌ **NEVER nest layouts without proper structure** - always wrap in `grid` or `stack`
+
+**Common Two-Column Variations**:
+
+**A) Image Left, Text Right (Hero)**
+```json
+"columns": { "xs": 1, "sm": 1, "md": 2, "lg": 2 },
+"children": [
+  { "name": "image", ... },
+  { "name": "stack", ... with text + button ... }
+]
+```
+
+**B) Text Left, Image Right (Reversed)**
+```json
+"columns": { "xs": 1, "sm": 1, "md": 2, "lg": 2 },
+"children": [
+  { "name": "stack", ... with text + button ... },
+  { "name": "image", ... }
+]
+```
+
+**C) 3-Column Layout (Image + Two Text Columns)**
+```json
+"columns": { "xs": 1, "sm": 1, "md": 3, "lg": 3 },
+"gap": "large",
+"children": [
+  { "name": "image", ... },
+  { "name": "stack", ... with features ... },
+  { "name": "stack", ... with more details ... }
+]
+```
+
+**D) Image Top, Text Bottom (Mobile-Optimized)**
+```json
+"columns": { "xs": 1, "sm": 2, "md": 1, "lg": 2 },
+"children": [
+  { "name": "image", ... },
+  { "name": "stack", "templateProps": { "direction": "vertical", ... } }
+]
+```
 
 ### Charts (CRITICAL FOR DATA VIZ)
 
