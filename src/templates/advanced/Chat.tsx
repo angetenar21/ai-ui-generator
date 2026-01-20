@@ -49,13 +49,21 @@ const Chat: React.FC<ChatProps> = ({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Validate messages array
   if (!Array.isArray(messages)) {
+    console.error('[Chat] Invalid messages prop - expected array, got:', typeof messages);
     return (
       <div className="glass-dark border border-gray-700/50 rounded-lg p-6 my-2">
-        <div className="text-text-tertiary text-sm">Invalid messages data</div>
+        <div className="text-text-tertiary text-sm">
+          <div className="text-yellow-500 font-semibold mb-2">⚠️ Configuration Error</div>
+          <div>Invalid messages data. Expected an array of message objects.</div>
+        </div>
       </div>
     );
   }
+
+  // Filter out invalid messages
+  const validMessages = messages.filter(msg => msg && typeof msg === 'object' && msg.text);
 
   const handleSend = () => {
     if (inputValue.trim()) {
@@ -69,9 +77,9 @@ const Chat: React.FC<ChatProps> = ({
   };
 
   const getMessageBg = (sender: string) => {
-    if (sender === 'user') return 'bg-primary-500 text-white';
-    if (sender === 'system') return 'bg-bg-sub text-text-tertiary text-center';
-    return 'bg-bg-sub text-gray-900 dark:text-white';
+    if (sender === 'user') return 'bg-blue-500 dark:bg-blue-600 text-white';
+    if (sender === 'system') return 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-center';
+    return 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white';
   };
 
   const formatTimestamp = (timestamp?: string) => {
@@ -98,12 +106,18 @@ const Chat: React.FC<ChatProps> = ({
         className="overflow-y-auto p-4 space-y-4"
         style={{ maxHeight: `${maxHeight}px` }}
       >
-        {messages.length === 0 ? (
+        {validMessages.length === 0 ? (
           <div className="text-text-tertiary text-sm text-center py-8">
-            No messages yet
+            <div className="mb-2">💬</div>
+            <div>No messages yet</div>
+            {messages.length > 0 && validMessages.length === 0 && (
+              <div className="text-xs text-yellow-500 mt-2">
+                {messages.length} invalid message(s) filtered out
+              </div>
+            )}
           </div>
         ) : (
-          messages.map((message, index) => (
+          validMessages.map((message, index) => (
             <div
               key={index}
               className={`flex ${getMessageAlignment(message.sender)}`}
@@ -137,7 +151,7 @@ const Chat: React.FC<ChatProps> = ({
                       {message.name}
                     </div>
                   )}
-                  
+
                   <div
                     className={`
                       ${getMessageBg(message.sender)}

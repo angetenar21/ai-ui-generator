@@ -28,7 +28,7 @@ const Image: React.FC<ImageProps> = ({
   alt,
   width = '100%',
   height = 'auto',
-  fallbackSrc = 'https://via.placeholder.com/400x300?text=Image+Not+Found',
+  fallbackSrc,
   lazyLoad = true,
   objectFit = 'cover',
   rounded = 'md',
@@ -47,6 +47,17 @@ const Image: React.FC<ImageProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+
+  // Check if this is a map-related image
+  const isMapImage = alt?.toLowerCase().includes('map') ||
+    src?.toLowerCase().includes('map') ||
+    caption?.toLowerCase().includes('map');
+
+  // Use a better default fallback for maps
+  const defaultFallback = isMapImage
+    ? 'https://via.placeholder.com/800x600/1F2937/9CA3AF?text=Map+Visualization'
+    : 'https://via.placeholder.com/400x300/1F2937/9CA3AF?text=Image+Not+Found';
+
   const [currentSrc, setCurrentSrc] = useState(src);
   const [isZoomed, setIsZoomed] = useState(false);
 
@@ -64,7 +75,7 @@ const Image: React.FC<ImageProps> = ({
   const handleError = () => {
     setIsLoading(false);
     setHasError(true);
-    setCurrentSrc(fallbackSrc);
+    setCurrentSrc(fallbackSrc || defaultFallback);
     if (onError) onError();
   };
 
@@ -178,10 +189,10 @@ const Image: React.FC<ImageProps> = ({
 
         {/* Error State */}
         {hasError && (
-          <div className="absolute inset-0 bg-gray-900/90 flex items-center justify-center">
-            <div className="text-center text-gray-400">
+          <div className="absolute inset-0 bg-gray-900/90 dark:bg-gray-800/90 flex flex-col items-center justify-center p-4">
+            <div className="text-center text-gray-400 dark:text-gray-500">
               <svg
-                className="w-16 h-16 mx-auto mb-2"
+                className="w-16 h-16 mx-auto mb-3"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -193,7 +204,12 @@ const Image: React.FC<ImageProps> = ({
                   d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                 />
               </svg>
-              <p className="text-sm">Failed to load image</p>
+              <p className="text-sm font-medium mb-1">
+                {isMapImage ? 'Map visualization unavailable' : 'Image unavailable'}
+              </p>
+              <p className="text-xs text-gray-500 dark:text-gray-600">
+                {isMapImage ? 'Using placeholder map' : 'Using placeholder image'}
+              </p>
             </div>
           </div>
         )}

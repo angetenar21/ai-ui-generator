@@ -1715,7 +1715,72 @@ Use colors that provide good contrast with the component's background:
 #### Common Compositions:
 - **Dialog** = `modal` + `text` + `button` components
 - **Form** = `stack` + multiple input components + `button`
-- **Button Group** = `flexbox` or `stack` with multiple `button` components
+- **Button Group** = `stack` with `direction: "horizontal"` and `spacing: "medium"` + multiple `button` components
+
+#### Button Icons:
+When creating buttons with specific actions, ALWAYS use the `icon` prop with appropriate icon names:
+
+**Available Icons**:
+- **Media controls**: `play`, `play_arrow`, `pause`
+- **Navigation**: `chevron_right`, `chevron_left`, `home`
+- **Actions**: `plus`, `add`, `minus`, `close`, `x`, `check`
+- **File operations**: `download`, `upload`
+- **UI controls**: `search`, `settings`, `menu`
+
+**Examples**:
+```json
+{
+  "name": "button",
+  "templateProps": {
+    "label": "Play",
+    "icon": "play",
+    "variant": "primary"
+  }
+}
+```
+
+```json
+{
+  "name": "button",
+  "templateProps": {
+    "label": "Pause",
+    "icon": "pause",
+    "variant": "secondary"
+  }
+}
+```
+
+**For play/pause controls**, use a horizontal stack:
+```json
+{
+  "name": "stack",
+  "templateProps": {
+    "direction": "horizontal",
+    "spacing": "medium",
+    "align": "center",
+    "children": [
+      {
+        "name": "button",
+        "templateProps": {
+          "label": "Pause",
+          "icon": "pause",
+          "variant": "secondary",
+          "size": "medium"
+        }
+      },
+      {
+        "name": "button",
+        "templateProps": {
+          "label": "Resume",
+          "icon": "play",
+          "variant": "primary",
+          "size": "medium"
+        }
+      }
+    ]
+  }
+}
+```
 
 ### Best Practices
 

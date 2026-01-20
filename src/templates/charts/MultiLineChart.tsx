@@ -16,7 +16,7 @@ const MultiLineChart: React.FC<MultiLineChartProps> = ({ title, data, height = 4
   const tooltipBorder = isDarkMode ? '#374151' : '#E5E7EB';
 
   return (
-    <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6 my-1">
+    <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6">
       {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>}
       <ResponsiveContainer width="100%" height={height}>
         <BarChart data={data} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>

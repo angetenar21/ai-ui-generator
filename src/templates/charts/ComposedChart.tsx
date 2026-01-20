@@ -130,7 +130,7 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
   }
 
   return (
-    <div className="card rounded-card p-6 my-1 hover:shadow-hover transition-all duration-300">
+    <div className="card rounded-card p-6 hover:shadow-hover transition-all duration-300">
       {(title || description) && (
         <div className="mb-6">
           {title && (

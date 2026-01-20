@@ -49,7 +49,7 @@ const AvatarGroup: React.FC<AvatarGroupProps> = ({
 
   if (validAvatars.length === 0) {
     return (
-      <div className="glass-dark border border-gray-700/50 rounded-lg p-4 my-1">
+      <div className="glass-dark border border-gray-700/50 rounded-lg p-4">
         <div className="flex items-center gap-2 text-text-tertiary">
           <Users className="w-5 h-5" />
           <span className="text-sm">No avatars to display</span>
@@ -98,7 +98,7 @@ const AvatarGroup: React.FC<AvatarGroupProps> = ({
   };
 
   return (
-    <div className="glass-dark border border-gray-700/50 rounded-lg p-4 my-1">
+    <div className="glass-dark border border-gray-700/50 rounded-lg p-4">
       {label && (
         <div className="text-gray-600 dark:text-gray-300 text-sm font-medium mb-3">{label}</div>
       )}

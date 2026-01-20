@@ -49,7 +49,7 @@ const Well: React.FC<WellProps> = ({
       className={`
         ${variantClasses[variant]}
         ${sizeClasses[size]}
-        border rounded-lg my-1
+        border rounded-lg
         shadow-inner
       `}
     >

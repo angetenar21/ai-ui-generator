@@ -18,7 +18,7 @@ const GroupedBarChart: React.FC<GroupedBarChartProps> = ({ title, description, d
   const tooltipText = isDarkMode ? '#E5E7EB' : '#111827';
 
   return (
-    <div className="card border hover:shadow-hover transition-all duration-300 rounded-card p-6 my-1">
+    <div className="card border hover:shadow-hover transition-all duration-300 rounded-card p-6">
       {(title || description) && (
         <div className="mb-6">
           {title && (

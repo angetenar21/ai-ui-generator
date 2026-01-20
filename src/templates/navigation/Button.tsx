@@ -1,4 +1,5 @@
 import React from 'react';
+import { Play, Pause, ChevronRight, ChevronLeft, Plus, Minus, X, Check, Download, Upload, Search, Settings, Menu, Home } from 'lucide-react';
 
 interface ButtonProps {
   label?: string;
@@ -25,18 +26,45 @@ const Button: React.FC<ButtonProps> = ({
 }) => {
   const content = label || text || 'Button';
 
+  // Icon mapping
+  const iconMap: Record<string, React.ReactNode> = {
+    'play': <Play className="w-4 h-4" />,
+    'play_arrow': <Play className="w-4 h-4" />,
+    'pause': <Pause className="w-4 h-4" />,
+    'chevron_right': <ChevronRight className="w-4 h-4" />,
+    'chevron_left': <ChevronLeft className="w-4 h-4" />,
+    'plus': <Plus className="w-4 h-4" />,
+    'add': <Plus className="w-4 h-4" />,
+    'minus': <Minus className="w-4 h-4" />,
+    'close': <X className="w-4 h-4" />,
+    'x': <X className="w-4 h-4" />,
+    'check': <Check className="w-4 h-4" />,
+    'download': <Download className="w-4 h-4" />,
+    'upload': <Upload className="w-4 h-4" />,
+    'search': <Search className="w-4 h-4" />,
+    'settings': <Settings className="w-4 h-4" />,
+    'menu': <Menu className="w-4 h-4" />,
+    'home': <Home className="w-4 h-4" />,
+  };
+
+  const getIcon = (iconName?: string) => {
+    if (!iconName) return null;
+    const normalizedName = iconName.toLowerCase().replace(/[\s-_]/g, '_');
+    return iconMap[normalizedName] || <span className="text-sm">{iconName}</span>;
+  };
+
   const variantClasses = {
     primary: 'bg-blue-600 hover:bg-blue-700 text-white',
     secondary: 'bg-gray-600 hover:bg-gray-700 text-white',
-    outline: 'border-2 border-blue-600 text-blue-400 hover:bg-blue-600/10',
-    ghost: 'text-gray-300 hover:bg-gray-700/50',
+    outline: 'border-2 border-blue-600 text-blue-600 dark:text-blue-400 hover:bg-blue-600/10',
+    ghost: 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700/50',
     danger: 'bg-red-600 hover:bg-red-700 text-white',
     success: 'bg-green-600 hover:bg-green-700 text-white',
   };
 
   const sizeClasses = {
     small: 'px-3 py-1.5 text-sm',
-    medium: 'px-4 py-2 text-base',
+    medium: 'px-5 py-2.5 text-base',
     large: 'px-6 py-3 text-lg',
   };
 
@@ -49,15 +77,17 @@ const Button: React.FC<ButtonProps> = ({
     flex items-center justify-center gap-2
   `.trim().replace(/\s+/g, ' ');
 
+  const iconElement = getIcon(icon);
+
   return (
     <button
       className={buttonClasses}
       disabled={disabled}
       onClick={onClick}
     >
-      {icon && iconPosition === 'left' && <span>{icon}</span>}
+      {iconElement && iconPosition === 'left' && iconElement}
       {content}
-      {icon && iconPosition === 'right' && <span>{icon}</span>}
+      {iconElement && iconPosition === 'right' && iconElement}
     </button>
   );
 };
