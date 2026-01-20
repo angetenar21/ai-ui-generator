@@ -1003,6 +1003,14 @@ app.get('/api/agent/:jobId', (req, res) => {
   if (job.status === JobStatus.COMPLETED) {
     response.completedAt = job.completedAt;
     response.result = job.result;
+
+    // Debug logging to verify spec is an object
+    Logger.debug('Returning job result', {
+      jobId,
+      specType: typeof job.result.spec,
+      specIsObject: typeof job.result.spec === 'object',
+      specHasName: job.result.spec?.name || job.result.spec?.type,
+    });
   }
 
   if (job.status === JobStatus.FAILED || job.status === JobStatus.TIMEOUT) {
