@@ -43,10 +43,10 @@ const Grid: React.FC<GridProps> = ({
 }) => {
   const gapClasses = {
     none: 'gap-0',
-    small: 'gap-1',
-    medium: 'gap-2',
-    large: 'gap-3',
-    xlarge: 'gap-4',
+    small: 'gap-3',
+    medium: 'gap-4',
+    large: 'gap-6',
+    xlarge: 'gap-8',
   };
 
   const alignClasses = {
