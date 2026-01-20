@@ -464,13 +464,39 @@ async function callGemini(userMessage, context = '') {
     if (!response.ok) {
       const errorMessage = data?.error?.message || `HTTP ${response.status}`;
       Logger.geminiError(GEMINI_MODEL, new Error(errorMessage), data);
+
+      // Check for API key issues
+      if (response.status === 400 && errorMessage.includes('API key')) {
+        throw new Error(`Gemini API key error: ${errorMessage}. Please check your GEMINI_API_KEY in .env file.`);
+      }
+
+      // Check for quota/rate limit issues
+      if (response.status === 429) {
+        throw new Error(`Gemini API rate limit exceeded. Please try again later.`);
+      }
+
       throw new Error(`Gemini API error: ${errorMessage}`);
     }
 
     const candidate = data?.candidates?.[0];
     if (!candidate) {
       Logger.error('Gemini response missing candidate', { fullResponse: data });
+
+      // Check if content was blocked by safety filters
+      if (data?.promptFeedback?.blockReason) {
+        throw new Error(`Content blocked by safety filters: ${data.promptFeedback.blockReason}. Please rephrase your request.`);
+      }
+
       throw new Error('Gemini response missing candidate');
+    }
+
+    // Check for blocked content
+    if (candidate.finishReason === 'SAFETY' || candidate.finishReason === 'RECITATION') {
+      Logger.warn('Content blocked by Gemini safety filters', {
+        finishReason: candidate.finishReason,
+        safetyRatings: candidate.safetyRatings
+      });
+      throw new Error(`Content blocked: ${candidate.finishReason}. Please rephrase your request to avoid triggering safety filters.`);
     }
 
     // Check for malformed function call
@@ -709,7 +735,18 @@ function extractJsonObject(text) {
       startsWithBrace: trimmed.startsWith('{'),
       endsWithBrace: trimmed.endsWith('}'),
     });
-    throw new Error('Failed to parse JSON from Gemini output (see logs/backend.log for full text)');
+
+    // Provide helpful error message based on what we detected
+    let errorMsg = 'Failed to parse JSON from Gemini output';
+    if (!trimmed.includes('{')) {
+      errorMsg += ' - Response contains no JSON object. Gemini may have returned only text.';
+    } else if (!trimmed.includes('}')) {
+      errorMsg += ' - Response appears to have incomplete JSON (missing closing brace).';
+    } else {
+      errorMsg += ' - Response contains malformed JSON. See logs/backend.log for full text.';
+    }
+
+    throw new Error(errorMsg);
   }
 
   // Unwrap if wrapped in "components" array
@@ -729,6 +766,7 @@ let isWorkerRunning = false;
 async function processJob(job) {
   const { jobId, sessionId, message, threadId, context } = job;
   const startTime = Date.now();
+  const MAX_JOB_DURATION = 5 * 60 * 1000; // 5 minutes timeout
 
   try {
     // Update status to processing
@@ -743,8 +781,19 @@ async function processJob(job) {
     // Build context string
     const contextString = context ? JSON.stringify(context) : '';
 
-    // Call Gemini with function calling and retry logic
-    const modelText = await callGeminiWithRetry(message, contextString);
+    // Create timeout promise
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => {
+        reject(new Error(`Job timed out after ${MAX_JOB_DURATION / 1000} seconds`));
+      }, MAX_JOB_DURATION);
+    });
+
+    // Race between job completion and timeout
+    const modelText = await Promise.race([
+      callGeminiWithRetry(message, contextString),
+      timeoutPromise
+    ]);
+
     const spec = extractJsonObject(modelText);
 
     // Validate spec

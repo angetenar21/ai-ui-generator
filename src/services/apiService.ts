@@ -372,6 +372,22 @@ class ApiService {
 
     if (Array.isArray(children)) {
       childArray = children;
+    } else if (typeof children === 'string') {
+      // CRITICAL FIX: Handle stringified children
+      try {
+        const parsed = JSON.parse(children);
+        if (Array.isArray(parsed)) {
+          childArray = parsed;
+        } else if (typeof parsed === 'object' && parsed !== null) {
+          childArray = [parsed];
+        } else {
+          console.warn('[ApiService] Children is a string but not valid JSON:', children.substring(0, 100));
+          return undefined;
+        }
+      } catch (e) {
+        console.warn('[ApiService] Children is a string but failed to parse:', children.substring(0, 100));
+        return undefined;
+      }
     } else if (typeof children === 'object' && (children as any).name) {
       // Single child object
       childArray = [children];
