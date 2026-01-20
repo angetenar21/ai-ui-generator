@@ -1,6 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Gauge } from '@mui/x-charts/Gauge';
 
+interface ColorLevel {
+  value: number;
+  color: string;
+}
+
 interface ColorStop {
   offset: number;
   color: string;
@@ -22,6 +27,9 @@ interface GaugeChartProps {
     label?: string;
     colorStops?: ColorStop[];
   }>;
+
+  /** Color levels for threshold-based coloring */
+  levels?: ColorLevel[];
 
   /** Minimum value */
   valueMin?: number;
@@ -59,6 +67,7 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
   description,
   value: propValue,
   series,
+  levels,
   valueMin = 0,
   valueMax = 100,
   startAngle = -90,
@@ -66,42 +75,37 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
   innerRadius = '60%',
   outerRadius = '90%',
   width: propWidth,
-  height: propHeight = 90,
+  height: propHeight = 200,
   text,
   color: propColor,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [chartSize, setChartSize] = useState({ width: propWidth || 120, height: propHeight });
+  const [containerWidth, setContainerWidth] = useState(propWidth || 300);
 
+  // Update container width on resize
   useEffect(() => {
-    const updateSize = () => {
-      const measuredWidth = containerRef.current?.getBoundingClientRect().width || 0;
-      const maxWidth = measuredWidth > 0 ? measuredWidth - 24 : undefined;
-      const fallbackWidth = propWidth || 180;
+    if (!propWidth) {
+      const updateWidth = () => {
+        if (containerRef.current) {
+          const width = containerRef.current.offsetWidth;
+          setContainerWidth(Math.max(200, Math.min(width - 48, 400)));
+        }
+      };
 
-      let nextWidth = fallbackWidth;
-      if (typeof maxWidth === 'number') {
-        nextWidth = propWidth ? Math.min(propWidth, maxWidth) : maxWidth;
+      updateWidth();
+      const resizeObserver = new ResizeObserver(updateWidth);
+      if (containerRef.current) {
+        resizeObserver.observe(containerRef.current);
       }
 
-      const minWidth = typeof maxWidth === 'number' ? Math.min(120, maxWidth) : 120;
-      const maxWidthClamp = typeof maxWidth === 'number' ? maxWidth : 520;
-
-      const resolvedWidth = Math.max(minWidth, Math.min(nextWidth, maxWidthClamp));
-      const resolvedHeight = Math.max(propHeight, Math.round(resolvedWidth * 0.7));
-      setChartSize({ width: resolvedWidth, height: resolvedHeight });
-    };
-
-    updateSize();
-    const resizeObserver = new ResizeObserver(updateSize);
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
+      return () => resizeObserver.disconnect();
+    } else {
+      setContainerWidth(propWidth);
     }
+  }, [propWidth]);
 
-    return () => resizeObserver.disconnect();
-  }, [propWidth, propHeight]);
   // Extract value from series if available, otherwise use direct prop
-  let gaugeValue = propValue || 0;
+  let gaugeValue = propValue ?? 0;
   let seriesLabel = '';
   let colorStops: ColorStop[] = [];
 
@@ -114,10 +118,29 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
     colorStops = firstSeries.colorStops || [];
   }
 
-  // Determine gauge color based on colorStops or prop
+  // Ensure value is a valid number
+  if (typeof gaugeValue !== 'number' || isNaN(gaugeValue)) {
+    gaugeValue = 0;
+  }
+
+  // Clamp value within min/max range
+  gaugeValue = Math.max(valueMin, Math.min(valueMax, gaugeValue));
+
+  // Determine gauge color based on levels, colorStops, or prop
   let gaugeColor = propColor || '#F97316';
-  if (colorStops.length > 0) {
-    // Find the appropriate color based on value and offset
+
+  // Check levels first (new format)
+  if (levels && levels.length > 0) {
+    const sortedLevels = [...levels].sort((a, b) => a.value - b.value);
+    for (let i = sortedLevels.length - 1; i >= 0; i--) {
+      if (gaugeValue >= sortedLevels[i].value) {
+        gaugeColor = sortedLevels[i].color;
+        break;
+      }
+    }
+  }
+  // Then check colorStops (series format)
+  else if (colorStops.length > 0) {
     const applicableStop = colorStops
       .filter(stop => stop.offset <= gaugeValue)
       .sort((a, b) => b.offset - a.offset)[0];
@@ -135,24 +158,31 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
     referenceArc: isDarkMode ? '#374151' : '#E5E7EB',
   };
 
+  // Calculate appropriate height
+  const chartHeight = propHeight || Math.min(200, containerWidth * 0.6);
+  const chartWidth = containerWidth;
+
   return (
-    <div className="w-full max-w-full bg-white dark:bg-gray-800 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+    <div
+      ref={containerRef}
+      className="w-full bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-700"
+    >
       {(title || description) && (
-        <div className="mb-1 text-center">
+        <div className="mb-3 text-center">
           {title && (
-            <h3 className="text-xs font-semibold text-gray-900 dark:text-gray-100 truncate">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-1">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-[10px] text-gray-600 dark:text-gray-400 truncate">
+            <p className="text-xs text-gray-600 dark:text-gray-400">
               {description}
             </p>
           )}
         </div>
       )}
 
-      <div ref={containerRef} className="flex flex-col justify-center items-center overflow-hidden w-full">
+      <div className="flex flex-col justify-center items-center w-full">
         <Gauge
           value={gaugeValue}
           valueMin={valueMin}
@@ -161,12 +191,12 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
           endAngle={endAngle}
           innerRadius={innerRadius}
           outerRadius={outerRadius}
-          width={chartSize.width}
-          height={chartSize.height}
-          text={`${gaugeValue}%`}
+          width={chartWidth}
+          height={chartHeight}
+          text={({ value }) => `${value}${text ? '' : '%'}`}
           sx={{
             '& .MuiGauge-valueText': {
-              fontSize: 14,
+              fontSize: 18,
               fill: gaugeStyles.valueText,
               fontWeight: 600,
             },
@@ -179,7 +209,9 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
           }}
         />
         {displayText && (
-          <p className="text-gray-500 dark:text-gray-400 text-[10px] text-center truncate w-full">{displayText}</p>
+          <p className="text-gray-500 dark:text-gray-400 text-xs text-center mt-2">
+            {displayText}
+          </p>
         )}
       </div>
     </div>
@@ -197,7 +229,10 @@ export const metadata = {
   tags: ['chart', 'gauge', 'meter', 'kpi', 'metric', 'data-visualization'],
   propTypes: {
     title: 'string',
+    description: 'string',
     value: 'number',
+    series: 'Array<{ data?: number[], label?: string, colorStops?: ColorStop[] }>',
+    levels: 'Array<{ value: number, color: string }>',
     valueMin: 'number',
     valueMax: 'number',
     startAngle: 'number',

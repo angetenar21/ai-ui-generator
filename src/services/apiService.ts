@@ -293,7 +293,21 @@ class ApiService {
    */
   private static transformResultToComponentSpec(result: JobResult): ComponentSpec {
     try {
-      const spec = result.spec;
+      let spec: unknown = result.spec;
+
+      // CRITICAL FIX: Check if spec is a string and parse it
+      if (typeof spec === 'string') {
+        console.warn('[ApiService] Spec is a string, parsing JSON:', spec.substring(0, 100));
+        try {
+          spec = JSON.parse(spec);
+        } catch (parseError) {
+          console.error('[ApiService] Failed to parse stringified spec:', parseError);
+          throw new Error('Spec is a string but failed to parse as JSON');
+        }
+      }
+
+      console.log('[ApiService] Spec type:', typeof spec);
+      console.log('[ApiService] Spec structure:', spec);
 
       // Validate spec has minimum required structure
       if (!this.isValidComponentData(spec)) {
@@ -302,7 +316,9 @@ class ApiService {
       }
 
       // Normalize to ComponentSpec format
-      return this.normalizeToComponentSpec(spec as Record<string, unknown>);
+      const normalized = this.normalizeToComponentSpec(spec as Record<string, unknown>);
+      console.log('[ApiService] Normalized spec:', normalized);
+      return normalized;
 
     } catch (error) {
       console.error('[ApiService] Error transforming result:', error);

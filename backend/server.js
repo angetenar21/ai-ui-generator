@@ -358,7 +358,9 @@ function executeToolCall(toolCall) {
         valid: validation.valid,
         errors: validation.errors,
         componentName: args.spec?.name || args.spec?.type || args.spec?.component,
-        message: validation.valid ? 'Validation successful. Now return the complete JSON object you just validated.' : undefined,
+        message: validation.valid
+          ? 'SUCCESS! Validation passed. Now you MUST return the complete JSON object in your next response. Return ONLY the JSON - no markdown code blocks, no explanations, no text. Just the raw JSON object starting with { and ending with }.'
+          : `Validation failed with ${validation.errors.length} error(s): ${validation.errors.join('; ')}. Fix ALL errors and call validate_component again.`,
       };
     }
 
@@ -514,14 +516,18 @@ async function callGemini(userMessage, context = '') {
           return JSON.stringify(lastValidatedSpec, null, 2);
         }
 
-        Logger.error('No text in final response and no fallback', {
-          parts,
-          candidateFinishReason: candidate.finishReason,
-          safetyRatings: candidate.safetyRatings,
-          iterationCount: iterations,
-          fullCandidate: JSON.stringify(candidate, null, 2)
+        // Prompt Gemini one more time to return the JSON
+        Logger.warn('Empty final response, prompting Gemini to return JSON', {
+          iterationCount: iterations
         });
-        throw new Error('No text in final Gemini response');
+
+        contents.push({
+          role: 'user',
+          parts: [{
+            text: 'You must now return the complete JSON object. Do not use any function calls. Return only the JSON object you validated earlier, nothing else.'
+          }]
+        });
+        continue; // Try again
       }
 
       Logger.geminiResponse(GEMINI_MODEL, response, textPart.text);
@@ -626,18 +632,72 @@ function extractJsonObject(text) {
     }
   }
 
-  // Try to find JSON object in text - find the outermost braces
+  // Try to find JSON object in text - find matching braces using a stack
   if (!parsed) {
-    // Find first { and last }
+    const firstBrace = trimmed.indexOf('{');
+    if (firstBrace !== -1) {
+      let depth = 0;
+      let inString = false;
+      let escapeNext = false;
+      let endBrace = -1;
+
+      for (let i = firstBrace; i < trimmed.length; i++) {
+        const char = trimmed[i];
+
+        if (escapeNext) {
+          escapeNext = false;
+          continue;
+        }
+
+        if (char === '\\') {
+          escapeNext = true;
+          continue;
+        }
+
+        if (char === '"') {
+          inString = !inString;
+          continue;
+        }
+
+        if (inString) continue;
+
+        if (char === '{') {
+          depth++;
+        } else if (char === '}') {
+          depth--;
+          if (depth === 0) {
+            endBrace = i;
+            break;
+          }
+        }
+      }
+
+      if (endBrace !== -1) {
+        const jsonContent = trimmed.substring(firstBrace, endBrace + 1);
+        try {
+          parsed = JSON.parse(jsonContent);
+          Logger.debug('Successfully parsed JSON from balanced brace extraction');
+        } catch (e) {
+          Logger.debug('Balanced brace extraction JSON parse failed', {
+            error: e.message,
+            extractedLength: jsonContent.length
+          });
+        }
+      }
+    }
+  }
+
+  // Fallback: try to find the last complete JSON object
+  if (!parsed) {
     const firstBrace = trimmed.indexOf('{');
     const lastBrace = trimmed.lastIndexOf('}');
     if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
       const jsonContent = trimmed.substring(firstBrace, lastBrace + 1);
       try {
         parsed = JSON.parse(jsonContent);
-        Logger.debug('Successfully parsed JSON from brace extraction');
+        Logger.debug('Successfully parsed JSON from simple brace extraction (fallback)');
       } catch (e) {
-        Logger.debug('Brace extraction JSON parse failed', { error: e.message });
+        Logger.debug('Simple brace extraction JSON parse failed', { error: e.message });
       }
     }
   }
@@ -646,6 +706,8 @@ function extractJsonObject(text) {
     Logger.error('Failed to parse JSON from Gemini output', {
       textLength: trimmed.length,
       fullText: trimmed,
+      startsWithBrace: trimmed.startsWith('{'),
+      endsWithBrace: trimmed.endsWith('}'),
     });
     throw new Error('Failed to parse JSON from Gemini output (see logs/backend.log for full text)');
   }
