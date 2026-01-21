@@ -370,12 +370,47 @@ function executeToolCall(toolCall) {
 }
 
 async function callGemini(userMessage, context = '') {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
-    Logger.error('GEMINI_API_KEY is not set');
-    throw new Error('GEMINI_API_KEY is required for the backend to talk to Gemini 2.5 Pro.');
+  // Support multiple API keys - try each one in order
+  const apiKeys = process.env.GEMINI_API_KEYS
+    ? process.env.GEMINI_API_KEYS.split(',').map(key => key.trim()).filter(Boolean)
+    : process.env.GEMINI_API_KEY
+    ? [process.env.GEMINI_API_KEY]
+    : [];
+
+  if (apiKeys.length === 0) {
+    Logger.error('No GEMINI_API_KEY(s) configured');
+    throw new Error('GEMINI_API_KEY or GEMINI_API_KEYS is required for the backend to talk to Gemini 2.5 Pro.');
   }
 
+  // Try each API key in order
+  for (let keyIndex = 0; keyIndex < apiKeys.length; keyIndex++) {
+    const apiKey = apiKeys[keyIndex];
+    const keyLabel = apiKeys.length > 1 ? `key ${keyIndex + 1}/${apiKeys.length}` : 'key';
+    
+    try {
+      const result = await callGeminiWithKey(userMessage, context, apiKey, keyLabel);
+      return result;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      const isQuotaError = errorMessage.toLowerCase().includes('exhausted') || 
+                          errorMessage.toLowerCase().includes('rate limit') ||
+                          errorMessage.toLowerCase().includes('quota');
+
+      // If this is the last key or not a quota error, throw
+      if (keyIndex === apiKeys.length - 1 || !isQuotaError) {
+        Logger.error(`All API keys failed or non-retryable error`, { error: errorMessage });
+        throw error;
+      }
+
+      // Otherwise, try next key
+      Logger.warn(`API ${keyLabel} quota exhausted, trying next key...`, { error: errorMessage });
+    }
+  }
+
+  throw new Error('All Gemini API keys failed');
+}
+
+async function callGeminiWithKey(userMessage, context = '', apiKey, keyLabel) {
   // Track the last validated spec as a fallback
   let lastValidatedSpec = null;
 
