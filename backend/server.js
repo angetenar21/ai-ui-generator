@@ -605,12 +605,14 @@ async function callGeminiWithRetry(userMessage, context = '', maxRetries = 3) {
       return await callGemini(userMessage, context);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      const isOverloaded = errorMessage.toLowerCase().includes('overloaded') ||
-        errorMessage.toLowerCase().includes('resource has been exhausted');
+      const isRetryable =
+        errorMessage.toLowerCase().includes('overloaded') ||
+        errorMessage.toLowerCase().includes('resource has been exhausted') ||
+        errorMessage.toLowerCase().includes('rate limit');
 
-      if (isOverloaded && attempt < maxRetries) {
+      if (isRetryable && attempt < maxRetries) {
         const backoff = Math.pow(2, attempt) * 1000; // 2s, 4s, 8s
-        Logger.warn(`Gemini overloaded, retry ${attempt}/${maxRetries} in ${backoff}ms`, {
+        Logger.warn(`Gemini API temporary issue, retry ${attempt}/${maxRetries} in ${backoff}ms`, {
           error: errorMessage,
           nextRetryIn: backoff
         });
@@ -618,7 +620,7 @@ async function callGeminiWithRetry(userMessage, context = '', maxRetries = 3) {
         continue;
       }
 
-      // If not overloaded or max retries reached, throw the error
+      // If not retryable or max retries reached, throw the error
       throw error;
     }
   }
