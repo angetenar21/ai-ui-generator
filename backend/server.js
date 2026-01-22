@@ -17,7 +17,7 @@ dotenv.config({ path: path.join(__dirname_temp, '../.env') }); // Try root .env
 Logger.info('Backend server initializing...');
 
 const APP_PORT = Number(process.env.BACKEND_PORT || 4000);
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-pro';
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const schemaPath = path.join(__dirname, 'docs', 'component-library-schema.json');
 
