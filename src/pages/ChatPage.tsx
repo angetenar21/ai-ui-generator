@@ -286,7 +286,21 @@ const ChatPage: React.FC = () => {
                       <div className="w-full max-w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl rounded-tl-md p-4 md:p-6 shadow-2xl border border-gray-200/50 dark:border-gray-700/50 hover:shadow-3xl transition-shadow duration-300 overflow-hidden">
                         <div className="w-full max-w-full overflow-x-auto overflow-y-auto" style={{ maxHeight: '80vh' }}>
                           <ResponsiveComponentWrapper maxWidth={1200}>
-                            {renderComponent(message.content)}
+                            {(() => {
+                              try {
+                                return renderComponent(message.content);
+                              } catch (error) {
+                                console.error('[ChatPage] Error rendering component:', error);
+                                return (
+                                  <div className="p-6 border border-red-500/30 rounded-xl bg-red-500/10">
+                                    <p className="text-red-400 font-semibold mb-2">⚠️ Rendering Error</p>
+                                    <p className="text-gray-400 text-sm">
+                                      Failed to render component. {error instanceof Error ? error.message : 'Unknown error'}
+                                    </p>
+                                  </div>
+                                );
+                              }
+                            })()}
                           </ResponsiveComponentWrapper>
                         </div>
                       </div>
