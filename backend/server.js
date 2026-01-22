@@ -608,7 +608,8 @@ async function callGeminiWithRetry(userMessage, context = '', maxRetries = 3) {
       const isRetryable =
         errorMessage.toLowerCase().includes('overloaded') ||
         errorMessage.toLowerCase().includes('resource has been exhausted') ||
-        errorMessage.toLowerCase().includes('rate limit');
+        errorMessage.toLowerCase().includes('rate limit') ||
+        errorMessage.toLowerCase().includes('temporarily unavailable');
 
       if (isRetryable && attempt < maxRetries) {
         const backoff = Math.pow(2, attempt) * 1000; // 2s, 4s, 8s
