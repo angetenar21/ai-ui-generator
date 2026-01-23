@@ -76,14 +76,14 @@ const BulletChart: React.FC<BulletChartProps> = ({
   showLabels = true,
 }) => {
   // Ensure value is within bounds
-  const clampedValue = Math.max(min, Math.min(max, value));
-  const clampedTarget = target ? Math.max(min, Math.min(max, target)) : undefined;
-  const clampedComparative = comparative ? Math.max(min, Math.min(max, comparative)) : undefined;
+  const clampedValue = Math.max(min, Math.min(max, value || 0));
+  const clampedTarget = target !== undefined && target !== null ? Math.max(min, Math.min(max, target)) : undefined;
+  const clampedComparative = comparative !== undefined && comparative !== null ? Math.max(min, Math.min(max, comparative)) : undefined;
 
   // Calculate percentages for positioning
-  const valuePercent = ((clampedValue - min) / (max - min)) * 100;
-  const targetPercent = clampedTarget ? ((clampedTarget - min) / (max - min)) * 100 : undefined;
-  const comparativePercent = clampedComparative ? ((clampedComparative - min) / (max - min)) * 100 : undefined;
+  const valuePercent = max > min ? ((clampedValue - min) / (max - min)) * 100 : 0;
+  const targetPercent = clampedTarget !== undefined && max > min ? ((clampedTarget - min) / (max - min)) * 100 : undefined;
+  const comparativePercent = clampedComparative !== undefined && max > min ? ((clampedComparative - min) / (max - min)) * 100 : undefined;
 
   // Default ranges if none provided
   const defaultRanges = ranges.length > 0 ? ranges : [
@@ -108,17 +108,17 @@ const BulletChart: React.FC<BulletChartProps> = ({
   const valueColor = isDarkMode ? '#3B82F6' : '#2563EB';
 
   return (
-    <div className={`${surfaceClasses} p-6 rounded-xl`} style={{ width: propWidth || '100%' }}>
+    <div className={`${surfaceClasses} p-6 rounded-xl`} style={{ width: propWidth || '100%', minWidth: '400px' }}>
       {/* Header */}
       {(title || description) && (
-        <div className="mb-4">
+        <div className="mb-6">
           {title && (
-            <h3 className="text-base font-semibold mb-1" style={{ color: textColor }}>
+            <h3 className="text-lg font-semibold mb-2" style={{ color: textColor }}>
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-sm" style={{ color: secondaryTextColor }}>
+            <p className="text-sm leading-relaxed" style={{ color: secondaryTextColor }}>
               {description}
             </p>
           )}
@@ -126,27 +126,32 @@ const BulletChart: React.FC<BulletChartProps> = ({
       )}
 
       {/* Bullet Chart */}
-      <div style={{ height: `${height}px` }} className="flex flex-col justify-center">
+      <div style={{ minHeight: `${height + 40}px` }} className="flex flex-col justify-center">
         {/* Value display */}
         {showLabels && (
-          <div className="flex justify-between items-center mb-2">
-            <div>
-              <span className="text-2xl font-bold" style={{ color: textColor }}>
+          <div className="flex flex-col gap-2 mb-4">
+            <div className="flex items-baseline gap-3">
+              <span className="text-3xl font-bold" style={{ color: textColor }}>
                 {clampedValue.toLocaleString()}{unit}
               </span>
               {clampedTarget && (
-                <span className="text-sm ml-2" style={{ color: secondaryTextColor }}>
+                <span className="text-base font-medium" style={{ color: secondaryTextColor }}>
                   Target: {clampedTarget.toLocaleString()}{unit}
                 </span>
               )}
             </div>
+            {clampedComparative && (
+              <div className="text-sm" style={{ color: secondaryTextColor }}>
+                Previous: {clampedComparative.toLocaleString()}{unit}
+              </div>
+            )}
           </div>
         )}
 
         {/* Chart visualization */}
-        <div className="relative" style={{ height: '60px' }}>
+        <div className="relative" style={{ height: '70px' }}>
           {/* Qualitative ranges background */}
-          <div className="absolute inset-0 flex">
+          <div className="absolute inset-0 flex rounded-lg overflow-hidden">
             {sortedRanges.map((range, index) => {
               const prevValue = index > 0 ? sortedRanges[index - 1].value : min;
               const rangeStart = ((prevValue - min) / (max - min)) * 100;
@@ -155,7 +160,7 @@ const BulletChart: React.FC<BulletChartProps> = ({
               return (
                 <div
                   key={index}
-                  className="h-full opacity-20"
+                  className="h-full opacity-25"
                   style={{
                     width: `${rangeWidth}%`,
                     backgroundColor: range.color || '#6B7280',
@@ -169,33 +174,39 @@ const BulletChart: React.FC<BulletChartProps> = ({
 
           {/* Main value bar */}
           <div
-            className="absolute top-1/2 -translate-y-1/2 h-8 rounded transition-all duration-300"
+            className="absolute top-1/2 -translate-y-1/2 h-10 rounded-lg transition-all duration-300"
             style={{
               width: `${valuePercent}%`,
               backgroundColor: valueColor,
-              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.15)',
             }}
           />
 
           {/* Comparative marker */}
           {comparativePercent !== undefined && (
             <div
-              className="absolute top-1/2 -translate-y-1/2 w-1 h-12 bg-gray-600 dark:bg-gray-400"
+              className="absolute top-1/2 -translate-y-1/2 h-16 rounded-sm"
               style={{
                 left: `${comparativePercent}%`,
-                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.2)',
+                width: '3px',
+                backgroundColor: '#F59E0B',
+                boxShadow: '0 0 8px rgba(245, 158, 11, 0.5), 0 2px 4px rgba(0, 0, 0, 0.3)',
               }}
-              title={`Comparative: ${clampedComparative}${unit}`}
+              title={`Previous: ${clampedComparative}${unit}`}
             />
           )}
 
           {/* Target marker */}
           {targetPercent !== undefined && (
             <div
-              className="absolute top-1/2 -translate-y-1/2 w-1 h-full bg-gray-900 dark:bg-gray-100"
+              className="absolute top-1/2 -translate-y-1/2 h-full rounded-sm"
               style={{
                 left: `${targetPercent}%`,
-                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.3)',
+                width: '3px',
+                backgroundColor: isDarkMode ? '#F3F4F6' : '#1F2937',
+                boxShadow: isDarkMode
+                  ? '0 0 8px rgba(243, 244, 246, 0.6), 0 2px 4px rgba(0, 0, 0, 0.4)'
+                  : '0 0 8px rgba(31, 41, 55, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3)',
               }}
               title={`Target: ${clampedTarget}${unit}`}
             />
@@ -204,30 +215,30 @@ const BulletChart: React.FC<BulletChartProps> = ({
 
         {/* Scale labels */}
         {showLabels && (
-          <div className="flex justify-between mt-2 text-xs" style={{ color: secondaryTextColor }}>
+          <div className="flex justify-between mt-4 text-sm font-medium" style={{ color: secondaryTextColor }}>
             <span>{min.toLocaleString()}{unit}</span>
-            <span>{((max - min) / 2 + min).toLocaleString()}{unit}</span>
+            <span>{Math.round((max - min) / 2 + min).toLocaleString()}{unit}</span>
             <span>{max.toLocaleString()}{unit}</span>
           </div>
         )}
 
         {/* Legend */}
         {showLabels && (
-          <div className="flex flex-wrap gap-4 mt-3 text-xs" style={{ color: secondaryTextColor }}>
-            <div className="flex items-center gap-1">
-              <div className="w-4 h-2 rounded" style={{ backgroundColor: valueColor }} />
-              <span>Actual</span>
+          <div className="flex flex-wrap gap-6 mt-5 text-sm" style={{ color: secondaryTextColor }}>
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-3 rounded" style={{ backgroundColor: valueColor }} />
+              <span className="font-medium">Actual</span>
             </div>
-            {clampedTarget && (
-              <div className="flex items-center gap-1">
-                <div className="w-1 h-4 bg-gray-900 dark:bg-gray-100" />
-                <span>Target</span>
+            {clampedTarget !== undefined && (
+              <div className="flex items-center gap-2">
+                <div className="w-1 h-5 rounded-sm" style={{ backgroundColor: isDarkMode ? '#F3F4F6' : '#1F2937' }} />
+                <span className="font-medium">Target</span>
               </div>
             )}
-            {clampedComparative && (
-              <div className="flex items-center gap-1">
-                <div className="w-1 h-4 bg-gray-600 dark:bg-gray-400" />
-                <span>Comparative</span>
+            {clampedComparative !== undefined && (
+              <div className="flex items-center gap-2">
+                <div className="w-1 h-5 rounded-sm" style={{ backgroundColor: '#F59E0B' }} />
+                <span className="font-medium">Previous</span>
               </div>
             )}
           </div>
