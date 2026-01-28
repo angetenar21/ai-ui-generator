@@ -125,7 +125,7 @@ const Audio: React.FC<AudioProps> = ({
 
   if (variant === 'compact') {
     return (
-      <div className={`glass-dark border border-gray-700/50 rounded-xl p-4 max-w-md ${className}`}>
+      <div className={`card border border-gray-200 dark:border-gray-700 rounded-xl p-4 max-w-md ${className}`}>
         <audio
           ref={audioRef}
           src={src}
@@ -188,7 +188,7 @@ const Audio: React.FC<AudioProps> = ({
   }
 
   return (
-    <div className={`glass-dark border border-gray-700/50 rounded-2xl p-6 max-w-2xl ${className}`}>
+    <div className={`card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 max-w-2xl ${className}`}>
       <audio
         ref={audioRef}
         src={src}

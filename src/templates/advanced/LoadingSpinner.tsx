@@ -37,12 +37,12 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   };
 
   const colorClasses = {
-    primary: 'text-primary-500',
+    primary: 'text-orange-600 dark:text-orange-400',
     secondary: 'text-gray-600 dark:text-gray-300',
-    accent: 'text-accent-cyan',
-    success: 'text-success',
-    warning: 'text-warning',
-    error: 'text-error',
+    accent: 'text-teal-500 dark:text-teal-400',
+    success: 'text-green-600 dark:text-green-400',
+    warning: 'text-amber-600 dark:text-amber-400',
+    error: 'text-red-600 dark:text-red-400',
   };
 
   const renderSpinner = () => {
@@ -58,6 +58,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
         );
 
       case 'dots':
+        const dotSize = size === 'small' ? '6px' : size === 'medium' ? '8px' : size === 'large' ? '10px' : '12px';
         return (
           <div className="flex gap-2">
             {[0, 1, 2].map((i) => (
@@ -65,8 +66,8 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
                 key={i}
                 className={`rounded-full ${spinnerColor} bg-current`}
                 style={{
-                  width: size === 'small' ? '6px' : size === 'medium' ? '8px' : '10px',
-                  height: size === 'small' ? '6px' : size === 'medium' ? '8px' : '10px',
+                  width: dotSize,
+                  height: dotSize,
                   animation: `pulse 1.5s ease-in-out ${i * 0.2}s infinite`,
                 }}
               />
@@ -75,6 +76,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
         );
 
       case 'bars':
+        const barHeight = size === 'small' ? '12px' : size === 'medium' ? '20px' : size === 'large' ? '28px' : '36px';
         return (
           <div className="flex gap-1 items-end">
             {[0, 1, 2, 3].map((i) => (
@@ -82,7 +84,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
                 key={i}
                 className={`w-1 ${spinnerColor} bg-current rounded`}
                 style={{
-                  height: size === 'small' ? '12px' : size === 'medium' ? '20px' : '28px',
+                  height: barHeight,
                   animation: `loading-bars 1s ease-in-out ${i * 0.1}s infinite`,
                 }}
               />
@@ -118,7 +120,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 
   if (fullScreen) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg-main/80 backdrop-blur-sm">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white dark:bg-gray-900/80 backdrop-blur-sm">
         {content}
       </div>
     );

@@ -15,7 +15,7 @@ interface BackdropProps {
 }
 
 const Backdrop: React.FC<BackdropProps> = ({
-  open = true,
+  open = false,
   isOpen,
   visible,
   opacity = 0.6,
@@ -27,11 +27,11 @@ const Backdrop: React.FC<BackdropProps> = ({
   content,
   message,
 }) => {
-  const [isVisible, setIsVisible] = useState(open || isOpen || visible || false);
+  const [isVisible, setIsVisible] = useState(Boolean(open || isOpen || visible));
 
   useEffect(() => {
-    const shouldShow = open || isOpen || visible;
-    setIsVisible(shouldShow !== undefined ? shouldShow : true);
+    const shouldShow = open ?? isOpen ?? visible ?? false;
+    setIsVisible(Boolean(shouldShow));
   }, [open, isOpen, visible]);
 
   const handleClick = () => {

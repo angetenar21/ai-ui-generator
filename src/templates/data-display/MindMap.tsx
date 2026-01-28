@@ -243,7 +243,7 @@ const MindMap: React.FC<MindMapProps> = ({
   };
 
   return (
-    <div className="glass-dark border border-gray-700/50 rounded-2xl p-6 my-4">
+    <div className="card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 my-4">
       {title && (
         <div className="mb-6">
           <h3 className="text-xl font-display font-semibold text-white">

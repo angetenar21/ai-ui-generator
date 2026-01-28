@@ -92,7 +92,7 @@ const Gantt: React.FC<GanttProps> = ({
   const timeScales = generateTimeScale();
 
   return (
-    <div className="glass-dark border border-gray-700/50 rounded-2xl p-6 my-4 overflow-x-auto">
+    <div className="card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 my-4 overflow-x-auto">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-display font-semibold text-white">
           {title}

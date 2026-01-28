@@ -6,7 +6,7 @@ interface Column {
   width?: number;
   sortable?: boolean;
   filterable?: boolean;
-  type?: 'text' | 'number' | 'date' | 'boolean';
+  type?: 'text' | 'number' | 'date' | 'boolean' | 'avatar';
 }
 
 interface Row {
@@ -329,8 +329,8 @@ const DataGrid: React.FC<DataGridProps> = ({
               const bgColor = isSelected
                 ? selectedRowBg
                 : idx % 2 === 0
-                ? rowBg
-                : rowAltBg;
+                  ? rowBg
+                  : rowAltBg;
 
               return (
                 <tr
@@ -362,21 +362,39 @@ const DataGrid: React.FC<DataGridProps> = ({
                     </td>
                   )}
 
-                  {columns.map((column) => (
-                    <td
-                      key={column.id}
-                      style={{
-                        ...tdStyle,
-                        maxWidth: column.width ? column.width : 'auto',
-                      }}
-                    >
-                      {column.type === 'boolean'
-                        ? row[column.id]
-                          ? '✓'
-                          : '✗'
-                        : row[column.id]}
-                    </td>
-                  ))}
+                  {columns.map((column) => {
+                    const cellValue = row[column.id];
+                    const isAvatarType = column.type === 'avatar';
+                    const isImageUrl = typeof cellValue === 'string' && (cellValue.includes('http') && (cellValue.includes('avatar') || cellValue.includes('image') || cellValue.includes('.jpg') || cellValue.includes('.png') || cellValue.includes('.gif')));
+
+                    return (
+                      <td
+                        key={column.id}
+                        style={{
+                          ...tdStyle,
+                          maxWidth: column.width ? column.width : 'auto',
+                        }}
+                      >
+                        {isAvatarType || isImageUrl ? (
+                          <img
+                            src={cellValue}
+                            alt="avatar"
+                            style={{
+                              width: 32,
+                              height: 32,
+                              borderRadius: '50%',
+                              objectFit: 'cover',
+                              display: 'inline-block',
+                            }}
+                          />
+                        ) : column.type === 'boolean'
+                          ? cellValue
+                            ? '✓'
+                            : '✗'
+                          : cellValue}
+                      </td>
+                    );
+                  })}
 
                   {editable && (
                     <td style={{ ...tdStyle, width: 90 }}>

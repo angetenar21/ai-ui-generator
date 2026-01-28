@@ -54,13 +54,13 @@ const Container: React.FC<ContainerProps> = ({
   };
 
   const centerClass = center ? 'mx-auto' : '';
-  const backgroundClass = background ? 'bg-bg-surface' : '';
-  const borderClass = border ? 'border border-border-primary rounded-card' : '';
+  const backgroundClass = background ? 'bg-gray-50 dark:bg-gray-700' : '';
+  const borderClass = border ? 'border border-orange-600 rounded-card' : '';
   const shadowClass = shadow ? 'shadow-lg' : '';
 
   return (
     <div
-      className={`${maxWidthClasses[maxWidth]} ${paddingClasses[padding]} ${centerClass} ${backgroundClass} ${borderClass} ${shadowClass} w-full`}
+      className={`${maxWidthClasses[maxWidth]} ${paddingClasses[padding]} ${centerClass} ${backgroundClass} ${borderClass} ${shadowClass} w-full overflow-visible`}
     >
       {children && children.length > 0 && renderChild ? (
         <div className="space-y-4">
@@ -70,7 +70,7 @@ const Container: React.FC<ContainerProps> = ({
         </div>
       ) : (
         <div className="text-center py-8">
-          <p className="text-text-tertiary">
+          <p className="text-gray-600 dark:text-gray-400">
             Container (max-width: {maxWidth}) - Add child components
           </p>
         </div>

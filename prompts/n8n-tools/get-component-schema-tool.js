@@ -40,6 +40,18 @@ const components = {
         "required": true,
         "tsType": "Array<{ data: number[]; label?: string; color?: string; stack?: string; curve?: 'linear' | 'natural' | 'monotoneX' | 'monotoneY' | 'step'; showMark?: boolean; }>"
       },
+      "stack": {
+        "type": "boolean",
+        "description": "Stack areas (default: true for area charts)",
+        "required": false,
+        "tsType": "boolean"
+      },
+      "gradientOpacity": {
+        "type": "number",
+        "description": "Gradient opacity for area fills: [startOpacity, endOpacity]",
+        "required": false,
+        "tsType": "[ number, number ]"
+      },
       "width": {
         "type": "number",
         "description": "Chart width",
@@ -92,6 +104,16 @@ const components = {
           "type": "Array<{ data: number[]; label?: string; color?: string; stack?: string; curve?: 'linear' | 'natural' | 'monotoneX' | 'monotoneY' | 'step'; showMark?: boolean; }>",
           "description": "Series data for the areas",
           "optional": false
+        },
+        "stack": {
+          "type": "boolean",
+          "description": "Stack areas (default: true for area charts)",
+          "optional": true
+        },
+        "gradientOpacity": {
+          "type": "[ number, number ]",
+          "description": "Gradient opacity for area fills: [startOpacity, endOpacity]",
+          "optional": true
         },
         "width": {
           "type": "number",
@@ -487,6 +509,202 @@ const components = {
       }
     }
   },
+  "bullet-chart": {
+    "name": "bullet-chart",
+    "category": "charts",
+    "fileName": "BulletChart",
+    "description": "Bullet chart for displaying performance metrics against targets and ranges",
+    "tags": [
+      "chart",
+      "bullet",
+      "kpi",
+      "performance",
+      "target",
+      "data-visualization"
+    ],
+    "props": {
+      "title": {
+        "type": "string",
+        "description": "Chart title",
+        "required": false,
+        "tsType": "string"
+      },
+      "description": {
+        "type": "string",
+        "description": "Optional description text",
+        "required": false,
+        "tsType": "string"
+      },
+      "target": {
+        "type": "number",
+        "description": "Target value to achieve",
+        "required": false,
+        "tsType": "number"
+      },
+      "value": {
+        "type": "number",
+        "description": "Current actual value",
+        "required": true,
+        "tsType": "number"
+      },
+      "min": {
+        "type": "number",
+        "description": "Minimum value",
+        "required": false,
+        "tsType": "number"
+      },
+      "max": {
+        "type": "number",
+        "description": "Maximum value",
+        "required": false,
+        "tsType": "number"
+      },
+      "ranges": {
+        "type": "string",
+        "description": "Qualitative ranges for context (e.g., poor, satisfactory, good)",
+        "required": false,
+        "tsType": "Array<{ value: number; color?: string; label?: string; }>"
+      },
+      "comparative": {
+        "type": "number",
+        "description": "Comparative measure (e.g., previous period)",
+        "required": false,
+        "tsType": "number"
+      },
+      "width": {
+        "type": "number",
+        "description": "Chart width",
+        "required": false,
+        "tsType": "number"
+      },
+      "height": {
+        "type": "number",
+        "description": "Chart height",
+        "required": false,
+        "tsType": "number"
+      },
+      "unit": {
+        "type": "string",
+        "description": "Unit label (e.g., \"%\", \"K\", \"M\")",
+        "required": false,
+        "tsType": "string"
+      },
+      "cardBackgroundColor": {
+        "type": "string",
+        "description": "Card background color",
+        "required": false,
+        "tsType": "string"
+      },
+      "variant": {
+        "type": "SurfaceVariant",
+        "description": "Surface variant for visual hierarchy",
+        "required": false,
+        "tsType": "SurfaceVariant"
+      },
+      "elevation": {
+        "type": "ElevationLevel",
+        "description": "Elevation level for depth",
+        "required": false,
+        "tsType": "ElevationLevel"
+      },
+      "emphasis": {
+        "type": "EmphasisLevel",
+        "description": "Visual emphasis level",
+        "required": false,
+        "tsType": "EmphasisLevel"
+      },
+      "showLabels": {
+        "type": "boolean",
+        "description": "Show value labels",
+        "required": false,
+        "tsType": "boolean"
+      }
+    },
+    "interfaces": {
+      "BulletChartProps": {
+        "title": {
+          "type": "string",
+          "description": "Chart title",
+          "optional": true
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description text",
+          "optional": true
+        },
+        "target": {
+          "type": "number",
+          "description": "Target value to achieve",
+          "optional": true
+        },
+        "value": {
+          "type": "number",
+          "description": "Current actual value",
+          "optional": false
+        },
+        "min": {
+          "type": "number",
+          "description": "Minimum value",
+          "optional": true
+        },
+        "max": {
+          "type": "number",
+          "description": "Maximum value",
+          "optional": true
+        },
+        "ranges": {
+          "type": "Array<{ value: number; color?: string; label?: string; }>",
+          "description": "Qualitative ranges for context (e.g., poor, satisfactory, good)",
+          "optional": true
+        },
+        "comparative": {
+          "type": "number",
+          "description": "Comparative measure (e.g., previous period)",
+          "optional": true
+        },
+        "width": {
+          "type": "number",
+          "description": "Chart width",
+          "optional": true
+        },
+        "height": {
+          "type": "number",
+          "description": "Chart height",
+          "optional": true
+        },
+        "unit": {
+          "type": "string",
+          "description": "Unit label (e.g., \"%\", \"K\", \"M\")",
+          "optional": true
+        },
+        "cardBackgroundColor": {
+          "type": "string",
+          "description": "Card background color",
+          "optional": true
+        },
+        "variant": {
+          "type": "SurfaceVariant",
+          "description": "Surface variant for visual hierarchy",
+          "optional": true
+        },
+        "elevation": {
+          "type": "ElevationLevel",
+          "description": "Elevation level for depth",
+          "optional": true
+        },
+        "emphasis": {
+          "type": "EmphasisLevel",
+          "description": "Visual emphasis level",
+          "optional": true
+        },
+        "showLabels": {
+          "type": "boolean",
+          "description": "Show value labels",
+          "optional": true
+        }
+      }
+    }
+  },
   "chord-chart": {
     "name": "chord-chart",
     "category": "charts",
@@ -850,14 +1068,22 @@ const components = {
     "name": "funnel-chart",
     "category": "charts",
     "fileName": "FunnelChart",
-    "description": "Funnel chart for conversion funnels",
+    "description": "Funnel chart for conversion funnels with distinct colors per segment and centered legend",
     "tags": [
       "chart",
       "funnel",
-      "conversion"
+      "conversion",
+      "sales",
+      "marketing"
     ],
     "props": {
       "title": {
+        "type": "string",
+        "description": "",
+        "required": false,
+        "tsType": "string"
+      },
+      "description": {
         "type": "string",
         "description": "",
         "required": false,
@@ -867,7 +1093,7 @@ const components = {
         "type": "string",
         "description": "",
         "required": true,
-        "tsType": "Array<{ name: string; value: number; }>"
+        "tsType": "Array<{ name: string; value: number; color?: string; }>"
       },
       "width": {
         "type": "number",
@@ -880,6 +1106,18 @@ const components = {
         "description": "",
         "required": false,
         "tsType": "number"
+      },
+      "colors": {
+        "type": "string",
+        "description": "",
+        "required": false,
+        "tsType": "string[]"
+      },
+      "legend": {
+        "type": "boolean",
+        "description": "",
+        "required": false,
+        "tsType": "boolean"
       }
     },
     "interfaces": {
@@ -888,8 +1126,12 @@ const components = {
           "type": "string",
           "optional": true
         },
+        "description": {
+          "type": "string",
+          "optional": true
+        },
         "data": {
-          "type": "Array<{ name: string; value: number; }>",
+          "type": "Array<{ name: string; value: number; color?: string; }>",
           "optional": false
         },
         "width": {
@@ -898,6 +1140,14 @@ const components = {
         },
         "height": {
           "type": "number",
+          "optional": true
+        },
+        "colors": {
+          "type": "string[]",
+          "optional": true
+        },
+        "legend": {
+          "type": "boolean",
           "optional": true
         }
       }
@@ -940,6 +1190,12 @@ const components = {
         "description": "Series data format [{ data: [value], label?, colorStops? }]",
         "required": false,
         "tsType": "Array<{ data?: number[]; label?: string; colorStops?: ColorStop[]; }>"
+      },
+      "levels": {
+        "type": "array",
+        "description": "Color levels for threshold-based coloring",
+        "required": false,
+        "tsType": "ColorLevel[]"
       },
       "valueMin": {
         "type": "number",
@@ -1003,6 +1259,16 @@ const components = {
       }
     },
     "interfaces": {
+      "ColorLevel": {
+        "value": {
+          "type": "number",
+          "optional": false
+        },
+        "color": {
+          "type": "string",
+          "optional": false
+        }
+      },
       "ColorStop": {
         "offset": {
           "type": "number",
@@ -1032,6 +1298,11 @@ const components = {
         "series": {
           "type": "Array<{ data?: number[]; label?: string; colorStops?: ColorStop[]; }>",
           "description": "Series data format [{ data: [value], label?, colorStops? }]",
+          "optional": true
+        },
+        "levels": {
+          "type": "ColorLevel[]",
+          "description": "Color levels for threshold-based coloring",
           "optional": true
         },
         "valueMin": {
@@ -1752,7 +2023,7 @@ const components = {
         "type": "string",
         "description": "Angle axis configuration",
         "required": false,
-        "tsType": "{ data: string[]; }"
+        "tsType": "{ data: string[]; } | string[]"
       },
       "radiusAxis": {
         "type": "any",
@@ -1792,7 +2063,7 @@ const components = {
           "optional": true
         },
         "angleAxis": {
-          "type": "{ data: string[]; }",
+          "type": "{ data: string[]; } | string[]",
           "description": "Angle axis configuration",
           "optional": true
         },
@@ -2238,14 +2509,15 @@ const components = {
     "name": "sparkline-chart",
     "category": "charts",
     "fileName": "SparklineChart",
-    "description": "Compact sparkline chart for displaying trends in small spaces, perfect for dashboards",
+    "description": "Compact sparkline chart for displaying trends in small spaces with value, trend indicators, and stats",
     "tags": [
       "chart",
       "sparkline",
       "mini",
       "trend",
       "compact",
-      "data-visualization"
+      "data-visualization",
+      "metric"
     ],
     "props": {
       "title": {
@@ -2301,6 +2573,30 @@ const components = {
         "description": "Curve type",
         "required": false,
         "tsType": "'linear' | 'natural' | 'monotoneX' | 'monotoneY' | 'step'"
+      },
+      "metric": {
+        "type": "string",
+        "description": "Metric label (e.g., \"Revenue\")",
+        "required": false,
+        "tsType": "string"
+      },
+      "value": {
+        "type": "string",
+        "description": "Current value display",
+        "required": false,
+        "tsType": "string | number"
+      },
+      "trend": {
+        "type": "string",
+        "description": "Trend indicator (e.g., \"+12%\" or \"-5%\")",
+        "required": false,
+        "tsType": "string"
+      },
+      "trendPositive": {
+        "type": "boolean",
+        "description": "Trend is positive (green) or negative (red)",
+        "required": false,
+        "tsType": "boolean"
       }
     },
     "interfaces": {
@@ -2349,6 +2645,26 @@ const components = {
           "type": "'linear' | 'natural' | 'monotoneX' | 'monotoneY' | 'step'",
           "description": "Curve type",
           "optional": true
+        },
+        "metric": {
+          "type": "string",
+          "description": "Metric label (e.g., \"Revenue\")",
+          "optional": true
+        },
+        "value": {
+          "type": "string | number",
+          "description": "Current value display",
+          "optional": true
+        },
+        "trend": {
+          "type": "string",
+          "description": "Trend indicator (e.g., \"+12%\" or \"-5%\")",
+          "optional": true
+        },
+        "trendPositive": {
+          "type": "boolean",
+          "description": "Trend is positive (green) or negative (red)",
+          "optional": true
         }
       }
     }
@@ -2363,6 +2679,12 @@ const components = {
     ],
     "props": {
       "title": {
+        "type": "string",
+        "description": "",
+        "required": false,
+        "tsType": "string"
+      },
+      "description": {
         "type": "string",
         "description": "",
         "required": false,
@@ -2385,11 +2707,27 @@ const components = {
         "description": "",
         "required": false,
         "tsType": "number"
+      },
+      "xAxis": {
+        "type": "string",
+        "description": "",
+        "required": false,
+        "tsType": "Array<{ dataKey?: string; label?: string; }>"
+      },
+      "series": {
+        "type": "string",
+        "description": "",
+        "required": false,
+        "tsType": "Array<{ dataKey: string; name?: string; color?: string; stackId?: string; }>"
       }
     },
     "interfaces": {
       "StackedAreaChartProps": {
         "title": {
+          "type": "string",
+          "optional": true
+        },
+        "description": {
           "type": "string",
           "optional": true
         },
@@ -2403,6 +2741,14 @@ const components = {
         },
         "height": {
           "type": "number",
+          "optional": true
+        },
+        "xAxis": {
+          "type": "Array<{ dataKey?: string; label?: string; }>",
+          "optional": true
+        },
+        "series": {
+          "type": "Array<{ dataKey: string; name?: string; color?: string; stackId?: string; }>",
           "optional": true
         }
       }
@@ -2446,6 +2792,24 @@ const components = {
         "description": "",
         "required": false,
         "tsType": "number"
+      },
+      "xAxis": {
+        "type": "string",
+        "description": "",
+        "required": false,
+        "tsType": "Array<{ dataKey?: string; label?: string; }>"
+      },
+      "series": {
+        "type": "string",
+        "description": "",
+        "required": false,
+        "tsType": "Array<{ dataKey: string; name?: string; color?: string; stackId?: string; }>"
+      },
+      "layout": {
+        "type": "'horizontal' | 'vertical'",
+        "description": "",
+        "required": false,
+        "tsType": "'horizontal' | 'vertical'"
       }
     },
     "interfaces": {
@@ -2469,6 +2833,18 @@ const components = {
         "height": {
           "type": "number",
           "optional": true
+        },
+        "xAxis": {
+          "type": "Array<{ dataKey?: string; label?: string; }>",
+          "optional": true
+        },
+        "series": {
+          "type": "Array<{ dataKey: string; name?: string; color?: string; stackId?: string; }>",
+          "optional": true
+        },
+        "layout": {
+          "type": "'horizontal' | 'vertical'",
+          "optional": true
         }
       }
     }
@@ -2477,13 +2853,15 @@ const components = {
     "name": "time-series-chart",
     "category": "charts",
     "fileName": "TimeSeriesChart",
-    "description": "Time series line chart for visualizing data over time with multiple series support",
+    "description": "Time series line chart for visualizing data over time. Supports multiple data formats: [[label, value]], [{month, value}], [{date, value}], [{x, y}], or plain number arrays.",
     "tags": [
       "chart",
       "time-series",
       "line",
       "temporal",
-      "data-visualization"
+      "data-visualization",
+      "monthly",
+      "trend"
     ],
     "props": {
       "title": {
@@ -2500,15 +2878,15 @@ const components = {
       },
       "series": {
         "type": "string",
-        "description": "Series data with time-based data points",
+        "description": "Series data with time-based data points - supports multiple formats",
         "required": true,
-        "tsType": "Array<{ name?: string; color?: string; data: Array<[ number, number ]>; // [timestamp, value] pairs }>"
+        "tsType": "Array<{ name?: string; label?: string; color?: string; data: Array<[ number | string, number ]> | Array<{ x: number | string; y: number; }> | Array<{ date: string; value: number; }> | Array<{ month: string; value: number; }> | number[]; }>"
       },
       "xAxis": {
-        "type": "object",
+        "type": "string",
         "description": "X-axis configuration",
         "required": false,
-        "tsType": "{ type: 'time'; }"
+        "tsType": "{ type?: 'time' | 'category'; data?: (string | number | Date)[]; label?: string; }"
       },
       "width": {
         "type": "number",
@@ -2539,6 +2917,12 @@ const components = {
         "description": "Margin around chart",
         "required": false,
         "tsType": "{ top?: number; right?: number; bottom?: number; left?: number; }"
+      },
+      "area": {
+        "type": "boolean",
+        "description": "Show area fill under the line",
+        "required": false,
+        "tsType": "boolean"
       }
     },
     "interfaces": {
@@ -2554,12 +2938,12 @@ const components = {
           "optional": true
         },
         "series": {
-          "type": "Array<{ name?: string; color?: string; data: Array<[ number, number ]>; // [timestamp, value] pairs }>",
-          "description": "Series data with time-based data points",
+          "type": "Array<{ name?: string; label?: string; color?: string; data: Array<[ number | string, number ]> | Array<{ x: number | string; y: number; }> | Array<{ date: string; value: number; }> | Array<{ month: string; value: number; }> | number[]; }>",
+          "description": "Series data with time-based data points - supports multiple formats",
           "optional": false
         },
         "xAxis": {
-          "type": "{ type: 'time'; }",
+          "type": "{ type?: 'time' | 'category'; data?: (string | number | Date)[]; label?: string; }",
           "description": "X-axis configuration",
           "optional": true
         },
@@ -2586,6 +2970,11 @@ const components = {
         "margin": {
           "type": "{ top?: number; right?: number; bottom?: number; left?: number; }",
           "description": "Margin around chart",
+          "optional": true
+        },
+        "area": {
+          "type": "boolean",
+          "description": "Show area fill under the line",
           "optional": true
         }
       }
@@ -2692,12 +3081,13 @@ const components = {
     "name": "waterfall-chart",
     "category": "charts",
     "fileName": "WaterfallChart",
-    "description": "Waterfall chart for cumulative impact visualization. Shows increases, decreases, and totals.",
+    "description": "Waterfall chart for cumulative impact visualization. Shows increases, decreases, and totals with proper stacking and positioning.",
     "tags": [
       "chart",
       "waterfall",
       "cumulative",
-      "financial"
+      "financial",
+      "variance"
     ],
     "props": {
       "title": {
@@ -3286,7 +3676,7 @@ const components = {
           "optional": true
         },
         "type": {
-          "type": "'text' | 'number' | 'date' | 'boolean'",
+          "type": "'text' | 'number' | 'date' | 'boolean' | 'avatar'",
           "optional": true
         }
       },
@@ -8211,6 +8601,114 @@ const components = {
       }
     }
   },
+  "toggle": {
+    "name": "toggle",
+    "category": "inputs",
+    "fileName": "Toggle",
+    "description": "Toggle switch for boolean settings and preferences",
+    "tags": [
+      "toggle",
+      "switch",
+      "checkbox",
+      "boolean",
+      "setting",
+      "option"
+    ],
+    "props": {
+      "label": {
+        "type": "string",
+        "description": "Label for the toggle",
+        "required": false,
+        "tsType": "string"
+      },
+      "description": {
+        "type": "string",
+        "description": "Helper text",
+        "required": false,
+        "tsType": "string"
+      },
+      "defaultChecked": {
+        "type": "boolean",
+        "description": "Initial state",
+        "required": false,
+        "tsType": "boolean"
+      },
+      "checked": {
+        "type": "boolean",
+        "description": "Controlled state",
+        "required": false,
+        "tsType": "boolean"
+      },
+      "onChange": {
+        "type": "boolean",
+        "description": "Change handler",
+        "required": false,
+        "tsType": "(checked: boolean) => void"
+      },
+      "disabled": {
+        "type": "boolean",
+        "description": "Disabled state",
+        "required": false,
+        "tsType": "boolean"
+      },
+      "size": {
+        "type": "'small' | 'medium' | 'large'",
+        "description": "Size variant",
+        "required": false,
+        "tsType": "'small' | 'medium' | 'large'"
+      },
+      "variant": {
+        "type": "'default' | 'primary' | 'success' | 'danger'",
+        "description": "Color variant",
+        "required": false,
+        "tsType": "'default' | 'primary' | 'success' | 'danger'"
+      }
+    },
+    "interfaces": {
+      "ToggleProps": {
+        "label": {
+          "type": "string",
+          "description": "Label for the toggle",
+          "optional": true
+        },
+        "description": {
+          "type": "string",
+          "description": "Helper text",
+          "optional": true
+        },
+        "defaultChecked": {
+          "type": "boolean",
+          "description": "Initial state",
+          "optional": true
+        },
+        "checked": {
+          "type": "boolean",
+          "description": "Controlled state",
+          "optional": true
+        },
+        "onChange": {
+          "type": "(checked: boolean) => void",
+          "description": "Change handler",
+          "optional": true
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Disabled state",
+          "optional": true
+        },
+        "size": {
+          "type": "'small' | 'medium' | 'large'",
+          "description": "Size variant",
+          "optional": true
+        },
+        "variant": {
+          "type": "'default' | 'primary' | 'success' | 'danger'",
+          "description": "Color variant",
+          "optional": true
+        }
+      }
+    }
+  },
   "accordion": {
     "name": "accordion",
     "category": "layout",
@@ -10852,6 +11350,12 @@ const components = {
         "description": "",
         "required": false,
         "tsType": "Array<{ label: string; onClick?: () => void; variant?: 'primary' | 'secondary' | 'danger'; }>"
+      },
+      "children": {
+        "type": "React.ReactNode",
+        "description": "",
+        "required": false,
+        "tsType": "React.ReactNode"
       }
     },
     "interfaces": {
@@ -10906,6 +11410,10 @@ const components = {
         },
         "actions": {
           "type": "Array<{ label: string; onClick?: () => void; variant?: 'primary' | 'secondary' | 'danger'; }>",
+          "optional": true
+        },
+        "children": {
+          "type": "React.ReactNode",
           "optional": true
         }
       }

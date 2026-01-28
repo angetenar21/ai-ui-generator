@@ -83,6 +83,14 @@ const Gallery: React.FC<GalleryProps> = ({
     6: 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6',
   };
 
+  const columnsMasonryClasses = {
+    2: 'columns-2',
+    3: 'columns-3',
+    4: 'columns-4',
+    5: 'columns-5',
+    6: 'columns-6',
+  };
+
   const gapClasses = {
     sm: 'gap-2',
     md: 'gap-4',
@@ -114,7 +122,7 @@ const Gallery: React.FC<GalleryProps> = ({
 
   if (!images || images.length === 0) {
     return (
-      <div className="glass-dark border border-gray-700/50 rounded-xl p-12 text-center">
+      <div className="card border border-gray-200 dark:border-gray-700 rounded-xl p-12 text-center">
         <svg className="w-20 h-20 mx-auto text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
@@ -150,7 +158,7 @@ const Gallery: React.FC<GalleryProps> = ({
       <div
         className={`
           ${variant === 'grid' ? `grid ${columnClasses[columns]} ${gapClasses[gap]}` : ''}
-          ${variant === 'masonry' ? `columns-${columns} ${gapClasses[gap]}` : ''}
+          ${variant === 'masonry' ? `${columnsMasonryClasses[columns]} ${gapClasses[gap]}` : ''}
           ${variant === 'justified' ? 'flex flex-wrap' : ''}
         `.trim().replace(/\s+/g, ' ')}
       >

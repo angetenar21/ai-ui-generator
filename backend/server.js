@@ -28,6 +28,16 @@ if (!fs.existsSync(schemaPath)) {
 const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf-8'));
 const components = schema.components || {};
 const categories = schema.categories || {};
+const COMPONENT_ALIASES = {
+  'gantt-chart': 'gantt',
+  ganttchart: 'gantt',
+  'map_ui': 'map-ui',
+  'map-ui': 'map-ui',
+  map: 'map-ui',
+  'weather_ui': 'weather-ui',
+  'weather-ui': 'weather-ui',
+  weather: 'weather-ui',
+};
 
 // Job Queue System
 const jobQueue = [];
@@ -143,11 +153,14 @@ for (const [componentName, componentDef] of Object.entries(components)) {
         propSchema.type = 'array';
         propSchema.items = {};
       }
+    } else if (tsType.includes('{') || propDef.type === 'object') {
+      // Check for object types BEFORE checking for arrays
+      // This prevents object types with nested arrays (like { data: string[] })
+      // from being incorrectly classified as arrays
+      propSchema.type = 'object';
     } else if (tsType.includes('[]') || propDef.type === 'array') {
       propSchema.type = 'array';
       propSchema.items = {};
-    } else if (tsType.includes('{') || propDef.type === 'object') {
-      propSchema.type = 'object';
     } else if (propDef.type === 'number') {
       propSchema.type = 'number';
     } else if (propDef.type === 'boolean') {
@@ -183,7 +196,8 @@ function validateSpec(spec) {
   }
 
   // Extract component name - accept both "name", "type", and "component"
-  const componentName = spec.name || spec.type || spec.component;
+  const componentNameRaw = spec.name || spec.type || spec.component;
+  const componentName = COMPONENT_ALIASES[componentNameRaw] || componentNameRaw;
 
   if (typeof componentName !== 'string') {
     errors.push('Component name is required (must have "name", "type", or "component" field)');
@@ -228,6 +242,111 @@ function validateSpec(spec) {
     valid: errors.length === 0,
     errors,
   };
+}
+
+function normalizeSpec(spec) {
+  if (!spec || typeof spec !== 'object') return spec;
+
+  const normalized = { ...spec };
+  const name = normalized.name || normalized.type || normalized.component;
+  if (name && COMPONENT_ALIASES[name]) {
+    normalized.name = COMPONENT_ALIASES[name];
+  }
+
+  const resolvedName = normalized.name || normalized.type || normalized.component;
+
+  // Fallback builders for common requested-but-missing components
+  if (!components[resolvedName]) {
+    // Map UI fallback → image with map styling
+    if (resolvedName && resolvedName.toLowerCase().includes('map')) {
+      return {
+        name: 'image',
+        templateProps: {
+          alt: 'Map visualization',
+          caption: 'Interactive map view placeholder',
+          src: 'https://via.placeholder.com/800x600/1F2937/9CA3AF?text=Map+Visualization',
+        },
+      };
+    }
+
+    // Weather UI fallback → panel with quick stats
+    if (resolvedName && resolvedName.toLowerCase().includes('weather')) {
+      return {
+        name: 'panel',
+        templateProps: {
+          title: 'Weather Overview',
+          variant: 'gradient',
+          elevation: 'raised',
+          emphasis: 'medium',
+          children: [
+            {
+              name: 'stack',
+              templateProps: {
+                direction: 'vertical',
+                spacing: 'medium',
+                children: [
+                  {
+                    name: 'text',
+                    templateProps: {
+                      content: 'Current conditions: 72°F, Partly Cloudy',
+                      variant: 'body'
+                    }
+                  },
+                  {
+                    name: 'grid',
+                    templateProps: {
+                      columns: { xs: 2, sm: 2, md: 4 },
+                      gap: 'small',
+                      children: [
+                        { name: 'summary-card', templateProps: { title: 'Humidity', items: [{ label: 'Value', value: '48%' }], elevation: 'raised', variant: 'accent' } },
+                        { name: 'summary-card', templateProps: { title: 'Wind', items: [{ label: 'Speed', value: '9 mph' }], elevation: 'raised', variant: 'info' } },
+                        { name: 'summary-card', templateProps: { title: 'Precip', items: [{ label: 'Chance', value: '10%' }], elevation: 'raised', variant: 'success' } },
+                        { name: 'summary-card', templateProps: { title: 'Visibility', items: [{ label: 'Range', value: '9 mi' }], elevation: 'raised', variant: 'neutral' } }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      };
+    }
+  }
+
+  const props = normalized.templateProps || normalized.props;
+  if (props && typeof props === 'object') {
+    const clonedProps = { ...props };
+    if (normalized.templateProps) normalized.templateProps = clonedProps;
+    if (normalized.props) normalized.props = clonedProps;
+    const p = clonedProps;
+
+    // Normalize select options/items when provided as strings
+    if (normalized.name === 'select') {
+      if (Array.isArray(p.options)) {
+        p.options = p.options.map(opt =>
+          typeof opt === 'string' ? { label: opt, value: opt } : opt
+        );
+      }
+      if (Array.isArray(p.items)) {
+        p.items = p.items.map(opt =>
+          typeof opt === 'string' ? { label: opt, value: opt } : opt
+        );
+      }
+    }
+
+    // Add fallback description for insight-card when missing
+    if (normalized.name === 'insight-card' && !p.description) {
+      p.description = p.summary || p.title || 'Insight details unavailable';
+    }
+
+    // Recursively normalize children
+    if (Array.isArray(p.children)) {
+      p.children = p.children.map(child => normalizeSpec(child));
+    }
+  }
+
+  return normalized;
 }
 
 function formatToolDefinitions() {
@@ -341,25 +460,26 @@ function executeToolCall(toolCall) {
     }
 
     case 'validate_component': {
-      const validation = validateSpec(args.spec);
+      const normalizedSpec = normalizeSpec(args.spec);
+      const validation = validateSpec(normalizedSpec);
       Logger.info('Validation result', {
         valid: validation.valid,
         errors: validation.errors,
-        componentName: args.spec?.name || args.spec?.type || args.spec?.component,
+        componentName: normalizedSpec?.name || normalizedSpec?.type || normalizedSpec?.component,
       });
 
       // Store the spec if validation succeeds for potential fallback
-      if (validation.valid && args.spec) {
+      if (validation.valid && normalizedSpec) {
         // Mark this spec as the last validated one
-        args.spec._lastValidated = true;
+        normalizedSpec._lastValidated = true;
       }
 
       return {
         valid: validation.valid,
         errors: validation.errors,
-        componentName: args.spec?.name || args.spec?.type || args.spec?.component,
+        componentName: normalizedSpec?.name || normalizedSpec?.type || normalizedSpec?.component,
         message: validation.valid
-          ? 'SUCCESS! Validation passed. Now you MUST return the complete JSON object in your next response. Return ONLY the JSON - no markdown code blocks, no explanations, no text. Just the raw JSON object starting with { and ending with }.'
+          ? 'SUCCESS! Validation passed. Now you MUST return the complete JSON object in your next response. Return ONLY the JSON - no markdown code blocks, no explanations, no text. Just the raw JSON object starting with { and ending with }. '
           : `Validation failed with ${validation.errors.length} error(s): ${validation.errors.join('; ')}. Fix ALL errors and call validate_component again.`,
       };
     }
@@ -409,6 +529,13 @@ async function callGemini(userMessage, context = '') {
     functionDeclarations: getToolDeclarations(),
   }];
 
+  // Configure tool calling mode to ensure proper function calling
+  const toolConfig = {
+    functionCallingConfig: {
+      mode: 'AUTO', // Let model decide when to use functions
+    },
+  };
+
   Logger.geminiRequest(GEMINI_MODEL, userMessage, context);
 
   // Function calling loop - balanced for reliability and speed
@@ -417,7 +544,8 @@ async function callGemini(userMessage, context = '') {
   // 2. get_component_schema (batch call)
   // 3. validate (once)
   // 4-5. Fix validation errors if needed
-  let maxIterations = 15; // Restored to 15 for reliability (allows enough retries)
+  // Complex layouts with sidebars, toggles, and multiple sections may need more iterations
+  let maxIterations = 16; // Increased for complex layouts with sidebars and nested components
   let iterations = 0;
 
   while (iterations < maxIterations) {
@@ -426,11 +554,12 @@ async function callGemini(userMessage, context = '') {
     const body = {
       contents,
       tools,
+      toolConfig,
       generationConfig: {
-        temperature: 0.05, // Very low for consistent, fast modifications
-        maxOutputTokens: 6144, // Restored to 6144 for complex components (balance between speed and completeness)
-        topP: 0.9, // Slightly more focused
-        topK: 20, // Reduced for faster, more deterministic output
+        temperature: 0.3, // Optimized for speed while maintaining quality
+        maxOutputTokens: 8192, // Balanced for speed and complex layouts
+        topP: 0.85, // Optimized for faster sampling
+        topK: 20, // Reduced for faster token selection
       },
     };
 
@@ -507,15 +636,45 @@ async function callGemini(userMessage, context = '') {
         iterationCount: iterations
       });
 
-      // Send error feedback to Gemini to retry
+      // Check if it's trying to use Python syntax
+      const isPythonSyntax = candidate.finishMessage && (
+        candidate.finishMessage.includes('print(') ||
+        candidate.finishMessage.includes('default_api.') ||
+        candidate.finishMessage.includes('spec =')
+      );
+
+      // Send specific error feedback to Gemini to retry with correct format
       contents.push({
         role: 'model',
-        parts: [{ text: 'ERROR: Malformed function call detected' }]
+        parts: [{ text: 'MALFORMED_FUNCTION_CALL' }]
       });
       contents.push({
         role: 'user',
         parts: [{
-          text: 'Your last function call was malformed. Please ensure all property names and string values are properly quoted in JSON format. For example: {"name": "stack", "templateProps": {"content": "text"}}. Try again with correct JSON syntax.'
+          text: isPythonSyntax
+            ? `CRITICAL ERROR: You are using Python code syntax which is COMPLETELY WRONG.
+
+DO NOT use:
+❌ print(default_api.validate_component(spec = {...}))
+❌ print(...)
+❌ default_api.anything
+❌ spec = {...}
+
+This is NOT a Python environment. You MUST use the native function calling interface.
+
+The system will automatically call the functions you request. Just specify:
+- Function name: validate_component
+- Arguments: { "spec": {...} }
+
+Try again WITHOUT any Python syntax. Use ONLY the function calling interface.`
+            : `ERROR: Malformed function call detected.
+
+Ensure all JSON is properly formatted with:
+- Double quotes around ALL property names and string values
+- No trailing commas
+- Proper nesting of objects and arrays
+
+Try again with valid JSON syntax.`
         }]
       });
       continue; // Try again in next iteration
@@ -568,8 +727,8 @@ async function callGemini(userMessage, context = '') {
 
       // Track last validated spec for fallback
       if (toolCall.name === 'validate_component' && result.valid && toolCall.args?.spec) {
-        lastValidatedSpec = toolCall.args.spec;
-        Logger.info('Stored validated spec as fallback', { componentName: result.componentName });
+        lastValidatedSpec = normalizeSpec(toolCall.args.spec);
+        Logger.info('Stored validated spec as fallback', { componentName: lastValidatedSpec?.name || result.componentName });
       }
 
       functionResponses.push({
@@ -637,14 +796,52 @@ function extractJsonObject(text) {
 
   let parsed = null;
 
+  // Strip any leading function-call wrappers such as
+  // "validate_component(spec = {...})" or "print(default_api.validate_component(...))"
+  // so we can attempt a clean JSON parse first.
+  function stripFunctionWrapper(str) {
+    const s = String(str);
+    const firstBrace = s.indexOf('{');
+    const lastBrace = s.lastIndexOf('}');
+    if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+      return s.substring(firstBrace, lastBrace + 1);
+    }
+    return s;
+  }
+
+  // Sanitize common non-JSON artifacts to improve parse robustness
+  function fixJsonString(str) {
+    let s = String(str);
+    // Remove Markdown code fences
+    s = s.replace(/```(?:json)?\s*([\s\S]*?)\s*```/g, (m, inner) => inner);
+    s = s.replace(/```(?:json)?\s*|```/g, '');
+    // Replace Python-style booleans and None
+    s = s.replace(/\bTrue\b/g, 'true');
+    s = s.replace(/\bFalse\b/g, 'false');
+    s = s.replace(/\bNone\b/g, 'null');
+    // Remove trailing commas before closing braces/brackets
+    s = s.replace(/,\s*(?=[}\]])/g, '');
+    return s.trim();
+  }
+
+  const preprocessed = stripFunctionWrapper(trimmed);
+
   // Try direct parse first
   try {
-    parsed = JSON.parse(trimmed);
+    parsed = JSON.parse(preprocessed);
     Logger.debug('Successfully parsed JSON directly');
   } catch (e) {
     Logger.debug('Direct JSON parse failed, trying pattern matching', {
       error: e.message,
     });
+    // Try sanitizing and parsing again
+    try {
+      const sanitized = fixJsonString(preprocessed);
+      parsed = JSON.parse(sanitized);
+      Logger.debug('Successfully parsed JSON after sanitizing input (direct)');
+    } catch (e2) {
+      Logger.debug('Sanitized direct JSON parse failed', { error: e2.message });
+    }
   }
 
   // Try to extract JSON from markdown code blocks (greedy match for nested objects)
@@ -657,6 +854,14 @@ function extractJsonObject(text) {
         Logger.debug('Successfully parsed JSON from code block');
       } catch (e) {
         Logger.debug('Code block JSON parse failed', { error: e.message });
+        // Try sanitizing and parsing again
+        try {
+          const sanitized = fixJsonString(jsonContent);
+          parsed = JSON.parse(sanitized);
+          Logger.debug('Successfully parsed JSON from sanitized code block');
+        } catch (e2) {
+          Logger.debug('Sanitized code block JSON parse failed', { error: e2.message });
+        }
       }
     }
   }
@@ -711,6 +916,14 @@ function extractJsonObject(text) {
             error: e.message,
             extractedLength: jsonContent.length
           });
+          // Try sanitizing and parsing again
+          try {
+            const sanitized = fixJsonString(jsonContent);
+            parsed = JSON.parse(sanitized);
+            Logger.debug('Successfully parsed JSON from sanitized balanced brace extraction');
+          } catch (e2) {
+            Logger.debug('Sanitized balanced brace JSON parse failed', { error: e2.message });
+          }
         }
       }
     }
@@ -727,6 +940,14 @@ function extractJsonObject(text) {
         Logger.debug('Successfully parsed JSON from simple brace extraction (fallback)');
       } catch (e) {
         Logger.debug('Simple brace extraction JSON parse failed', { error: e.message });
+        // Try sanitizing and parsing again
+        try {
+          const sanitized = fixJsonString(jsonContent);
+          parsed = JSON.parse(sanitized);
+          Logger.debug('Successfully parsed JSON from sanitized simple brace extraction');
+        } catch (e2) {
+          Logger.debug('Sanitized simple brace JSON parse failed', { error: e2.message });
+        }
       }
     }
   }
@@ -797,7 +1018,7 @@ async function processJob(job) {
       timeoutPromise
     ]);
 
-    const spec = extractJsonObject(modelText);
+    const spec = normalizeSpec(extractJsonObject(modelText));
 
     // Validate spec
     const validation = validateSpec(spec);

@@ -181,7 +181,7 @@ const Rating: React.FC<RatingProps> = ({
           ${fillType !== 'empty' ? colorClasses[color] : 'text-gray-600'}
           ${disabled || readOnly ? 'cursor-default' : 'cursor-pointer hover:scale-110'}
           transition-transform duration-150
-          focus:outline-none focus:ring-2 focus:ring-blue-500/50 rounded
+          focus:outline-none focus:ring-2 focus:ring-orange-500/50 rounded
         `.trim().replace(/\s+/g, ' ')}
       >
         {getIcon(fillType, i)}

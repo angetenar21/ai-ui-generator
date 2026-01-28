@@ -26,7 +26,7 @@ const Skeleton: React.FC<SkeletonProps> = ({
 
   const animationClasses = {
     pulse: 'animate-pulse',
-    wave: 'animate-[wave_1.5s_ease-in-out_infinite]',
+    wave: 'animate-[wave_1.5s_ease-in-out_infinite] bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent)] bg-[length:200%_100%]',
     none: '',
   };
 
@@ -37,23 +37,19 @@ const Skeleton: React.FC<SkeletonProps> = ({
     rounded: 'rounded-lg',
   };
 
-  const getWidthClass = () => {
-    if (width) {
-      return typeof width === 'number' ? `w-${width}` : '';
-    }
-    return 'w-full';
-  };
+  const getWidthClass = () => (width ? '' : 'w-full');
 
   const getHeightClass = () => {
-    if (height) {
-      return typeof height === 'number' ? `h-${height}` : '';
-    }
+    if (height) return '';
     if (skeletonType === 'circular') return 'w-12 h-12';
-    return '';
+    if (skeletonType === 'text') return 'h-4';
+    return 'h-6';
   };
 
   const getInlineStyles = () => {
     const styles: React.CSSProperties = {};
+    if (typeof width === 'number') styles.width = `${width}px`;
+    if (typeof height === 'number') styles.height = `${height}px`;
     if (typeof width === 'string') styles.width = width;
     if (typeof height === 'string') styles.height = height;
     return styles;

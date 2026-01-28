@@ -59,8 +59,8 @@ const AppBar: React.FC<AppBarProps> = ({
   };
 
   const variantClasses = {
-    default: 'bg-bg-surface border-b border-border-primary',
-    elevated: 'bg-bg-surface shadow-lg',
+    default: 'bg-gray-50 dark:bg-gray-700 border-b border-orange-600',
+    elevated: 'bg-gray-50 dark:bg-gray-700 shadow-lg',
     transparent: 'bg-transparent',
   };
 
@@ -79,7 +79,7 @@ const AppBar: React.FC<AppBarProps> = ({
         <div>
           <h1 className="text-gray-900 dark:text-white font-semibold text-lg">{title}</h1>
           {subtitle && (
-            <p className="text-text-tertiary text-sm">{subtitle}</p>
+            <p className="text-gray-600 dark:text-gray-400 text-sm">{subtitle}</p>
           )}
         </div>
       </div>
@@ -96,7 +96,7 @@ const AppBar: React.FC<AppBarProps> = ({
             <button
               key={index}
               onClick={action.onClick}
-              className="px-4 py-2 rounded-lg hover:bg-bg-elevated transition-colors text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:text-white flex items-center gap-2"
+              className="px-4 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white flex items-center gap-2"
             >
               {action.icon && <span>{action.icon}</span>}
               <span>{action.label}</span>

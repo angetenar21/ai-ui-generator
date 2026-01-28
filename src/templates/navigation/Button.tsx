@@ -29,10 +29,10 @@ const Button: React.FC<ButtonProps> = ({
   // Icon mapping
   const iconMap: Record<string, React.ReactNode> = {
     'play': <Play className="w-4 h-4" />,
-    'play_arrow': <Play className="w-4 h-4" />,
+    'playarrow': <Play className="w-4 h-4" />,
     'pause': <Pause className="w-4 h-4" />,
-    'chevron_right': <ChevronRight className="w-4 h-4" />,
-    'chevron_left': <ChevronLeft className="w-4 h-4" />,
+    'chevronright': <ChevronRight className="w-4 h-4" />,
+    'chevronleft': <ChevronLeft className="w-4 h-4" />,
     'plus': <Plus className="w-4 h-4" />,
     'add': <Plus className="w-4 h-4" />,
     'minus': <Minus className="w-4 h-4" />,
@@ -49,17 +49,17 @@ const Button: React.FC<ButtonProps> = ({
 
   const getIcon = (iconName?: string) => {
     if (!iconName) return null;
-    const normalizedName = iconName.toLowerCase().replace(/[\s-_]/g, '_');
-    return iconMap[normalizedName] || <span className="text-sm">{iconName}</span>;
+    const normalizedName = iconName.toLowerCase().replace(/[\s-_]/g, '');
+    return iconMap[normalizedName] || null;
   };
 
   const variantClasses = {
-    primary: 'bg-blue-600 hover:bg-blue-700 text-white',
-    secondary: 'bg-gray-600 hover:bg-gray-700 text-white',
-    outline: 'border-2 border-blue-600 text-blue-600 dark:text-blue-400 hover:bg-blue-600/10',
+    primary: 'bg-orange-600 hover:bg-orange-700 text-white shadow-md hover:shadow-lg',
+    secondary: 'bg-gray-600 hover:bg-gray-700 text-white shadow-md hover:shadow-lg',
+    outline: 'border-2 border-orange-600 text-orange-600 dark:text-orange-400 hover:bg-orange-600/10',
     ghost: 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700/50',
-    danger: 'bg-red-600 hover:bg-red-700 text-white',
-    success: 'bg-green-600 hover:bg-green-700 text-white',
+    danger: 'bg-red-600 hover:bg-red-700 text-white shadow-md hover:shadow-lg',
+    success: 'bg-green-600 hover:bg-green-700 text-white shadow-md hover:shadow-lg',
   };
 
   const sizeClasses = {

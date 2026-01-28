@@ -81,9 +81,9 @@ const Drawer: React.FC<DrawerProps> = ({
   };
 
   const variantClasses = {
-    default: 'bg-bg-surface border-border-primary',
-    elevated: 'bg-bg-surface shadow-2xl',
-    overlay: 'bg-bg-surface/95 backdrop-blur-sm',
+    default: 'bg-gray-50 dark:bg-gray-700 border-orange-600',
+    elevated: 'bg-gray-50 dark:bg-gray-700 shadow-2xl',
+    overlay: 'bg-gray-50 dark:bg-gray-700/95 backdrop-blur-sm',
   };
 
   const borderClasses = {
@@ -98,7 +98,7 @@ const Drawer: React.FC<DrawerProps> = ({
       {/* Toggle Button for Demo */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+        className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
       >
         {isOpen ? 'Close' : 'Open'} {position} Drawer
       </button>
@@ -115,11 +115,11 @@ const Drawer: React.FC<DrawerProps> = ({
       <aside
         className={`fixed ${positionClasses[position]} ${sizeClasses[position][size]} ${variantClasses[variant]} ${borderClasses[position]} ${transformClasses[position]} transition-transform duration-300 z-50 overflow-y-auto`}
       >
-        <div className="flex items-center justify-between p-4 border-b border-border-primary">
+        <div className="flex items-center justify-between p-4 border-b border-orange-600">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h2>
           <button
             onClick={() => setIsOpen(false)}
-            className="text-text-tertiary hover:text-gray-900 dark:text-white transition-colors p-1"
+            className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:text-white transition-colors p-1"
           >
             <svg
               className="w-6 h-6"
@@ -145,7 +145,7 @@ const Drawer: React.FC<DrawerProps> = ({
               ))}
             </div>
           ) : (
-            <p className="text-text-tertiary text-center py-8">
+            <p className="text-gray-600 dark:text-gray-400 text-center py-8">
               Drawer content - Add child components
             </p>
           )}

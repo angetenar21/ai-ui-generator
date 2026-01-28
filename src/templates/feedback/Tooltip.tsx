@@ -58,12 +58,12 @@ const Tooltip: React.FC<TooltipProps> = ({
   };
 
   const variantClasses = {
-    dark: 'bg-gray-900 text-white border-gray-700',
-    light: 'bg-white text-gray-900 border-gray-300',
-    info: 'bg-blue-600 text-white border-blue-500',
-    success: 'bg-green-600 text-white border-green-500',
-    warning: 'bg-yellow-600 text-white border-yellow-500',
-    error: 'bg-red-600 text-white border-red-500',
+    dark: 'bg-gray-900 dark:bg-gray-900 text-white border-gray-800 dark:border-gray-800',
+    light: 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-700',
+    info: 'bg-blue-600 dark:bg-blue-600 text-white border-blue-700 dark:border-blue-700',
+    success: 'bg-green-600 dark:bg-green-600 text-white border-green-700 dark:border-green-700',
+    warning: 'bg-amber-600 dark:bg-amber-600 text-white border-amber-700 dark:border-amber-700',
+    error: 'bg-red-600 dark:bg-red-600 text-white border-red-700 dark:border-red-700',
   };
 
   const positionClasses = {
@@ -93,7 +93,7 @@ const Tooltip: React.FC<TooltipProps> = ({
     <div className="inline-flex items-center justify-center my-4">
       <div className="relative inline-block">
         <button
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer transition-colors duration-200 font-medium shadow-md hover:shadow-lg"
+          className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg cursor-pointer transition-colors duration-200 font-medium shadow-md hover:shadow-lg"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >

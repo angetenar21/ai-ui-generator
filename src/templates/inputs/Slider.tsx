@@ -56,12 +56,19 @@ const Slider: React.FC<SliderProps> = ({
 
   const percentage = ((displayValue - min) / (max - min)) * 100;
 
-  const colorClasses = {
-    primary: 'bg-blue-600',
-    secondary: 'bg-gray-600',
-    success: 'bg-green-600',
-    warning: 'bg-yellow-600',
-    error: 'bg-red-600',
+  // Helper function to get color value based on color prop and error state
+  const getColorValue = (colorProp: string): string => {
+    if (error) return '#EF4444'; // red-500
+
+    const colorMap: Record<string, string> = {
+      primary: '#F97316',   // orange-600
+      secondary: '#6B7280', // gray-500
+      success: '#10B981',   // green-500
+      warning: '#F59E0B',   // amber-500
+      error: '#EF4444',     // red-500
+    };
+
+    return colorMap[colorProp] || colorProp;
   };
 
   // const sizeClasses = {
@@ -80,12 +87,12 @@ const Slider: React.FC<SliderProps> = ({
     <div className="my-4 max-w-md">
       {label && (
         <div className="flex justify-between items-center mb-2">
-          <label className="block text-sm font-medium text-gray-300">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
             {label}
-            {required && <span className="text-red-400 ml-1">*</span>}
+            {required && <span className="text-red-600 dark:text-red-400 ml-1">*</span>}
           </label>
           {showValue && (
-            <span className="text-sm text-gray-400 font-mono">
+            <span className="text-sm text-gray-600 dark:text-gray-400 font-mono">
               {displayValue}
             </span>
           )}
@@ -106,7 +113,7 @@ const Slider: React.FC<SliderProps> = ({
             required={required}
             className="w-full h-2 bg-transparent appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             style={{
-              background: `linear-gradient(to right, ${error ? '#ef4444' : colorClasses[color].replace('bg-', '')} 0%, ${error ? '#ef4444' : colorClasses[color].replace('bg-', '')} ${percentage}%, #374151 ${percentage}%, #374151 100%)`,
+              background: `linear-gradient(to right, ${getColorValue(color)} 0%, ${getColorValue(color)} ${percentage}%, #374151 ${percentage}%, #374151 100%)`,
             }}
           />
           <style>{`

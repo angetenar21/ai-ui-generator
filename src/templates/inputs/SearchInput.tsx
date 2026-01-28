@@ -104,9 +104,9 @@ const SearchInput: React.FC<SearchInputProps> = ({
             ${sizeClasses[size]}
             ${variantClasses[variant]}
             ${fullWidth ? 'w-full' : 'w-full'}
-            pl-10 pr-${showClearButton && displayValue ? '20' : '10'}
+            ${showClearButton && displayValue ? 'pl-10 pr-20' : 'pl-10 pr-10'}
             rounded-lg text-white placeholder-gray-400
-            focus:outline-none focus:ring-2 focus:ring-blue-500/50
+            focus:outline-none focus:ring-2 focus:ring-orange-500/50
             disabled:opacity-50 disabled:cursor-not-allowed
             transition-all duration-200
           `.trim().replace(/\s+/g, ' ')}

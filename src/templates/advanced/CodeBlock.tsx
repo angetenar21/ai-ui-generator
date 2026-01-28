@@ -37,8 +37,8 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
 
   if (!code || code.trim() === '') {
     return (
-      <div className="glass-dark border border-gray-700/50 rounded-lg p-6 my-2">
-        <div className="text-text-tertiary text-sm">No code provided</div>
+      <div className="card border border-gray-200 dark:border-gray-700 rounded-lg p-6 my-2">
+        <div className="text-gray-600 dark:text-gray-400 text-sm">No code provided</div>
       </div>
     );
   }
@@ -56,32 +56,32 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
   const lines = code.split('\n');
 
   const languageColors: Record<string, string> = {
-    javascript: 'text-yellow-400',
-    typescript: 'text-blue-400',
-    python: 'text-green-400',
-    java: 'text-orange-400',
-    html: 'text-pink-400',
-    css: 'text-purple-400',
-    json: 'text-cyan-400',
-    bash: 'text-gray-400',
-    sql: 'text-red-400',
-    other: 'text-text-tertiary',
+    javascript: 'text-yellow-600 dark:text-yellow-400',
+    typescript: 'text-blue-600 dark:text-blue-400',
+    python: 'text-green-600 dark:text-green-400',
+    java: 'text-orange-600 dark:text-orange-400',
+    html: 'text-pink-600 dark:text-pink-400',
+    css: 'text-purple-600 dark:text-purple-400',
+    json: 'text-cyan-600 dark:text-cyan-400',
+    bash: 'text-gray-600 dark:text-gray-400',
+    sql: 'text-red-600 dark:text-red-400',
+    other: 'text-gray-600 dark:text-gray-400',
   };
 
   const themeClasses = {
-    dark: 'bg-gray-900 border-gray-700/50',
-    light: 'bg-gray-100 border-gray-300',
+    dark: 'bg-gray-900 border-gray-700',
+    light: 'bg-gray-50 border-gray-200',
   };
 
   const themeTextClasses = {
     dark: 'text-gray-300',
-    light: 'text-gray-800',
+    light: 'text-gray-900',
   };
 
   return (
     <div className={`${themeClasses[theme]} border rounded-lg my-2 overflow-hidden`}>
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-2 border-b border-border-main bg-bg-sub/50">
+      <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50">
         <div className="flex items-center gap-3">
           {title && (
             <span className="text-gray-900 dark:text-white text-sm font-medium">{title}</span>
@@ -96,8 +96,8 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
             onClick={handleCopy}
             className="
               flex items-center gap-1 px-2 py-1 rounded
-              text-text-tertiary hover:text-gray-900 dark:text-white
-              hover:bg-bg-main transition-colors
+              text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:text-white
+              hover:bg-white dark:bg-gray-900 transition-colors
               text-sm
             "
             title="Copy code"
@@ -127,7 +127,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
             {lines.map((line, index) => (
               <div key={index} className="flex">
                 {showLineNumbers && (
-                  <span className="text-text-tertiary select-none w-8 flex-shrink-0 text-right mr-4">
+                  <span className="text-gray-600 dark:text-gray-400 select-none w-8 flex-shrink-0 text-right mr-4">
                     {index + 1}
                   </span>
                 )}
@@ -139,8 +139,8 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
       </div>
 
       {/* Footer with line count */}
-      <div className="px-4 py-1 border-t border-border-main bg-bg-sub/30">
-        <div className="text-text-tertiary text-xs">
+      <div className="px-4 py-1 border-t border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/30">
+        <div className="text-gray-600 dark:text-gray-400 text-xs">
           {lines.length} {lines.length === 1 ? 'line' : 'lines'}
         </div>
       </div>

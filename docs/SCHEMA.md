@@ -2,13 +2,13 @@
 
 This document provides the complete JSON schema reference for all components in the AI UI Generator.
 
-**Last Updated**: 2026-01-14
+**Last Updated**: 2026-01-25
 
 ## Table of Contents
 
-- [Charts](#charts) (27 components)
+- [Charts](#charts) (28 components)
 - [Data-display](#data-display) (15 components)
-- [Inputs](#inputs) (20 components)
+- [Inputs](#inputs) (21 components)
 - [Layout](#layout) (15 components)
 - [Navigation](#navigation) (4 components)
 - [Feedback](#feedback) (9 components)
@@ -36,6 +36,8 @@ Area chart for visualizing cumulative data and trends over time with filled regi
 | description | `string` | No | Optional description |
 | xAxis | `string` | No | X-axis data points |
 | series | `string` | Yes | Series data for the areas |
+| stack | `boolean` | No | Stack areas (default: true for area charts) |
+| gradientOpacity | `number` | No | Gradient opacity for area fills: [startOpacity, endOpacity] |
 | width | `number` | No | Chart width |
 | height | `number` | No | Chart height |
 | grid | `boolean` | No | Show grid lines |
@@ -52,6 +54,8 @@ Area chart for visualizing cumulative data and trends over time with filled regi
     "description": "example",
     "xAxis": "example",
     "series": "example",
+    "stack": false,
+    "gradientOpacity": 0,
     "width": 0,
     "height": 0,
     "grid": false,
@@ -194,6 +198,63 @@ Bubble chart for visualizing three-dimensional data with x, y, and size dimensio
 
 ---
 
+### bullet-chart
+
+Bullet chart for displaying performance metrics against targets and ranges
+
+**Tags**: chart, bullet, kpi, performance, target, data-visualization
+
+**Component Name**: `bullet-chart`
+
+#### Props
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| title | `string` | No | Chart title |
+| description | `string` | No | Optional description text |
+| target | `number` | No | Target value to achieve |
+| value | `number` | Yes | Current actual value |
+| min | `number` | No | Minimum value |
+| max | `number` | No | Maximum value |
+| ranges | `string` | No | Qualitative ranges for context (e.g., poor, satisfactory, good) |
+| comparative | `number` | No | Comparative measure (e.g., previous period) |
+| width | `number` | No | Chart width |
+| height | `number` | No | Chart height |
+| unit | `string` | No | Unit label (e.g., "%", "K", "M") |
+| cardBackgroundColor | `string` | No | Card background color |
+| variant | `SurfaceVariant` | No | Surface variant for visual hierarchy |
+| elevation | `ElevationLevel` | No | Elevation level for depth |
+| emphasis | `EmphasisLevel` | No | Visual emphasis level |
+| showLabels | `boolean` | No | Show value labels |
+
+#### JSON Schema
+
+```json
+{
+  "name": "bullet-chart",
+  "templateProps": {
+    "title": "example",
+    "description": "example",
+    "target": 0,
+    "value": 0,
+    "min": 0,
+    "max": 0,
+    "ranges": "example",
+    "comparative": 0,
+    "width": 0,
+    "height": 0,
+    "unit": "example",
+    "cardBackgroundColor": "example",
+    "variant": null,
+    "elevation": null,
+    "emphasis": null,
+    "showLabels": false
+  }
+}
+```
+
+---
+
 ### chord-chart
 
 Chord diagram for showing relationships between nodes. Displayed as matrix table.
@@ -323,9 +384,9 @@ Donut chart (pie chart with center hole) for displaying proportional data with o
 
 ### funnel-chart
 
-Funnel chart for conversion funnels
+Funnel chart for conversion funnels with distinct colors per segment and centered legend
 
-**Tags**: chart, funnel, conversion
+**Tags**: chart, funnel, conversion, sales, marketing
 
 **Component Name**: `funnel-chart`
 
@@ -334,9 +395,12 @@ Funnel chart for conversion funnels
 | Property | Type | Required | Description |
 |----------|------|----------|-------------|
 | title | `string` | No |  |
+| description | `string` | No |  |
 | data | `string` | Yes |  |
 | width | `number` | No |  |
 | height | `number` | No |  |
+| colors | `string` | No |  |
+| legend | `boolean` | No |  |
 
 #### JSON Schema
 
@@ -345,9 +409,12 @@ Funnel chart for conversion funnels
   "name": "funnel-chart",
   "templateProps": {
     "title": "example",
+    "description": "example",
     "data": "example",
     "width": 0,
-    "height": 0
+    "height": 0,
+    "colors": "example",
+    "legend": false
   }
 }
 ```
@@ -370,6 +437,7 @@ Gauge chart for displaying a single value within a range, useful for KPIs and me
 | description | `string` | No | Optional description |
 | value | `number` | No | Current value - can be direct number or from series |
 | series | `string` | No | Series data format [{ data: [value], label?, colorStops? }] |
+| levels | `array` | No | Color levels for threshold-based coloring |
 | valueMin | `number` | No | Minimum value |
 | valueMax | `number` | No | Maximum value |
 | startAngle | `number` | No | Start angle in degrees |
@@ -391,6 +459,7 @@ Gauge chart for displaying a single value within a range, useful for KPIs and me
     "description": "example",
     "value": 0,
     "series": "example",
+    "levels": [],
     "valueMin": 0,
     "valueMax": 0,
     "startAngle": 0,
@@ -849,9 +918,9 @@ Scatter chart for visualizing correlation between two variables with customizabl
 
 ### sparkline-chart
 
-Compact sparkline chart for displaying trends in small spaces, perfect for dashboards
+Compact sparkline chart for displaying trends in small spaces with value, trend indicators, and stats
 
-**Tags**: chart, sparkline, mini, trend, compact, data-visualization
+**Tags**: chart, sparkline, mini, trend, compact, data-visualization, metric
 
 **Component Name**: `sparkline-chart`
 
@@ -868,6 +937,10 @@ Compact sparkline chart for displaying trends in small spaces, perfect for dashb
 | area | `boolean` | No | Show area under the line |
 | showTooltip | `boolean` | No | Show tooltip |
 | curve | `'linear' | 'natural' | 'monotoneX' | 'monotoneY' | 'step'` | No | Curve type |
+| metric | `string` | No | Metric label (e.g., "Revenue") |
+| value | `string` | No | Current value display |
+| trend | `string` | No | Trend indicator (e.g., "+12%" or "-5%") |
+| trendPositive | `boolean` | No | Trend is positive (green) or negative (red) |
 
 #### JSON Schema
 
@@ -883,7 +956,11 @@ Compact sparkline chart for displaying trends in small spaces, perfect for dashb
     "color": "example",
     "area": false,
     "showTooltip": false,
-    "curve": null
+    "curve": null,
+    "metric": "example",
+    "value": "example",
+    "trend": "example",
+    "trendPositive": false
   }
 }
 ```
@@ -903,9 +980,12 @@ Stacked area chart
 | Property | Type | Required | Description |
 |----------|------|----------|-------------|
 | title | `string` | No |  |
+| description | `string` | No |  |
 | data | `array` | Yes |  |
 | width | `number` | No |  |
 | height | `number` | No |  |
+| xAxis | `string` | No |  |
+| series | `string` | No |  |
 
 #### JSON Schema
 
@@ -914,9 +994,12 @@ Stacked area chart
   "name": "stacked-area-chart",
   "templateProps": {
     "title": "example",
+    "description": "example",
     "data": [],
     "width": 0,
-    "height": 0
+    "height": 0,
+    "xAxis": "example",
+    "series": "example"
   }
 }
 ```
@@ -940,6 +1023,9 @@ Stacked bar variant
 | data | `array` | Yes |  |
 | width | `number` | No |  |
 | height | `number` | No |  |
+| xAxis | `string` | No |  |
+| series | `string` | No |  |
+| layout | `'horizontal' | 'vertical'` | No |  |
 
 #### JSON Schema
 
@@ -951,7 +1037,10 @@ Stacked bar variant
     "description": "example",
     "data": [],
     "width": 0,
-    "height": 0
+    "height": 0,
+    "xAxis": "example",
+    "series": "example",
+    "layout": null
   }
 }
 ```
@@ -960,9 +1049,9 @@ Stacked bar variant
 
 ### time-series-chart
 
-Time series line chart for visualizing data over time with multiple series support
+Time series line chart for visualizing data over time. Supports multiple data formats: [[label, value]], [{month, value}], [{date, value}], [{x, y}], or plain number arrays.
 
-**Tags**: chart, time-series, line, temporal, data-visualization
+**Tags**: chart, time-series, line, temporal, data-visualization, monthly, trend
 
 **Component Name**: `time-series-chart`
 
@@ -972,13 +1061,14 @@ Time series line chart for visualizing data over time with multiple series suppo
 |----------|------|----------|-------------|
 | title | `string` | No | Chart title |
 | description | `string` | No | Optional description text |
-| series | `string` | Yes | Series data with time-based data points |
-| xAxis | `object` | No | X-axis configuration |
+| series | `string` | Yes | Series data with time-based data points - supports multiple formats |
+| xAxis | `string` | No | X-axis configuration |
 | width | `number` | No | Chart width |
 | height | `number` | No | Chart height |
 | grid | `boolean` | No | Show grid lines |
 | legend | `boolean` | No | Show legend |
 | margin | `number` | No | Margin around chart |
+| area | `boolean` | No | Show area fill under the line |
 
 #### JSON Schema
 
@@ -989,12 +1079,13 @@ Time series line chart for visualizing data over time with multiple series suppo
     "title": "example",
     "description": "example",
     "series": "example",
-    "xAxis": {},
+    "xAxis": "example",
     "width": 0,
     "height": 0,
     "grid": false,
     "legend": false,
-    "margin": 0
+    "margin": 0,
+    "area": false
   }
 }
 ```
@@ -1042,9 +1133,9 @@ Tree map chart for displaying hierarchical data with nested rectangles proportio
 
 ### waterfall-chart
 
-Waterfall chart for cumulative impact visualization. Shows increases, decreases, and totals.
+Waterfall chart for cumulative impact visualization. Shows increases, decreases, and totals with proper stacking and positioning.
 
-**Tags**: chart, waterfall, cumulative, financial
+**Tags**: chart, waterfall, cumulative, financial, variance
 
 **Component Name**: `waterfall-chart`
 
@@ -2832,6 +2923,47 @@ Time picker component with clock icon, min/max time validation, and step support
 
 ---
 
+### toggle
+
+Toggle switch for boolean settings and preferences
+
+**Tags**: toggle, switch, checkbox, boolean, setting, option
+
+**Component Name**: `toggle`
+
+#### Props
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| label | `string` | No | Label for the toggle |
+| description | `string` | No | Helper text |
+| defaultChecked | `boolean` | No | Initial state |
+| checked | `boolean` | No | Controlled state |
+| onChange | `boolean` | No | Change handler |
+| disabled | `boolean` | No | Disabled state |
+| size | `'small' | 'medium' | 'large'` | No | Size variant |
+| variant | `'default' | 'primary' | 'success' | 'danger'` | No | Color variant |
+
+#### JSON Schema
+
+```json
+{
+  "name": "toggle",
+  "templateProps": {
+    "label": "example",
+    "description": "example",
+    "defaultChecked": false,
+    "checked": false,
+    "onChange": false,
+    "disabled": false,
+    "size": null,
+    "variant": null
+  }
+}
+```
+
+---
+
 ## Layout
 
 ### accordion
@@ -3804,6 +3936,7 @@ Modal dialog component with customizable size, header, content, and actions. Inc
 | onClose | `function` | No |  |
 | footer | `string` | No |  |
 | actions | `string` | No |  |
+| children | `React.ReactNode` | No |  |
 
 #### JSON Schema
 
@@ -3823,7 +3956,8 @@ Modal dialog component with customizable size, header, content, and actions. Inc
     "closable": false,
     "onClose": null,
     "footer": "example",
-    "actions": "example"
+    "actions": "example",
+    "children": null
   }
 }
 ```

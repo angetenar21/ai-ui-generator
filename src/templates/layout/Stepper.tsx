@@ -63,7 +63,7 @@ const Stepper: React.FC<StepperProps> = ({
   if (steps.length === 0) {
     return (
       <div className="card rounded-card p-8 text-center">
-        <p className="text-text-tertiary">Stepper - Add steps to display</p>
+        <p className="text-gray-600 dark:text-gray-400">Stepper - Add steps to display</p>
       </div>
     );
   }
@@ -78,19 +78,19 @@ const Stepper: React.FC<StepperProps> = ({
   const getStepColor = (status: string) => {
     switch (status) {
       case 'completed':
-        return 'bg-primary-500 text-white border-primary-500';
+        return 'bg-orange-600 text-white border-orange-600';
       case 'active':
         return 'bg-accent-from text-white border-accent-from';
       case 'error':
         return 'bg-red-500 text-white border-red-500';
       default:
-        return 'bg-bg-surface text-text-tertiary border-border-primary';
+        return 'bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-400 border-orange-600';
     }
   };
 
   const getConnectorColor = (index: number) => {
     return index < activeStep
-      ? 'bg-primary-500'
+      ? 'bg-orange-600'
       : 'bg-border-primary';
   };
 
@@ -150,7 +150,7 @@ const Stepper: React.FC<StepperProps> = ({
                   {step.label}
                 </div>
                 {step.description && variant !== 'simple' && (
-                  <div className="text-text-tertiary text-xs mt-1 truncate">
+                  <div className="text-gray-600 dark:text-gray-400 text-xs mt-1 truncate">
                     {step.description}
                   </div>
                 )}

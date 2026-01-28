@@ -36,38 +36,45 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
   };
 
   const colorClasses = {
-    primary: 'text-blue-500',
-    secondary: 'text-gray-500',
-    success: 'text-green-500',
-    warning: 'text-yellow-500',
-    error: 'text-red-500',
+    primary: 'text-orange-600 dark:text-orange-500',
+    secondary: 'text-gray-500 dark:text-gray-500',
+    success: 'text-green-600 dark:text-green-500',
+    warning: 'text-amber-600 dark:text-amber-500',
+    error: 'text-red-600 dark:text-red-500',
   };
 
   const sizeConfig = sizeClasses[size];
+  const viewBoxSize = 100;
   const radius = 40;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (clampedValue / 100) * circumference;
 
   return (
-    <div className="card rounded-card p-6 my-4">
+    <div
+      className="card rounded-card p-6 my-4"
+      role="progressbar"
+      aria-valuenow={indeterminate ? undefined : Math.round(clampedValue)}
+      aria-valuemin={0}
+      aria-valuemax={100}
+    >
       <div className="flex flex-col items-center gap-3">
         <div className={`relative ${sizeConfig.circle}`}>
-          <svg className="transform -rotate-90 w-full h-full">
+          <svg className="transform -rotate-90 w-full h-full" viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}>
             {/* Background circle */}
             <circle
-              cx="50%"
-              cy="50%"
+              cx="50"
+              cy="50"
               r={radius}
               stroke="currentColor"
               strokeWidth={thickness}
               fill="none"
-              className="text-gray-700 dark:text-gray-600"
+              className="text-gray-700/60 dark:text-gray-700"
             />
             {/* Progress circle */}
             {!indeterminate ? (
               <circle
-                cx="50%"
-                cy="50%"
+                cx="50"
+                cy="50"
                 r={radius}
                 stroke="currentColor"
                 strokeWidth={thickness}
@@ -79,8 +86,8 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
               />
             ) : (
               <circle
-                cx="50%"
-                cy="50%"
+                cx="50"
+                cy="50"
                 r={radius}
                 stroke="currentColor"
                 strokeWidth={thickness}
@@ -95,7 +102,7 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
           {/* Center text */}
           {showValue && !indeterminate && (
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className={`font-semibold text-white ${sizeConfig.text}`}>
+              <span className={`font-semibold text-gray-100 ${sizeConfig.text}`}>
                 {Math.round(clampedValue)}%
               </span>
             </div>

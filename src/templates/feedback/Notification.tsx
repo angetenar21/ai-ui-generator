@@ -54,10 +54,30 @@ const Notification: React.FC<NotificationProps> = ({
   if (!visible) return null;
 
   const typeConfig = {
-    info: { icon: icon || 'ℹ️', color: 'text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/50' },
-    success: { icon: icon || '✓', color: 'text-green-400', bg: 'bg-green-500/10', border: 'border-green-500/50' },
-    warning: { icon: icon || '⚠️', color: 'text-yellow-400', bg: 'bg-yellow-500/10', border: 'border-yellow-500/50' },
-    error: { icon: icon || '✕', color: 'text-red-400', bg: 'bg-red-500/10', border: 'border-red-500/50' },
+    info: {
+      icon: icon || 'ℹ️',
+      container: 'border border-blue-300 dark:border-blue-700/60',
+      chip: 'bg-blue-100 dark:bg-blue-900/40',
+      text: 'text-blue-700 dark:text-blue-400',
+    },
+    success: {
+      icon: icon || '✓',
+      container: 'border border-green-300 dark:border-green-700/60',
+      chip: 'bg-green-100 dark:bg-green-900/40',
+      text: 'text-green-700 dark:text-green-400',
+    },
+    warning: {
+      icon: icon || '⚠️',
+      container: 'border border-amber-300 dark:border-amber-700/60',
+      chip: 'bg-amber-100 dark:bg-amber-900/40',
+      text: 'text-amber-700 dark:text-amber-400',
+    },
+    error: {
+      icon: icon || '✕',
+      container: 'border border-red-300 dark:border-red-700/60',
+      chip: 'bg-red-100 dark:bg-red-900/40',
+      text: 'text-red-700 dark:text-red-400',
+    },
   };
 
   const positionClasses = {
@@ -71,15 +91,15 @@ const Notification: React.FC<NotificationProps> = ({
 
   return (
     <div className={`relative flex ${positionClasses[position]} w-full mb-4`}>
-      <div className={`glass-dark border border-gray-300 dark:border-${config.border.replace('border-', '')} rounded-xl shadow-lg overflow-hidden max-w-md`}>
+      <div className={`card ${config.container} rounded-xl shadow-lg overflow-hidden max-w-md`}>
         <div className="p-4">
           <div className="flex items-start gap-3">
-            <div className={`flex-shrink-0 w-10 h-10 rounded-lg ${config.bg} flex items-center justify-center`}>
+            <div className={`flex-shrink-0 w-10 h-10 rounded-lg ${config.chip} flex items-center justify-center`}>
               <span className="text-xl">{config.icon}</span>
             </div>
             <div className="flex-1 min-w-0">
               {title && (
-                <h4 className={`text-sm font-semibold ${config.color} mb-1`}>{title}</h4>
+                <h4 className={`text-sm font-semibold ${config.text} mb-1`}>{title}</h4>
               )}
               <p className="text-sm text-gray-700 dark:text-gray-300">{displayMessage}</p>
               {action && (
@@ -88,7 +108,7 @@ const Notification: React.FC<NotificationProps> = ({
                     if (action.onClick) action.onClick();
                     handleClose();
                   }}
-                  className={`mt-2 text-xs font-semibold ${config.color} hover:underline`}
+                  className={`mt-2 text-xs font-semibold ${config.text} hover:underline`}
                 >
                   {action.label}
                 </button>

@@ -124,7 +124,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
                 ${variantClasses[variant]}
                 ${fullWidth ? 'w-full' : 'w-full'}
                 rounded-lg text-white placeholder-gray-400 font-mono uppercase
-                focus:outline-none focus:ring-2 focus:ring-blue-500/50
+                focus:outline-none focus:ring-2 focus:ring-orange-500/50
                 disabled:opacity-50 disabled:cursor-not-allowed
                 transition-all duration-200
               `.trim().replace(/\s+/g, ' ')}
@@ -145,7 +145,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
                 ${displayValue.toLowerCase() === color.toLowerCase() ? 'border-white' : 'border-gray-600'}
                 hover:scale-110 transition-transform duration-150
                 disabled:opacity-50 disabled:cursor-not-allowed
-                focus:outline-none focus:ring-2 focus:ring-blue-500/50
+                focus:outline-none focus:ring-2 focus:ring-orange-500/50
               `.trim().replace(/\s+/g, ' ')}
               style={{ backgroundColor: color }}
               title={color}

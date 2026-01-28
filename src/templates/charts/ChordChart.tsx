@@ -27,11 +27,9 @@ const ChordChart: React.FC<ChordChartProps> = ({
   description,
   nodes,
   matrix,
-  width = 800,
-  height = 400,
+  width: _width,
+  height: _height,
 }) => {
-  void(width); // Width prop available for future use
-  void(height); // Height prop available for future use
   // Validate
   if (!nodes || !Array.isArray(nodes) || nodes.length === 0) {
     return (

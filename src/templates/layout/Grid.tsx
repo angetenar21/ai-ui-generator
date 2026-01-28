@@ -69,7 +69,16 @@ const Grid: React.FC<GridProps> = ({
     }
 
     if (!responsive) {
-      return `grid-cols-${columns}`;
+      const colsMap: Record<number, string> = {
+        1: 'grid-cols-1',
+        2: 'grid-cols-2',
+        3: 'grid-cols-3',
+        4: 'grid-cols-4',
+        5: 'grid-cols-5',
+        6: 'grid-cols-6',
+        12: 'grid-cols-12',
+      };
+      return colsMap[columns] || 'grid-cols-2';
     }
 
     // Responsive grid classes with better mobile/tablet/desktop breakpoints
@@ -95,8 +104,8 @@ const Grid: React.FC<GridProps> = ({
 
   const gridStyle = autoFit
     ? {
-        gridTemplateColumns: `repeat(auto-fit, minmax(${minColumnWidth}, 1fr))`,
-      }
+      gridTemplateColumns: `repeat(auto-fit, minmax(${minColumnWidth}, 1fr))`,
+    }
     : undefined;
 
   return (

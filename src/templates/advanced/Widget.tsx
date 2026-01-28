@@ -48,16 +48,16 @@ const Widget: React.FC<WidgetProps> = ({
 
   if (!title) {
     return (
-      <div className="glass-dark border border-gray-700/50 rounded-lg p-4 my-2">
-        <div className="text-text-tertiary text-sm">Widget requires a title</div>
+      <div className="card border border-gray-200 dark:border-gray-700 rounded-lg p-4 my-2">
+        <div className="text-gray-600 dark:text-gray-400 text-sm">Widget requires a title</div>
       </div>
     );
   }
 
   const variantClasses = {
-    default: 'glass-dark border-gray-700/50',
-    compact: 'bg-bg-sub border-border-main',
-    highlighted: 'bg-gradient-to-br from-primary-500/10 to-accent-cyan/10 border-primary-500/30',
+    default: 'card border border-gray-200 dark:border-gray-700',
+    compact: 'bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700',
+    highlighted: 'bg-gradient-to-br from-orange-100 dark:from-orange-900/20 to-teal-100 dark:to-teal-900/20 border border-orange-300 dark:border-orange-700',
   };
 
   const variantPadding = {
@@ -72,7 +72,7 @@ const Widget: React.FC<WidgetProps> = ({
       <div className={`
         flex items-center justify-between
         ${variantPadding[variant]}
-        ${content || children ? 'border-b border-border-main' : ''}
+        ${content || children ? 'border-b border-gray-200 dark:border-gray-700' : ''}
       `}>
         <h3 className="text-gray-900 dark:text-white font-semibold text-lg flex-1">
           {title}
@@ -84,7 +84,7 @@ const Widget: React.FC<WidgetProps> = ({
             {collapsible && (
               <button
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className="p-1 text-text-tertiary hover:text-gray-900 dark:text-white transition-colors rounded hover:bg-bg-sub"
+                className="p-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:text-white transition-colors rounded hover:bg-gray-100 dark:bg-gray-800"
                 title={isCollapsed ? 'Expand' : 'Collapse'}
               >
                 {isCollapsed ? (
@@ -96,7 +96,7 @@ const Widget: React.FC<WidgetProps> = ({
             )}
 
             <button
-              className="p-1 text-text-tertiary hover:text-gray-900 dark:text-white transition-colors rounded hover:bg-bg-sub"
+              className="p-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:text-white transition-colors rounded hover:bg-gray-100 dark:bg-gray-800"
               title="More options"
             >
               <MoreVertical className="w-4 h-4" />
@@ -105,7 +105,7 @@ const Widget: React.FC<WidgetProps> = ({
             {closeable && (
               <button
                 onClick={() => setIsClosed(true)}
-                className="p-1 text-text-tertiary hover:text-error transition-colors rounded hover:bg-bg-sub"
+                className="p-1 text-gray-600 dark:text-gray-400 hover:text-error transition-colors rounded hover:bg-gray-100 dark:bg-gray-800"
                 title="Close"
               >
                 <X className="w-4 h-4" />
@@ -132,7 +132,7 @@ const Widget: React.FC<WidgetProps> = ({
             )}
 
             {!content && !children && (
-              <div className="text-text-tertiary text-sm text-center py-4">
+              <div className="text-gray-600 dark:text-gray-400 text-sm text-center py-4">
                 No content
               </div>
             )}
@@ -142,9 +142,9 @@ const Widget: React.FC<WidgetProps> = ({
           {footer && (
             <div className={`
               ${variant === 'compact' ? 'px-4 py-2' : 'px-6 py-3'}
-              border-t border-border-main bg-bg-sub/30
+              border-t border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/30
             `}>
-              <div className="text-text-tertiary text-sm">
+              <div className="text-gray-600 dark:text-gray-400 text-sm">
                 {footer}
               </div>
             </div>

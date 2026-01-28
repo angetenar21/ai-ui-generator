@@ -66,9 +66,9 @@ const Accordion: React.FC<AccordionProps> = ({
   };
 
   const variantClasses = {
-    default: 'bg-bg-surface',
-    bordered: 'bg-bg-surface border border-border-primary',
-    elevated: 'bg-bg-surface shadow-md',
+    default: 'bg-gray-50 dark:bg-gray-700',
+    bordered: 'bg-gray-50 dark:bg-gray-700 border border-orange-600',
+    elevated: 'bg-gray-50 dark:bg-gray-700 shadow-md',
   };
 
   const sizeClasses = {
@@ -80,7 +80,7 @@ const Accordion: React.FC<AccordionProps> = ({
   if (items.length === 0) {
     return (
       <div className="card rounded-card p-8 text-center">
-        <p className="text-text-tertiary">Accordion - Add items to display</p>
+        <p className="text-gray-600 dark:text-gray-400">Accordion - Add items to display</p>
       </div>
     );
   }
@@ -97,18 +97,18 @@ const Accordion: React.FC<AccordionProps> = ({
           >
             <button
               onClick={() => toggleItem(index)}
-              className="w-full flex items-center justify-between p-4 text-left hover:bg-bg-elevated transition-colors"
+              className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
             >
               <div className="flex items-center gap-3 flex-1">
                 {item.icon && (
-                  <span className="text-text-tertiary text-xl">{item.icon}</span>
+                  <span className="text-gray-600 dark:text-gray-400 text-xl">{item.icon}</span>
                 )}
                 <span className="font-semibold text-gray-900 dark:text-white">
                   {item.title}
                 </span>
               </div>
               <svg
-                className={`w-5 h-5 text-text-tertiary transition-transform ${
+                className={`w-5 h-5 text-gray-600 dark:text-gray-400 transition-transform ${
                   isExpanded ? 'rotate-180' : ''
                 }`}
                 fill="none"
@@ -125,7 +125,7 @@ const Accordion: React.FC<AccordionProps> = ({
             </button>
 
             {isExpanded && (
-              <div className="px-4 pb-4 pt-2 border-t border-border-primary">
+              <div className="px-4 pb-4 pt-2 border-t border-orange-600">
                 {item.content && (
                   <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
                     {item.content}

@@ -32,10 +32,9 @@ const RadialBarChart: React.FC<RadialBarChartProps> = ({
   title,
   description,
   series,
-  width = 800,
+  width: _width,
   height = 400,
 }) => {
-  void (width); // Width prop available for future use
   // Validate
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (

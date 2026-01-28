@@ -52,8 +52,8 @@ const Divider: React.FC<DividerProps> = ({
   };
 
   const colorClasses = {
-    default: 'bg-border-primary border-border-primary',
-    primary: 'bg-primary-500 border-primary-500',
+    default: 'bg-border-primary border-orange-600',
+    primary: 'bg-orange-600 border-orange-600',
     secondary: 'bg-accent-from border-accent-from',
   };
 
@@ -85,7 +85,7 @@ const Divider: React.FC<DividerProps> = ({
             className={`flex-1 ${thicknessClasses[thickness]} ${colorClasses[color]}`}
           />
         )}
-        <span className="px-3 text-sm text-text-tertiary whitespace-nowrap">
+        <span className="px-3 text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">
           {label}
         </span>
         {labelPosition !== 'right' && (

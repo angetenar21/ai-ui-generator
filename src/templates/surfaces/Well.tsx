@@ -31,7 +31,7 @@ const Well: React.FC<WellProps> = ({
   };
 
   const variantClasses = {
-    default: 'bg-bg-sub border-border-main',
+    default: 'bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700',
     info: 'bg-info/10 border-info/30',
     warning: 'bg-warning/10 border-warning/30',
     success: 'bg-success/10 border-success/30',
@@ -56,7 +56,7 @@ const Well: React.FC<WellProps> = ({
       {title && (
         <div className={`
           font-semibold mb-3 pb-2 border-b
-          ${variant === 'default' ? 'text-gray-900 dark:text-white border-border-main' : `${variantTextClasses[variant]} border-current/20`}
+          ${variant === 'default' ? 'text-gray-900 dark:text-white border-gray-200 dark:border-gray-700' : `${variantTextClasses[variant]} border-current/20`}
         `}>
           {title}
         </div>
@@ -78,7 +78,7 @@ const Well: React.FC<WellProps> = ({
       )}
 
       {!content && !children && !title && (
-        <div className="text-text-tertiary text-sm text-center py-2">
+        <div className="text-gray-600 dark:text-gray-400 text-sm text-center py-2">
           Empty well container
         </div>
       )}

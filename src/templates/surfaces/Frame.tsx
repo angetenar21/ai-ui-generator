@@ -54,8 +54,8 @@ const Frame: React.FC<FrameProps> = ({
 
   const backgroundClasses = {
     transparent: 'bg-transparent border-gray-700/50',
-    dark: 'glass-dark border-gray-700/50',
-    light: 'bg-bg-sub border-border-main',
+    dark: 'card border border-gray-200 dark:border-gray-700',
+    light: 'bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700',
     gradient: 'bg-gradient-to-br from-bg-main to-bg-sub border-gray-700/50',
   };
 
@@ -71,7 +71,7 @@ const Frame: React.FC<FrameProps> = ({
       `}
     >
       {title && (
-        <div className="text-gray-900 dark:text-white font-semibold text-lg mb-4 pb-3 border-b border-border-main">
+        <div className="text-gray-900 dark:text-white font-semibold text-lg mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
           {title}
         </div>
       )}
@@ -89,7 +89,7 @@ const Frame: React.FC<FrameProps> = ({
       )}
 
       {!content && !children && !title && (
-        <div className="text-text-tertiary text-sm text-center py-4">
+        <div className="text-gray-600 dark:text-gray-400 text-sm text-center py-4">
           Empty frame container
         </div>
       )}

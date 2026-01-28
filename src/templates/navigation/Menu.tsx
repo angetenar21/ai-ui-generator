@@ -67,9 +67,9 @@ const Menu: React.FC<MenuProps> = ({
   };
 
   const triggerVariantClasses = {
-    primary: 'bg-blue-600 hover:bg-blue-700 text-white',
-    secondary: 'bg-gray-700 hover:bg-gray-600 text-white',
-    ghost: 'bg-transparent hover:bg-gray-700/50 text-gray-300',
+    primary: 'bg-orange-600 hover:bg-orange-700 text-white',
+    secondary: 'bg-gray-700 hover:bg-gray-600 text-white dark:bg-gray-700 dark:hover:bg-gray-600',
+    ghost: 'bg-transparent hover:bg-gray-200 dark:hover:bg-gray-700/50 text-gray-700 dark:text-gray-300',
   };
 
   // Always render as dropdown menu with a button

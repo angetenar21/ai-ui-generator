@@ -173,7 +173,7 @@ const TreeView: React.FC<TreeViewProps> = ({
                 type="checkbox"
                 checked={isSelected}
                 onChange={() => handleNodeClick(node)}
-                className="w-4 h-4 rounded border-gray-600 text-blue-600 focus:ring-blue-500"
+                className="w-4 h-4 rounded border-gray-600 text-blue-600 focus:ring-orange-500"
               />
             )}
 
@@ -212,7 +212,7 @@ const TreeView: React.FC<TreeViewProps> = ({
   };
 
   return (
-    <div className="glass-dark border border-gray-700/50 rounded-2xl p-6 my-4">
+    <div className="card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 my-4">
       {title && (
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-display font-semibold text-white">

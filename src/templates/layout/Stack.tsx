@@ -79,24 +79,24 @@ const Stack: React.FC<StackProps> = ({
 
   // Get child wrapper classes
   const getChildWrapperClasses = () => {
-    const classes = ['min-w-0', 'flex-shrink-0'];
-    if (fullWidth) {
+    const classes = ['min-w-0'];
+    if (fullWidth && direction === 'vertical') {
       classes.push('w-full');
     }
-    if (direction === 'horizontal' && !fullWidth) {
-      classes.push('flex-1');
+    if (direction === 'horizontal' && !wrap) {
+      classes.push('flex-shrink-0');
     }
     return classes.join(' ');
   };
 
   return (
     <div
-      className={`flex ${directionClass} ${spacingClasses[spacing]} ${alignClasses[align]} ${justifyClasses[justify]} ${wrapClass} ${widthClass} max-w-full overflow-hidden`}
+      className={`flex ${directionClass} ${spacingClasses[spacing]} ${alignClasses[align]} ${justifyClasses[justify]} ${wrapClass} ${widthClass} max-w-full overflow-visible`}
     >
       {children && children.length > 0 && renderChild ? (
         children.map((child, index) => (
           <React.Fragment key={index}>
-            <div className={`${getChildWrapperClasses()} overflow-hidden`}>
+            <div className={`${getChildWrapperClasses()} overflow-visible`}>
               {renderChild(child)}
             </div>
             {divider && index < children.length - 1 && (

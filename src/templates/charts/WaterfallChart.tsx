@@ -32,11 +32,9 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
   description,
   xAxis,
   series,
-  width = 800,
+  width: _width,
   height = 400,
 }) => {
-  void (width); // Width prop available for future use
-
   // Dark mode detection
   const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
   const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
@@ -277,7 +275,7 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
               >
                 {chartData.map((entry, index) => {
                   const fill = entry.isTotal
-                    ? '#3B82F6' // Blue for totals
+                    ? '#F97316' // Orange for totals
                     : entry.positive
                       ? '#10B981' // Green for increases
                       : '#EF4444'; // Red for decreases
@@ -299,7 +297,7 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
               <span className="text-gray-700 dark:text-gray-300 font-medium">Decrease</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-blue-500 rounded" />
+              <div className="w-4 h-4 bg-orange-600 rounded" />
               <span className="text-gray-700 dark:text-gray-300 font-medium">Total</span>
             </div>
           </div>
@@ -321,8 +319,8 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
             <div className="flex justify-between items-center text-sm mt-1">
               <span className="text-gray-600 dark:text-gray-400">Net Change:</span>
               <span className={`font-semibold ${(chartData[chartData.length - 1]?.end || 0) >= (chartData[0]?.start || 0)
-                  ? 'text-green-600 dark:text-green-400'
-                  : 'text-red-600 dark:text-red-400'
+                ? 'text-green-600 dark:text-green-400'
+                : 'text-red-600 dark:text-red-400'
                 }`}>
                 {((chartData[chartData.length - 1]?.end || 0) - (chartData[0]?.start || 0)).toFixed(2)}
               </span>

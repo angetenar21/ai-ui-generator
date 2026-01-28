@@ -30,10 +30,9 @@ const BoxPlotChart: React.FC<BoxPlotChartProps> = ({
   description,
   xAxis,
   series,
-  width = 800,
+  width: _width,
   height = 400,
 }) => {
-  void (width); // Width prop available for future use
   // Validate
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (

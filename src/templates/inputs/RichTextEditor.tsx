@@ -107,7 +107,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
                     text-gray-300 hover:bg-gray-700 hover:text-white
                     disabled:opacity-50 disabled:cursor-not-allowed
                     transition-colors duration-150
-                    focus:outline-none focus:ring-2 focus:ring-blue-500/50
+                    focus:outline-none focus:ring-2 focus:ring-orange-500/50
                   `.trim().replace(/\s+/g, ' ')}
                 >
                   {btn.icon}

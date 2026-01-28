@@ -56,7 +56,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
       case 'negative':
         return <ArrowDown className="w-3.5 h-3.5 text-error" />;
       case 'neutral':
-        return <Minus className="w-3.5 h-3.5 text-text-tertiary" />;
+        return <Minus className="w-3.5 h-3.5 text-gray-600 dark:text-gray-400" />;
       default:
         return null;
     }
@@ -67,7 +67,8 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
       return 'flex flex-wrap gap-6';
     }
     if (layout === 'grid') {
-      return `grid grid-cols-${columns} gap-6`;
+      const gridCols = columns === 2 ? 'grid-cols-2' : columns === 3 ? 'grid-cols-3' : 'grid-cols-4';
+      return `grid ${gridCols} gap-6`;
     }
     return 'flex flex-col gap-4';
   };

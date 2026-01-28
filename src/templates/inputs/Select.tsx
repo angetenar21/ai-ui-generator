@@ -77,9 +77,9 @@ const Select: React.FC<SelectProps> = ({
         className={`
           ${sizeClasses[size]}
           ${variantClasses[variant]}
-          ${fullWidth ? 'w-full' : ''}
+          ${fullWidth ? 'w-full' : 'max-w-md'}
           rounded-lg text-white
-          focus:outline-none focus:ring-2 focus:ring-blue-500/50
+          focus:outline-none focus:ring-2 focus:ring-orange-500/50
           disabled:opacity-50 disabled:cursor-not-allowed
           transition-all duration-200
           cursor-pointer

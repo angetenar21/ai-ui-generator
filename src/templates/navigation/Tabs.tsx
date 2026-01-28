@@ -42,22 +42,22 @@ const Tabs: React.FC<TabsProps> = ({
 
   const variantClasses = {
     default: {
-      container: 'border-b border-gray-700',
+      container: 'border-b border-gray-200 dark:border-gray-700',
       tab: 'px-4 py-2 border-b-2 transition-colors',
-      active: 'border-blue-500 text-blue-400',
-      inactive: 'border-transparent text-gray-400 hover:text-gray-300',
+      active: 'border-orange-600 text-orange-600 dark:text-orange-400',
+      inactive: 'border-transparent text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300',
     },
     pills: {
-      container: 'bg-gray-800/50 rounded-lg p-1',
+      container: 'bg-gray-100 dark:bg-gray-800/50 rounded-lg p-1',
       tab: 'px-4 py-2 rounded-md transition-colors',
-      active: 'bg-blue-600 text-white',
-      inactive: 'text-gray-400 hover:text-gray-300 hover:bg-gray-700/50',
+      active: 'bg-orange-600 text-white',
+      inactive: 'text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700/50',
     },
     underline: {
       container: 'gap-4',
       tab: 'px-2 py-2 border-b-2 transition-colors',
-      active: 'border-blue-500 text-blue-400',
-      inactive: 'border-transparent text-gray-400 hover:text-gray-300',
+      active: 'border-orange-600 text-orange-600 dark:text-orange-400',
+      inactive: 'border-transparent text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300',
     },
   };
 
@@ -85,7 +85,7 @@ const Tabs: React.FC<TabsProps> = ({
         </div>
 
         {tabItems[activeTab]?.content && (
-          <div className={`${isVertical ? 'flex-1' : ''} mt-4 text-gray-300`}>
+          <div className={`${isVertical ? 'flex-1' : ''} mt-4 text-gray-700 dark:text-gray-300`}>
             {tabItems[activeTab].content}
           </div>
         )}

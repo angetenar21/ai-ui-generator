@@ -55,7 +55,7 @@ const Masonry: React.FC<MasonryProps> = ({
   if (!children || children.length === 0) {
     return (
       <div className="card rounded-card p-8 text-center">
-        <p className="text-text-tertiary">
+        <p className="text-gray-600 dark:text-gray-400">
           Masonry layout ({columns} columns) - Add child components
         </p>
       </div>
@@ -67,16 +67,24 @@ const Masonry: React.FC<MasonryProps> = ({
   // Build responsive column classes
   const getColumnClasses = () => {
     if (!responsive) {
-      return `grid-cols-${columns}`;
+      const colsMap: Record<number, string> = {
+        2: 'grid-cols-2',
+        3: 'grid-cols-3',
+        4: 'grid-cols-4',
+        5: 'grid-cols-5',
+        6: 'grid-cols-6',
+      };
+      return colsMap[columns] || 'grid-cols-3';
     }
 
     if (breakAt) {
+      const colMap: Record<number, string> = { 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6' };
       const classes: string[] = [];
-      if (breakAt.default) classes.push(`grid-cols-${breakAt.default}`);
-      if (breakAt.sm) classes.push(`sm:grid-cols-${breakAt.sm}`);
-      if (breakAt.md) classes.push(`md:grid-cols-${breakAt.md}`);
-      if (breakAt.lg) classes.push(`lg:grid-cols-${breakAt.lg}`);
-      if (breakAt.xl) classes.push(`xl:grid-cols-${breakAt.xl}`);
+      if (breakAt.default && colMap[breakAt.default]) classes.push(`grid-cols-${colMap[breakAt.default]}`);
+      if (breakAt.sm && colMap[breakAt.sm]) classes.push(`sm:grid-cols-${colMap[breakAt.sm]}`);
+      if (breakAt.md && colMap[breakAt.md]) classes.push(`md:grid-cols-${colMap[breakAt.md]}`);
+      if (breakAt.lg && colMap[breakAt.lg]) classes.push(`lg:grid-cols-${colMap[breakAt.lg]}`);
+      if (breakAt.xl && colMap[breakAt.xl]) classes.push(`xl:grid-cols-${colMap[breakAt.xl]}`);
       return classes.join(' ');
     }
 

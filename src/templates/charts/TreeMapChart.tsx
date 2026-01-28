@@ -53,12 +53,11 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
   title,
   data,
   series,
-  width = 800,
+  width: _width,
   height = 400,
   colors = COLORS,
   showLabels = true,
 }) => {
-  void(width); // Width prop available for future use
 
   // Detect dark mode
   const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
@@ -68,7 +67,7 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
   // Transform data to ensure consistent format
   const transformData = (inputData: any): any[] => {
     if (!inputData) return [];
-    
+
     return inputData.map((item: any) => ({
       name: item.name,
       size: item.size || item.value || 0,
@@ -125,13 +124,12 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
             y={y + height / 2}
             textAnchor="middle"
             fill={textColor}
-            // fontSize={Math.round(Math.min(width / 8, height / 4, 14))}
+            fontSize={14}
             fontWeight={depth === 1 ? 600 : 500}
             fontFamily="Inter, system-ui, -apple-system, sans-serif"
             style={{
               textRendering: 'optimizeLegibility',
               fontFeatureSettings: '"liga" 1, "kern" 1',
-              // filter: 'drop-shadow(0px 1px 2px rgba(0, 0, 0, 0))',
             }}
           >
             {name}
@@ -143,12 +141,11 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
             y={y + height / 2 + 18}
             textAnchor="middle"
             fill="#000000ff"
-            fontSize={Math.round(Math.min(width / 12, height / 6, 12))}
+            fontSize={12}
             fontFamily="Inter, system-ui, -apple-system, sans-serif"
             style={{
               textRendering: 'optimizeLegibility',
               fontFeatureSettings: '"liga" 1, "kern" 1',
-              // filter: 'drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.4))',
             }}
           >
             {size}

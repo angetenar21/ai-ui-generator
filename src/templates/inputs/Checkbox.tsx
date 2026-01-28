@@ -46,7 +46,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
   };
 
   const colorClasses = {
-    primary: 'text-blue-600 focus:ring-blue-500',
+    primary: 'text-blue-600 focus:ring-orange-500',
     secondary: 'text-gray-600 focus:ring-gray-500',
     success: 'text-green-600 focus:ring-green-500',
     warning: 'text-yellow-600 focus:ring-yellow-500',

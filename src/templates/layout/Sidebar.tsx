@@ -75,9 +75,9 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const variantClasses = {
-    default: 'bg-bg-surface',
-    elevated: 'bg-bg-surface shadow-lg',
-    bordered: 'bg-bg-surface border-r border-border-primary',
+    default: 'bg-gray-50 dark:bg-gray-700',
+    elevated: 'bg-gray-50 dark:bg-gray-700 shadow-lg',
+    bordered: 'bg-gray-50 dark:bg-gray-700 border-r border-orange-600',
   };
 
   const positionClasses = {
@@ -106,11 +106,10 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div key={index}>
         <button
           onClick={() => hasChildren && toggleExpanded(index)}
-          className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors ${
-            item.active
-              ? 'bg-primary-500/10 text-primary-500'
-              : 'text-gray-600 dark:text-gray-300 hover:bg-bg-elevated hover:text-gray-900 dark:text-white'
-          } ${depth > 0 ? 'pl-8' : ''}`}
+          className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors ${item.active
+              ? 'bg-orange-600/10 text-orange-600'
+              : 'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
+            } ${depth > 0 ? 'pl-8' : ''}`}
         >
           {item.icon && (
             <span className={isCollapsed ? 'text-xl' : 'text-lg'}>
@@ -127,9 +126,8 @@ const Sidebar: React.FC<SidebarProps> = ({
               )}
               {hasChildren && (
                 <svg
-                  className={`w-4 h-4 transition-transform ${
-                    isExpanded ? 'rotate-180' : ''
-                  }`}
+                  className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-180' : ''
+                    }`}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -160,7 +158,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     <aside
       className={`${positionClasses[position]} ${widthClasses[width]} ${variantClasses[variant]} transition-all duration-300 overflow-y-auto`}
     >
-      <div className="flex items-center justify-between p-4 border-b border-border-primary">
+      <div className="flex items-center justify-between p-4 border-b border-orange-600">
         {!isCollapsed && (
           <div className="flex items-center gap-3">
             {logo && <span className="text-2xl">{logo}</span>}
@@ -171,12 +169,11 @@ const Sidebar: React.FC<SidebarProps> = ({
         {collapsible && (
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="text-text-tertiary hover:text-gray-900 dark:text-white transition-colors p-1"
+            className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:text-white transition-colors p-1"
           >
             <svg
-              className={`w-5 h-5 transition-transform ${
-                isCollapsed ? 'rotate-180' : ''
-              }`}
+              className={`w-5 h-5 transition-transform ${isCollapsed ? 'rotate-180' : ''
+                }`}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -197,7 +194,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       </nav>
 
       {children && children.length > 0 && renderChild && !isCollapsed && (
-        <div className="p-4 border-t border-border-primary">
+        <div className="p-4 border-t border-orange-600">
           <div className="space-y-3">
             {children.map((child, index) => (
               <div key={index}>{renderChild(child)}</div>

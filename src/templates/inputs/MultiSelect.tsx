@@ -119,7 +119,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
             ${variantClasses[variant]}
             ${fullWidth ? 'w-full' : 'w-full'}
             rounded-lg text-white
-            focus:outline-none focus:ring-2 focus:ring-blue-500/50
+            focus:outline-none focus:ring-2 focus:ring-orange-500/50
             ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
             transition-all duration-200
             min-h-[2.5rem] flex items-center flex-wrap gap-1
@@ -178,7 +178,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
                       checked={isSelected}
                       onChange={() => {}}
                       disabled={isDisabled}
-                      className="w-4 h-4 rounded border-2 border-gray-600 bg-gray-800 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                      className="w-4 h-4 rounded border-2 border-gray-600 bg-gray-800 text-blue-600 focus:ring-orange-500 cursor-pointer"
                     />
                   )}
                   <span className="text-gray-300">{option.label}</span>

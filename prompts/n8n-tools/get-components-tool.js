@@ -3,12 +3,13 @@ const categories = {
   "charts": {
     "name": "charts",
     "displayName": "Charts",
-    "componentCount": 27,
+    "componentCount": 28,
     "components": [
       "area-chart",
       "bar-chart",
       "boxplot-chart",
       "bubble-chart",
+      "bullet-chart",
       "chord-chart",
       "composed-chart",
       "donut-chart",
@@ -59,7 +60,7 @@ const categories = {
   "inputs": {
     "name": "inputs",
     "displayName": "Inputs",
-    "componentCount": 20,
+    "componentCount": 21,
     "components": [
       "autocomplete",
       "checkbox",
@@ -80,7 +81,8 @@ const categories = {
       "tag-input",
       "text-area",
       "text-field",
-      "time-picker"
+      "time-picker",
+      "toggle"
     ]
   },
   "layout": {

@@ -66,7 +66,7 @@ const BulletChart: React.FC<BulletChartProps> = ({
   max = 100,
   ranges = [],
   comparative,
-  width: propWidth,
+  width,
   height = 100,
   unit = '',
   cardBackgroundColor,
@@ -108,7 +108,7 @@ const BulletChart: React.FC<BulletChartProps> = ({
   const valueColor = isDarkMode ? '#3B82F6' : '#2563EB';
 
   return (
-    <div className={`${surfaceClasses} p-6 rounded-xl`} style={{ width: propWidth || '100%', minWidth: '400px' }}>
+    <div className={`${surfaceClasses} p-6 rounded-xl`} style={{ width: width || '100%', minWidth: '400px' }}>
       {/* Header */}
       {(title || description) && (
         <div className="mb-6">

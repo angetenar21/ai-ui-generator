@@ -66,7 +66,7 @@ const List: React.FC<ListProps> = ({
   const isSelected = (id: string) => selected.includes(id);
 
   return (
-    <div className="glass-dark border border-gray-700/50 rounded-2xl overflow-hidden my-4">
+    <div className="card border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden my-4">
       {title && (
         <div className="px-6 py-4 border-b border-gray-700/50">
           <h3 className="text-xl font-display font-semibold text-white">
@@ -100,7 +100,7 @@ const List: React.FC<ListProps> = ({
                   type="checkbox"
                   checked={isSelected(item.id)}
                   onChange={() => {}}
-                  className="w-4 h-4 rounded border-gray-600 text-blue-600 focus:ring-blue-500 focus:ring-offset-gray-900"
+                  className="w-4 h-4 rounded border-gray-600 text-blue-600 focus:ring-orange-500 focus:ring-offset-gray-900"
                   disabled={item.disabled}
                 />
               </div>

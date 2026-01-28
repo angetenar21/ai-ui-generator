@@ -74,10 +74,9 @@ const PolarChart: React.FC<PolarChartProps> = ({
   description,
   angleAxis,
   series,
-  width = 800,
+  width: _width,
   height = 400,
 }) => {
-  void (width); // Width prop available for future use
 
   // Validate series
   if (!series || !Array.isArray(series) || series.length === 0) {

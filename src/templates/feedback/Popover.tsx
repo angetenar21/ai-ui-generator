@@ -49,10 +49,10 @@ const Popover: React.FC<PopoverProps> = ({
   };
 
   const arrowClasses = {
-    top: 'top-full left-1/2 -translate-x-1/2 border-t-6 border-x-6 border-x-transparent border-t-gray-900 dark:border-t-gray-800',
-    bottom: 'bottom-full left-1/2 -translate-x-1/2 border-b-6 border-x-6 border-x-transparent border-b-gray-900 dark:border-b-gray-800',
-    left: 'left-full top-1/2 -translate-y-1/2 border-l-6 border-y-6 border-y-transparent border-l-gray-900 dark:border-l-gray-800',
-    right: 'right-full top-1/2 -translate-y-1/2 border-r-6 border-y-6 border-y-transparent border-r-gray-900 dark:border-r-gray-800',
+    top: 'top-full left-1/2 -translate-x-1/2 border-t-[6px] border-x-[6px] border-x-transparent border-t-gray-900 dark:border-t-gray-800',
+    bottom: 'bottom-full left-1/2 -translate-x-1/2 border-b-[6px] border-x-[6px] border-x-transparent border-b-gray-900 dark:border-b-gray-800',
+    left: 'left-full top-1/2 -translate-y-1/2 border-l-[6px] border-y-[6px] border-y-transparent border-l-gray-900 dark:border-l-gray-800',
+    right: 'right-full top-1/2 -translate-y-1/2 border-r-[6px] border-y-[6px] border-y-transparent border-r-gray-900 dark:border-r-gray-800',
   };
 
   return (
@@ -60,7 +60,7 @@ const Popover: React.FC<PopoverProps> = ({
       <div className="relative inline-block">
         <button
           onClick={handleToggle}
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+          className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition-colors"
         >
           {triggerLabel}
         </button>
@@ -76,13 +76,13 @@ const Popover: React.FC<PopoverProps> = ({
             {/* Popover */}
             <div className={`absolute ${positionClasses[popoverPosition]} z-50`}>
               <div
-                className="bg-gray-900 dark:bg-gray-800 border border-gray-700 dark:border-gray-600 rounded-md shadow-lg px-3 py-2 max-w-[200px]"
+                className="relative bg-gray-900 dark:bg-gray-800 border border-gray-800 dark:border-gray-700 rounded-md shadow-lg px-3 py-2 max-w-[200px]"
                 onClick={handleContentClick}
               >
                 {title && (
                   <h4 className="text-xs font-semibold text-white mb-1">{title}</h4>
                 )}
-                <div className="text-xs text-gray-200 dark:text-gray-300 leading-snug whitespace-normal break-words">{popoverContent}</div>
+                <div className="text-xs text-gray-100 dark:text-gray-300 leading-snug whitespace-normal break-words">{popoverContent}</div>
                 {arrow && (
                   <div className={`absolute ${arrowClasses[popoverPosition]} w-0 h-0`} />
                 )}

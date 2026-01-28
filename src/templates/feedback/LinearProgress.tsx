@@ -38,41 +38,55 @@ const LinearProgress: React.FC<LinearProgressProps> = ({
     small: 'h-1',
     medium: 'h-2',
     large: 'h-3',
-  };
+  } as const;
 
   const colorClasses = {
-    primary: 'bg-blue-500',
-    secondary: 'bg-gray-500',
-    success: 'bg-green-500',
-    warning: 'bg-yellow-500',
-    error: 'bg-red-500',
-  };
+    primary: 'bg-orange-600 dark:bg-orange-500',
+    secondary: 'bg-gray-500 dark:bg-gray-500',
+    success: 'bg-green-600 dark:bg-green-500',
+    warning: 'bg-amber-600 dark:bg-amber-500',
+    error: 'bg-red-600 dark:bg-red-500',
+  } as const;
+
+  const animationClass = indeterminate
+    ? 'animate-[slide_1.2s_ease-in-out_infinite]'
+    : animated
+      ? 'transition-[width] duration-300 ease-out'
+      : '';
+
+  const stripedClass = striped
+    ? 'bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent)] bg-[length:30px_100%] bg-[position:0_0]'
+    : '';
+
+  const valueLabel = showValue && !indeterminate ? `${Math.round(clampedValue)}%` : undefined;
 
   return (
-    <div className="card rounded-card p-6 my-4">
+    <div
+      className="card rounded-card p-6 my-4"
+      role="progressbar"
+      aria-valuenow={indeterminate ? undefined : Math.round(clampedValue)}
+      aria-valuemin={0}
+      aria-valuemax={100}
+    >
       <div className="w-full">
-        {label && (
+        {(label || valueLabel) && (
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-gray-300">{label}</span>
-            {showValue && !indeterminate && (
-              <span className="text-sm text-gray-400">{Math.round(clampedValue)}%</span>
-            )}
+            {label ? <span className="text-sm text-gray-700 dark:text-gray-300">{label}</span> : <span />}
+            {valueLabel && <span className="text-sm text-gray-600 dark:text-gray-400">{valueLabel}</span>}
           </div>
         )}
-        <div className={`w-full ${sizeClasses[size]} bg-gray-700 rounded-full overflow-hidden`}>
+        <div className={`w-full ${sizeClasses[size]} bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden`}>
           <div
             className={`
               ${sizeClasses[size]}
               ${colorClasses[progressColor]}
-              ${indeterminate ? 'w-1/3 animate-pulse' : ''}
-              ${striped ? 'bg-gradient-to-r from-transparent via-white/20 to-transparent bg-[length:30px_100%]' : ''}
-              ${animated ? 'transition-all duration-300 ease-out' : ''}
-              ${indeterminate ? 'animate-[slide_1.5s_ease-in-out_infinite]' : ''}
+              ${indeterminate ? 'w-1/3' : ''}
+              ${stripedClass}
+              ${animationClass}
               rounded-full
             `}
             style={{
-              width: indeterminate ? undefined : `${clampedValue}%`,
-              animation: indeterminate ? 'slide 1.5s ease-in-out infinite' : undefined,
+              width: indeterminate ? '35%' : `${clampedValue}%`,
             }}
           />
         </div>

@@ -92,7 +92,7 @@ const Flexbox: React.FC<FlexboxProps> = ({
         ))
       ) : (
         <div className="card rounded-card p-8 text-center flex-1">
-          <p className="text-text-tertiary">
+          <p className="text-gray-600 dark:text-gray-400">
             Flexbox ({direction}) - Add child components
           </p>
         </div>

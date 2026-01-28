@@ -49,8 +49,8 @@ const AvatarGroup: React.FC<AvatarGroupProps> = ({
 
   if (validAvatars.length === 0) {
     return (
-      <div className="glass-dark border border-gray-700/50 rounded-lg p-4">
-        <div className="flex items-center gap-2 text-text-tertiary">
+      <div className="card border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+        <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
           <Users className="w-5 h-5" />
           <span className="text-sm">No avatars to display</span>
         </div>
@@ -87,8 +87,8 @@ const AvatarGroup: React.FC<AvatarGroupProps> = ({
     if (color) return color;
     
     const colors = [
-      'bg-primary-500',
-      'bg-accent-cyan',
+      'bg-orange-600',
+      'bg-teal-500',
       'bg-accent-purple',
       'bg-accent-pink',
       'bg-accent-from',
@@ -98,7 +98,7 @@ const AvatarGroup: React.FC<AvatarGroupProps> = ({
   };
 
   return (
-    <div className="glass-dark border border-gray-700/50 rounded-lg p-4">
+    <div className="card border border-gray-200 dark:border-gray-700 rounded-lg p-4">
       {label && (
         <div className="text-gray-600 dark:text-gray-300 text-sm font-medium mb-3">{label}</div>
       )}
@@ -146,7 +146,7 @@ const AvatarGroup: React.FC<AvatarGroupProps> = ({
             className={`
               ${sizeClasses[size]}
               rounded-full border-2 border-bg-main
-              bg-bg-sub flex items-center justify-center
+              bg-gray-100 dark:bg-gray-800 flex items-center justify-center
               font-semibold text-gray-600 dark:text-gray-300
               hover:z-10 hover:scale-110 transition-transform cursor-pointer
             `}
@@ -158,7 +158,7 @@ const AvatarGroup: React.FC<AvatarGroupProps> = ({
       </div>
 
       {validAvatars.length > 0 && (
-        <div className="text-text-tertiary text-xs mt-3">
+        <div className="text-gray-600 dark:text-gray-400 text-xs mt-3">
           {validAvatars.length} {validAvatars.length === 1 ? 'member' : 'members'}
         </div>
       )}

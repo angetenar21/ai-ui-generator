@@ -49,8 +49,8 @@ const Dashboard: React.FC<DashboardProps> = ({
 }) => {
   if (!Array.isArray(widgets) || widgets.length === 0) {
     return (
-      <div className="glass-dark border border-gray-700/50 rounded-lg p-6 my-2">
-        <div className="text-text-tertiary text-sm">No widgets to display</div>
+      <div className="card border border-gray-200 dark:border-gray-700 rounded-lg p-6 my-2">
+        <div className="text-gray-600 dark:text-gray-400 text-sm">No widgets to display</div>
       </div>
     );
   }
@@ -83,9 +83,9 @@ const Dashboard: React.FC<DashboardProps> = ({
       case 'negative':
         return 'text-error';
       case 'neutral':
-        return 'text-text-tertiary';
+        return 'text-gray-600 dark:text-gray-400';
       default:
-        return 'text-text-tertiary';
+        return 'text-gray-600 dark:text-gray-400';
     }
   };
 
@@ -110,7 +110,7 @@ const Dashboard: React.FC<DashboardProps> = ({
       )}
 
       {/* Widgets Grid */}
-      <div className={`grid ${getGridColumns()} gap-${compact ? '3' : '4'}`}>
+      <div className={`grid ${getGridColumns()} ${compact ? 'gap-3' : 'gap-4'}`}>
         {widgets.map((widget) => {
           const IconComponent = widget.icon ? iconMap[widget.icon] : Activity;
 
@@ -118,15 +118,15 @@ const Dashboard: React.FC<DashboardProps> = ({
             <div
               key={widget.id}
               className={`
-                glass-dark border border-gray-700/50 rounded-lg
-                p-${compact ? '4' : '6'}
+                card border border-gray-200 dark:border-gray-700 rounded-lg
+                ${compact ? 'p-4' : 'p-6'}
                 hover:border-gray-600/50 transition-all
                 ${getSizeClasses(widget.size)}
               `}
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1">
-                  <div className="text-text-tertiary text-sm font-medium mb-1">
+                  <div className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-1">
                     {widget.title}
                   </div>
                   <div className="text-gray-900 dark:text-white text-2xl font-bold">
@@ -135,15 +135,15 @@ const Dashboard: React.FC<DashboardProps> = ({
                 </div>
 
                 {widget.icon && (
-                  <div className="p-2 rounded-lg bg-primary-500/20">
-                    <IconComponent className="w-5 h-5 text-primary-500" />
+                  <div className="p-2 rounded-lg bg-orange-100 dark:bg-orange-900/20">
+                    <IconComponent className="w-5 h-5 text-orange-600 dark:text-orange-400" />
                   </div>
                 )}
               </div>
 
               <div className="flex items-center justify-between">
                 {widget.subtitle && (
-                  <div className="text-text-tertiary text-xs">
+                  <div className="text-gray-600 dark:text-gray-400 text-xs">
                     {widget.subtitle}
                   </div>
                 )}
@@ -162,7 +162,7 @@ const Dashboard: React.FC<DashboardProps> = ({
       </div>
 
       {/* Footer Stats */}
-      <div className="mt-6 text-text-tertiary text-xs text-center">
+      <div className="mt-6 text-gray-600 dark:text-gray-400 text-xs text-center">
         {widgets.length} {widgets.length === 1 ? 'widget' : 'widgets'} displayed
       </div>
     </div>

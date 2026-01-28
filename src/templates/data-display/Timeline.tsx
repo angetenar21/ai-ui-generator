@@ -67,7 +67,7 @@ const Timeline: React.FC<TimelineProps> = ({
 
   if (orientation === 'horizontal') {
     return (
-      <div className="glass-dark border border-gray-700/50 rounded-2xl p-6 my-4 overflow-x-auto">
+      <div className="card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 my-4 overflow-x-auto">
         {title && (
           <h3 className="text-xl font-display font-semibold text-white mb-6">
             {title}
@@ -124,7 +124,7 @@ const Timeline: React.FC<TimelineProps> = ({
 
   // Vertical orientation
   return (
-    <div className="glass-dark border border-gray-700/50 rounded-2xl p-6 my-4">
+    <div className="card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 my-4">
       {title && (
         <h3 className="text-xl font-display font-semibold text-white mb-6">
           {title}

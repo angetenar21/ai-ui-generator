@@ -14,6 +14,7 @@ interface ModalProps {
   onClose?: () => void;
   footer?: string;
   actions?: Array<{ label: string; onClick?: () => void; variant?: 'primary' | 'secondary' | 'danger' }>;
+  children?: React.ReactNode;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -21,7 +22,7 @@ const Modal: React.FC<ModalProps> = ({
   content,
   message,
   description,
-  open = true,
+  open = false,
   isOpen,
   visible,
   size = 'medium',
@@ -30,13 +31,14 @@ const Modal: React.FC<ModalProps> = ({
   onClose,
   footer,
   actions,
+  children,
 }) => {
-  const [isVisible, setIsVisible] = useState(open || isOpen || visible || false);
-  const displayContent = content || message || description || 'Modal content';
+  const [isVisible, setIsVisible] = useState(Boolean(open || isOpen || visible));
+  const displayContent = content || message || description || children || 'Modal content';
 
   useEffect(() => {
-    const shouldShow = open || isOpen || visible;
-    setIsVisible(shouldShow !== undefined ? shouldShow : true);
+    const shouldShow = open ?? isOpen ?? visible ?? false;
+    setIsVisible(Boolean(shouldShow));
   }, [open, isOpen, visible]);
 
   const handleClose = () => {
@@ -58,63 +60,71 @@ const Modal: React.FC<ModalProps> = ({
   };
 
   return (
-    <div className="relative flex items-center justify-center p-4 min-h-[400px]">
-      {/* Backdrop */}
+    <>
+      {/* Backdrop - Fixed positioning for proper overlay */}
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm rounded-2xl"
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
         onClick={closable ? handleClose : undefined}
       />
 
-      {/* Modal */}
-      <div className={`relative ${sizeClasses[size]} w-full glass-dark border border-gray-300 dark:border-gray-700/50 rounded-2xl shadow-2xl overflow-hidden z-10`}>
-        {/* Header */}
-        {(title || showCloseButton) && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700/50">
-            {title && (
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{title}</h3>
-            )}
-            {showCloseButton && closable && (
-              <button
-                onClick={handleClose}
-                className="text-gray-400 hover:text-white transition-colors p-1"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            )}
-          </div>
-        )}
-
-        {/* Content */}
-        <div className="px-6 py-4 text-gray-700 dark:text-gray-300">
-          {displayContent}
-        </div>
-
-        {/* Footer */}
-        {(footer || actions) && (
-          <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200 dark:border-gray-700/50 bg-gray-50 dark:bg-gray-800/30">
-            {footer && <div className="text-gray-400 flex-1">{footer}</div>}
-            {actions && actions.map((action, index) => {
-              const variantClasses = {
-                primary: 'bg-blue-600 hover:bg-blue-700 text-white',
-                secondary: 'bg-gray-600 hover:bg-gray-700 text-white',
-                danger: 'bg-red-600 hover:bg-red-700 text-white',
-              };
-              return (
+      {/* Modal Container */}
+      <div className="fixed inset-0 flex items-center justify-center p-4 z-50">
+        {/* Modal */}
+        <div className={`relative ${sizeClasses[size]} w-full card border border-gray-300 dark:border-gray-700 rounded-2xl shadow-2xl overflow-hidden`}>
+          {/* Header */}
+          {(title || showCloseButton) && (
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+              {title && (
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{title}</h3>
+              )}
+              {showCloseButton && closable && (
                 <button
-                  key={index}
-                  onClick={action.onClick || handleClose}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${variantClasses[action.variant || 'secondary']}`}
+                  onClick={handleClose}
+                  className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors p-1"
+                  aria-label="Close modal"
                 >
-                  {action.label}
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
                 </button>
-              );
-            })}
+              )}
+            </div>
+          )}
+
+          {/* Content */}
+          <div className="px-6 py-4 text-gray-700 dark:text-gray-300">
+            {typeof displayContent === 'string' ? (
+              <p>{displayContent}</p>
+            ) : (
+              displayContent
+            )}
           </div>
-        )}
+
+          {/* Footer */}
+          {(footer || actions) && (
+            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200 dark:border-gray-700/50 bg-gray-50 dark:bg-gray-800/30">
+              {footer && <div className="text-gray-400 flex-1">{footer}</div>}
+              {actions && actions.map((action, index) => {
+                const variantClasses = {
+                  primary: 'bg-blue-600 hover:bg-blue-700 text-white',
+                  secondary: 'bg-gray-600 hover:bg-gray-700 text-white',
+                  danger: 'bg-red-600 hover:bg-red-700 text-white',
+                };
+                return (
+                  <button
+                    key={index}
+                    onClick={action.onClick || handleClose}
+                    className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${variantClasses[action.variant || 'secondary']}`}
+                  >
+                    {action.label}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
