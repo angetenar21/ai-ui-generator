@@ -15,14 +15,14 @@ interface ModalProps {
   footer?: string;
   actions?: Array<{ label: string; onClick?: () => void; variant?: 'primary' | 'secondary' | 'danger' }>;
   children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Modal: React.FC<ModalProps> = ({
   title,
   content,
-  message,
   description,
-  open = false,
+  open,
   isOpen,
   visible,
   size = 'medium',
@@ -33,12 +33,14 @@ const Modal: React.FC<ModalProps> = ({
   actions,
   children,
 }) => {
-  const [isVisible, setIsVisible] = useState(Boolean(open || isOpen || visible));
-  const displayContent = content || message || description || children || 'Modal content';
+  // Default to true for generated components (they're being rendered intentionally)
+  const defaultOpen = open ?? isOpen ?? visible ?? true;
+  const [isVisible, setIsVisible] = useState(Boolean(defaultOpen));
 
   useEffect(() => {
-    const shouldShow = open ?? isOpen ?? visible ?? false;
+    const shouldShow = open ?? isOpen ?? visible ?? true;
     setIsVisible(Boolean(shouldShow));
+    console.log('[Modal] Visibility:', shouldShow, { open, isOpen, visible, children });
   }, [open, isOpen, visible]);
 
   const handleClose = () => {
@@ -56,7 +58,7 @@ const Modal: React.FC<ModalProps> = ({
     small: 'max-w-md',
     medium: 'max-w-lg',
     large: 'max-w-2xl',
-    fullscreen: 'max-w-full w-full h-full m-0',
+    fullscreen: 'max-w-[95vw] w-full max-h-[95vh]',
   };
 
   return (
@@ -68,53 +70,57 @@ const Modal: React.FC<ModalProps> = ({
       />
 
       {/* Modal Container */}
-      <div className="fixed inset-0 flex items-center justify-center p-4 z-50">
+      <div className={`fixed inset-0 flex items-center justify-center ${size === 'fullscreen' ? 'p-2' : 'p-4'} z-50`}>
         {/* Modal */}
-        <div className={`relative ${sizeClasses[size]} w-full card border border-gray-300 dark:border-gray-700 rounded-2xl shadow-2xl overflow-hidden`}>
+        <div className={`relative ${sizeClasses[size]} w-full card border border-gray-300 dark:border-gray-700 ${size === 'fullscreen' ? 'rounded-lg' : 'rounded-2xl'} shadow-2xl flex flex-col overflow-hidden`}>
           {/* Header */}
-          {(title || showCloseButton) && (
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-              {title && (
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{title}</h3>
-              )}
-              {showCloseButton && closable && (
-                <button
-                  onClick={handleClose}
-                  className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors p-1"
-                  aria-label="Close modal"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              )}
+          {(title || description || showCloseButton) && (
+            <div className="flex-shrink-0 px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+              <div className="flex items-start justify-between">
+                <div className="flex-1 pr-4">
+                  {title && (
+                    <h3 className="text-xl font-display font-bold text-gray-900 dark:text-white">{title}</h3>
+                  )}
+                  {description && (
+                    <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{description}</p>
+                  )}
+                </div>
+                {showCloseButton && closable && (
+                  <button
+                    onClick={handleClose}
+                    className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors p-1 flex-shrink-0"
+                    aria-label="Close modal"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
+              </div>
             </div>
           )}
 
-          {/* Content */}
-          <div className="px-6 py-4 text-gray-700 dark:text-gray-300">
-            {typeof displayContent === 'string' ? (
-              <p>{displayContent}</p>
-            ) : (
-              displayContent
-            )}
+          {/* Content - Scrollable */}
+          <div className="flex-1 overflow-y-auto px-6 py-4 text-gray-700 dark:text-gray-300">
+            {content && typeof content === 'string' && <p>{content}</p>}
+            {children}
           </div>
 
           {/* Footer */}
           {(footer || actions) && (
-            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200 dark:border-gray-700/50 bg-gray-50 dark:bg-gray-800/30">
-              {footer && <div className="text-gray-400 flex-1">{footer}</div>}
+            <div className="flex-shrink-0 flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+              {footer && <div className="text-gray-600 dark:text-gray-400 flex-1 text-sm">{footer}</div>}
               {actions && actions.map((action, index) => {
                 const variantClasses = {
-                  primary: 'bg-blue-600 hover:bg-blue-700 text-white',
-                  secondary: 'bg-gray-600 hover:bg-gray-700 text-white',
-                  danger: 'bg-red-600 hover:bg-red-700 text-white',
+                  primary: 'bg-orange-600 hover:bg-orange-700 text-white shadow-sm hover:shadow-md',
+                  secondary: 'bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white',
+                  danger: 'bg-red-600 hover:bg-red-700 text-white shadow-sm hover:shadow-md',
                 };
                 return (
                   <button
                     key={index}
                     onClick={action.onClick || handleClose}
-                    className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${variantClasses[action.variant || 'secondary']}`}
+                    className={`px-5 py-2.5 rounded-lg font-medium transition-all duration-200 ${variantClasses[action.variant || 'secondary']}`}
                   >
                     {action.label}
                   </button>

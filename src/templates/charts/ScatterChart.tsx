@@ -13,7 +13,10 @@ interface ScatterChartProps {
     min?: number;
     max?: number;
     label?: string;
-  }>;
+  
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
+}>;
 
   /** Y-axis configuration */
   yAxis?: Array<{

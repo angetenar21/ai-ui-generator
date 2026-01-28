@@ -11,7 +11,10 @@ interface SankeyChartProps {
   /** Node definitions */
   nodes: Array<{
     name: string;
-  }>;
+  
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
+}>;
 
   /** Link/flow definitions */
   links: Array<{

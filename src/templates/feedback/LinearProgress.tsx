@@ -13,6 +13,9 @@ interface LinearProgressProps {
   indeterminate?: boolean;
   striped?: boolean;
   animated?: boolean;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const LinearProgress: React.FC<LinearProgressProps> = ({

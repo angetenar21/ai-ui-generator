@@ -9,6 +9,9 @@ interface SkeletonProps {
   lines?: number;
   animation?: 'pulse' | 'wave' | 'none';
   className?: string;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Skeleton: React.FC<SkeletonProps> = ({

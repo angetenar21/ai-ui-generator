@@ -10,6 +10,9 @@ interface BadgeProps {
   count?: number;
   showDot?: boolean;
   max?: number;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Badge: React.FC<BadgeProps> = ({

@@ -21,6 +21,9 @@ interface ImageProps {
   onLoad?: () => void;
   onError?: () => void;
   onClick?: () => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Image: React.FC<ImageProps> = ({

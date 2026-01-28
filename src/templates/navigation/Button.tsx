@@ -11,6 +11,9 @@ interface ButtonProps {
   iconPosition?: 'left' | 'right';
   fullWidth?: boolean;
   onClick?: () => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Button: React.FC<ButtonProps> = ({

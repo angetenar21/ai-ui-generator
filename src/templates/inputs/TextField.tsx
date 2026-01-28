@@ -21,6 +21,9 @@ interface TextFieldProps {
   onChange?: (value: string) => void;
   onBlur?: () => void;
   onFocus?: () => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const TextField: React.FC<TextFieldProps> = ({

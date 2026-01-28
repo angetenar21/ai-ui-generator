@@ -26,6 +26,9 @@ interface BreadcrumbsProps {
 
   /** Show home icon */
   showHome?: boolean;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Breadcrumbs: React.FC<BreadcrumbsProps> = ({

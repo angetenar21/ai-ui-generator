@@ -14,6 +14,8 @@ interface AvatarProps {
   badge?: string | number;
   fallbackIcon?: string;
   onClick?: () => void;
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Avatar: React.FC<AvatarProps> = ({

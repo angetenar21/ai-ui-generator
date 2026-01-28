@@ -18,6 +18,9 @@ interface DatePickerProps {
   onChange?: (value: string) => void;
   onBlur?: () => void;
   onFocus?: () => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const DatePicker: React.FC<DatePickerProps> = ({

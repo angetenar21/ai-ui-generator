@@ -16,6 +16,9 @@ interface GanttProps {
   tasks: GanttTask[];
   onTaskClick?: (task: GanttTask) => void;
   viewMode?: 'day' | 'week' | 'month';
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Gantt: React.FC<GanttProps> = ({

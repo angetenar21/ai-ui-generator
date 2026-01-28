@@ -22,6 +22,9 @@ interface GalleryProps {
   hoverEffect?: 'zoom' | 'fade' | 'lift' | 'none';
   className?: string;
   onImageClick?: (image: GalleryImage, index: number) => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Gallery: React.FC<GalleryProps> = ({

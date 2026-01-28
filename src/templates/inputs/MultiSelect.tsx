@@ -24,6 +24,9 @@ interface MultiSelectProps {
   maxSelections?: number;
   showCheckboxes?: boolean;
   onChange?: (value: Array<string | number>) => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const MultiSelect: React.FC<MultiSelectProps> = ({

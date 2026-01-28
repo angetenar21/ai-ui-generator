@@ -32,6 +32,9 @@ interface HeroProps {
 
   /** Size variant */
   size?: 'normal' | 'large';
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Hero: React.FC<HeroProps> = ({

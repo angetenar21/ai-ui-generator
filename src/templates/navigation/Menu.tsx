@@ -19,6 +19,9 @@ interface MenuProps {
   position?: 'bottom-left' | 'bottom-right' | 'top-left' | 'top-right';
   closeOnSelect?: boolean;
   variant?: 'default' | 'compact' | 'bordered';
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Menu: React.FC<MenuProps> = ({

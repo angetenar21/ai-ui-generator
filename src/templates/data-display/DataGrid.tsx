@@ -26,6 +26,8 @@ interface DataGridProps {
   onRowClick?: (row: Row) => void;
   onRowEdit?: (row: Row) => void;
   onRowSelect?: (selectedRows: Row[]) => void;
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const DataGrid: React.FC<DataGridProps> = ({

@@ -20,6 +20,9 @@ interface TimelineProps {
   orientation?: TimelineOrientation;
   align?: TimelineAlign;
   showConnector?: boolean;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Timeline: React.FC<TimelineProps> = ({

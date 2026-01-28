@@ -13,6 +13,9 @@ interface TabsProps {
   defaultTab?: string | number;
   variant?: 'default' | 'pills' | 'underline';
   orientation?: 'horizontal' | 'vertical';
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Tabs: React.FC<TabsProps> = ({

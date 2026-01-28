@@ -14,7 +14,10 @@ interface DonutChartProps {
     value: number;
     label?: string;
     color?: string;
-  }>;
+  
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
+}>;
 
   /** Inner radius percentage (creates the donut hole) */
   innerRadius?: number;

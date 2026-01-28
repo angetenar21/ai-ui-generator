@@ -39,6 +39,9 @@ interface DashboardProps {
 
   /** Compact mode (smaller spacing) */
   compact?: boolean;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({

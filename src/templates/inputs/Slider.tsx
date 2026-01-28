@@ -11,7 +11,10 @@ interface SliderProps {
   required?: boolean;
   showValue?: boolean;
   showMarks?: boolean;
-  marks?: Array<{ value: number; label: string }>;
+  marks?: Array<{ value: number; label: string 
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
+}>;
   color?: 'primary' | 'secondary' | 'success' | 'warning' | 'error';
   size?: 'small' | 'medium' | 'large';
   helperText?: string;

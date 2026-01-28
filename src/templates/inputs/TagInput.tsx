@@ -21,6 +21,9 @@ interface TagInputProps {
   onChange?: (tags: string[]) => void;
   onAdd?: (tag: string) => void;
   onRemove?: (tag: string) => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const TagInput: React.FC<TagInputProps> = ({

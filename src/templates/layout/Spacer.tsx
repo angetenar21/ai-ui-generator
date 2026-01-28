@@ -15,6 +15,9 @@ interface SpacerProps {
 
   /** Show visual indicator (for debugging/demo) */
   showIndicator?: boolean;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Spacer: React.FC<SpacerProps> = ({

@@ -18,6 +18,9 @@ interface RangeSliderProps {
   errorMessage?: string;
   onChange?: (value: [number, number]) => void;
   onChangeCommitted?: (value: [number, number]) => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const RangeSlider: React.FC<RangeSliderProps> = ({

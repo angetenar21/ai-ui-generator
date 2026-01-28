@@ -12,7 +12,10 @@ interface BubbleChartProps {
   series: Array<{
     label?: string;
     name?: string;
-    data: Array<[number, number, number] | { value: [number, number, number]; name?: string; color?: string }>;
+    data: Array<[number, number, number] | { value: [number, number, number]; name?: string; color?: string 
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
+}>;
     color?: string;
   }>;
 

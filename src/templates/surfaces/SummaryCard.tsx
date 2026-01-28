@@ -17,7 +17,10 @@ interface SummaryCardProps {
     change?: string;
     changeType?: 'positive' | 'negative' | 'neutral';
     subtext?: string;
-  }>;
+  
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
+}>;
 
   /** Layout orientation */
   layout?: 'vertical' | 'horizontal' | 'grid';

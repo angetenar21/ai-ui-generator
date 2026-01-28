@@ -19,6 +19,9 @@ interface TimePickerProps {
   onChange?: (value: string) => void;
   onBlur?: () => void;
   onFocus?: () => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const TimePicker: React.FC<TimePickerProps> = ({

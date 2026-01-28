@@ -22,6 +22,9 @@ interface CodeBlockProps {
 
   /** Theme variant */
   theme?: 'dark' | 'light';
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const CodeBlock: React.FC<CodeBlockProps> = ({

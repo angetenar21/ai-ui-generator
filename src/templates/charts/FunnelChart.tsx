@@ -4,7 +4,10 @@ import { Funnel, Tooltip, ResponsiveContainer, FunnelChart as RechartsFunnelChar
 interface FunnelChartProps {
   title?: string;
   description?: string;
-  data: Array<{ name: string; value: number; color?: string }>;
+  data: Array<{ name: string; value: number; color?: string 
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
+}>;
   width?: number;
   height?: number;
   colors?: string[];

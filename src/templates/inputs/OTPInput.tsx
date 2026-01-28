@@ -16,6 +16,9 @@ interface OTPInputProps {
   autoFocus?: boolean;
   onChange?: (value: string) => void;
   onComplete?: (value: string) => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const OTPInput: React.FC<OTPInputProps> = ({

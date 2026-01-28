@@ -27,7 +27,10 @@ interface BulletChartProps {
     value: number;
     color?: string;
     label?: string;
-  }>;
+  
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
+}>;
 
   /** Comparative measure (e.g., previous period) */
   comparative?: number;

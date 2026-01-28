@@ -20,6 +20,9 @@ interface CarouselProps {
   rounded?: boolean | 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
   onSlideChange?: (index: number) => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Carousel: React.FC<CarouselProps> = ({

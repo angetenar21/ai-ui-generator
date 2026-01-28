@@ -16,6 +16,9 @@ interface TextProps {
 
   /** Enable markdown-style formatting */
   markdown?: boolean;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Text: React.FC<TextProps> = ({

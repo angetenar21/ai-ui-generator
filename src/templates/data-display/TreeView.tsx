@@ -17,6 +17,9 @@ interface TreeViewProps {
   showLines?: boolean;
   onNodeClick?: (node: TreeNode) => void;
   onNodeSelect?: (selectedNodes: TreeNode[]) => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const TreeView: React.FC<TreeViewProps> = ({

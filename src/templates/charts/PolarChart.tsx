@@ -20,7 +20,10 @@ interface PolarChartProps {
   /** Angle axis configuration */
   angleAxis?: {
     data: string[];
-  } | string[];
+  
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
+} | string[];
 
   /** Radius axis configuration */
   radiusAxis?: any;

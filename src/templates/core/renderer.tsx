@@ -40,6 +40,12 @@ export const renderComponent = (spec: ComponentSpec): React.ReactNode => {
   const componentName = (spec as any).name || (spec as any).type;
   const componentProps = (spec as any).templateProps || (spec as any).props || {};
 
+  console.log(`[Renderer] Rendering component: ${componentName}`, {
+    hasChildren: Boolean(componentProps.children || (spec as any).children),
+    childrenCount: (componentProps.children || (spec as any).children || []).length,
+    props: Object.keys(componentProps)
+  });
+
   // Extract children from props and keep other props separate
   const { children: rawChildren, ...propsWithoutChildren } = componentProps;
   const children = rawChildren || (spec as any).children || [];

@@ -27,6 +27,9 @@ interface AutocompleteProps {
   onInputChange?: (inputValue: string) => void;
   onBlur?: () => void;
   onFocus?: () => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Autocomplete: React.FC<AutocompleteProps> = ({

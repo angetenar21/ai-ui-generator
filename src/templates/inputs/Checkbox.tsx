@@ -13,6 +13,9 @@ interface CheckboxProps {
   color?: 'primary' | 'secondary' | 'success' | 'warning' | 'error';
   size?: 'small' | 'medium' | 'large';
   onChange?: (checked: boolean) => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Checkbox: React.FC<CheckboxProps> = ({

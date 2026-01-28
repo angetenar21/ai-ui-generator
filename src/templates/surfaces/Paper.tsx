@@ -18,6 +18,9 @@ interface PaperProps {
 
   /** Optional children (for nested components) */
   children?: React.ReactNode;
+
+  /** Function to render child component specs */
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Paper: React.FC<PaperProps> = ({

@@ -11,6 +11,9 @@ interface SwitchProps {
   size?: 'small' | 'medium' | 'large';
   labelPosition?: 'left' | 'right';
   onChange?: (checked: boolean) => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Switch: React.FC<SwitchProps> = ({

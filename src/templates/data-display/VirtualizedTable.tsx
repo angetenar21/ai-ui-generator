@@ -21,6 +21,9 @@ interface VirtualizedTableProps {
   overscan?: number;
   onRowClick?: (row: Row) => void;
   stickyHeader?: boolean;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const VirtualizedTable: React.FC<VirtualizedTableProps> = ({

@@ -15,7 +15,10 @@ interface PieChartProps {
       value: number;
       label?: string;
       color?: string;
-    }>;
+    
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
+}>;
     innerRadius?: number;
     outerRadius?: number;
     paddingAngle?: number;

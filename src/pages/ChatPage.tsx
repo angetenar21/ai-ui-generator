@@ -271,7 +271,6 @@ const ChatPage: React.FC = () => {
                         {message.content as string}
                       </p>
                     </div>
-                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-gradient-to-br from-orange-600 to-amber-600 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-300" />
                   </div>
                 ) : (
                   // Assistant Message

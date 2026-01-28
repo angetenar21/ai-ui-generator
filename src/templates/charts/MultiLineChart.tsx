@@ -6,6 +6,9 @@ interface MultiLineChartProps {
   data: any[];
   width?: number;
   height?: number;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const MultiLineChart: React.FC<MultiLineChartProps> = ({ title, data, height = 400 }) => {

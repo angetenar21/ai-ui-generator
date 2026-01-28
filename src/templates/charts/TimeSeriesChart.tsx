@@ -13,7 +13,10 @@ interface TimeSeriesChartProps {
     name?: string;
     label?: string;
     color?: string;
-    data: Array<[number | string, number]> | Array<{ x: number | string; y: number }> | Array<{ date: string; value: number }> | Array<{ month: string; value: number }> | number[];
+    data: Array<[number | string, number]> | Array<{ x: number | string; y: number 
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
+}> | Array<{ date: string; value: number }> | Array<{ month: string; value: number }> | number[];
   }>;
 
   /** X-axis configuration */

@@ -87,9 +87,15 @@ const Flexbox: React.FC<FlexboxProps> = ({
       className={`flex ${directionClasses[direction]} ${justifyClasses[justify]} ${alignClasses[align]} ${gapClasses[gap]} ${wrapClasses[wrap]} ${widthClass} ${heightClass}`}
     >
       {children && children.length > 0 && renderChild ? (
-        children.map((child, index) => (
-          <div key={index}>{renderChild(child)}</div>
-        ))
+        children.map((child, index) => {
+          // For horizontal layouts with 2 children (sidebar pattern), make second child flexible
+          const isFlexContent = direction === 'row' && children.length === 2 && index === 1;
+          return (
+            <div key={index} className={isFlexContent ? 'flex-1 min-w-0' : ''}>
+              {renderChild(child)}
+            </div>
+          );
+        })
       ) : (
         <div className="card rounded-card p-8 text-center flex-1">
           <p className="text-gray-600 dark:text-gray-400">

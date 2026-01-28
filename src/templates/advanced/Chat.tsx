@@ -33,6 +33,9 @@ interface ChatProps {
 
   /** Max height for scrollable area */
   maxHeight?: number;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Chat: React.FC<ChatProps> = ({

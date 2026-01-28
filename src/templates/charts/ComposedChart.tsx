@@ -24,7 +24,10 @@ interface ComposedChartProps {
     data: (number | string | Date)[];
     label?: string;
     scaleType?: 'band' | 'linear' | 'log' | 'time';
-  }>;
+  
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
+}>;
   yAxis?: Array<{
     type?: string;
     name?: string;

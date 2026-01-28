@@ -21,6 +21,9 @@ interface DividerProps {
 
   /** Color variant */
   color?: 'default' | 'primary' | 'secondary';
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Divider: React.FC<DividerProps> = ({

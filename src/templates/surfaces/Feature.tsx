@@ -22,6 +22,9 @@ interface FeatureProps {
 
   /** Optional link text */
   linkText?: string;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Feature: React.FC<FeatureProps> = ({

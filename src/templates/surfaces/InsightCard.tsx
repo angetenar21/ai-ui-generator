@@ -17,7 +17,10 @@ interface InsightCardProps {
     label: string;
     trend?: 'up' | 'down' | 'neutral';
     trendValue?: string;
-  };
+  
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
+};
 
   /** Show icon */
   showIcon?: boolean;

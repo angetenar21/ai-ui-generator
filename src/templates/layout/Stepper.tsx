@@ -32,6 +32,9 @@ interface StepperProps {
 
   /** Size */
   size?: 'small' | 'medium' | 'large';
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Stepper: React.FC<StepperProps> = ({

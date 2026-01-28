@@ -10,7 +10,10 @@ interface HeatMapChartProps {
   /** X-axis labels */
   xAxis?: {
     data: string[];
-  };
+  
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
+};
 
   /** Y-axis labels */
   yAxis?: {

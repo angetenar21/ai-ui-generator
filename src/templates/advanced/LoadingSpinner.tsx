@@ -19,6 +19,9 @@ interface LoadingSpinnerProps {
 
   /** Full screen overlay */
   fullScreen?: boolean;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({

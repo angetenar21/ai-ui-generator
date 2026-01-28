@@ -14,6 +14,9 @@ interface MindMapProps {
   data: MindMapNode;
   onNodeClick?: (node: MindMapNode) => void;
   layout?: 'radial' | 'tree';
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const MindMap: React.FC<MindMapProps> = ({

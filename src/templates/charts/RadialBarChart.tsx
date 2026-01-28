@@ -19,7 +19,10 @@ interface RadialBarChartProps {
     name: string;
     value: number;
     color?: string;
-  }>;
+  
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
+}>;
 
   /** Chart width */
   width?: number;

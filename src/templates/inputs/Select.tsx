@@ -21,6 +21,9 @@ interface SelectProps {
   error?: boolean;
   helperText?: string;
   onChange?: (value: string | number) => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Select: React.FC<SelectProps> = ({

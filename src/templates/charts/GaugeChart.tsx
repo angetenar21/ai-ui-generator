@@ -60,6 +60,9 @@ interface GaugeChartProps {
 
   /** Color of the gauge arc */
   color?: string;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const GaugeChart: React.FC<GaugeChartProps> = ({

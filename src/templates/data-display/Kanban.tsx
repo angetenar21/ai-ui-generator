@@ -24,6 +24,9 @@ interface KanbanProps {
   columns: KanbanColumn[];
   onCardClick?: (card: KanbanCard) => void;
   onCardMove?: (cardId: string, fromColumn: string, toColumn: string) => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Kanban: React.FC<KanbanProps> = ({

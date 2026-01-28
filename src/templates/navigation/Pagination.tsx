@@ -10,6 +10,9 @@ interface PaginationProps {
   siblingCount?: number;
   variant?: 'default' | 'outlined' | 'rounded';
   onChange?: (page: number) => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Pagination: React.FC<PaginationProps> = ({

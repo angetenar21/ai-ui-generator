@@ -23,6 +23,9 @@ interface ListProps {
   selectedIds?: string[];
   onSelect?: (ids: string[]) => void;
   onItemClick?: (id: string) => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const List: React.FC<ListProps> = ({

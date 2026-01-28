@@ -18,6 +18,9 @@ interface ChipProps {
   deletable?: boolean;
   onDelete?: (id: string) => void;
   onClick?: (id: string) => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Chip: React.FC<ChipProps> = ({

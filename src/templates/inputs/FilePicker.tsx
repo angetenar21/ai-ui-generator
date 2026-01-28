@@ -16,6 +16,9 @@ interface FilePickerProps {
   variant?: 'button' | 'dropzone';
   onChange?: (files: FileList | null) => void;
   onError?: (error: string) => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const FilePicker: React.FC<FilePickerProps> = ({

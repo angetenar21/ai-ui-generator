@@ -9,6 +9,9 @@ interface AlertProps {
   icon?: string;
   closable?: boolean;
   onClose?: () => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Alert: React.FC<AlertProps> = ({

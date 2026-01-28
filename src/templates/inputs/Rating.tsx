@@ -17,6 +17,9 @@ interface RatingProps {
   icon?: 'star' | 'heart' | 'circle';
   showValue?: boolean;
   onChange?: (value: number) => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Rating: React.FC<RatingProps> = ({

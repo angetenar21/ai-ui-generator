@@ -19,6 +19,9 @@ interface SearchInputProps {
   onClear?: () => void;
   onBlur?: () => void;
   onFocus?: () => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const SearchInput: React.FC<SearchInputProps> = ({

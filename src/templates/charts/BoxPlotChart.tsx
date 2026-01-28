@@ -16,7 +16,10 @@ interface BoxPlotChartProps {
     name: string;
     data: Array<[number, number, number, number, number]>; // [min, q1, median, q3, max]
     type?: string;
-  }>;
+  
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
+}>;
 
   /** Chart width */
   width?: number;

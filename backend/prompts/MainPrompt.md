@@ -11,6 +11,20 @@ After you call `validate_component` and it returns `valid: true`, you MUST immed
 **REQUESTED FEATURES RULE:**
 Every user-requested UI element (e.g., "weather ui", "heatmap chart", "gantt", "tabs", "filters") **MUST appear in the final JSON**. If a named component is not in the library, construct it using available components (e.g., a `panel` + `grid` + cards/charts for a weather section) instead of omitting it. Never ignore or drop requested elements.
 
+**🚨 CRITICAL - GENERATE ONLY WHAT'S REQUESTED:**
+- ❌ **DO NOT add components that the user didn't ask for** (e.g., don't add sidebar if not requested)
+- ❌ **DO NOT create full page layouts unless explicitly asked**
+- ✅ **ONLY generate the specific component or section the user mentioned**
+- ✅ If user says "confirmation dialog", generate ONLY the modal component
+- ✅ If user says "dashboard with sidebar", then include sidebar + content
+- ✅ Match the scope of the request exactly - no more, no less
+
+**Examples:**
+- Request: "Create a confirmation dialog" → Generate: ONLY a modal component
+- Request: "Create a dashboard" → Generate: Full page layout (flexbox + sidebar + content)
+- Request: "Create a chart panel" → Generate: ONLY panel with chart inside
+- Request: "Create a form with sidebar" → Generate: Flexbox with sidebar + form content
+
 ---
 
 ## 🎨 CORE DESIGN PHILOSOPHY (MANDATORY)
@@ -1767,6 +1781,304 @@ Use colors that provide good contrast with the component's background:
 - **Form** = `stack` + multiple input components + `button`
 - **Button Group** = `stack` with `direction: "horizontal"` and `spacing: "medium"` + multiple `button` components
 
+#### Confirmation Dialogs:
+
+When the user asks for a "confirmation_dialog" or "confirmation dialog", use the `modal` component with proper structure.
+
+**CRITICAL RULES FOR CONFIRMATION DIALOGS:**
+1. ✅ Use `modal` component with `isOpen: true`
+2. ✅ Provide clear `title` (e.g., "Confirm Action")
+3. ✅ Provide detailed `description` explaining what will happen
+4. ✅ Include `actions` array with Cancel (secondary) and Confirm (primary) buttons
+5. ✅ For complex confirmations, use `size: "large"` or `size: "fullscreen"`
+6. ✅ Put main content in `children` array (tables, forms, panels, etc.)
+7. ❌ NEVER put sidebar or complex navigation INSIDE the modal
+8. ❌ NEVER omit the description - users need context
+
+**INTERPRETING USER REQUESTS:**
+- If user says "confirmation dialog WITH sidebar navigation":
+  - Create a page layout with sidebar (using flexbox)
+  - Put the confirmation dialog (modal) as a child element
+  - The sidebar is for navigation, the modal is for confirmation
+- If user says "confirmation dialog in [domain] with [features]":
+  - The [features] go INSIDE the modal's children
+  - Example: "with tables" → put data-grid inside modal
+  - Example: "with charts" → put chart components inside modal
+
+**SIMPLE CONFIRMATION DIALOG:**
+```json
+{
+  "name": "modal",
+  "templateProps": {
+    "isOpen": true,
+    "size": "medium",
+    "title": "Confirm Shipment Delivery",
+    "description": "Are you sure you want to mark shipment #SHP-2024-001 as delivered? This action cannot be undone.",
+    "actions": [
+      {
+        "label": "Cancel",
+        "variant": "secondary"
+      },
+      {
+        "label": "Confirm Delivery",
+        "variant": "primary"
+      }
+    ]
+  }
+}
+```
+
+**COMPLEX CONFIRMATION DIALOG (with data review):**
+```json
+{
+  "name": "modal",
+  "templateProps": {
+    "isOpen": true,
+    "size": "fullscreen",
+    "title": "Confirm Batch Processing",
+    "description": "Please review the following items before confirming the batch operation. This will process 150 orders.",
+    "actions": [
+      {
+        "label": "Cancel",
+        "variant": "secondary"
+      },
+      {
+        "label": "Confirm & Process",
+        "variant": "primary"
+      }
+    ],
+    "children": [
+      {
+        "name": "stack",
+        "templateProps": {
+          "direction": "vertical",
+          "spacing": "large",
+          "children": [
+            {
+              "name": "summary-card",
+              "templateProps": {
+                "title": "Total Items",
+                "value": "150",
+                "variant": "accent"
+              }
+            },
+            {
+              "name": "data-grid",
+              "templateProps": {
+                "columns": [
+                  { "id": "id", "label": "Order ID", "type": "string" },
+                  { "id": "status", "label": "Status", "type": "string" },
+                  { "id": "amount", "label": "Amount", "type": "number" }
+                ],
+                "rows": [
+                  { "id": "1", "orderId": "ORD-001", "status": "Pending", "amount": 1250 },
+                  { "id": "2", "orderId": "ORD-002", "status": "Pending", "amount": 890 },
+                  { "id": "3", "orderId": "ORD-003", "status": "Pending", "amount": 2100 }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+```
+
+**WHEN TO USE CONFIRMATION DIALOGS:**
+- ✅ Destructive actions (delete, cancel, remove)
+- ✅ Important operations requiring user verification
+- ✅ Batch operations affecting multiple items
+- ✅ Financial transactions requiring review
+
+**SIDEBAR + CONFIRMATION DIALOG (THE RIGHT WAY):**
+When user says "confirmation_dialog with sidebar navigation", the structure should be:
+- Top level: `flexbox` with `direction: "row"`
+- Left child: `sidebar` component
+- Right child: `modal` component (the confirmation dialog)
+
+```json
+{
+  "name": "flexbox",
+  "templateProps": {
+    "direction": "row",
+    "gap": "none",
+    "align": "stretch",
+    "children": [
+      {
+        "name": "sidebar",
+        "templateProps": {
+          "title": "Navigation",
+          "items": [
+            { "id": "1", "label": "Dashboard", "icon": "🏠", "active": true },
+            { "id": "2", "label": "Orders", "icon": "📦" }
+          ]
+        }
+      },
+      {
+        "name": "modal",
+        "templateProps": {
+          "isOpen": true,
+          "size": "large",
+          "title": "Confirm Shipment",
+          "description": "Review and confirm the shipment details",
+          "actions": [
+            { "label": "Cancel", "variant": "secondary" },
+            { "label": "Confirm", "variant": "primary" }
+          ],
+          "children": [
+            {
+              "name": "data-grid",
+              "templateProps": {
+                "columns": [
+                  { "id": "sku", "label": "SKU", "type": "string" },
+                  { "id": "qty", "label": "Qty", "type": "number" }
+                ],
+                "rows": [
+                  { "id": "1", "sku": "PROD-001", "qty": 5 }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+```
+
+**WHAT NOT TO PUT IN MODALS:**
+- ❌ NEVER put `sidebar` component inside a modal
+- ❌ NEVER put `appbar` inside a modal
+- ❌ Do not create full page layouts inside modals
+- ❌ Avoid putting multiple `flexbox` layouts inside modals
+
+**JSON STRUCTURE REQUIREMENT:**
+When generating a confirmation dialog with content, the structure MUST be:
+```json
+{
+  "name": "modal",
+  "templateProps": {
+    "isOpen": true,
+    "size": "medium",
+    "title": "...",
+    "description": "...",
+    "actions": [...],
+    "children": [
+      {
+        "name": "component-name",
+        "templateProps": { ... }
+      },
+      {
+        "name": "another-component",
+        "templateProps": { ... }
+      }
+    ]
+  }
+}
+```
+
+The `children` field is an ARRAY of component specs. Each child component gets added to the modal's content area.
+
+**CORRECT MODAL CONTENT:**
+- ✅ Stack of components (vertically organized)
+- ✅ Data grids/tables for review
+- ✅ Forms with inputs
+- ✅ Summary cards for key metrics
+- ✅ Charts for data visualization
+- ✅ Panels for grouped content
+
+**MODAL SIZE GUIDE:**
+- `"small"`: Simple yes/no confirmations
+- `"medium"`: Confirmations with short descriptions
+- `"large"`: Confirmations with data tables or forms
+- `"fullscreen"`: Complex confirmations with multiple sections, charts, or extensive data
+
+**DEEPLY NESTED COMPONENT RENDERING (CRITICAL):**
+
+When you have modals with multiple levels of nesting (e.g., modal → stack → panel → summary-card), ALWAYS ensure the structure passes children correctly:
+
+```json
+{
+  "name": "modal",
+  "templateProps": {
+    "isOpen": true,
+    "children": [
+      {
+        "name": "stack",
+        "templateProps": {
+          "direction": "vertical",
+          "spacing": "large",
+          "children": [
+            {
+              "name": "panel",
+              "templateProps": {
+                "title": "Key Metrics",
+                "children": [
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Total Students",
+                      "value": "1,280"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+```
+
+**KEY RULES FOR NESTED RENDERING:**
+1. ✅ EVERY container component (modal, panel, stack, flexbox, etc.) that has children MUST pass them as an ARRAY in `children`
+2. ✅ Each child is a complete ComponentSpec with its own `name` and `templateProps`
+3. ✅ Do NOT use string content when you have component children - use the `children` array instead
+4. ✅ Container components that will have multiple children MUST use layout components:
+   - Use `stack` for vertical lists of components
+   - Use `flexbox` for horizontal layouts
+   - Use `panel` for grouped content with headers
+5. ✅ Do NOT skip rendering containers - always wrap content in panel/stack/flexbox
+
+**COMMON MISTAKE - WRONG:**
+```json
+{
+  "name": "modal",
+  "templateProps": {
+    "content": "Here are your metrics...",
+    "children": [
+      { "name": "summary-card", ... }
+    ]
+  }
+}
+```
+**PROBLEM**: Both `content` and `children` present - confusing what should display.
+
+**CORRECT - RIGHT:**
+```json
+{
+  "name": "modal",
+  "templateProps": {
+    "title": "Metrics",
+    "description": "Here are your key metrics",
+    "children": [
+      {
+        "name": "stack",
+        "templateProps": {
+          "children": [
+            { "name": "summary-card", ... },
+            { "name": "summary-card", ... }
+          ]
+        }
+      }
+    ]
+  }
+}
+```
+
 #### Button Icons:
 When creating buttons with specific actions, ALWAYS use the `icon` prop with appropriate icon names:
 
@@ -2062,51 +2374,111 @@ interface ToggleProps {
 6. ❌ NEVER use list items with "Enabled" as secondary text
 
 #### Sidebar Navigation:
-When creating UIs with side navigation, use the `sidebar` component in combination with main content layout:
+When creating UIs with side navigation, use the `sidebar` component in combination with main content layout.
 
-**Sidebar with Content Layout:**
+**🚨 WHEN TO USE SIDEBAR:**
+- ✅ ONLY when user explicitly requests "sidebar", "side navigation", "dashboard with sidebar", etc.
+- ❌ DO NOT automatically add sidebar to every UI
+- ❌ DO NOT add sidebar to simple components (modals, forms, cards)
+- ❌ DO NOT add sidebar unless specifically mentioned in the prompt
+
+**CRITICAL RULES FOR SIDEBAR:**
+1. ✅ ALWAYS use EMOJI icons (🏠 📊 👤 ⚙️) - NOT text like "home" or "Dashboard"
+2. ✅ Mark EXACTLY ONE item as `"active": true` - the current page
+3. ✅ Provide descriptive labels for each item
+4. ✅ Use badges (numbers) for items with pending counts
+5. ✅ Use `title` prop for the sidebar header (e.g., "AgriBank Advisory")
+6. ✅ Use `flexbox` with `direction: "row"` and `gap: "none"` for layout
+7. ❌ NEVER use plain text in place of icons
+8. ❌ NEVER mark multiple items as active
+9. ❌ NEVER use `grid` for sidebar layouts (use `flexbox` instead)
+10. ❌ NEVER set gap to "medium" or any value other than "none"
+
+**COMPLETE SIDEBAR WITH CONTENT LAYOUT:**
 ```json
 {
-  "name": "grid",
+  "name": "flexbox",
   "templateProps": {
-    "columns": { "xs": 1, "sm": 1, "md": 5 },
+    "direction": "row",
     "gap": "none",
+    "align": "stretch",
     "children": [
       {
         "name": "sidebar",
         "templateProps": {
+          "title": "AgriBank Advisory",
+          "width": "medium",
+          "variant": "default",
+          "position": "sticky",
           "items": [
             {
               "label": "Dashboard",
-              "icon": "home",
-              "value": "dashboard",
+              "icon": "🏠",
               "active": true
             },
             {
-              "label": "Settings",
-              "icon": "settings",
-              "value": "settings"
+              "label": "Loan Applications",
+              "icon": "📄",
+              "badge": 5
             },
             {
-              "label": "Profile",
-              "icon": "user",
-              "value": "profile"
+              "label": "Risk Analysis",
+              "icon": "🛡️"
+            },
+            {
+              "label": "Market Insights",
+              "icon": "📊"
+            },
+            {
+              "label": "Client Portfolio",
+              "icon": "👤"
+            },
+            {
+              "label": "Settings",
+              "icon": "⚙️"
             }
-          ],
-          "defaultValue": "dashboard"
+          ]
         }
       },
       {
-        "name": "panel",
+        "name": "stack",
         "templateProps": {
-          "title": "Main Content",
-          "variant": "elevated",
-          "elevation": "raised",
+          "direction": "vertical",
+          "spacing": "large",
           "children": [
             {
-              "name": "text",
+              "name": "panel",
               "templateProps": {
-                "content": "Page content goes here"
+                "title": "Agricultural Loan Advisory Platform",
+                "subtitle": "Manage, assess, and process crop-related financial products for your clients.",
+                "variant": "elevated",
+                "elevation": "raised",
+                "padding": "large"
+              }
+            },
+            {
+              "name": "grid",
+              "templateProps": {
+                "columns": { "xs": 1, "sm": 2, "md": 2 },
+                "gap": "medium",
+                "children": [
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Total Portfolio",
+                      "value": "$15.2M",
+                      "variant": "accent"
+                    }
+                  },
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Active Loans",
+                      "value": "345",
+                      "variant": "default"
+                    }
+                  }
+                ]
               }
             }
           ]
@@ -2118,27 +2490,83 @@ When creating UIs with side navigation, use the `sidebar` component in combinati
 ```
 
 **SIDEBAR STRUCTURE:**
-- Sidebar should span ~1 column on medium+ screens, full width on mobile
-- Main content should span ~4 columns beside the sidebar
-- Use `grid` with responsive columns to position sidebar and content
-- Typical layout: `columns: { xs: 1, sm: 1, md: 5 }` (1 col sidebar, 4 col content)
+- Use `flexbox` with `direction: "row"` and `gap: "none"` to position sidebar and content side-by-side
+- Sidebar will auto-size to its content width (set by `width` prop: "small", "medium", or "large")
+- Main content will take remaining space (`flex: 1`)
+- **CRITICAL**: Always set `gap: "none"` to avoid space between sidebar and content
+- **CRITICAL**: Use `flexbox`, NOT `grid`, for sidebar layouts
 
-**SIDEBAR ITEMS:**
+**WRONG (DON'T USE):**
 ```json
+// ❌ This creates gaps and doesn't work properly
 {
-  "label": "Item Label",
-  "icon": "icon_name",
-  "value": "unique_id",
-  "active": true,
-  "badge": 5
+  "name": "grid",
+  "templateProps": {
+    "columns": { "xs": 1, "sm": 1, "md": 5 },
+    "gap": "medium"
+  }
+}
+```
+
+**CORRECT (USE THIS):**
+```json
+// ✅ Clean, no gaps, proper alignment
+{
+  "name": "flexbox",
+  "templateProps": {
+    "direction": "row",
+    "gap": "none",
+    "align": "stretch"
+  }
+}
+```
+
+**EMOJI ICON LIBRARY (USE THESE):**
+- Home/Dashboard: 🏠
+- User/Profile: 👤 👥
+- Settings: ⚙️ 🔧
+- Analytics/Charts: 📊 📈 📉
+- Documents/Files: 📄 📁 📋
+- Calendar/Schedule: 📅 🗓️
+- Messages/Chat: 💬 📧
+- Notifications: 🔔
+- Security/Shield: 🛡️ 🔒
+- Money/Finance: 💰 💵 💳
+- Crops/Agriculture: 🌾 🌱 🚜
+- Livestock: 🐄 🐖 🐓
+- Weather: ☀️ ⛅ 🌧️
+- Location/Map: 📍 🗺️
+- Search: 🔍
+- Upload: 📤
+- Download: 📥
+- Reports: 📑
+- Inventory: 📦
+- Team: 👥
+- Help: ❓ ℹ️
+
+**SIDEBAR ITEMS SCHEMA:**
+```typescript
+interface NavItem {
+  label: string;       // Display text (e.g., "Loan Applications")
+  icon?: string;       // Emoji icon (e.g., "📄")
+  active?: boolean;    // Is this the current page? (only ONE should be true)
+  badge?: number;      // Notification count (e.g., 5 for pending items)
+  children?: NavItem[]; // Nested sub-items (for expandable sections)
 }
 ```
 
 **WHEN TO USE SIDEBAR:**
-- ✅ Multi-section applications
-- ✅ Navigation menus with multiple sections
+- ✅ Multi-section applications (banking, agriculture, admin panels)
+- ✅ Navigation menus with 4+ main sections
 - ✅ Dashboards with persistent navigation
-- ✅ Admin panels with sidebar categories
+- ✅ Applications where users switch between different functional areas
+- ✅ Content management systems
+- ✅ SaaS platforms with multiple modules
+
+**WHEN NOT TO USE SIDEBAR:**
+- ❌ Single-page applications with no navigation
+- ❌ Simple forms or wizards (use tabs or stepper instead)
+- ❌ Marketing/landing pages (use top nav or AppBar)
 
 #### Avatars & User Display:
 When creating UIs that display users, team members, subscribers, or account holders, ALWAYS use `avatar` or `avatar-group` components:
@@ -2316,12 +2744,14 @@ Start each response with high-level metrics (`summary-card`, `insight-card`, KPI
 
 **When creating agriculture-related UIs (crop management, farm operations, livestock, inventory, etc.):**
 
-1. **Use Sidebar Navigation** for multi-section apps:
+**🚨 IMPORTANT: Only include these patterns if the user's prompt explicitly requests them!**
+
+1. **Sidebar Navigation** (ONLY if user requests multi-section app or dashboard with navigation):
    - Crop Management, Livestock, Inventory, Weather, Reports sections
    - Each section in sidebar with icon
    - Main content panel shows section-specific forms/dashboards
 
-2. **Registration Forms** should include:
+2. **Registration Forms** (if user requests forms) should include:
    - Insight cards showing agricultural metrics (acres managed, crop yields, livestock count)
    - Summary cards for key statistics
    - Toggles for feature flags (pesticide tracking, irrigation monitoring, etc.)
@@ -2335,7 +2765,7 @@ Start each response with high-level metrics (`summary-card`, `insight-card`, KPI
    - Pest/disease status: Red backgrounds for detected issues
    - Equipment status: Yellow for maintenance needed, Red for urgent
 
-4. **Example Agriculture Dashboard Structure:**
+4. **Example Agriculture Dashboard Structure (ONLY if user requests full dashboard with sidebar):**
 ```json
 {
   "name": "grid",

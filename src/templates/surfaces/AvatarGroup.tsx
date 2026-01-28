@@ -33,6 +33,9 @@ interface AvatarGroupProps {
 
   /** Optional label/title */
   label?: string;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const AvatarGroup: React.FC<AvatarGroupProps> = ({

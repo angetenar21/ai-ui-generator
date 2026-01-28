@@ -69,15 +69,15 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
 
   const widthClasses = {
-    small: isCollapsed ? 'w-16' : 'w-48',
+    small: isCollapsed ? 'w-16' : 'w-56',
     medium: isCollapsed ? 'w-16' : 'w-64',
-    large: isCollapsed ? 'w-16' : 'w-80',
+    large: isCollapsed ? 'w-16' : 'w-72',
   };
 
   const variantClasses = {
-    default: 'bg-gray-50 dark:bg-gray-700',
-    elevated: 'bg-gray-50 dark:bg-gray-700 shadow-lg',
-    bordered: 'bg-gray-50 dark:bg-gray-700 border-r border-orange-600',
+    default: 'bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800',
+    elevated: 'bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 shadow-xl',
+    bordered: 'bg-white dark:bg-gray-900 border-r-2 border-orange-600',
   };
 
   const positionClasses = {
@@ -106,9 +106,9 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div key={index}>
         <button
           onClick={() => hasChildren && toggleExpanded(index)}
-          className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors ${item.active
-              ? 'bg-orange-600/10 text-orange-600'
-              : 'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 ${item.active
+            ? 'bg-orange-600 text-white shadow-sm font-medium'
+            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white'
             } ${depth > 0 ? 'pl-8' : ''}`}
         >
           {item.icon && (
@@ -156,13 +156,13 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <aside
-      className={`${positionClasses[position]} ${widthClasses[width]} ${variantClasses[variant]} transition-all duration-300 overflow-y-auto`}
+      className={`${positionClasses[position]} ${widthClasses[width]} ${variantClasses[variant]} transition-all duration-300 overflow-y-auto min-h-screen flex-shrink-0`}
     >
-      <div className="flex items-center justify-between p-4 border-b border-orange-600">
+      <div className="flex items-center justify-between p-5 border-b border-gray-200 dark:border-gray-800">
         {!isCollapsed && (
           <div className="flex items-center gap-3">
             {logo && <span className="text-2xl">{logo}</span>}
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h2>
+            <h2 className="text-xl font-display font-bold text-gray-900 dark:text-white">{title}</h2>
           </div>
         )}
         {logo && isCollapsed && <span className="text-2xl mx-auto">{logo}</span>}
@@ -189,12 +189,12 @@ const Sidebar: React.FC<SidebarProps> = ({
         )}
       </div>
 
-      <nav className="p-3 space-y-1">
+      <nav className="p-4 space-y-1">
         {items.map((item, index) => renderNavItem(item, index))}
       </nav>
 
       {children && children.length > 0 && renderChild && !isCollapsed && (
-        <div className="p-4 border-t border-orange-600">
+        <div className="p-4 border-t border-gray-200 dark:border-gray-800">
           <div className="space-y-3">
             {children.map((child, index) => (
               <div key={index}>{renderChild(child)}</div>

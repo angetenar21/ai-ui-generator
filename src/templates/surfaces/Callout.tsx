@@ -16,6 +16,9 @@ interface CalloutProps {
 
   /** Make dismissible */
   dismissible?: boolean;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Callout: React.FC<CalloutProps> = ({

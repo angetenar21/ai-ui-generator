@@ -16,6 +16,9 @@ interface OrgChartProps {
   data: OrgNode;
   onNodeClick?: (node: OrgNode) => void;
   showDetails?: boolean;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const OrgChart: React.FC<OrgChartProps> = ({

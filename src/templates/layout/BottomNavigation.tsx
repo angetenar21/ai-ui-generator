@@ -29,6 +29,9 @@ interface BottomNavigationProps {
 
   /** Color when active */
   activeColor?: 'primary' | 'accent' | 'secondary';
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const BottomNavigation: React.FC<BottomNavigationProps> = ({

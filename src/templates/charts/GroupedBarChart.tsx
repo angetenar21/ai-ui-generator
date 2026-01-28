@@ -7,6 +7,9 @@ interface GroupedBarChartProps {
   data: any[];
   width?: number;
   height?: number;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const GroupedBarChart: React.FC<GroupedBarChartProps> = ({ title, description, data, height = 400 }) => {

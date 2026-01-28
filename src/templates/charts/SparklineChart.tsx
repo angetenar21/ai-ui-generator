@@ -40,6 +40,9 @@ interface SparklineChartProps {
 
   /** Trend is positive (green) or negative (red) */
   trendPositive?: boolean;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const SparklineChart: React.FC<SparklineChartProps> = ({

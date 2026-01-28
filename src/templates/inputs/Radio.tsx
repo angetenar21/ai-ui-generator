@@ -23,6 +23,9 @@ interface RadioProps {
   color?: 'primary' | 'secondary' | 'success' | 'warning' | 'error';
   size?: 'small' | 'medium' | 'large';
   onChange?: (value: string | number) => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Radio: React.FC<RadioProps> = ({

@@ -14,6 +14,9 @@ interface RichTextEditorProps {
   maxHeight?: string;
   showToolbar?: boolean;
   onChange?: (value: string) => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const RichTextEditor: React.FC<RichTextEditorProps> = ({

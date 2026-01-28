@@ -11,6 +11,9 @@ interface PopoverProps {
   placement?: 'top' | 'bottom' | 'left' | 'right';
   arrow?: boolean;
   closeOnClick?: boolean;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Popover: React.FC<PopoverProps> = ({

@@ -6,6 +6,9 @@ interface DataTableProps {
   rows: (string | number)[][];
   sortable?: boolean;
   searchable?: boolean;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const DataTable: React.FC<DataTableProps> = ({

@@ -18,6 +18,9 @@ interface ListItemProps {
   action?: React.ReactNode;
   leftContent?: React.ReactNode;
   rightContent?: React.ReactNode;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const ListItem: React.FC<ListItemProps> = ({

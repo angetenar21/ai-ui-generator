@@ -6,6 +6,9 @@ interface MultiAxisChartProps {
   data: any[];
   width?: number;
   height?: number;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const MultiAxisChart: React.FC<MultiAxisChartProps> = ({ title, data, height = 400 }) => {

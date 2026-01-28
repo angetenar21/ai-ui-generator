@@ -14,7 +14,10 @@ interface NotificationProps {
   autoHide?: boolean;
   closable?: boolean;
   onClose?: () => void;
-  action?: { label: string; onClick?: () => void };
+  action?: { label: string; onClick?: () => void 
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
+};
 }
 
 const Notification: React.FC<NotificationProps> = ({

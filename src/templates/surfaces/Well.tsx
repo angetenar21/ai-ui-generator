@@ -15,6 +15,9 @@ interface WellProps {
 
   /** Optional children (for nested components) */
   children?: React.ReactNode;
+
+  /** Function to render child component specs */
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Well: React.FC<WellProps> = ({

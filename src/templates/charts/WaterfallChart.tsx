@@ -11,7 +11,10 @@ interface WaterfallChartProps {
   /** X-axis categories */
   xAxis?: {
     data: string[];
-  };
+  
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
+};
 
   /** Series data with waterfall values */
   series: Array<{

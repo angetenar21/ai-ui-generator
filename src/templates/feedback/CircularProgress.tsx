@@ -11,6 +11,9 @@ interface CircularProgressProps {
   showValue?: boolean;
   label?: string;
   indeterminate?: boolean;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const CircularProgress: React.FC<CircularProgressProps> = ({

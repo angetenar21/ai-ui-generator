@@ -24,6 +24,9 @@ interface ToggleProps {
 
   /** Color variant */
   variant?: 'default' | 'primary' | 'success' | 'danger';
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Toggle: React.FC<ToggleProps> = ({

@@ -7,7 +7,10 @@ interface StackedBarChartProps {
   data: any[];
   width?: number;
   height?: number;
-  xAxis?: Array<{ dataKey?: string; label?: string }>;
+  xAxis?: Array<{ dataKey?: string; label?: string 
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
+}>;
   series?: Array<{ dataKey: string; name?: string; color?: string; stackId?: string }>;
   layout?: 'horizontal' | 'vertical';
 }

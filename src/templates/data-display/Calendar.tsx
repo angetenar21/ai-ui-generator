@@ -18,6 +18,9 @@ interface CalendarProps {
   onEventClick?: (event: CalendarEvent) => void;
   minDate?: Date;
   maxDate?: Date;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Calendar: React.FC<CalendarProps> = ({

@@ -15,6 +15,9 @@ interface AudioProps {
   onPause?: () => void;
   onEnded?: () => void;
   onTimeUpdate?: (currentTime: number) => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
 }
 
 const Audio: React.FC<AudioProps> = ({
