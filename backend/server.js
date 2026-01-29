@@ -18,6 +18,11 @@ Logger.info('Backend server initializing...');
 
 const APP_PORT = Number(process.env.BACKEND_PORT || 4000);
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-pro';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_ACCESS_TOKEN = process.env.GEMINI_ACCESS_TOKEN;
+const GEMINI_PROJECT_ID = process.env.GEMINI_PROJECT_ID;
+const GEMINI_LOCATION = process.env.GEMINI_LOCATION || 'us-central1';
+const GEMINI_USE_VERTEX = (process.env.GEMINI_USE_VERTEX || '').toLowerCase() === 'true';
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const schemaPath = path.join(__dirname, 'docs', 'component-library-schema.json');
 
@@ -489,12 +494,44 @@ function executeToolCall(toolCall) {
   }
 }
 
-async function callGemini(userMessage, context = '') {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
-    Logger.error('GEMINI_API_KEY is not set');
-    throw new Error('GEMINI_API_KEY is required for the backend to talk to Gemini 2.5 Pro.');
+function buildGeminiRequestConfig() {
+  const hasAccessToken = Boolean(GEMINI_ACCESS_TOKEN);
+  const hasApiKey = Boolean(GEMINI_API_KEY);
+  const useVertex = GEMINI_USE_VERTEX || Boolean(GEMINI_PROJECT_ID);
+
+  if (!hasAccessToken && !hasApiKey) {
+    Logger.error('No Gemini credentials provided');
+    throw new Error('Gemini credentials are required. Set GEMINI_API_KEY or GEMINI_ACCESS_TOKEN in .env.');
   }
+
+  if (useVertex && !GEMINI_PROJECT_ID) {
+    Logger.error('GEMINI_PROJECT_ID is not set for Vertex usage');
+    throw new Error('GEMINI_PROJECT_ID is required when using Vertex AI.');
+  }
+
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+
+  if (hasAccessToken) {
+    headers.Authorization = `Bearer ${GEMINI_ACCESS_TOKEN}`;
+  }
+
+  let endpoint;
+  if (useVertex) {
+    endpoint = `https://${GEMINI_LOCATION}-aiplatform.googleapis.com/v1/projects/${GEMINI_PROJECT_ID}/locations/${GEMINI_LOCATION}/publishers/google/models/${GEMINI_MODEL}:generateContent`;
+  } else {
+    endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
+    if (!hasAccessToken && hasApiKey) {
+      endpoint += `?key=${GEMINI_API_KEY}`;
+    }
+  }
+
+  return { endpoint, headers, useVertex, hasAccessToken, hasApiKey };
+}
+
+async function callGemini(userMessage, context = '') {
+  const { endpoint, headers, useVertex, hasAccessToken, hasApiKey } = buildGeminiRequestConfig();
 
   // Track the last validated spec as a fallback
   let lastValidatedSpec = null;
@@ -565,14 +602,11 @@ async function callGemini(userMessage, context = '') {
 
     let response;
     try {
-      response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
-        }
-      );
+      response = await fetch(endpoint, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body),
+      });
     } catch (err) {
       Logger.error('Network error while calling Gemini', { error: err?.message ?? err });
       throw new Error('Network error while calling Gemini');
@@ -597,6 +631,14 @@ async function callGemini(userMessage, context = '') {
       // Check for API key issues
       if (response.status === 400 && errorMessage.includes('API key')) {
         throw new Error(`Gemini API key error: ${errorMessage}. Please check your GEMINI_API_KEY in .env file.`);
+      }
+
+      // API key not supported by this API
+      if (response.status === 400 && errorMessage.includes('API keys are not supported')) {
+        const hint = useVertex
+          ? 'Use an OAuth access token (GEMINI_ACCESS_TOKEN) for Vertex AI.'
+          : 'Use an OAuth access token (GEMINI_ACCESS_TOKEN) or switch to a model that supports API keys.';
+        throw new Error(`Gemini API error: ${errorMessage}. ${hint}`);
       }
 
       // Check for quota/rate limit issues
