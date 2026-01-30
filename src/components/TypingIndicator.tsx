@@ -37,7 +37,7 @@ const TypingIndicator: React.FC<TypingIndicatorProps> = ({ status }) => {
           if (prev >= 7) return 2;
           return prev + 1;
         });
-      }, 1200); // Faster rotation for smoother experience
+      }, 2500); // Slower rotation for better readability
 
       return () => clearInterval(interval);
     }

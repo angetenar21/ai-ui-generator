@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Send, Sparkles } from 'lucide-react';
+import { Send, Sparkles, RotateCcw, StopCircle } from 'lucide-react';
 import ApiService from '../services/apiService';
 import StorageService from '../services/storageService';
 import SessionManager from '../services/sessionManager';
@@ -28,6 +28,7 @@ const ChatPage: React.FC = () => {
   const [queueStatus, setQueueStatus] = useState<QueueStatus | null>(null);
   const { currentThreadId, setCurrentThreadId, addGeneratedComponent, shouldStartNewChat, resetNewChatTrigger } = useAppStore();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -78,19 +79,40 @@ const ChatPage: React.FC = () => {
     }
   }, [currentThreadId]);
 
-  const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+  const handleStopGeneration = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+    setIsLoading(false);
+    setJobStatus(null);
+    setQueueStatus(null);
+  };
+
+  const handleRetry = async (originalPrompt: string) => {
+    setInput(originalPrompt);
+    await handleSend(originalPrompt);
+  };
+
+  const handleSend = async (retryPrompt?: string) => {
+    const promptText = retryPrompt || input;
+    if (!promptText.trim() || isLoading) return;
 
     const userMessage: ChatMessage = {
       id: generateUUID(),
       role: 'user',
-      content: input,
+      content: promptText,
       timestamp: Date.now(),
     };
 
     setMessages((prev) => [...prev, userMessage]);
-    setInput('');
+    if (!retryPrompt) {
+      setInput('');
+    }
     setIsLoading(true);
+
+    // Create new abort controller for this request
+    abortControllerRef.current = new AbortController();
 
     try {
       const threadId = currentThreadId || generateUUID();
@@ -106,7 +128,7 @@ const ChatPage: React.FC = () => {
       }
 
       const response = await ApiService.sendMessage(
-        input,
+        promptText,
         threadId,
         {
           previousComponents: messages
@@ -141,6 +163,12 @@ const ChatPage: React.FC = () => {
 
       addGeneratedComponent(response);
     } catch (error) {
+      // Don't show error if request was aborted by user
+      if (error instanceof Error && error.name === 'AbortError') {
+        console.log('Request aborted by user');
+        return;
+      }
+
       console.error('Error:', error);
       const errorMessage: ChatMessage = {
         id: generateUUID(),
@@ -163,6 +191,7 @@ const ChatPage: React.FC = () => {
       setIsLoading(false);
       setJobStatus(null);
       setQueueStatus(null);
+      abortControllerRef.current = null;
     }
   };
 
@@ -274,34 +303,55 @@ const ChatPage: React.FC = () => {
                   </div>
                 ) : (
                   // Assistant Message
-                  <div className="flex justify-start w-full max-w-[90%]">
-                    {typeof message.content === 'string' ? (
-                      <div className="glass-light rounded-3xl rounded-tl-md px-6 py-4 shadow-lg border border-gray-200/50 dark:border-gray-700/50">
-                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                          {message.content}
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="w-full max-w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl rounded-tl-md p-4 md:p-6 shadow-2xl border border-gray-200/50 dark:border-gray-700/50 hover:shadow-3xl transition-shadow duration-300 overflow-hidden">
-                        <div className="w-full max-w-full overflow-x-auto overflow-y-auto" style={{ maxHeight: '80vh' }}>
-                          <ResponsiveComponentWrapper maxWidth={1200}>
-                            {(() => {
-                              try {
-                                return renderComponent(message.content);
-                              } catch (error) {
-                                console.error('[ChatPage] Error rendering component:', error);
-                                return (
-                                  <div className="p-6 border border-red-500/30 rounded-xl bg-red-500/10">
-                                    <p className="text-red-400 font-semibold mb-2">⚠️ Rendering Error</p>
-                                    <p className="text-gray-400 text-sm">
-                                      Failed to render component. {error instanceof Error ? error.message : 'Unknown error'}
-                                    </p>
-                                  </div>
-                                );
-                              }
-                            })()}
-                          </ResponsiveComponentWrapper>
+                  <div className="flex flex-col items-start w-full max-w-[90%] gap-2">
+                    <div className="w-full">
+                      {typeof message.content === 'string' ? (
+                        <div className="glass-light rounded-3xl rounded-tl-md px-6 py-4 shadow-lg border border-gray-200/50 dark:border-gray-700/50">
+                          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                            {message.content}
+                          </p>
                         </div>
+                      ) : (
+                        <div className="w-full max-w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl rounded-tl-md p-4 md:p-6 shadow-2xl border border-gray-200/50 dark:border-gray-700/50 hover:shadow-3xl transition-shadow duration-300 overflow-hidden">
+                          <div className="w-full max-w-full overflow-x-auto overflow-y-auto" style={{ maxHeight: '80vh' }}>
+                            <ResponsiveComponentWrapper maxWidth={1200}>
+                              {(() => {
+                                try {
+                                  return renderComponent(message.content);
+                                } catch (error) {
+                                  console.error('[ChatPage] Error rendering component:', error);
+                                  return (
+                                    <div className="p-6 border border-red-500/30 rounded-xl bg-red-500/10">
+                                      <p className="text-red-400 font-semibold mb-2">⚠️ Rendering Error</p>
+                                      <p className="text-gray-400 text-sm">
+                                        Failed to render component. {error instanceof Error ? error.message : 'Unknown error'}
+                                      </p>
+                                    </div>
+                                  );
+                                }
+                              })()}
+                            </ResponsiveComponentWrapper>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Action buttons for assistant messages */}
+                    {index === messages.length - 1 && !isLoading && (
+                      <div className="flex items-center gap-2 ml-2">
+                        <button
+                          onClick={() => {
+                            const previousUserMessage = messages.slice(0, index).reverse().find(m => m.role === 'user');
+                            if (previousUserMessage) {
+                              handleRetry(previousUserMessage.content as string);
+                            }
+                          }}
+                          className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
+                          title="Retry"
+                        >
+                          <RotateCcw className="w-3.5 h-3.5" />
+                          <span>Retry</span>
+                        </button>
                       </div>
                     )}
                   </div>
@@ -311,7 +361,7 @@ const ChatPage: React.FC = () => {
 
             {/* Typing Indicator */}
             {isLoading && (
-              <div className="flex justify-start animate-slide-up">
+              <div className="flex flex-col items-start gap-2 animate-slide-up">
                 <div className="glass-light rounded-3xl rounded-tl-md px-6 py-4 shadow-lg border border-gray-200/50 dark:border-gray-700/50">
                   <div className="flex items-center gap-4">
                     <TypingIndicator status={jobStatus} />
@@ -323,6 +373,18 @@ const ChatPage: React.FC = () => {
                       </div>
                     )}
                   </div>
+                </div>
+
+                {/* Stop button during generation */}
+                <div className="flex items-center gap-2 ml-2">
+                  <button
+                    onClick={handleStopGeneration}
+                    className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200"
+                    title="Stop generation"
+                  >
+                    <StopCircle className="w-3.5 h-3.5" />
+                    <span>Stop</span>
+                  </button>
                 </div>
               </div>
             )}
@@ -365,7 +427,7 @@ const ChatPage: React.FC = () => {
               </button>
 
               <button
-                onClick={handleSend}
+                onClick={() => handleSend()}
                 disabled={!input.trim() || isLoading}
                 className="bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 disabled:from-gray-400 disabled:to-gray-500 text-white px-8 py-4 rounded-full font-bold hover:scale-105 active:scale-95 transition-all disabled:cursor-not-allowed disabled:opacity-50 flex items-center gap-2 shadow-lg"
               >
