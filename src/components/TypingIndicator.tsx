@@ -63,6 +63,10 @@ const TypingIndicator: React.FC<TypingIndicatorProps> = ({ status }) => {
             className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 animate-bounce-dot"
             style={{ animationDelay: '150ms' }}
           />
+          <div
+            className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-pink-500 to-orange-500 animate-bounce-dot"
+            style={{ animationDelay: '300ms' }}
+          />
         </div>
       </div>
     </div>
