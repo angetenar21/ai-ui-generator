@@ -1295,6 +1295,185 @@ Before returning chart JSON, verify:
 
 ---
 
+### 🎯 DATA GENERATION RULES (WHEN USER SPECIFIES COUNT)
+
+**CRITICAL:** When the user specifies a number of data entries (e.g., "9 entries", "with 15 rows", "sample data with 20 items"), you MUST generate EXACTLY that many entries with realistic, domain-specific data.
+
+#### Universal Data Generation Rules
+
+**When user says:**
+- "Create [component] with 9 entries"
+- "Generate table with 15 rows"
+- "Sample data with 20 items"
+- "[domain] with N data points"
+
+**You MUST:**
+1. ✅ Generate EXACTLY N entries (not N-1, not N+1, EXACTLY N)
+2. ✅ Use realistic, domain-appropriate data
+3. ✅ Make each entry unique and meaningful
+4. ✅ Include all requested fields/columns
+5. ✅ Use proper data types (numbers as numbers, not strings)
+6. ✅ Apply consistent formatting across all entries
+
+**Common Mistakes to AVOID:**
+- ❌ Generating fewer entries than requested (e.g., only 3 when user asked for 9)
+- ❌ Using placeholder data ("Item 1", "Item 2", "Item 3")
+- ❌ Repeating the same data with minor changes
+- ❌ Forgetting to include entries in all components (charts AND tables)
+- ❌ Mismatching data counts between related components
+
+#### Data Tables / Data Grids
+
+**When generating table data with N rows:**
+
+```json
+{
+  "name": "data-table",
+  "templateProps": {
+    "title": "Order History",
+    "sortable": true,
+    "searchable": true,
+    "columns": [
+      { "id": "orderId", "label": "Order ID", "field": "orderId" },
+      { "id": "customer", "label": "Customer", "field": "customer" },
+      { "id": "amount", "label": "Amount", "field": "amount" },
+      { "id": "date", "label": "Date", "field": "date" },
+      { "id": "status", "label": "Status", "field": "status" }
+    ],
+    "rows": [
+      // ✅ MUST have EXACTLY N rows as specified by user
+      { "orderId": "FD1001", "customer": "John Doe", "amount": "$32.50", "date": "2026-01-30", "status": "Delivered" },
+      { "orderId": "FD1002", "customer": "Jane Smith", "amount": "$45.00", "date": "2026-01-30", "status": "In Progress" },
+      { "orderId": "FD1003", "customer": "Mike Johnson", "amount": "$58.75", "date": "2026-01-29", "status": "Delivered" },
+      // ... continue until you have EXACTLY the requested number
+    ]
+  }
+}
+```
+
+#### Charts with Data
+
+**When generating chart data with N points:**
+
+```json
+{
+  "name": "line-chart",
+  "templateProps": {
+    "title": "Sales Trend",
+    "series": [
+      {
+        "label": "Sales",
+        "data": [1200, 1450, 1380, 1620, 1850, 1720, 1950, 2100, 1980]  // ✅ EXACTLY 9 data points if user requested 9
+      }
+    ],
+    "xAxis": [{
+      "data": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],  // ✅ EXACTLY 9 labels to match
+      "scaleType": "band"
+    }]
+  }
+}
+```
+
+#### Gauge Charts - Display Value Correctly
+
+**CRITICAL GAUGE CHART RULES:**
+
+When generating gauge charts, the displayed value MUST match the actual data:
+
+```json
+{
+  "name": "gauge-chart",
+  "templateProps": {
+    "title": "Customer Satisfaction",
+    "value": 87,           // ✅ The actual numeric value
+    "valueMin": 0,
+    "valueMax": 100,
+    "startAngle": -90,
+    "endAngle": 90,
+    "innerRadius": "60%",
+    "outerRadius": "100%",
+    "color": "#10b981",
+    "text": "87%",         // ✅ MUST match the value with appropriate formatting
+    "height": 250
+  }
+}
+```
+
+**Gauge Chart Validation:**
+- ✅ `value` prop must be a number (not a string)
+- ✅ `text` prop should display the value with units (%, $, etc.)
+- ✅ `value` must be between `valueMin` and `valueMax`
+- ✅ `color` should reflect the metric's status (green for good, red for bad, etc.)
+
+**Common Gauge Chart Mistakes:**
+- ❌ Setting `value: 4.5` when you mean `value: 45` (missing the correct scale)
+- ❌ Using `text: "4.5%"` when `value: 45` (mismatched display)
+- ❌ Not setting proper min/max ranges for the gauge
+- ❌ Using string values instead of numbers: `value: "87"` instead of `value: 87`
+
+#### Domain-Specific Data Generation
+
+**Food Delivery Domain (9 entries example):**
+```json
+"rows": [
+  { "orderId": "FD1001", "customer": "John Doe", "restaurant": "Burger Palace", "date": "2026-01-30", "amount": "$32.50", "status": "Delivered" },
+  { "orderId": "FD1002", "customer": "Jane Smith", "restaurant": "Pizza Corner", "date": "2026-01-30", "amount": "$45.00", "status": "In Progress" },
+  { "orderId": "FD1003", "customer": "Mike Johnson", "restaurant": "Sushi House", "date": "2026-01-29", "amount": "$58.75", "status": "Delivered" },
+  { "orderId": "FD1004", "customer": "Sarah Williams", "restaurant": "Taco Express", "date": "2026-01-29", "amount": "$28.00", "status": "Delivered" },
+  { "orderId": "FD1005", "customer": "David Brown", "restaurant": "Pasta Roma", "date": "2026-01-28", "amount": "$52.25", "status": "Cancelled" },
+  { "orderId": "FD1006", "customer": "Emily Davis", "restaurant": "Curry Delight", "date": "2026-01-28", "amount": "$41.50", "status": "Delivered" },
+  { "orderId": "FD1007", "customer": "Chris Wilson", "restaurant": "Salad Bar", "date": "2026-01-27", "amount": "$24.00", "status": "Delivered" },
+  { "orderId": "FD1008", "customer": "Lisa Anderson", "restaurant": "BBQ Grill", "date": "2026-01-27", "amount": "$67.80", "status": "Delivered" },
+  { "orderId": "FD1009", "customer": "Tom Martinez", "restaurant": "Noodle Bowl", "date": "2026-01-26", "amount": "$36.90", "status": "Delivered" }
+]
+```
+
+**E-commerce Domain:**
+- Product names, SKUs, prices, categories, stock levels, ratings
+- Order IDs, customer names, shipping addresses, order dates, delivery status
+
+**Healthcare Domain:**
+- Patient IDs, names, admission dates, diagnoses, treatment status, doctor names
+- Appointment times, department names, room numbers, vital signs
+
+**Finance Domain:**
+- Transaction IDs, account numbers, amounts, dates, categories, descriptions
+- Portfolio values, investment types, returns, risk levels
+
+**Manufacturing Domain:**
+- Machine IDs, production lines, output quantities, efficiency percentages, downtime hours
+- Batch numbers, quality scores, defect counts, operator names
+
+**Education Domain:**
+- Student IDs, names, grades, courses, attendance percentages, test scores
+- Assignment titles, due dates, submission status, feedback scores
+
+#### Data Count Verification Checklist
+
+**Before returning your JSON, verify:**
+
+- [ ] Count the data entries in each component
+- [ ] Verify the count matches the user's request EXACTLY
+- [ ] Check that all related components have matching data counts (e.g., if table has 9 rows, related chart should have 9 data points)
+- [ ] Ensure all entries are unique and realistic
+- [ ] Confirm gauge charts display the correct value
+- [ ] Validate that chart data arrays match xAxis label arrays in length
+
+**Example Verification:**
+```
+User Request: "Create account_overview with 9 entries"
+
+Your JSON has:
+✅ Data table rows: 9 entries (FD1001 through FD1009)
+✅ Gauge chart values: Correctly displayed (87% shows as 87)
+✅ Summary cards: All show accurate aggregate data
+✅ Each entry is unique and realistic for food_delivery domain
+```
+
+**IF YOUR DATA COUNT DOESN'T MATCH USER'S REQUEST, THE OUTPUT IS WRONG!**
+
+---
+
 ## PART 2: WORKFLOW
 
 ### Detect Request Type FIRST
