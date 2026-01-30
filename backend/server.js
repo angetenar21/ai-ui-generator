@@ -494,10 +494,10 @@ function executeToolCall(toolCall) {
   }
 }
 
-function buildGeminiRequestConfig() {
-  const hasAccessToken = Boolean(GEMINI_ACCESS_TOKEN);
+function buildGeminiRequestConfig(forceApiKey = false) {
+  const hasAccessToken = Boolean(GEMINI_ACCESS_TOKEN) && !forceApiKey;
   const hasApiKey = Boolean(GEMINI_API_KEY);
-  const useVertex = GEMINI_USE_VERTEX || Boolean(GEMINI_PROJECT_ID);
+  const useVertex = (GEMINI_USE_VERTEX || Boolean(GEMINI_PROJECT_ID)) && !forceApiKey;
 
   if (!hasAccessToken && !hasApiKey) {
     Logger.error('No Gemini credentials provided');
@@ -530,8 +530,15 @@ function buildGeminiRequestConfig() {
   return { endpoint, headers, useVertex, hasAccessToken, hasApiKey };
 }
 
-async function callGemini(userMessage, context = '') {
-  const { endpoint, headers, useVertex, hasAccessToken, hasApiKey } = buildGeminiRequestConfig();
+async function callGemini(userMessage, context = '', retryWithApiKey = false) {
+  let config;
+  try {
+    config = buildGeminiRequestConfig(retryWithApiKey);
+  } catch (err) {
+    throw err;
+  }
+
+  const { endpoint, headers, useVertex, hasAccessToken, hasApiKey } = config;
 
   // Track the last validated spec as a fallback
   let lastValidatedSpec = null;
@@ -627,6 +634,26 @@ async function callGemini(userMessage, context = '') {
     if (!response.ok) {
       const errorMessage = data?.error?.message || `HTTP ${response.status}`;
       Logger.geminiError(GEMINI_MODEL, new Error(errorMessage), data);
+
+      // Check for OAuth/authentication failures that could benefit from fallback
+      const isOAuthError = (
+        (response.status === 401 || response.status === 403) ||
+        (response.status === 400 && (
+          errorMessage.includes('invalid authentication') ||
+          errorMessage.includes('authentication') ||
+          errorMessage.includes('token') ||
+          errorMessage.includes('credentials')
+        ))
+      );
+
+      // If OAuth failed and we have an API key and haven't tried it yet, retry with API key
+      if (isOAuthError && !retryWithApiKey && hasAccessToken && GEMINI_API_KEY) {
+        Logger.warn('OAuth authentication failed, attempting fallback to API key', {
+          status: response.status,
+          error: errorMessage
+        });
+        return callGemini(userMessage, context, true);
+      }
 
       // Check for API key issues
       if (response.status === 400 && errorMessage.includes('API key')) {
