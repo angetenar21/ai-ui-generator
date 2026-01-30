@@ -1,5 +1,6 @@
 import React from 'react';
 import { MoreVertical, Maximize2, Minimize2, X } from 'lucide-react';
+import type { ComponentSpec } from '../core/types';
 
 interface WidgetProps {
   /** Widget title */
@@ -27,7 +28,10 @@ interface WidgetProps {
   closeable?: boolean;
 
   /** Optional children (for nested components) */
-  children?: React.ReactNode;
+  children?: ComponentSpec[];
+
+  /** Function to render child component specs */
+  renderChild?: (child: ComponentSpec) => React.ReactNode;
 }
 
 const Widget: React.FC<WidgetProps> = ({
@@ -40,6 +44,7 @@ const Widget: React.FC<WidgetProps> = ({
   defaultCollapsed = false,
   closeable = false,
   children,
+  renderChild,
 }) => {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
   const [isClosed, setIsClosed] = React.useState(false);
@@ -125,13 +130,15 @@ const Widget: React.FC<WidgetProps> = ({
               </div>
             )}
 
-            {children && (
+            {children && children.length > 0 && renderChild && (
               <div className="space-y-2">
-                {children}
+                {children.map((child, index) => (
+                  <div key={index}>{renderChild(child)}</div>
+                ))}
               </div>
             )}
 
-            {!content && !children && (
+            {!content && (!children || children.length === 0) && (
               <div className="text-gray-600 dark:text-gray-400 text-sm text-center py-4">
                 No content
               </div>

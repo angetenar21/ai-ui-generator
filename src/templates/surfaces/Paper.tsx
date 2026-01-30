@@ -1,4 +1,5 @@
 import React from 'react';
+import type { ComponentSpec } from '../core/types';
 
 interface PaperProps {
   /** Content to display */
@@ -17,10 +18,10 @@ interface PaperProps {
   variant?: 'default' | 'outlined' | 'filled';
 
   /** Optional children (for nested components) */
-  children?: React.ReactNode;
+  children?: ComponentSpec[];
 
   /** Function to render child component specs */
-  renderChild?: (child: any) => React.ReactNode;
+  renderChild?: (child: ComponentSpec) => React.ReactNode;
 }
 
 const Paper: React.FC<PaperProps> = ({
@@ -30,6 +31,7 @@ const Paper: React.FC<PaperProps> = ({
   rounded = 'medium',
   variant = 'default',
   children,
+  renderChild,
 }) => {
   const elevationClasses = {
     0: 'shadow-none',
@@ -78,13 +80,15 @@ const Paper: React.FC<PaperProps> = ({
         </div>
       )}
 
-      {children && (
+      {children && children.length > 0 && renderChild && (
         <div className="space-y-2">
-          {children}
+          {children.map((child, index) => (
+            <div key={index}>{renderChild(child)}</div>
+          ))}
         </div>
       )}
 
-      {!content && !children && (
+      {!content && (!children || children.length === 0) && (
         <div className="text-gray-600 dark:text-gray-400 text-sm text-center py-8">
           Empty paper surface
         </div>

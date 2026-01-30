@@ -1,7 +1,7 @@
 import React from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { getSurfaceClasses, getToneClasses } from '@/theme/designTokens';
-import type { SurfaceVariant, ElevationLevel, EmphasisLevel, ToneVariant } from '../core/types';
+import type { SurfaceVariant, ElevationLevel, EmphasisLevel, ToneVariant, ComponentSpec } from '../core/types';
 
 interface PanelProps {
   /** Panel header/title */
@@ -32,10 +32,10 @@ interface PanelProps {
   tone?: ToneVariant;
 
   /** Optional children (for nested components) */
-  children?: React.ReactNode;
+  children?: ComponentSpec[];
 
   /** Function to render child component specs */
-  renderChild?: (child: any) => React.ReactNode;
+  renderChild?: (child: ComponentSpec) => React.ReactNode;
 }
 
 const Panel: React.FC<PanelProps> = ({
@@ -49,6 +49,7 @@ const Panel: React.FC<PanelProps> = ({
   emphasis = 'medium',
   tone,
   children,
+  renderChild,
 }) => {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
 
@@ -109,13 +110,15 @@ const Panel: React.FC<PanelProps> = ({
               </div>
             )}
 
-            {children && (
+            {children && children.length > 0 && renderChild && (
               <div className="space-y-3 overflow-hidden">
-                {children}
+                {children.map((child, index) => (
+                  <div key={index}>{renderChild(child)}</div>
+                ))}
               </div>
             )}
 
-            {!content && !children && (
+            {!content && (!children || children.length === 0) && (
               <div className="text-gray-400 dark:text-gray-500 text-xs text-center py-2">
                 No content
               </div>

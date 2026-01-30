@@ -1,4 +1,5 @@
 import React from 'react';
+import type { ComponentSpec } from '../core/types';
 
 interface WellProps {
   /** Content to display */
@@ -14,10 +15,10 @@ interface WellProps {
   variant?: 'default' | 'info' | 'warning' | 'success';
 
   /** Optional children (for nested components) */
-  children?: React.ReactNode;
+  children?: ComponentSpec[];
 
   /** Function to render child component specs */
-  renderChild?: (child: any) => React.ReactNode;
+  renderChild?: (child: ComponentSpec) => React.ReactNode;
 }
 
 const Well: React.FC<WellProps> = ({
@@ -26,6 +27,7 @@ const Well: React.FC<WellProps> = ({
   title,
   variant = 'default',
   children,
+  renderChild,
 }) => {
   const sizeClasses = {
     small: 'p-4 text-sm',
@@ -74,13 +76,15 @@ const Well: React.FC<WellProps> = ({
         </div>
       )}
 
-      {children && (
+      {children && children.length > 0 && renderChild && (
         <div className="space-y-2">
-          {children}
+          {children.map((child, index) => (
+            <div key={index}>{renderChild(child)}</div>
+          ))}
         </div>
       )}
 
-      {!content && !children && !title && (
+      {!content && (!children || children.length === 0) && !title && (
         <div className="text-gray-600 dark:text-gray-400 text-sm text-center py-2">
           Empty well container
         </div>

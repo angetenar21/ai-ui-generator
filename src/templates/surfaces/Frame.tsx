@@ -1,4 +1,5 @@
 import React from 'react';
+import type { ComponentSpec } from '../core/types';
 
 interface FrameProps {
   /** Frame title */
@@ -20,10 +21,10 @@ interface FrameProps {
   background?: 'transparent' | 'dark' | 'light' | 'gradient';
 
   /** Optional children (for nested components) */
-  children?: React.ReactNode;
+  children?: ComponentSpec[];
 
   /** Function to render child component specs */
-  renderChild?: (child: any) => React.ReactNode;
+  renderChild?: (child: ComponentSpec) => React.ReactNode;
 }
 
 const Frame: React.FC<FrameProps> = ({
@@ -34,6 +35,7 @@ const Frame: React.FC<FrameProps> = ({
   padding = 'medium',
   background = 'dark',
   children,
+  renderChild,
 }) => {
   const borderStyleClasses = {
     solid: 'border-solid',
@@ -85,13 +87,15 @@ const Frame: React.FC<FrameProps> = ({
         </div>
       )}
 
-      {children && (
+      {children && children.length > 0 && renderChild && (
         <div className="space-y-2">
-          {children}
+          {children.map((child, index) => (
+            <div key={index}>{renderChild(child)}</div>
+          ))}
         </div>
       )}
 
-      {!content && !children && !title && (
+      {!content && (!children || children.length === 0) && !title && (
         <div className="text-gray-600 dark:text-gray-400 text-sm text-center py-4">
           Empty frame container
         </div>
