@@ -70,7 +70,7 @@ const ChatPage: React.FC = () => {
           loadedMessages.push({
             id: item.id,
             role: 'assistant',
-            content: item.response,
+            content: item.status === 'stopped' ? 'Generation stopped.' : item.response,
             timestamp: item.timestamp,
           });
         });
