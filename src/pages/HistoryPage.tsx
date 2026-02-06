@@ -10,12 +10,13 @@ interface Thread {
   items: GenerationHistory[];
   lastTimestamp: number;
   firstPrompt: string;
+  status?: 'pending' | 'completed' | 'error' | 'stopped';
 }
 
 const HistoryPage: React.FC = () => {
   const [threads, setThreads] = useState<Thread[]>([]);
   const navigate = useNavigate();
-  const { setCurrentThreadId, clearGeneratedComponents, triggerNewChat } = useAppStore();
+  const { setCurrentThreadId, clearGeneratedComponents, clearCurrentChatMessages, setCurrentChatInput } = useAppStore();
 
   useEffect(() => {
     loadThreads();
@@ -23,10 +24,10 @@ const HistoryPage: React.FC = () => {
 
   const loadThreads = () => {
     const history = StorageService.getHistory();
-    
+
     // Group history items by threadId
     const threadMap = new Map<string, GenerationHistory[]>();
-    
+
     history.forEach(item => {
       const threadId = item.threadId || item.id;
       if (!threadMap.has(threadId)) {
@@ -38,24 +39,29 @@ const HistoryPage: React.FC = () => {
     // Convert to Thread objects
     const threadList: Thread[] = Array.from(threadMap.entries()).map(([threadId, items]) => {
       const sortedItems = items.sort((a, b) => a.timestamp - b.timestamp);
+      const hasPending = items.some((item) => item.status === 'pending');
+      const hasError = items.some((item) => item.status === 'error');
+      const hasStopped = items.some((item) => item.status === 'stopped');
       return {
         id: threadId,
         items: sortedItems,
         lastTimestamp: Math.max(...items.map(i => i.timestamp)),
         firstPrompt: sortedItems[0].prompt,
+        status: hasPending ? 'pending' : hasError ? 'error' : hasStopped ? 'stopped' : 'completed',
       };
     });
 
     // Sort threads by last activity
     threadList.sort((a, b) => b.lastTimestamp - a.lastTimestamp);
-    
+
     setThreads(threadList);
   };
 
   const handleThreadClick = (threadId: string) => {
     clearGeneratedComponents();
+    clearCurrentChatMessages();
+    setCurrentChatInput('');
     setCurrentThreadId(threadId);
-    triggerNewChat();
     navigate('/');
   };
 
@@ -95,7 +101,7 @@ const HistoryPage: React.FC = () => {
       {/* Header */}
       <div className="mb-8 flex items-center justify-between">
         <div>
-                    <p className="text-xs font-medium uppercase tracking-[0.18em] text-gray-700 dark:text-gray-400 mb-2" style={{ color: '#6B7280' }}>
+          <p className="text-xs font-medium uppercase tracking-[0.18em] text-gray-700 dark:text-gray-400 mb-2" style={{ color: '#6B7280' }}>
             History
           </p>
           <h2 className="text-4xl font-display font-bold text-gray-900 dark:text-white mb-2" style={{ color: '#111827' }}>
@@ -124,7 +130,7 @@ const HistoryPage: React.FC = () => {
             <div className="w-16 h-16 mx-auto mb-4 rounded-full gradient-primary flex items-center justify-center text-white">
               <MessageSquare className="w-8 h-8" />
             </div>
-                        <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2" style={{ color: '#111827' }}>
+            <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2" style={{ color: '#111827' }}>
               No History Found
             </h3>
             <p className="text-gray-700 dark:text-gray-300" style={{ color: '#374151' }}>
@@ -144,6 +150,21 @@ const HistoryPage: React.FC = () => {
                 <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center text-white flex-shrink-0">
                   <MessageSquare className="w-5 h-5" />
                 </div>
+                {thread.status === 'pending' && (
+                  <div className="ml-2 px-2 py-1 rounded-full text-xs font-semibold bg-orange-100 text-orange-700 border border-orange-200">
+                    Processing
+                  </div>
+                )}
+                {thread.status === 'error' && (
+                  <div className="ml-2 px-2 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700 border border-red-200">
+                    Error
+                  </div>
+                )}
+                {thread.status === 'stopped' && (
+                  <div className="ml-2 px-2 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700 border border-yellow-200">
+                    Stopped
+                  </div>
+                )}
                 <button
                   onClick={(e) => {
                     e.stopPropagation();

@@ -43,7 +43,7 @@ class ApiService {
       previousComponents?: ComponentSpec[];
       userPreferences?: Record<string, unknown>;
     },
-    config?: PollingConfig
+    config?: PollingConfig & { onJobId?: (jobId: string) => void; signal?: AbortSignal }
   ): Promise<ComponentSpec> {
     const sessionId = SessionManager.getSessionId();
 
@@ -53,10 +53,14 @@ class ApiService {
       message,
       threadId,
       context,
-    });
+    }, config?.signal);
+
+    if (config?.onJobId) {
+      config.onJobId(jobId);
+    }
 
     // Step 2: Poll for completion
-    const result = await this.pollJobStatus(jobId, config);
+    const result = await this.pollJobStatus(jobId, config, config?.signal);
 
     // Step 3: Transform result to ComponentSpec
     return this.transformResultToComponentSpec(result);
@@ -65,7 +69,12 @@ class ApiService {
   /**
    * Enqueue a new job and get jobId
    */
-  static async enqueueJob(request: JobRequest): Promise<string> {
+  static async enqueueJob(request: JobRequest): Promise<string>;
+  static async enqueueJob(request: JobRequest, signal?: AbortSignal): Promise<string>;
+  /**
+   * Enqueue a new job with optional abort signal
+   */
+  static async enqueueJob(request: JobRequest, signal?: AbortSignal): Promise<string> {
     try {
       const response = await fetch(`${API_BASE_URL}/api/agent`, {
         method: 'POST',
@@ -73,6 +82,7 @@ class ApiService {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(request),
+        signal,
       });
 
       if (!response.ok) {
@@ -101,7 +111,8 @@ class ApiService {
    */
   static async pollJobStatus(
     jobId: string,
-    config?: PollingConfig
+    config?: PollingConfig,
+    signal?: AbortSignal
   ): Promise<JobResult> {
     const pollInterval = config?.pollInterval ?? DEFAULT_POLL_INTERVAL;
     const maxDuration = config?.maxDuration ?? DEFAULT_MAX_DURATION;
@@ -124,6 +135,7 @@ class ApiService {
           headers: {
             'Content-Type': 'application/json',
           },
+          signal,
         });
 
         if (!response.ok) {

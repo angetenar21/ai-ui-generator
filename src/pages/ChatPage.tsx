@@ -1,15 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Send, Sparkles, RotateCcw, StopCircle } from 'lucide-react';
 import ApiService from '../services/apiService';
 import StorageService from '../services/storageService';
 import SessionManager from '../services/sessionManager';
-import { renderComponent } from '../templates';
+import { ComponentRenderer } from '../templates';
 import { useAppStore } from '../store/appStore';
 import TypingIndicator from '../components/TypingIndicator';
 import ResponsiveComponentWrapper from '../components/ResponsiveComponentWrapper';
 import type { ComponentSpec } from '../templates/core/types';
-import type { JobStatus, QueueStatus } from '../types/api.types';
 import { generateUUID } from '../utils/uuid';
 
 interface ChatMessage {
@@ -21,12 +20,33 @@ interface ChatMessage {
 
 const ChatPage: React.FC = () => {
   const location = useLocation();
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [jobStatus, setJobStatus] = useState<JobStatus | null>(null);
-  const [queueStatus, setQueueStatus] = useState<QueueStatus | null>(null);
-  const { currentThreadId, setCurrentThreadId, addGeneratedComponent, shouldStartNewChat, resetNewChatTrigger } = useAppStore();
+  const {
+    currentChatMessages: messages,
+    setCurrentChatMessages: setMessages,
+    addChatMessage,
+    clearCurrentChatMessages,
+    currentChatInput: input,
+    setCurrentChatInput: setInput,
+  } = useAppStore();
+  const {
+    chatIsLoading: isLoading,
+    setChatIsLoading: setIsLoading,
+    chatJobStatus: jobStatus,
+    setChatJobStatus: setJobStatus,
+    chatQueueStatus: queueStatus,
+    setChatQueueStatus: setQueueStatus,
+  } = useAppStore();
+  const {
+    currentThreadId,
+    setCurrentThreadId,
+    addGeneratedComponent,
+    shouldStartNewChat,
+    resetNewChatTrigger,
+    chatJobId,
+    setChatJobId,
+    chatHistoryItemId,
+    setChatHistoryItemId,
+  } = useAppStore();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -47,16 +67,21 @@ const ChatPage: React.FC = () => {
   // Handle new chat trigger from sidebar
   useEffect(() => {
     if (shouldStartNewChat) {
-      setMessages([]);
+      clearCurrentChatMessages();
       setInput('');
       setCurrentThreadId(null);
+      setIsLoading(false);
+      setJobStatus(null);
+      setQueueStatus(null);
+      setChatJobId(null);
+      setChatHistoryItemId(null);
       resetNewChatTrigger();
     }
-  }, [shouldStartNewChat, resetNewChatTrigger, setCurrentThreadId]);
+  }, [shouldStartNewChat, resetNewChatTrigger, setCurrentThreadId, clearCurrentChatMessages, setInput, setIsLoading, setJobStatus, setQueueStatus, setChatJobId, setChatHistoryItemId]);
 
   // Load thread history when currentThreadId changes
   useEffect(() => {
-    if (currentThreadId) {
+    if (currentThreadId && messages.length === 0) {
       const threadHistory = StorageService.getHistoryByThread(currentThreadId);
       if (threadHistory.length > 0) {
         const loadedMessages: ChatMessage[] = [];
@@ -77,16 +102,49 @@ const ChatPage: React.FC = () => {
         setMessages(loadedMessages);
       }
     }
-  }, [currentThreadId]);
+  }, [currentThreadId, messages.length, setMessages]);
 
   const handleStopGeneration = () => {
+    if (!isLoading) return;
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
       abortControllerRef.current = null;
     }
+    if (chatJobId) {
+      ApiService.cancelJob(chatJobId).catch((error) => {
+        console.error('Failed to cancel job:', error);
+      });
+    }
+    setChatJobId(null);
     setIsLoading(false);
     setJobStatus(null);
     setQueueStatus(null);
+    if (chatHistoryItemId) {
+      StorageService.updateHistoryItem(chatHistoryItemId, {
+        response: {
+          name: 'panel',
+          templateProps: {
+            title: 'Generation stopped',
+            content: 'This generation was stopped by the user.',
+            tone: 'warning',
+            variant: 'subtle',
+          },
+          metadata: {
+            componentId: `stopped-${chatHistoryItemId}`,
+            generatedAt: new Date().toISOString(),
+          },
+        },
+        timestamp: Date.now(),
+        status: 'stopped',
+      });
+      setChatHistoryItemId(null);
+    }
+    addChatMessage({
+      id: generateUUID(),
+      role: 'assistant',
+      content: 'Generation stopped.',
+      timestamp: Date.now(),
+    });
   };
 
   const handleRetry = async (originalPrompt: string) => {
@@ -98,6 +156,8 @@ const ChatPage: React.FC = () => {
     const promptText = retryPrompt || input;
     if (!promptText.trim() || isLoading) return;
 
+    let historyId: string | null = null;
+
     const userMessage: ChatMessage = {
       id: generateUUID(),
       role: 'user',
@@ -105,7 +165,7 @@ const ChatPage: React.FC = () => {
       timestamp: Date.now(),
     };
 
-    setMessages((prev) => [...prev, userMessage]);
+    addChatMessage(userMessage);
     if (!retryPrompt) {
       setInput('');
     }
@@ -113,12 +173,39 @@ const ChatPage: React.FC = () => {
 
     // Create new abort controller for this request
     abortControllerRef.current = new AbortController();
+    setChatJobId(null);
 
     try {
       const threadId = currentThreadId || generateUUID();
       if (!currentThreadId) {
         setCurrentThreadId(threadId);
       }
+
+      historyId = generateUUID();
+      setChatHistoryItemId(historyId);
+      const pendingResponse: ComponentSpec = {
+        name: 'panel',
+        templateProps: {
+          title: 'Processing…',
+          content: 'This generation is still running. Check back soon.',
+          tone: 'info',
+          variant: 'subtle',
+        },
+        metadata: {
+          componentId: `pending-${historyId}`,
+          generatedAt: new Date().toISOString(),
+        },
+      };
+
+      StorageService.saveToHistory({
+        id: historyId,
+        prompt: userMessage.content as string,
+        response: pendingResponse,
+        timestamp: Date.now(),
+        threadId,
+        sessionId: SessionManager.getSessionId(),
+        status: 'pending',
+      });
 
       try {
         const stats = await ApiService.getQueueStatus();
@@ -140,26 +227,26 @@ const ChatPage: React.FC = () => {
             setJobStatus(status);
             console.log(`[ChatPage] Job status: ${status}`);
           },
+          onJobId: (jobId) => setChatJobId(jobId),
+          signal: abortControllerRef.current?.signal,
         }
       );
 
       const assistantMessage: ChatMessage = {
-        id: generateUUID(),
+        id: historyId,
         role: 'assistant',
         content: response,
         timestamp: Date.now(),
       };
 
-      setMessages((prev) => [...prev, assistantMessage]);
+      addChatMessage(assistantMessage);
 
-      StorageService.saveToHistory({
-        id: assistantMessage.id,
-        prompt: userMessage.content as string,
+      StorageService.updateHistoryItem(assistantMessage.id, {
         response: response,
         timestamp: Date.now(),
-        threadId,
-        sessionId: SessionManager.getSessionId(),
+        status: 'completed',
       });
+      setChatHistoryItemId(null);
 
       addGeneratedComponent(response);
     } catch (error) {
@@ -186,11 +273,21 @@ const ChatPage: React.FC = () => {
         },
         timestamp: Date.now(),
       };
-      setMessages((prev) => [...prev, errorMessage]);
+      addChatMessage(errorMessage);
+
+      if (historyId) {
+        StorageService.updateHistoryItem(historyId, {
+          response: errorMessage.content as ComponentSpec,
+          timestamp: Date.now(),
+          status: 'error',
+        });
+        setChatHistoryItemId(null);
+      }
     } finally {
       setIsLoading(false);
       setJobStatus(null);
       setQueueStatus(null);
+      setChatJobId(null);
       abortControllerRef.current = null;
     }
   };
@@ -315,21 +412,7 @@ const ChatPage: React.FC = () => {
                         <div className="w-full max-w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl rounded-tl-md p-4 md:p-6 shadow-2xl border border-gray-200/50 dark:border-gray-700/50 hover:shadow-3xl transition-shadow duration-300 overflow-hidden">
                           <div className="w-full max-w-full overflow-x-auto overflow-y-auto" style={{ maxHeight: '80vh' }}>
                             <ResponsiveComponentWrapper maxWidth={1200}>
-                              {(() => {
-                                try {
-                                  return renderComponent(message.content);
-                                } catch (error) {
-                                  console.error('[ChatPage] Error rendering component:', error);
-                                  return (
-                                    <div className="p-6 border border-red-500/30 rounded-xl bg-red-500/10">
-                                      <p className="text-red-400 font-semibold mb-2">⚠️ Rendering Error</p>
-                                      <p className="text-gray-400 text-sm">
-                                        Failed to render component. {error instanceof Error ? error.message : 'Unknown error'}
-                                      </p>
-                                    </div>
-                                  );
-                                }
-                              })()}
+                              <ComponentRenderer spec={message.content as ComponentSpec} />
                             </ResponsiveComponentWrapper>
                           </div>
                         </div>

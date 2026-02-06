@@ -183,6 +183,7 @@ export interface GenerationHistory {
   timestamp: number;
   threadId: string;
   sessionId: string;
+  status?: 'pending' | 'completed' | 'error' | 'stopped';
 }
 
 /**

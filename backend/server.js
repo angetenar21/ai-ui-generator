@@ -47,6 +47,7 @@ const COMPONENT_ALIASES = {
 // Job Queue System
 const jobQueue = [];
 const jobStore = new Map();
+const jobAbortControllers = new Map();
 const JOB_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
 const CLEANUP_INTERVAL_MS = 10 * 60 * 1000; // 10 minutes
 
@@ -56,7 +57,8 @@ const JobStatus = {
   PROCESSING: 'processing',
   COMPLETED: 'completed',
   FAILED: 'failed',
-  TIMEOUT: 'timeout'
+  TIMEOUT: 'timeout',
+  CANCELLED: 'cancelled'
 };
 
 // Initialize AJV for JSON Schema validation with STRICT type checking
@@ -530,7 +532,7 @@ function buildGeminiRequestConfig(forceApiKey = false) {
   return { endpoint, headers, useVertex, hasAccessToken, hasApiKey };
 }
 
-async function callGemini(userMessage, context = '', retryWithApiKey = false) {
+async function callGemini(userMessage, context = '', retryWithApiKey = false, signal) {
   let config;
   try {
     config = buildGeminiRequestConfig(retryWithApiKey);
@@ -613,6 +615,7 @@ async function callGemini(userMessage, context = '', retryWithApiKey = false) {
         method: 'POST',
         headers,
         body: JSON.stringify(body),
+        signal,
       });
     } catch (err) {
       Logger.error('Network error while calling Gemini', { error: err?.message ?? err });
@@ -652,7 +655,7 @@ async function callGemini(userMessage, context = '', retryWithApiKey = false) {
           status: response.status,
           error: errorMessage
         });
-        return callGemini(userMessage, context, true);
+        return callGemini(userMessage, context, true, signal);
       }
 
       // Check for API key issues
@@ -827,12 +830,15 @@ Try again with valid JSON syntax.`
 }
 
 // Wrapper for callGemini with exponential backoff retry
-async function callGeminiWithRetry(userMessage, context = '', maxRetries = 3) {
+async function callGeminiWithRetry(userMessage, context = '', maxRetries = 3, signal) {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      return await callGemini(userMessage, context);
+      return await callGemini(userMessage, context, false, signal);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
+      if (signal?.aborted) {
+        throw error;
+      }
       const isRetryable =
         errorMessage.toLowerCase().includes('overloaded') ||
         errorMessage.toLowerCase().includes('resource has been exhausted') ||
@@ -1062,14 +1068,25 @@ async function processJob(job) {
   const MAX_JOB_DURATION = 5 * 60 * 1000; // 5 minutes timeout
 
   try {
+    const existing = jobStore.get(jobId);
+    if (!existing) {
+      return;
+    }
+    if (existing.status === JobStatus.CANCELLED) {
+      return;
+    }
+
     // Update status to processing
     jobStore.set(jobId, {
-      ...jobStore.get(jobId),
+      ...existing,
       status: JobStatus.PROCESSING,
       startedAt: new Date().toISOString(),
     });
 
     Logger.jobProcessing(jobId);
+
+    const controller = new AbortController();
+    jobAbortControllers.set(jobId, controller);
 
     // Build context string
     const contextString = context ? JSON.stringify(context) : '';
@@ -1083,9 +1100,13 @@ async function processJob(job) {
 
     // Race between job completion and timeout
     const modelText = await Promise.race([
-      callGeminiWithRetry(message, contextString),
+      callGeminiWithRetry(message, contextString, 3, controller.signal),
       timeoutPromise
     ]);
+
+    if (controller.signal.aborted) {
+      throw new Error('Job cancelled');
+    }
 
     const spec = normalizeSpec(extractJsonObject(modelText));
 
@@ -1124,10 +1145,12 @@ async function processJob(job) {
 
     jobStore.set(jobId, {
       ...jobStore.get(jobId),
-      status: JobStatus.FAILED,
+      status: error instanceof Error && error.message === 'Job cancelled' ? JobStatus.CANCELLED : JobStatus.FAILED,
       completedAt: new Date().toISOString(),
       error: error instanceof Error ? error.message : 'Unknown error occurred',
     });
+  } finally {
+    jobAbortControllers.delete(jobId);
   }
 }
 
@@ -1162,7 +1185,8 @@ function cleanupOldJobs() {
     if (age > JOB_TIMEOUT_MS &&
       (job.status === JobStatus.COMPLETED ||
         job.status === JobStatus.FAILED ||
-        job.status === JobStatus.TIMEOUT)) {
+        job.status === JobStatus.TIMEOUT ||
+        job.status === JobStatus.CANCELLED)) {
       jobStore.delete(jobId);
       cleaned++;
     }
@@ -1183,6 +1207,7 @@ function buildQueueStats() {
       completed: 0,
       failed: 0,
       timeout: 0,
+      cancelled: 0,
     },
   };
 
@@ -1228,7 +1253,7 @@ app.use(express.json({ limit: '1mb' }));
 // CORS for development
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') {
     return res.sendStatus(200);
@@ -1378,8 +1403,19 @@ app.delete('/api/agent/:jobId', (req, res) => {
     jobQueue.splice(queueIndex, 1);
   }
 
-  // Delete from store
-  jobStore.delete(jobId);
+  // Mark as cancelled and abort in-flight processing if needed
+  jobStore.set(jobId, {
+    ...job,
+    status: JobStatus.CANCELLED,
+    completedAt: new Date().toISOString(),
+    error: 'Job cancelled',
+  });
+
+  const controller = jobAbortControllers.get(jobId);
+  if (controller) {
+    controller.abort();
+    jobAbortControllers.delete(jobId);
+  }
 
   Logger.info(`Job cancelled/deleted: ${jobId}`);
 

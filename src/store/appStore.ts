@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { ComponentSpec } from '../templates/core/types';
+import type { JobStatus, QueueStatus } from '../types/api.types';
 import { generateUUID } from '../utils/uuid';
 
 interface AppState {
@@ -33,6 +34,29 @@ interface AppState {
   shouldStartNewChat: boolean;
   triggerNewChat: () => void;
   resetNewChatTrigger: () => void;
+
+  // Current chat draft (persistent while navigating)
+  currentChatMessages: {
+    id: string;
+    role: 'user' | 'assistant';
+    content: string | ComponentSpec;
+    timestamp: number;
+  }[];
+  setCurrentChatMessages: (messages: AppState['currentChatMessages']) => void;
+  addChatMessage: (message: AppState['currentChatMessages'][number]) => void;
+  clearCurrentChatMessages: () => void;
+  currentChatInput: string;
+  setCurrentChatInput: (input: string) => void;
+  chatIsLoading: boolean;
+  setChatIsLoading: (isLoading: boolean) => void;
+  chatJobStatus: JobStatus | null;
+  setChatJobStatus: (status: JobStatus | null) => void;
+  chatQueueStatus: QueueStatus | null;
+  setChatQueueStatus: (status: QueueStatus | null) => void;
+  chatJobId: string | null;
+  setChatJobId: (jobId: string | null) => void;
+  chatHistoryItemId: string | null;
+  setChatHistoryItemId: (historyItemId: string | null) => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -67,4 +91,25 @@ export const useAppStore = create<AppState>((set) => ({
   shouldStartNewChat: false,
   triggerNewChat: () => set({ shouldStartNewChat: true }),
   resetNewChatTrigger: () => set({ shouldStartNewChat: false }),
+
+  // Current chat draft
+  currentChatMessages: [],
+  setCurrentChatMessages: (messages) => set({ currentChatMessages: messages }),
+  addChatMessage: (message) =>
+    set((state) => ({
+      currentChatMessages: [...state.currentChatMessages, message],
+    })),
+  clearCurrentChatMessages: () => set({ currentChatMessages: [] }),
+  currentChatInput: '',
+  setCurrentChatInput: (input) => set({ currentChatInput: input }),
+  chatIsLoading: false,
+  setChatIsLoading: (isLoading) => set({ chatIsLoading: isLoading }),
+  chatJobStatus: null,
+  setChatJobStatus: (status) => set({ chatJobStatus: status }),
+  chatQueueStatus: null,
+  setChatQueueStatus: (status) => set({ chatQueueStatus: status }),
+  chatJobId: null,
+  setChatJobId: (jobId) => set({ chatJobId: jobId }),
+  chatHistoryItemId: null,
+  setChatHistoryItemId: (historyItemId) => set({ chatHistoryItemId: historyItemId }),
 }));

@@ -51,6 +51,34 @@ class StorageService {
   }
 
   /**
+   * Update an existing history item (or add if missing)
+   */
+  static updateHistoryItem(id: string, updates: Partial<GenerationHistory>): void {
+    const history = this.getHistory();
+    const index = history.findIndex(item => item.id === id);
+
+    if (index === -1) {
+      if (updates && Object.keys(updates).length > 0) {
+        history.unshift({
+          id,
+          prompt: updates.prompt || '',
+          response: updates.response as GenerationHistory['response'],
+          timestamp: updates.timestamp || Date.now(),
+          threadId: updates.threadId || id,
+          sessionId: updates.sessionId || '',
+        });
+      }
+    } else {
+      history[index] = {
+        ...history[index],
+        ...updates,
+      };
+    }
+
+    localStorage.setItem(this.HISTORY_KEY, JSON.stringify(history));
+  }
+
+  /**
    * Clear all history
    */
   static clearHistory(): void {
