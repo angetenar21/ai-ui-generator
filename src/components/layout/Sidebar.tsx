@@ -75,12 +75,12 @@ const Sidebar: React.FC = () => {
 
         {/* Logo */}
         <div className={`flex items-center mb-6 px-2 transition-all duration-300 ${sidebarCollapsed ? 'justify-center' : 'gap-3'}`}>
-          <div className="w-8 h-8 rounded-xl gradient-primary flex items-center justify-center text-lg font-bold text-white flex-shrink-0">
-            ✦
+          <div className="w-8 h-8 rounded-xl bg-white dark:bg-gray-900 border border-blue-200 dark:border-blue-500 flex items-center justify-center text-lg font-bold text-[#2F6BFF] flex-shrink-0">
+            D
           </div>
           {!sidebarCollapsed && (
-            <span className="text-lg font-display font-bold text-gray-900 dark:text-white whitespace-nowrap" style={{ color: '#111827' }}>
-              AI Workshop
+            <span className="text-lg font-display font-bold whitespace-nowrap text-[#2F6BFF]">
+              Doc-E.ai
             </span>
           )}
         </div>
@@ -95,11 +95,10 @@ const Sidebar: React.FC = () => {
                 `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
                  hover:translate-x-1 group relative
                  ${sidebarCollapsed ? 'justify-center' : ''}
-                 ${
-                   isActive
-                     ? 'bg-orange-500 text-white'
-                     : 'text-gray-900 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
-                 }`
+                 ${isActive
+                  ? 'bg-orange-500 text-white'
+                  : 'text-gray-900 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
+                }`
               }
               onClick={() => {
                 // Close sidebar on mobile after navigation
@@ -113,7 +112,7 @@ const Sidebar: React.FC = () => {
               {!sidebarCollapsed && (
                 <span className="font-medium">{item.label}</span>
               )}
-              
+
               {/* Tooltip for collapsed state */}
               {sidebarCollapsed && (
                 <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 dark:bg-gray-700 text-white dark:text-gray-200 text-sm rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
@@ -136,7 +135,7 @@ const Sidebar: React.FC = () => {
         >
           <Plus className="w-5 h-5 flex-shrink-0" />
           {!sidebarCollapsed && <span>New Chat</span>}
-          
+
           {/* Tooltip for collapsed state */}
           {sidebarCollapsed && (
             <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 dark:bg-gray-700 text-white dark:text-gray-200 text-sm rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
@@ -147,12 +146,7 @@ const Sidebar: React.FC = () => {
 
         {/* Footer */}
         {!sidebarCollapsed && (
-            <div className="text-xs text-gray-700 dark:text-gray-400">
-              <div className="flex items-center gap-2">
-                <span>⚡</span>
-                <span>n8n AI</span>
-              </div>
-            </div>
+          <div className="text-xs text-gray-700 dark:text-gray-400" />
         )}
       </aside>
     </>
