@@ -1,9 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+
+interface DataTableColumn {
+  id?: string;
+  label?: string;
+  field?: string;
+  type?: string;
+}
+
+interface DataTableRow {
+  id?: string;
+  [key: string]: any;
+}
 
 interface DataTableProps {
   title?: string;
-  columns: string[];
-  rows: (string | number)[][];
+  columns?: string[] | DataTableColumn[];
+  rows?: (string | number)[][] | DataTableRow[];
   sortable?: boolean;
   searchable?: boolean;
 
@@ -13,11 +25,86 @@ interface DataTableProps {
 
 const DataTable: React.FC<DataTableProps> = ({
   title,
-  columns,
-  rows,
+  columns = [],
+  rows = [],
   sortable = false,
   searchable = false,
 }) => {
+  // Normalize columns: handle both string[] and Column[] formats
+  const normalizedColumns: string[] = useMemo(() => {
+    if (!columns || !Array.isArray(columns)) return [];
+    if (columns.length === 0) return [];
+
+    // Check if first element is a string (simple format)
+    if (typeof columns[0] === 'string') {
+      return columns as string[];
+    }
+
+    // Handle Column objects with {id, label, field, type}
+    return (columns as DataTableColumn[]).map(col => col.label || col.id || '');
+  }, [columns]);
+
+  // Normalize rows: handle both (string|number)[][] and Row[] formats
+  const normalizedRows: (string | number)[][] = useMemo(() => {
+    if (!rows || !Array.isArray(rows)) return [];
+    if (rows.length === 0) return [];
+
+    // Check if first element is an array (simple format)
+    if (Array.isArray(rows[0])) {
+      return rows as (string | number)[][];
+    }
+
+    // Handle Row objects - convert to array of values based on columns
+    // Get field names from column definitions
+    const columnFields = (columns as DataTableColumn[]).map(col => col.field || col.id || '');
+
+    return (rows as DataTableRow[]).map((row, rowIdx) => {
+      return columnFields.map((field, colIdx) => {
+        if (field && row[field] !== undefined) {
+          return row[field];
+        }
+        // Fallback: get value from row using column index as key
+        const keys = Object.keys(row);
+        const keyByIndex = keys[colIdx];
+        if (keyByIndex) {
+          return row[keyByIndex];
+        }
+        return '';
+      });
+    });
+  }, [rows, columns]);
+
+  // Helper function to render cell values (handle objects like avatars)
+  const renderCellValue = (value: any): React.ReactNode => {
+    if (value === null || value === undefined) {
+      return '';
+    }
+
+    // Check if value is an avatar/image object
+    if (typeof value === 'object' && !Array.isArray(value)) {
+      const avatarObj = value as { src?: string; name?: string; size?: number; variant?: string };
+      if (avatarObj.src) {
+        return (
+          <img
+            src={avatarObj.src}
+            alt={avatarObj.name || 'avatar'}
+            style={{
+              width: avatarObj.size || 32,
+              height: avatarObj.size || 32,
+              borderRadius: avatarObj.variant === 'circular' ? '50%' : '4px',
+              objectFit: 'cover',
+              display: 'inline-block',
+            }}
+          />
+        );
+      }
+      // For other objects, try to stringify or return empty
+      return JSON.stringify(value);
+    }
+
+    return value;
+  };
+
   const [sortColumn, setSortColumn] = useState<number | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [searchQuery, setSearchQuery] = useState('');
@@ -33,20 +120,20 @@ const DataTable: React.FC<DataTableProps> = ({
     }
   };
 
-  let displayRows = [...rows];
+  let displayRows = [...normalizedRows];
 
   // Filter by search
   if (searchable && searchQuery) {
     displayRows = displayRows.filter((row) =>
-      row.some((cell) => String(cell).toLowerCase().includes(searchQuery.toLowerCase()))
+      row.some((cell: string | number) => String(cell).toLowerCase().includes(searchQuery.toLowerCase()))
     );
   }
 
   // Sort
   if (sortable && sortColumn !== null) {
     displayRows.sort((a, b) => {
-      const aVal = String(a[sortColumn]);
-      const bVal = String(b[sortColumn]);
+      const aVal = String(a[sortColumn] || '');
+      const bVal = String(b[sortColumn] || '');
 
       if (sortDirection === 'asc') {
         return aVal.localeCompare(bVal, undefined, { numeric: true });
@@ -82,7 +169,7 @@ const DataTable: React.FC<DataTableProps> = ({
         <table className="w-full border-collapse min-w-0">
           <thead>
             <tr className="bg-gray-50 dark:bg-gray-900">
-              {columns.map((column, index) => (
+              {normalizedColumns.map((column, index) => (
                 <th
                   key={index}
                   onClick={() => handleSort(index)}
@@ -114,7 +201,7 @@ const DataTable: React.FC<DataTableProps> = ({
                     className="px-3 py-2 text-xs text-gray-700 dark:text-gray-300
                              border-b border-gray-100 dark:border-gray-700/50 whitespace-nowrap"
                   >
-                    {cell}
+                    {renderCellValue(cell)}
                   </td>
                 ))}
               </tr>
@@ -138,12 +225,12 @@ export const metadata = {
   name: 'data-table',
   category: 'data-display' as const,
   component: DataTable,
-  description: 'Advanced data table with sorting, filtering, and search functionality',
+  description: 'Advanced data table with sorting, filtering, and search functionality. Supports both simple string columns and complex column objects.',
   tags: ['table', 'data', 'grid', 'sort', 'search', 'filter'],
   propTypes: {
     title: 'string',
-    columns: 'string[]',
-    rows: '(string | number)[][]',
+    columns: 'string[] | Column[]',
+    rows: '(string | number)[][] | Row[]',
     sortable: 'boolean',
     searchable: 'boolean',
   },

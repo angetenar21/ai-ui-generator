@@ -3920,7 +3920,7 @@
       "name": "data-table",
       "category": "data-display",
       "fileName": "DataTable",
-      "description": "Advanced data table with sorting, filtering, and search functionality",
+      "description": "Advanced data table with sorting, filtering, and search functionality. Supports both simple string columns and complex column objects with {id, label, field, type}.",
       "tags": [
         "table",
         "data",
@@ -3932,55 +3932,94 @@
       "props": {
         "title": {
           "type": "string",
-          "description": "",
+          "description": "Table title",
           "required": false,
           "tsType": "string"
         },
         "columns": {
-          "type": "string",
-          "description": "",
+          "type": "array",
+          "description": "Column definitions. Can be simple string[] (e.g. [\"User\", \"Status\"]) or Column[] objects (e.g. [{id: \"user\", label: \"User\", type: \"string\"}])",
           "required": true,
-          "tsType": "string[]"
+          "tsType": "string[] | Column[]"
         },
         "rows": {
-          "type": "string",
-          "description": "",
+          "type": "array",
+          "description": "Row data. Can be simple (string|number)[][] or Row[] objects (e.g. [{id: \"1\", user: \"Alice\", status: \"Online\"}])",
           "required": true,
-          "tsType": "(string | number)[][]"
+          "tsType": "(string | number)[][] | Row[]"
         },
         "sortable": {
           "type": "boolean",
-          "description": "",
+          "description": "Enable column sorting",
           "required": false,
           "tsType": "boolean"
         },
         "searchable": {
           "type": "boolean",
-          "description": "",
+          "description": "Enable search/filter functionality",
           "required": false,
           "tsType": "boolean"
         }
       },
       "interfaces": {
+        "DataTableColumn": {
+          "id": {
+            "type": "string",
+            "description": "Column identifier",
+            "optional": true
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label",
+            "optional": true
+          },
+          "field": {
+            "type": "string",
+            "description": "Field name in row data",
+            "optional": true
+          },
+          "type": {
+            "type": "string",
+            "description": "Column data type",
+            "optional": true
+          }
+        },
+        "DataTableRow": {
+          "id": {
+            "type": "string",
+            "description": "Row identifier",
+            "optional": true
+          },
+          "[key: string]": {
+            "type": "any",
+            "description": "Additional row data fields",
+            "optional": true
+          }
+        },
         "DataTableProps": {
           "title": {
             "type": "string",
+            "description": "Table title",
             "optional": true
           },
           "columns": {
-            "type": "string[]",
+            "type": "string[] | Column[]",
+            "description": "Column definitions",
             "optional": false
           },
           "rows": {
-            "type": "(string | number)[][]",
+            "type": "(string | number)[][] | Row[]",
+            "description": "Row data",
             "optional": false
           },
           "sortable": {
             "type": "boolean",
+            "description": "Enable column sorting",
             "optional": true
           },
           "searchable": {
             "type": "boolean",
+            "description": "Enable search/filter functionality",
             "optional": true
           }
         }
@@ -8403,7 +8442,7 @@
           "tsType": "string"
         },
         "type": {
-          "type": "number",
+          "type": "string",
           "description": "",
           "required": false,
           "tsType": "'text' | 'email' | 'password' | 'number' | 'url' | 'tel'"

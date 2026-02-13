@@ -168,6 +168,9 @@ for (const [componentName, componentDef] of Object.entries(components)) {
     } else if (tsType.includes('[]') || propDef.type === 'array') {
       propSchema.type = 'array';
       propSchema.items = {};
+    } else if (tsType.includes("'") && !tsType.includes('Array') && !tsType.includes('[]')) {
+      // If tsType contains single quotes (string literal union types like 'text' | 'email'), treat as string
+      propSchema.type = 'string';
     } else if (propDef.type === 'number') {
       propSchema.type = 'number';
     } else if (propDef.type === 'boolean') {
