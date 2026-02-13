@@ -58,7 +58,7 @@ const DataTable: React.FC<DataTableProps> = ({
     // Get field names from column definitions
     const columnFields = (columns as DataTableColumn[]).map(col => col.field || col.id || '');
 
-    return (rows as DataTableRow[]).map((row, rowIdx) => {
+    return (rows as DataTableRow[]).map((row) => {
       return columnFields.map((field, colIdx) => {
         if (field && row[field] !== undefined) {
           return row[field];
