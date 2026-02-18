@@ -367,7 +367,12 @@ const DataGrid: React.FC<DataGridProps> = ({
                   {columns.map((column) => {
                     const cellValue = row[column.id];
                     const isAvatarType = column.type === 'avatar';
-                    const isImageUrl = typeof cellValue === 'string' && (cellValue.includes('http') && (cellValue.includes('avatar') || cellValue.includes('image') || cellValue.includes('.jpg') || cellValue.includes('.png') || cellValue.includes('.gif')));
+                    const isImageUrl = typeof cellValue === 'string' && (
+                      cellValue.startsWith('http') && (
+                        isAvatarType ||
+                        ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', 'avatar', 'image', 'photo'].some(ext => cellValue.toLowerCase().includes(ext))
+                      )
+                    );
 
                     return (
                       <td

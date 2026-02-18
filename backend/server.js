@@ -414,20 +414,7 @@ function getToolDeclarations() {
         required: ['componentNames'],
       },
     },
-    {
-      name: 'validate_component',
-      description: 'Validates a component specification against the schema. Use this BEFORE returning your final response to ensure it will work correctly.',
-      parameters: {
-        type: 'object',
-        properties: {
-          spec: {
-            type: 'object',
-            description: 'The component specification to validate',
-          },
-        },
-        required: ['spec'],
-      },
-    },
+
   ];
 }
 
@@ -715,7 +702,9 @@ async function callGemini(userMessage, context = '', retryWithApiKey = false, si
       const isPythonSyntax = candidate.finishMessage && (
         candidate.finishMessage.includes('print(') ||
         candidate.finishMessage.includes('default_api.') ||
-        candidate.finishMessage.includes('spec =')
+        candidate.finishMessage.includes('spec =') ||
+        candidate.finishMessage.includes('def ') ||
+        candidate.finishMessage.includes('import ')
       );
 
       // Send specific error feedback to Gemini to retry with correct format
@@ -729,27 +718,35 @@ async function callGemini(userMessage, context = '', retryWithApiKey = false, si
           text: isPythonSyntax
             ? `CRITICAL ERROR: You are using Python code syntax which is COMPLETELY WRONG.
 
-DO NOT use:
+THIS IS NOT A PYTHON ENVIRONMENT. You must use the native Gemini function calling interface.
+
+❌ WRONG SYNTAX (Python):
 ❌ print(default_api.validate_component(spec = {...}))
-❌ print(...)
-❌ default_api.anything
-❌ spec = {...}
+❌ spec = {"name": "stack", ...}
+❌ result = default_api.get_component_schema(...)
+❌ Any Python code: import, def, print, etc.
 
-This is NOT a Python environment. You MUST use the native function calling interface.
+✅ CORRECT SYNTAX (Gemini function calling):
+The system automatically manages function execution. You just need to request the function call by specifying:
+- The function name (get_components, get_component_schema, validate_component)
+- The parameters needed
 
-The system will automatically call the functions you request. Just specify:
-- Function name: validate_component
-- Arguments: { "spec": {...} }
+The system will automatically execute the function and return results.
 
-Try again WITHOUT any Python syntax. Use ONLY the function calling interface.`
-            : `ERROR: Malformed function call detected.
+Example: If you need a schema, just indicate you want to call get_component_schema with specific component names. 
+The system will handle it - you don't write code.
 
-Ensure all JSON is properly formatted with:
-- Double quotes around ALL property names and string values
+RESUME YOUR RESPONSE using the correct function calling format.`
+            : `ERROR: Malformed function call detected at iteration ${iterations}.
+
+The function declaration is not properly formatted. Ensure:
+- All JSON is properly formatted with double quotes
 - No trailing commas
 - Proper nesting of objects and arrays
+- No Python syntax (print, def, import, etc.)
+- Use only the native function calling interface
 
-Try again with valid JSON syntax.`
+RESTART and use the correct format for function calls.`
         }]
       });
       continue; // Try again in next iteration
@@ -1041,7 +1038,7 @@ function extractJsonObject(text) {
     // Provide helpful error message based on what we detected
     let errorMsg = 'Failed to parse JSON from Gemini output';
     if (!trimmed.includes('{')) {
-      errorMsg += ' - Response contains no JSON object. Gemini may have returned only text.';
+      errorMsg += ' - Response contains no JSON object. Gemini may have returned only text or refused the request.';
     } else if (!trimmed.includes('}')) {
       errorMsg += ' - Response appears to have incomplete JSON (missing closing brace).';
     } else {

@@ -161,8 +161,8 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
     referenceArc: isDarkMode ? '#374151' : '#E5E7EB',
   };
 
-  // Calculate appropriate height
-  const chartHeight = propHeight || Math.min(200, containerWidth * 0.6);
+  // Calculate appropriate height - default max to 400px or propHeight
+  const chartHeight = propHeight || Math.min(400, containerWidth * 0.8);
   const chartWidth = containerWidth;
 
   return (

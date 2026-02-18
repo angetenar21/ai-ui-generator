@@ -10,6 +10,9 @@ interface PanelProps {
   /** Panel content */
   content?: string;
 
+  /** Secondary content text (alias for content) */
+  description?: string;
+
   /** Footer content */
   footer?: string;
 
@@ -41,6 +44,7 @@ interface PanelProps {
 const Panel: React.FC<PanelProps> = ({
   title,
   content,
+  description,
   footer,
   collapsible = false,
   defaultCollapsed = false,
@@ -52,6 +56,7 @@ const Panel: React.FC<PanelProps> = ({
   renderChild,
 }) => {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
+  const displayContent = content || description;
 
   if (!title) {
     return (
@@ -104,11 +109,12 @@ const Panel: React.FC<PanelProps> = ({
       {!isCollapsed && (
         <>
           <div className="px-4 py-3 overflow-hidden">
-            {content && (
+            {displayContent && (
               <div className={`${secondaryTextClass} text-sm leading-relaxed`}>
-                {content}
+                {displayContent}
               </div>
             )}
+
 
             {children && children.length > 0 && renderChild && (
               <div className="space-y-3 overflow-hidden">
@@ -118,7 +124,7 @@ const Panel: React.FC<PanelProps> = ({
               </div>
             )}
 
-            {!content && (!children || children.length === 0) && (
+            {!displayContent && (!children || children.length === 0) && (
               <div className="text-gray-400 dark:text-gray-500 text-xs text-center py-2">
                 No content
               </div>

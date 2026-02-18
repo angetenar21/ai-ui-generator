@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useData } from '../core/DataContext';
 
 interface SelectOption {
   value: string | number;
@@ -8,6 +9,7 @@ interface SelectOption {
 
 interface SelectProps {
   label?: string;
+  name?: string;
   placeholder?: string;
   value?: string | number;
   defaultValue?: string | number;
@@ -41,7 +43,17 @@ const Select: React.FC<SelectProps> = ({
   error = false,
   helperText,
   onChange,
+  name,
 }) => {
+  const { data, setData } = useData();
+
+  // Initialize state from context if available and name is present
+  useEffect(() => {
+    if (name && data && data[name] !== undefined) {
+      setInternalValue(data[name]);
+    }
+  }, [data, name]);
+
   const [internalValue, setInternalValue] = useState<string | number>(defaultValue || '');
   const displayValue = value !== undefined ? value : internalValue;
   const selectOptions = options || items || [];
@@ -49,7 +61,13 @@ const Select: React.FC<SelectProps> = ({
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newValue = e.target.value;
     setInternalValue(newValue);
+
     if (onChange) onChange(newValue);
+
+    // Update context if name is present
+    if (name && setData) {
+      setData(name, newValue);
+    }
   };
 
   const sizeClasses = {

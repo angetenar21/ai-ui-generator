@@ -59,6 +59,13 @@ const InspectorPage: React.FC = () => {
         : 'card-sub text-text-secondary hover:bg-bg-card rounded-pill',
     ].join(' ');
 
+  if (selectedComponent) {
+    console.log('[Inspector] Rendering component:', selectedComponent.name, 'Has Data:', Boolean((selectedComponent as any).data));
+    if ((selectedComponent as any).data) {
+      console.log('[Inspector] Data keys:', Object.keys((selectedComponent as any).data));
+    }
+  }
+
   return (
     <div className="max-w-page mx-auto px-6 pt-8 pb-10 flex flex-col min-h-[calc(100vh-80px)]">
       {/* Header */}

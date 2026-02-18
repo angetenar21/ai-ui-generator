@@ -1,6 +1,7 @@
 import React from 'react';
 import { registry } from './registry';
 import type { ComponentSpec } from './types';
+import { DataProvider } from './DataContext';
 
 /**
  * Universal Component Renderer
@@ -114,7 +115,7 @@ export const renderComponent = (spec: ComponentSpec): React.ReactNode => {
     : undefined;
 
   // Render the component with props (WITHOUT raw children array)
-  return (
+  const renderedComponent = (
     <Component
       key={metadata?.componentId}
       {...propsWithoutChildren}
@@ -122,6 +123,23 @@ export const renderComponent = (spec: ComponentSpec): React.ReactNode => {
       renderChild={renderChildren}
     />
   );
+
+  // If the component has a 'data' property, wrap it in a DataProvider
+  if ((spec as any).data) {
+    console.log('[Renderer] Wrapping component in DataProvider:', componentName, 'Keys:', Object.keys((spec as any).data));
+    return (
+      <DataProvider initialData={(spec as any).data}>
+        <div style={{ border: '2px solid purple', position: 'relative' }}>
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'purple', color: 'white', fontSize: '10px', padding: '2px 4px', zIndex: 9999 }}>
+            DATA PROVIDER ACTIVE
+          </div>
+          {renderedComponent}
+        </div>
+      </DataProvider>
+    );
+  }
+
+  return renderedComponent;
 };
 
 /**

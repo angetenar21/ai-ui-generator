@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 interface Tab {
   label: string;
   value?: string;
-  content?: string;
+  content?: string | any; // Allow ComponentSpec
   disabled?: boolean;
 }
 
@@ -24,6 +24,8 @@ const Tabs: React.FC<TabsProps> = ({
   defaultTab,
   variant = 'default',
   orientation = 'horizontal',
+  children,
+  renderChild,
 }) => {
   const tabItems = tabs || items || [];
 
@@ -64,8 +66,11 @@ const Tabs: React.FC<TabsProps> = ({
     },
   };
 
-  const classes = variantClasses[variant];
+  const classes = variantClasses[variant] || variantClasses['default'];
   const isVertical = orientation === 'vertical';
+
+  // Support both content in tab item AND content in children array (by index)
+  const activeContent = tabItems[activeTab]?.content || (Array.isArray(children) ? children[activeTab] : null);
 
   return (
     <div className="card rounded-card p-6 my-4">
@@ -87,9 +92,11 @@ const Tabs: React.FC<TabsProps> = ({
           ))}
         </div>
 
-        {tabItems[activeTab]?.content && (
+        {activeContent && (
           <div className={`${isVertical ? 'flex-1' : ''} mt-4 text-gray-700 dark:text-gray-300`}>
-            {tabItems[activeTab].content}
+            {typeof activeContent === 'string'
+              ? activeContent
+              : (renderChild ? renderChild(activeContent) : null)}
           </div>
         )}
       </div>

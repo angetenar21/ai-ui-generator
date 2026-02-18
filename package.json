@@ -14,6 +14,7 @@
     "test:run": "vitest run",
     "test:watch": "vitest watch",
     "test:coverage": "vitest run --coverage",
+    "test:generate": "curl -X POST http://localhost:4000/generate -H 'Content-Type: application/json' -d '{\"prompt\": \"Create a simple button\"}'",
     "generate-schema": "node scripts/extract-schemas.js",
     "backend:dev": "node backend/server.js"
   },

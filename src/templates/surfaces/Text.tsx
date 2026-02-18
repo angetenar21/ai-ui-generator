@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
+import { useData, resolveVariables } from '../core/DataContext';
 
 interface TextProps {
   /** Text content to display */
@@ -28,6 +29,16 @@ const Text: React.FC<TextProps> = ({
   align = 'left',
   markdown = false,
 }) => {
+  const { data } = useData();
+
+  // console.log('[Text] Rendering with content:', content);
+  // console.log('[Text] Available data:', data);
+
+  // Resolve any variables in the content (e.g. {user.name})
+  const resolvedContent = resolveVariables(content, data);
+
+  // console.log('[Text] Resolved content:', resolvedContent);
+
   const variantClasses = {
     heading: 'text-2xl font-display font-semibold leading-tight',
     subtitle: 'text-lg font-semibold',
@@ -49,13 +60,25 @@ const Text: React.FC<TextProps> = ({
   };
 
   // Detect if it's a section header (h2)
-  const isSectionHeader = markdown && content.trim().startsWith('##');
+  const isSectionHeader = markdown && resolvedContent.trim().startsWith('##');
   const containerClasses = isSectionHeader
     ? "p-2"  // Minimal padding for headers
     : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6";  // Normal padding for content
 
+  // VISUAL DEBUGGING: Show error if variables match failed
+  const showDebug = resolvedContent.includes('{') && resolvedContent.includes('}');
+
   return (
     <div className={containerClasses}>
+      {showDebug && (
+        <div className="text-xs text-red-600 bg-red-50 p-2 rounded border border-red-200 mb-2 font-mono break-all">
+          <strong>DEBUG:</strong> Unresolved: {resolvedContent}
+          <br />
+          <strong>Data Keys:</strong> {JSON.stringify(Object.keys(data || {}))}
+          <br />
+          <strong>SelectedSubject:</strong> {JSON.stringify(data?.selectedSubject)}
+        </div>
+      )}
       {markdown ? (
         <div className={`${variantClasses[variant]} ${colorClasses[color]} ${alignClasses[align]} leading-relaxed prose dark:prose-invert max-w-none`}>
           <ReactMarkdown
@@ -75,12 +98,12 @@ const Text: React.FC<TextProps> = ({
               a: ({ href, children }) => <a href={href} className="text-orange-500 hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300 underline" target="_blank" rel="noopener noreferrer">{children}</a>,
             }}
           >
-            {content}
+            {resolvedContent}
           </ReactMarkdown>
         </div>
       ) : (
         <p className={`${variantClasses[variant]} ${colorClasses[color]} ${alignClasses[align]} leading-relaxed whitespace-pre-wrap`}>
-          {content}
+          {resolvedContent}
         </p>
       )}
     </div>

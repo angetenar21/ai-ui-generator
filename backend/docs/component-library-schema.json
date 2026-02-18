@@ -10962,7 +10962,7 @@
             "optional": true
           },
           "content": {
-            "type": "string",
+            "type": "any",
             "optional": true
           },
           "disabled": {

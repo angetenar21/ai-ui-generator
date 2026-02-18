@@ -5,8 +5,9 @@ import ChatPage from './pages/ChatPage';
 import GalleryPage from './pages/GalleryPage';
 import InspectorPage from './pages/InspectorPage';
 import HistoryPage from './pages/HistoryPage';
-import { useTheme } from './hooks/useTheme';
+import DebugPage from './pages/DebugPage';
 import TesterPage from './pages/TesterPage';
+import { useTheme } from './hooks/useTheme';
 
 function App() {
   // Initialize theme - this will set light mode as default
@@ -15,21 +16,21 @@ function App() {
   // Ensure light mode is set on initial load - force it
   useEffect(() => {
     const root = document.documentElement;
-    
+
     // Aggressive approach - force light mode
     root.classList.remove('dark');
     root.className = root.className.replace(/dark/g, ''); // Remove any dark classes
-    
+
     // Also force body background
     document.body.style.backgroundColor = '#f9fafb';
     document.body.style.color = '#111827';
-    
+
     // Clear any conflicting localStorage if theme is not explicitly set
     const currentTheme = localStorage.getItem('theme');
     if (!currentTheme || currentTheme !== 'light') {
       localStorage.setItem('theme', 'light');
     }
-    
+
     console.log('App mounted - aggressively forced light mode, theme:', currentTheme);
     console.log('HTML classes:', root.className);
   }, []);
@@ -43,6 +44,7 @@ function App() {
           <Route path="inspector" element={<InspectorPage />} />
           <Route path="history" element={<HistoryPage />} />
           <Route path="tester" element={<TesterPage />} />
+          <Route path="debug" element={<DebugPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

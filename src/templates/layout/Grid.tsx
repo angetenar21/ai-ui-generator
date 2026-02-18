@@ -2,8 +2,8 @@ import React from 'react';
 import type { ComponentSpec } from '../core/types';
 
 interface GridProps {
-  /** Number of columns in the grid */
-  columns?: 1 | 2 | 3 | 4 | 5 | 6 | 12;
+  /** Number of columns in the grid (number or object for responsive) */
+  columns?: 1 | 2 | 3 | 4 | 5 | 6 | 12 | Record<string, number>;
 
   /** Gap between grid items */
   gap?: 'none' | 'small' | 'medium' | 'large' | 'xlarge';
@@ -68,6 +68,22 @@ const Grid: React.FC<GridProps> = ({
       return ''; // Will use inline style for auto-fit
     }
 
+    // Handle responsive object format: { xs: 1, sm: 2, md: 3, ... }
+    if (typeof columns === 'object') {
+      const classes: string[] = [];
+      const colsObj = columns as Record<string, number>;
+
+      // Default to 1 column if xs/default not specified
+      if (!colsObj.xs) classes.push('grid-cols-1');
+
+      Object.entries(colsObj).forEach(([bp, cols]) => {
+        const prefix = bp === 'xs' ? '' : `${bp}:`;
+        classes.push(`${prefix}grid-cols-${cols}`);
+      });
+
+      return classes.join(' ');
+    }
+
     if (!responsive) {
       const colsMap: Record<number, string> = {
         1: 'grid-cols-1',
@@ -81,24 +97,16 @@ const Grid: React.FC<GridProps> = ({
       return colsMap[columns] || 'grid-cols-2';
     }
 
-    // Responsive grid classes with better mobile/tablet/desktop breakpoints
+    // specific responsive behaviors for single number inputs
     switch (columns) {
-      case 1:
-        return 'grid-cols-1';
-      case 2:
-        return 'grid-cols-1 sm:grid-cols-1 md:grid-cols-2';
-      case 3:
-        return 'grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3';
-      case 4:
-        return 'grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4';
-      case 5:
-        return 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5';
-      case 6:
-        return 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6';
-      case 12:
-        return 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-12';
-      default:
-        return 'grid-cols-1 sm:grid-cols-1 md:grid-cols-2';
+      case 1: return 'grid-cols-1';
+      case 2: return 'grid-cols-1 sm:grid-cols-1 md:grid-cols-2';
+      case 3: return 'grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3';
+      case 4: return 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4';
+      case 5: return 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5';
+      case 6: return 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6';
+      case 12: return 'grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-12';
+      default: return 'grid-cols-1 md:grid-cols-2';
     }
   };
 
@@ -122,7 +130,7 @@ const Grid: React.FC<GridProps> = ({
       ) : (
         <div className="col-span-full bg-gray-50 dark:bg-gray-800 rounded-lg p-4 text-center">
           <p className="text-gray-500 dark:text-gray-400 text-sm">
-            Grid layout ({columns} columns) - Add child components
+            Grid layout ({typeof columns === 'object' ? 'responsive' : `${columns} columns`}) - Add child components
           </p>
         </div>
       )}

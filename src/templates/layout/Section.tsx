@@ -26,6 +26,9 @@ interface SectionProps {
   /** Full width section */
   fullWidth?: boolean;
 
+  /** Vertical spacing between children */
+  spacing?: 'none' | 'small' | 'medium' | 'large';
+
   /** Child components */
   children?: ComponentSpec[];
 
@@ -42,6 +45,7 @@ const Section: React.FC<SectionProps> = ({
   background = 'default',
   divider = false,
   fullWidth = true,
+  spacing = 'medium',
   children,
   renderChild,
 }) => {
@@ -98,7 +102,7 @@ const Section: React.FC<SectionProps> = ({
       )}
 
       {children && children.length > 0 && renderChild ? (
-        <div className="space-y-4">
+        <div className={spacing === 'none' ? '' : 'space-y-4'}>
           {children.map((child, index) => (
             <div key={index}>{renderChild(child)}</div>
           ))}
@@ -131,6 +135,7 @@ export const metadata = {
     background: '"default" | "surface" | "elevated" | "accent"',
     divider: 'boolean',
     fullWidth: 'boolean',
+    spacing: '"none" | "small" | "medium" | "large"',
     children: 'ComponentSpec[]',
   },
 };

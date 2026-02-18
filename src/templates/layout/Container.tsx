@@ -20,6 +20,9 @@ interface ContainerProps {
   /** Add shadow */
   shadow?: boolean;
 
+  /** Vertical spacing between children */
+  spacing?: 'none' | 'small' | 'medium' | 'large';
+
   /** Child components */
   children?: ComponentSpec[];
 
@@ -34,6 +37,7 @@ const Container: React.FC<ContainerProps> = ({
   background = false,
   border = false,
   shadow = false,
+  spacing = 'medium',
   children,
   renderChild,
 }) => {
@@ -63,7 +67,7 @@ const Container: React.FC<ContainerProps> = ({
       className={`${maxWidthClasses[maxWidth]} ${paddingClasses[padding]} ${centerClass} ${backgroundClass} ${borderClass} ${shadowClass} w-full overflow-visible`}
     >
       {children && children.length > 0 && renderChild ? (
-        <div className="space-y-4">
+        <div className={spacing === 'none' ? '' : 'space-y-4'}>
           {children.map((child, index) => (
             <div key={index}>{renderChild(child)}</div>
           ))}
@@ -94,6 +98,7 @@ export const metadata = {
     background: 'boolean',
     border: 'boolean',
     shadow: 'boolean',
+    spacing: '"none" | "small" | "medium" | "large"',
     children: 'ComponentSpec[]',
   },
 };

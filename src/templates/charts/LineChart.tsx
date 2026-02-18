@@ -17,10 +17,10 @@ interface LineChartProps {
     data: (number | string | Date)[];
     label?: string;
     scaleType?: 'band' | 'linear' | 'log' | 'time';
-  
-  children?: React.ReactNode;
-  renderChild?: (child: any) => React.ReactNode;
-}>;
+
+    children?: React.ReactNode;
+    renderChild?: (child: any) => React.ReactNode;
+  }>;
 
   /** Series data for the lines */
   series: Array<{
@@ -166,7 +166,7 @@ const LineChart: React.FC<LineChartProps> = ({
     series.map((s, index) => ({
       ...s,
       color: s.color || paletteColors[index % paletteColors.length],
-      curve: s.curve || 'linear', // Default to linear (sharp corners) instead of smooth curves
+      curve: s.curve || 'monotoneX', // Default to smooth curves
     }))
   );
 
