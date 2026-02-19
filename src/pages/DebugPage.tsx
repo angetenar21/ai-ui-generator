@@ -1,4 +1,3 @@
-import React from 'react';
 import { DataProvider, useData, resolveVariables } from '../templates/core/DataContext';
 
 const DebugConsumer = () => {
