@@ -193,7 +193,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         {items.map((item, index) => renderNavItem(item, index))}
       </nav>
 
-      {children && children.length > 0 && renderChild && !isCollapsed && (
+      {Array.isArray(children) && children.length > 0 && renderChild && !isCollapsed && (
         <div className="p-4 border-t border-gray-200 dark:border-gray-800">
           <div className="space-y-3">
             {children.map((child, index) => (

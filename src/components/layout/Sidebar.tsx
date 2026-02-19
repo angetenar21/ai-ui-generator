@@ -75,9 +75,11 @@ const Sidebar: React.FC = () => {
 
         {/* Logo */}
         <div className={`flex items-center mb-6 px-2 transition-all duration-300 ${sidebarCollapsed ? 'justify-center' : 'gap-3'}`}>
-          <div className="w-8 h-8 rounded-xl bg-white dark:bg-gray-900 border border-blue-200 dark:border-blue-500 flex items-center justify-center text-lg font-bold text-[#2F6BFF] flex-shrink-0">
-            D
-          </div>
+          <img
+            src="/doc-e-logo.png"
+            alt="Doc-E.ai"
+            className="w-8 h-8 rounded-xl object-contain flex-shrink-0"
+          />
           {!sidebarCollapsed && (
             <span className="text-lg font-display font-bold whitespace-nowrap text-[#2F6BFF]">
               Doc-E.ai

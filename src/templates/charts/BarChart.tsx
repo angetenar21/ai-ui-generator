@@ -17,10 +17,10 @@ interface BarChartProps {
     data: (number | string)[];
     label?: string;
     scaleType?: 'band' | 'linear';
-  
-  children?: React.ReactNode;
-  renderChild?: (child: any) => React.ReactNode;
-}>;
+
+    children?: React.ReactNode;
+    renderChild?: (child: any) => React.ReactNode;
+  }>;
 
   /** Series data for the bars */
   series: Array<{
@@ -76,6 +76,12 @@ interface BarChartProps {
 
   /** Use gradient fills */
   useGradient?: boolean;
+
+  /** Scale type for the value axis (linear, log, sqrt) */
+  scaleType?: 'linear' | 'log' | 'sqrt';
+
+  /** Optional CSS class names */
+  className?: string;
 }
 
 const BarChart: React.FC<BarChartProps> = ({
@@ -96,6 +102,8 @@ const BarChart: React.FC<BarChartProps> = ({
   emphasis: _emphasis = 'medium',
   palette = 'default',
   useGradient: _useGradient = false,
+  scaleType = 'linear',
+  className = '',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [chartWidth, setChartWidth] = useState(propWidth || 500);
@@ -192,7 +200,7 @@ const BarChart: React.FC<BarChartProps> = ({
 
   return (
     <div
-      className={`${surfaceClasses} rounded-xl p-4 transition-all duration-300 w-full max-w-full overflow-hidden`}
+      className={`${surfaceClasses} rounded-xl p-4 transition-all duration-300 ${className || 'w-full'} max-w-full overflow-hidden`}
       style={cardBgColor ? { backgroundColor: cardBgColor } : undefined}
     >
       {/* Header */}
@@ -215,8 +223,8 @@ const BarChart: React.FC<BarChartProps> = ({
       <div ref={containerRef} className="w-full overflow-x-auto overflow-y-hidden">
         <div className="flex justify-center items-center min-h-[200px]">
           <MuiBarChart
-            xAxis={processedXAxis}
-            yAxis={processedYAxis}
+            xAxis={layout === 'horizontal' ? [{ scaleType }] : processedXAxis}
+            yAxis={layout === 'horizontal' ? processedYAxis : [{ scaleType }]}
             series={processedSeries}
             width={chartWidth}
             height={height}
@@ -307,5 +315,7 @@ export const metadata = {
     emphasis: 'EmphasisLevel - Visual emphasis: low | medium | high (default: medium)',
     palette: 'ChartPaletteType - Color palette: default | vibrant | pastel | gradient | monochrome | semantic (default: default)',
     useGradient: 'boolean - Use gradient fills (default: false)',
+    scaleType: '"linear" | "log" | "sqrt" (default: linear)',
+    className: 'string - Optional CSS class names',
   },
 };

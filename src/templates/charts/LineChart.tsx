@@ -75,6 +75,9 @@ interface LineChartProps {
 
   /** Use gradient fills for area charts */
   useGradient?: boolean;
+
+  /** Optional CSS class names */
+  className?: string;
 }
 
 const LineChart: React.FC<LineChartProps> = ({
@@ -94,6 +97,7 @@ const LineChart: React.FC<LineChartProps> = ({
   emphasis: _emphasis = 'medium',
   palette = 'default',
   useGradient: _useGradient = false,
+  className = '',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [chartWidth, setChartWidth] = useState(propWidth || 500);
@@ -211,7 +215,7 @@ const LineChart: React.FC<LineChartProps> = ({
 
   return (
     <div
-      className={`${surfaceClasses} rounded-xl p-4 transition-all duration-300 w-full max-w-full overflow-hidden`}
+      className={`${surfaceClasses} rounded-xl p-4 transition-all duration-300 ${className || 'w-full'} max-w-full overflow-hidden`}
       style={cardBgColor ? { backgroundColor: cardBgColor } : undefined}
     >
       {/* Header */}
@@ -338,5 +342,6 @@ export const metadata = {
     emphasis: 'EmphasisLevel - Visual emphasis: low | medium | high (default: medium)',
     palette: 'ChartPaletteType - Color palette: default | vibrant | pastel | gradient | monochrome | semantic (default: default)',
     useGradient: 'boolean - Use gradient fills for area charts (default: false)',
+    className: 'string - Optional CSS class names',
   },
 };

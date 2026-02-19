@@ -3,6 +3,14 @@ import { ArrowUp, ArrowDown, Minus } from 'lucide-react';
 import { getSurfaceClasses, getToneClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel, EmphasisLevel, ToneVariant } from '../core/types';
 
+const safeStr = (val: any): string => {
+  if (val === null || val === undefined) return '';
+  if (typeof val === 'string') return val;
+  if (typeof val === 'number' || typeof val === 'boolean') return String(val);
+  if (typeof val === 'object' && val.label) return String(val.label);
+  try { return JSON.stringify(val); } catch { return '[value]'; }
+};
+
 interface SummaryCardProps {
   /** Card title */
   title: string;
@@ -17,10 +25,10 @@ interface SummaryCardProps {
     change?: string;
     changeType?: 'positive' | 'negative' | 'neutral';
     subtext?: string;
-  
-  children?: React.ReactNode;
-  renderChild?: (child: any) => React.ReactNode;
-}>;
+
+    children?: React.ReactNode;
+    renderChild?: (child: any) => React.ReactNode;
+  }>;
 
   /** Layout orientation */
   layout?: 'vertical' | 'horizontal' | 'grid';
@@ -52,6 +60,14 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
   emphasis = 'medium',
   tone,
 }) => {
+  const safeItems = Array.isArray(items) ? items : [];
+
+  // Only the 'accent' surface variant has a dark/vivid orange background.
+  // Tone variants (success, error, etc.) use light pastel backgrounds — they need dark text.
+  // If a tone is present, it overrides the variant's background, so we must ensure text is dark.
+  // UPDATE: Accent is now a "Neon Glow" bordered style, so it also needs dark text in light mode.
+  const isDarkSurface = false; // !tone && variant === 'accent';
+
   const getChangeIcon = (changeType?: 'positive' | 'negative' | 'neutral') => {
     switch (changeType) {
       case 'positive':
@@ -84,12 +100,12 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
   return (
     <div className={`${surfaceClasses} rounded-xl p-6 transition-all duration-300`}>
       {/* Header */}
-      <div className="mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
-        <h3 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-2">
+      <div className={`mb-6 pb-4 border-b ${isDarkSurface ? 'border-white/20' : 'border-gray-200 dark:border-gray-700'}`}>
+        <h3 className={`text-xl font-display font-semibold mb-2 ${isDarkSurface ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
           {title}
         </h3>
         {description && (
-          <p className="text-sm text-gray-600 dark:text-gray-300">
+          <p className={`text-sm ${isDarkSurface ? 'text-white/75' : 'text-gray-600 dark:text-gray-300'}`}>
             {description}
           </p>
         )}
@@ -97,7 +113,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
 
       {/* Summary Items */}
       <div className={getLayoutClasses()}>
-        {items.map((item, index) => (
+        {safeItems.map((item, index) => (
           <div
             key={index}
             className={`
@@ -108,15 +124,18 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
           >
             <div className="flex items-start justify-between">
               <div className="flex-1">
-                <div className="text-xs text-gray-500 dark:text-gray-300 uppercase tracking-wide mb-2">
-                  {item.label}
+                <div className={`text-xs uppercase tracking-wide mb-2 ${isDarkSurface ? 'text-white/60' : 'text-gray-500 dark:text-gray-300'}`}>
+                  {safeStr(item.label)}
                 </div>
-                <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1 group-hover:text-orange-500 transition-colors">
-                  {item.value}
+                <div className={`text-2xl font-bold mb-1 transition-colors ${isDarkSurface
+                  ? 'text-white group-hover:text-white/80'
+                  : 'text-gray-900 dark:text-white group-hover:text-orange-500'
+                  }`}>
+                  {safeStr(item.value)}
                 </div>
                 {item.subtext && (
-                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {item.subtext}
+                  <div className={`text-xs mt-1 ${isDarkSurface ? 'text-white/50' : 'text-gray-500 dark:text-gray-400'}`}>
+                    {safeStr(item.subtext)}
                   </div>
                 )}
               </div>
@@ -129,7 +148,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
                   ${item.changeType === 'neutral' ? 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400' : ''}
                 `}>
                   {getChangeIcon(item.changeType)}
-                  <span>{item.change}</span>
+                  <span>{safeStr(item.change)}</span>
                 </div>
               )}
             </div>

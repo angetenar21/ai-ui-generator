@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useData } from '../core/DataContext';
 
 interface MultiSelectOption {
   value: string | number;
@@ -23,6 +24,7 @@ interface MultiSelectProps {
   errorMessage?: string;
   maxSelections?: number;
   showCheckboxes?: boolean;
+  name?: string;
   onChange?: (value: Array<string | number>) => void;
 
   children?: React.ReactNode;
@@ -47,13 +49,15 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   maxSelections,
   showCheckboxes = true,
   onChange,
+  name,
 }) => {
+  const { setData } = useData();
   const [internalValue, setInternalValue] = useState<Array<string | number>>(defaultValue || []);
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const selectedValues = value !== undefined ? value : internalValue;
-  const selectOptions = options || items || [];
+  const selectOptions = (options || items || []).filter(opt => opt && typeof opt === 'object');
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -79,12 +83,14 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
     }
 
     setInternalValue(newValues);
+    if (name) setData(name, newValues);
     if (onChange) onChange(newValues);
   };
 
   const handleRemoveValue = (optionValue: string | number) => {
     const newValues = selectedValues.filter(v => v !== optionValue);
     setInternalValue(newValues);
+    if (name) setData(name, newValues);
     if (onChange) onChange(newValues);
   };
 
@@ -179,7 +185,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
                     <input
                       type="checkbox"
                       checked={isSelected}
-                      onChange={() => {}}
+                      onChange={() => { }}
                       disabled={isDisabled}
                       className="w-4 h-4 rounded border-2 border-gray-600 bg-gray-800 text-blue-600 focus:ring-orange-500 cursor-pointer"
                     />

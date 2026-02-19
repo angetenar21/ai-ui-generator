@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
 
+const safeStr = (val: any): string => {
+  if (val === null || val === undefined) return '';
+  if (typeof val === 'string') return val;
+  if (typeof val === 'number' || typeof val === 'boolean') return String(val);
+  if (typeof val === 'object' && val.label) return String(val.label);
+  try { return JSON.stringify(val); } catch { return '[value]'; }
+};
+
 interface KanbanCard {
   id: string;
   title: string;
@@ -35,6 +43,7 @@ const Kanban: React.FC<KanbanProps> = ({
   onCardClick,
   onCardMove,
 }) => {
+  const safeColumns = Array.isArray(columns) ? columns : [];
   const [draggedCard, setDraggedCard] = useState<{
     card: KanbanCard;
     columnId: string;
@@ -70,7 +79,7 @@ const Kanban: React.FC<KanbanProps> = ({
       </div>
 
       <div className="flex gap-4 overflow-x-auto pb-4">
-        {columns.map((column) => (
+        {safeColumns.filter(c => c && c.id).map((column) => (
           <div
             key={column.id}
             className="flex-shrink-0 w-80"
@@ -88,12 +97,12 @@ const Kanban: React.FC<KanbanProps> = ({
                   )}
                   <h4 className="font-semibold text-white">{column.title}</h4>
                   <span className="text-sm text-gray-400">
-                    ({column.cards.length}
+                    ({(column.cards || []).length}
                     {column.limit ? `/${column.limit}` : ''})
                   </span>
                 </div>
               </div>
-              {column.limit && column.cards.length >= column.limit && (
+              {column.limit && (column.cards || []).length >= column.limit && (
                 <div className="text-xs text-yellow-400">
                   Column limit reached
                 </div>
@@ -102,7 +111,7 @@ const Kanban: React.FC<KanbanProps> = ({
 
             {/* Cards */}
             <div className="space-y-3 min-h-[200px]">
-              {column.cards.map((card) => (
+              {(column.cards || []).map((card) => (
                 <div
                   key={card.id}
                   draggable
@@ -145,7 +154,7 @@ const Kanban: React.FC<KanbanProps> = ({
                           className="px-2 py-0.5 bg-blue-900/30 text-blue-300
                                    border border-blue-700/50 rounded text-xs"
                         >
-                          {tag}
+                          {safeStr(tag)}
                         </span>
                       ))}
                     </div>
@@ -183,7 +192,7 @@ const Kanban: React.FC<KanbanProps> = ({
                 </div>
               ))}
 
-              {column.cards.length === 0 && (
+              {(column.cards || []).length === 0 && (
                 <div className="text-center py-8 text-gray-500 text-sm">
                   Drop cards here
                 </div>
@@ -193,7 +202,7 @@ const Kanban: React.FC<KanbanProps> = ({
         ))}
       </div>
 
-      {columns.length === 0 && (
+      {safeColumns.length === 0 && (
         <div className="text-center py-12 text-gray-400">
           No columns to display
         </div>

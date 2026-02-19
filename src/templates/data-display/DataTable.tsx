@@ -58,7 +58,7 @@ const DataTable: React.FC<DataTableProps> = ({
     // Get field names from column definitions
     const columnFields = (columns as DataTableColumn[]).map(col => col.field || col.id || '');
 
-    return (rows as DataTableRow[]).map((row) => {
+    return (rows as DataTableRow[]).filter(row => row && typeof row === 'object').map((row) => {
       return columnFields.map((field, colIdx) => {
         if (field && row[field] !== undefined) {
           return row[field];
@@ -74,35 +74,58 @@ const DataTable: React.FC<DataTableProps> = ({
     });
   }, [rows, columns]);
 
-  // Helper function to render cell values (handle objects like avatars)
+  // Helper function to render cell values (handle objects like avatars and badges)
   const renderCellValue = (value: any): React.ReactNode => {
     if (value === null || value === undefined) {
       return '';
     }
 
-    // Check if value is an avatar/image object
-    if (typeof value === 'object' && !Array.isArray(value)) {
-      const avatarObj = value as { src?: string; name?: string; size?: number; variant?: string };
-      if (avatarObj.src) {
+    if (typeof value === 'boolean') return value ? '✓' : '✗';
+    if (typeof value === 'string' || typeof value === 'number') return value;
+
+    if (Array.isArray(value)) {
+      return value.map((v, i) => (
+        <span key={i} style={{ marginRight: 4 }}>{renderCellValue(v)}</span>
+      ));
+    }
+
+    if (typeof value === 'object') {
+      // Render avatar/image objects
+      if (value.src) {
         return (
           <img
-            src={avatarObj.src}
-            alt={avatarObj.name || 'avatar'}
+            src={value.src}
+            alt={value.name || 'avatar'}
             style={{
-              width: avatarObj.size || 32,
-              height: avatarObj.size || 32,
-              borderRadius: avatarObj.variant === 'circular' ? '50%' : '4px',
+              width: value.size || 32,
+              height: value.size || 32,
+              borderRadius: value.variant === 'circular' ? '50%' : '4px',
               objectFit: 'cover',
               display: 'inline-block',
             }}
           />
         );
       }
-      // For other objects, try to stringify or return empty
-      return JSON.stringify(value);
+      // Render {label, color} objects as colored badge tags
+      if (value.label !== undefined) {
+        const bg = value.color ? `${value.color}20` : '#F3F4F620';
+        const text = value.color || '#374151';
+        return (
+          <span style={{
+            display: 'inline-flex', alignItems: 'center',
+            padding: '2px 8px', borderRadius: 999,
+            fontSize: 11, fontWeight: 600,
+            backgroundColor: bg, color: text,
+            border: `1px solid ${value.color || '#E5E7EB'}`,
+          }}>
+            {value.label}
+          </span>
+        );
+      }
+      try { return JSON.stringify(value); } catch { return '[object]'; }
     }
 
-    return value;
+    return String(value);
   };
 
   const [sortColumn, setSortColumn] = useState<number | null>(null);

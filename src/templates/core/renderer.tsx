@@ -1,34 +1,62 @@
 import React from 'react';
 import { registry } from './registry';
 import type { ComponentSpec } from './types';
-import { DataProvider } from './DataContext';
+import { DataProvider, useData, resolveVariables } from './DataContext';
+
+/**
+ * Deep-resolves all string values in a props object using DataContext data.
+ * Walks arrays and nested objects recursively.
+ */
+function resolveProps(props: Record<string, any>, data: Record<string, any>): Record<string, any> {
+  if (!props || typeof props !== 'object') return props;
+
+  const resolved: Record<string, any> = {};
+  for (const [key, val] of Object.entries(props)) {
+    if (typeof val === 'string' && val.includes('{')) {
+      resolved[key] = resolveVariables(val, data);
+    } else if (Array.isArray(val)) {
+      resolved[key] = val.map(item =>
+        item && typeof item === 'object' ? resolveProps(item, data) : item
+      );
+    } else if (val && typeof val === 'object' && !React.isValidElement(val)) {
+      resolved[key] = resolveProps(val, data);
+    } else {
+      resolved[key] = val;
+    }
+  }
+  return resolved;
+}
+
+/**
+ * Wrapper that subscribes to DataContext and resolves props reactively.
+ * This is what makes all components respond to Select/input changes.
+ */
+const ReactiveComponent: React.FC<{
+  Component: React.ComponentType<any>;
+  staticProps: Record<string, any>;
+  renderedChildren: React.ReactNode;
+  renderChild: (child: ComponentSpec) => React.ReactNode;
+  componentKey?: string;
+}> = ({ Component, staticProps, renderedChildren, renderChild, componentKey }) => {
+  const { data } = useData();
+  const resolvedProps = resolveProps(staticProps, data);
+
+  return (
+    <Component
+      key={componentKey}
+      {...resolvedProps}
+      children={renderedChildren}
+      renderChild={renderChild}
+    />
+  );
+};
 
 /**
  * Universal Component Renderer
  *
- * This replaces the switch-case statement pattern with dynamic
- * component lookup from the registry.
- *
- * Before (switch-case):
- * ```
- * switch (type) {
- *   case 'line-chart': return <LineChart />;
- *   case 'bar-chart': return <BarChart />;
- *   // ... 100+ more cases
- * }
- * ```
- *
- * After (registry lookup):
- * ```
- * const Component = registry.get(type);
- * return <Component />;
- * ```
- *
- * Benefits:
- * - No manual switch cases
- * - Auto-discovers new components
- * - Type-safe with proper error handling
- * - Supports recursive rendering for nested components
+ * Dynamically looks up components from the registry and renders them.
+ * All string props are resolved against DataContext, making every component
+ * reactive to state changes from Select, TextField, etc.
  */
 export const renderComponent = (spec: ComponentSpec): React.ReactNode => {
   // Safety check: Detect if someone is passing a React element instead of ComponentSpec
@@ -40,24 +68,17 @@ export const renderComponent = (spec: ComponentSpec): React.ReactNode => {
   // Support both formats: {name, templateProps} and {type, props}
   const componentName = (spec as any).name || (spec as any).type;
   const componentProps = (spec as any).templateProps || (spec as any).props || {};
-
-  console.log(`[Renderer] Rendering component: ${componentName}`, {
-    hasChildren: Boolean(componentProps.children || (spec as any).children),
-    childrenCount: (componentProps.children || (spec as any).children || []).length,
-    props: Object.keys(componentProps)
-  });
-
-  // Extract children from props and keep other props separate
-  const { children: rawChildren, ...propsWithoutChildren } = componentProps;
-  const children = rawChildren || (spec as any).children || [];
   const metadata = (spec as any).metadata;
 
-  // Get component from registry (replaces switch-case!)
+  // Extract children from props, keep other props separate
+  const { children: rawChildren, ...propsWithoutChildren } = componentProps;
+  const children = rawChildren || (spec as any).children || [];
+
+  // Get component from registry
   const Component = registry.get(componentName);
 
   // Handle unknown/unregistered components gracefully
   if (!Component) {
-    // Safe string conversion for componentName
     const componentNameStr = typeof componentName === 'symbol'
       ? componentName.toString()
       : String(componentName || 'undefined');
@@ -102,10 +123,9 @@ export const renderComponent = (spec: ComponentSpec): React.ReactNode => {
   // Recursive renderer for children
   const renderChildren = (child: ComponentSpec) => renderComponent(child);
 
-  // Render children array (only if they are valid ComponentSpecs, not already-rendered React elements)
+  // Render children array
   const renderedChildren = Array.isArray(children) && children.length > 0
     ? children.map((child, index) => {
-      // Skip if already a React element
       if (child && typeof child === 'object' && '$$typeof' in child) {
         return child;
       }
@@ -114,13 +134,14 @@ export const renderComponent = (spec: ComponentSpec): React.ReactNode => {
     })
     : undefined;
 
-  // Render the component with props (WITHOUT raw children array)
-  const renderedComponent = (
-    <Component
-      key={metadata?.componentId}
-      {...propsWithoutChildren}
-      children={renderedChildren}
+  // Wrap in ReactiveComponent so props are re-resolved whenever DataContext changes
+  const reactiveComponent = (
+    <ReactiveComponent
+      Component={Component}
+      staticProps={propsWithoutChildren}
+      renderedChildren={renderedChildren}
       renderChild={renderChildren}
+      componentKey={metadata?.componentId}
     />
   );
 
@@ -129,17 +150,12 @@ export const renderComponent = (spec: ComponentSpec): React.ReactNode => {
     console.log('[Renderer] Wrapping component in DataProvider:', componentName, 'Keys:', Object.keys((spec as any).data));
     return (
       <DataProvider initialData={(spec as any).data}>
-        <div style={{ border: '2px solid purple', position: 'relative' }}>
-          <div style={{ position: 'absolute', top: 0, right: 0, background: 'purple', color: 'white', fontSize: '10px', padding: '2px 4px', zIndex: 9999 }}>
-            DATA PROVIDER ACTIVE
-          </div>
-          {renderedComponent}
-        </div>
+        {reactiveComponent}
       </DataProvider>
     );
   }
 
-  return renderedComponent;
+  return reactiveComponent;
 };
 
 /**

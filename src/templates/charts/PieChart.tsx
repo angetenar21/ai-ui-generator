@@ -15,10 +15,10 @@ interface PieChartProps {
       value: number;
       label?: string;
       color?: string;
-    
-  children?: React.ReactNode;
-  renderChild?: (child: any) => React.ReactNode;
-}>;
+
+      children?: React.ReactNode;
+      renderChild?: (child: any) => React.ReactNode;
+    }>;
     innerRadius?: number;
     outerRadius?: number;
     paddingAngle?: number;
@@ -45,6 +45,9 @@ interface PieChartProps {
     bottom?: number;
     left?: number;
   };
+
+  /** Optional CSS class names */
+  className?: string;
 }
 
 const PieChart: React.FC<PieChartProps> = ({
@@ -55,6 +58,7 @@ const PieChart: React.FC<PieChartProps> = ({
   height: propHeight = 300,
   legend = true,
   margin = { top: 10, right: 10, bottom: legend ? 80 : 10, left: 10 },
+  className = '',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [chartSize, setChartSize] = useState({ width: propWidth || 400, height: propHeight });
@@ -92,7 +96,7 @@ const PieChart: React.FC<PieChartProps> = ({
   const legendTextColor = isDarkMode ? '#E5E7EB' : '#374151';
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className={`${className || 'w-full h-full'} flex flex-col`}>
       {(title || description) && (
         <div className="mb-3 px-4 text-center">
           {title && (
@@ -170,5 +174,6 @@ export const metadata = {
     height: 'number',
     legend: 'boolean',
     margin: '{ top?, right?, bottom?, left? }',
+    className: 'string',
   },
 };

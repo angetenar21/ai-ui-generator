@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useData } from '../core/DataContext';
 
 interface RadioOption {
   value: string | number;
@@ -46,12 +47,14 @@ const Radio: React.FC<RadioProps> = ({
   size = 'medium',
   onChange,
 }) => {
+  const { setData } = useData();
   const [internalValue, setInternalValue] = useState<string | number>(defaultValue || '');
   const selectedValue = value !== undefined ? value : internalValue;
-  const radioOptions = options || items || choices || [];
+  const radioOptions = Array.isArray(options) ? options : Array.isArray(items) ? items : Array.isArray(choices) ? choices : [];
 
   const handleChange = (newValue: string | number) => {
     setInternalValue(newValue);
+    if (name && name !== 'radio-group') setData(name, newValue);
     if (onChange) onChange(newValue);
   };
 

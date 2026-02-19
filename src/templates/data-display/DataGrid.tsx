@@ -43,6 +43,25 @@ const DataGrid: React.FC<DataGridProps> = ({
   onRowEdit,
   onRowSelect,
 }) => {
+  const safeColumns = Array.isArray(columns) ? columns : [];
+  const safeRows = Array.isArray(rows) ? rows : [];
+
+  const renderCellValue = (value: any, type?: string): React.ReactNode => {
+    if (value === null || value === undefined) return '';
+    if (type === 'boolean' || typeof value === 'boolean') return value ? '✓' : '✗';
+    if (typeof value === 'string' || typeof value === 'number') return value;
+    if (Array.isArray(value)) return value.map(v => typeof v === 'object' ? JSON.stringify(v) : String(v)).join(', ');
+    if (typeof value === 'object') {
+      if (value.label !== undefined) {
+        const bg = value.color ? `${value.color}20` : '#F3F4F6';
+        const text = value.color || '#374151';
+        return <span style={{ display: 'inline-flex', alignItems: 'center', padding: '2px 8px', borderRadius: 999, fontSize: 11, fontWeight: 600, backgroundColor: bg, color: text, border: `1px solid ${value.color || '#E5E7EB'}` }}>{value.label}</span>;
+      }
+      if (value.src) return <img src={value.src} alt={value.name || 'avatar'} style={{ width: 32, height: 32, borderRadius: '50%', objectFit: 'cover', display: 'inline-block' }} />;
+      try { return JSON.stringify(value); } catch { return '[object]'; }
+    }
+    return String(value);
+  };
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [filters, setFilters] = useState<Record<string, string>>({});
@@ -50,7 +69,7 @@ const DataGrid: React.FC<DataGridProps> = ({
   const [currentPage, setCurrentPage] = useState(1);
 
   // Apply filters
-  let filteredRows = rows.filter((row) => {
+  let filteredRows = safeRows.filter((row) => {
     return Object.entries(filters).every(([columnId, filterValue]) => {
       if (!filterValue) return true;
       const cellValue = String(row[columnId] || '').toLowerCase();
@@ -278,7 +297,7 @@ const DataGrid: React.FC<DataGridProps> = ({
                 </th>
               )}
 
-              {columns.map((column) => (
+              {safeColumns.map((column) => (
                 <th
                   key={column.id}
                   onClick={() => handleSort(column.id)}
@@ -304,10 +323,10 @@ const DataGrid: React.FC<DataGridProps> = ({
               )}
             </tr>
 
-            {columns.some((c) => c.filterable) && (
+            {safeColumns.some((c) => c.filterable) && (
               <tr style={filterRowStyle}>
                 {selectable && <th style={{ padding: 8 }} />}
-                {columns.map((column) => (
+                {safeColumns.map((column) => (
                   <th key={column.id} style={{ padding: '8px 12px' }}>
                     {column.filterable && (
                       <input
@@ -364,7 +383,7 @@ const DataGrid: React.FC<DataGridProps> = ({
                     </td>
                   )}
 
-                  {columns.map((column) => {
+                  {safeColumns.map((column) => {
                     const cellValue = row[column.id];
                     const isAvatarType = column.type === 'avatar';
                     const isImageUrl = typeof cellValue === 'string' && (
@@ -394,11 +413,7 @@ const DataGrid: React.FC<DataGridProps> = ({
                               display: 'inline-block',
                             }}
                           />
-                        ) : column.type === 'boolean'
-                          ? cellValue
-                            ? '✓'
-                            : '✗'
-                          : cellValue}
+                        ) : renderCellValue(cellValue, column.type)}
                       </td>
                     );
                   })}

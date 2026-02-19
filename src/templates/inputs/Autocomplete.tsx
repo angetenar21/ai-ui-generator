@@ -62,7 +62,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const displayValue = value !== undefined ? value : internalValue;
-  const autocompleteOptions = options || items || suggestions || [];
+  const autocompleteOptions = (options || items || suggestions || []).filter(opt => opt && typeof opt === 'object');
 
   useEffect(() => {
     const selectedOption = autocompleteOptions.find(opt => opt.value === displayValue);
@@ -84,10 +84,10 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
 
   const filteredOptions = filterOnType
     ? autocompleteOptions.filter(option =>
-        caseSensitive
-          ? option.label.includes(inputValue)
-          : option.label.toLowerCase().includes(inputValue.toLowerCase())
-      )
+      caseSensitive
+        ? option.label.includes(inputValue)
+        : option.label.toLowerCase().includes(inputValue.toLowerCase())
+    )
     : autocompleteOptions;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

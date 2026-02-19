@@ -66,7 +66,7 @@ const Container: React.FC<ContainerProps> = ({
     <div
       className={`${maxWidthClasses[maxWidth]} ${paddingClasses[padding]} ${centerClass} ${backgroundClass} ${borderClass} ${shadowClass} w-full overflow-visible`}
     >
-      {children && children.length > 0 && renderChild ? (
+      {Array.isArray(children) && children.length > 0 && renderChild ? (
         <div className={spacing === 'none' ? '' : 'space-y-4'}>
           {children.map((child, index) => (
             <div key={index}>{renderChild(child)}</div>

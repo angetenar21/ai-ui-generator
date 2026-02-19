@@ -89,17 +89,19 @@ const Stack: React.FC<StackProps> = ({
     return classes.join(' ');
   };
 
+  const safeChildren = Array.isArray(children) ? children : (children ? [children] : []);
+
   return (
     <div
       className={`flex ${directionClass} ${spacingClasses[spacing]} ${alignClasses[align]} ${justifyClasses[justify]} ${wrapClass} ${widthClass} max-w-full overflow-visible`}
     >
-      {children && children.length > 0 && renderChild ? (
-        children.map((child, index) => (
+      {safeChildren.length > 0 && renderChild ? (
+        safeChildren.map((child, index) => (
           <React.Fragment key={index}>
             <div className={`${getChildWrapperClasses()} overflow-visible`}>
               {renderChild(child)}
             </div>
-            {divider && index < children.length - 1 && (
+            {divider && index < safeChildren.length - 1 && (
               <div className={getDividerClasses()} />
             )}
           </React.Fragment>

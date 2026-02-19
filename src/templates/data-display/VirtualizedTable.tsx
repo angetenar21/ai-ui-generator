@@ -35,6 +35,24 @@ const VirtualizedTable: React.FC<VirtualizedTableProps> = ({
   onRowClick,
   stickyHeader = true,
 }) => {
+  const safeCols = Array.isArray(columns) ? columns : [];
+  const safeRows = Array.isArray(rows) ? rows : [];
+
+  const renderCellValue = (val: any): React.ReactNode => {
+    if (val === null || val === undefined) return '—';
+    if (typeof val === 'boolean') return val ? '✓' : '✗';
+    if (typeof val === 'string' || typeof val === 'number') return String(val);
+    if (Array.isArray(val)) return val.map(v => typeof v === 'object' ? JSON.stringify(v) : String(v)).join(', ');
+    if (typeof val === 'object') {
+      if (val.label !== undefined) {
+        const bg = val.color ? `${val.color}20` : '#F3F4F6';
+        const text = val.color || '#374151';
+        return <span style={{ display: 'inline-flex', alignItems: 'center', padding: '2px 8px', borderRadius: 999, fontSize: 11, fontWeight: 600, backgroundColor: bg, color: text, border: `1px solid ${val.color || '#E5E7EB'}` }}>{val.label}</span>;
+      }
+      try { return JSON.stringify(val); } catch { return '[object]'; }
+    }
+    return String(val);
+  };
   const [scrollTop, setScrollTop] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerHeight, setContainerHeight] = useState(600);
@@ -57,14 +75,14 @@ const VirtualizedTable: React.FC<VirtualizedTableProps> = ({
   };
 
   // Calculate visible range
-  const totalHeight = rows.length * rowHeight;
+  const totalHeight = safeRows.length * rowHeight;
   const startIndex = Math.max(0, Math.floor(scrollTop / rowHeight) - overscan);
   const endIndex = Math.min(
-    rows.length - 1,
+    safeRows.length - 1,
     Math.floor((scrollTop + containerHeight) / rowHeight) + overscan
   );
 
-  const visibleRows = rows.slice(startIndex, endIndex + 1);
+  const visibleRows = safeRows.slice(startIndex, endIndex + 1);
   const offsetY = startIndex * rowHeight;
 
   const getAlignment = (align?: 'left' | 'center' | 'right') => {
@@ -86,7 +104,7 @@ const VirtualizedTable: React.FC<VirtualizedTableProps> = ({
             {title}
           </h3>
           <div className="text-sm text-gray-400">
-            {rows.length.toLocaleString()} rows (virtualized)
+            {safeRows.length.toLocaleString()} rows (virtualized)
           </div>
         </div>
       )}
@@ -101,7 +119,7 @@ const VirtualizedTable: React.FC<VirtualizedTableProps> = ({
         {stickyHeader && (
           <div className="sticky top-0 z-10 bg-gray-800/95 backdrop-blur-sm">
             <div className="flex border-b border-gray-700">
-              {columns.map((column) => (
+              {safeCols.map((column) => (
                 <div
                   key={column.id}
                   className={`
@@ -148,7 +166,7 @@ const VirtualizedTable: React.FC<VirtualizedTableProps> = ({
                   `}
                   style={{ height: `${rowHeight}px` }}
                 >
-                  {columns.map((column) => (
+                  {safeCols.map((column) => (
                     <div
                       key={column.id}
                       className={`
@@ -163,7 +181,7 @@ const VirtualizedTable: React.FC<VirtualizedTableProps> = ({
                     >
                       {column.render
                         ? column.render(row[column.id], row)
-                        : row[column.id]}
+                        : renderCellValue(row[column.id])}
                     </div>
                   ))}
                 </div>
@@ -172,7 +190,7 @@ const VirtualizedTable: React.FC<VirtualizedTableProps> = ({
           </div>
         </div>
 
-        {rows.length === 0 && (
+        {safeRows.length === 0 && (
           <div className="text-center py-12 text-gray-400">
             No data to display
           </div>
@@ -182,7 +200,7 @@ const VirtualizedTable: React.FC<VirtualizedTableProps> = ({
       {/* Performance info */}
       <div className="mt-4 text-xs text-gray-500 flex items-center gap-4">
         <div>
-          Rendering {visibleRows.length} of {rows.length} rows
+          Rendering {visibleRows.length} of {safeRows.length} rows
         </div>
         <div>
           Viewport: {startIndex + 1}-{endIndex + 1}

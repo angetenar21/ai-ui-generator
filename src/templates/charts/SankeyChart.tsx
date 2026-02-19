@@ -11,10 +11,10 @@ interface SankeyChartProps {
   /** Node definitions */
   nodes: Array<{
     name: string;
-  
-  children?: React.ReactNode;
-  renderChild?: (child: any) => React.ReactNode;
-}>;
+
+    children?: React.ReactNode;
+    renderChild?: (child: any) => React.ReactNode;
+  }>;
 
   /** Link/flow definitions */
   links: Array<{
@@ -132,62 +132,32 @@ const SankeyChart: React.FC<SankeyChartProps> = ({
   };
 
   // Colors for links (with transparency)
-  // const getLinkColor = (sourceIndex: number) => {
-  //   const baseColor = colors[sourceIndex % colors.length];
-  //   return isDarkMode ? `${baseColor}80` : `${baseColor}60`; // 50% opacity
-  // };
-
-  // Custom node rendering
-  // const renderNode = (props: any) => {
-  //   const { x, y, width, height, index, payload } = props;
-  //   const nodeColor = payload.color || '#3b82f6';
-
-  //   return (
-  //     <g key={`node-${index}`}>
-  //       <rect
-  //         x={x}
-  //         y={y}
-  //         width={width}
-  //         height={height}
-  //         fill={nodeColor}
-  //         rx={4}
-  //         className="hover:opacity-80 transition-opacity"
-  //       />
-  //       <text
-  //         x={x + width + 8}
-  //         y={y + height / 2}
-  //         fill={isDarkMode ? '#e5e7eb' : '#1f2937'}
-  //         fontSize="12"
-  //         dominantBaseline="middle"
-  //         fontWeight="500"
-  //       >
-  //         {payload.name}
-  //       </text>
-  //     </g>
-  //   );
-  // };
+  const getLinkColor = (sourceIndex: number) => {
+    const baseColor = colors[sourceIndex % colors.length];
+    return isDarkMode ? `${baseColor}80` : `${baseColor}60`; // 50% opacity
+  };
 
   // Custom link rendering with gradient
-  // const renderLink = (props: any) => {
-  //   const { sourceX, sourceY, sourceControlX, targetX, targetY, targetControlX, linkWidth, index } = props;
-  //   const sourceIndex = sankyData.links[index]?.source || 0;
-  //   const linkColor = getLinkColor(sourceIndex);
+  const renderLink = (props: any) => {
+    const { sourceX, sourceY, sourceControlX, targetX, targetY, targetControlX, linkWidth, index } = props;
+    const sourceIndex = sankyData.links[index]?.source || 0;
+    const linkColor = getLinkColor(sourceIndex);
 
-  //   return (
-  //     <path
-  //       key={`link-${index}`}
-  //       d={`
-  //         M${sourceX},${sourceY}
-  //         C${sourceControlX},${sourceY} ${targetControlX},${targetY} ${targetX},${targetY}
-  //       `}
-  //       fill="none"
-  //       stroke={linkColor}
-  //       strokeWidth={Math.max(1, linkWidth)}
-  //       strokeOpacity={isDarkMode ? 0.6 : 0.4}
-  //       className="hover:opacity-100 transition-opacity"
-  //     />
-  //   );
-  // };
+    return (
+      <path
+        key={`link-${index}`}
+        d={`
+          M${sourceX},${sourceY}
+          C${sourceControlX},${sourceY} ${targetControlX},${targetY} ${targetX},${targetY}
+        `}
+        fill="none"
+        stroke={linkColor}
+        strokeWidth={Math.max(1, linkWidth)}
+        strokeOpacity={isDarkMode ? 0.6 : 0.4}
+        className="hover:opacity-100 transition-opacity"
+      />
+    );
+  };
 
   return (
     <div
@@ -218,8 +188,9 @@ const SankeyChart: React.FC<SankeyChartProps> = ({
               <ResponsiveContainer width="100%" height={chartHeight}>
                 <Sankey
                   data={sankyData}
-                  nodePadding={80}
-                  margin={{ top: 20, right: 200, bottom: 20, left: 20 }}
+                  nodePadding={10}
+                  margin={{ top: 10, right: 150, bottom: 10, left: 10 }}
+                  link={renderLink}
                 >
                   <Tooltip
                     contentStyle={{

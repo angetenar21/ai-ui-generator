@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useData } from '../core/DataContext';
 
 interface TextFieldProps {
   label?: string;
@@ -18,6 +19,7 @@ interface TextFieldProps {
   prefix?: string;
   suffix?: string;
   icon?: string;
+  name?: string;
   onChange?: (value: string) => void;
   onBlur?: () => void;
   onFocus?: () => void;
@@ -47,13 +49,16 @@ const TextField: React.FC<TextFieldProps> = ({
   onChange,
   onBlur,
   onFocus,
+  name,
 }) => {
+  const { setData } = useData();
   const [internalValue, setInternalValue] = useState(defaultValue || '');
   const displayValue = value !== undefined ? value : internalValue;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setInternalValue(newValue);
+    if (name) setData(name, newValue);
     if (onChange) onChange(newValue);
   };
 

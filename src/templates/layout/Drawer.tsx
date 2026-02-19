@@ -138,7 +138,7 @@ const Drawer: React.FC<DrawerProps> = ({
         </div>
 
         <div className="p-4">
-          {children && children.length > 0 && renderChild ? (
+          {Array.isArray(children) && children.length > 0 && renderChild ? (
             <div className="space-y-4">
               {children.map((child, index) => (
                 <div key={index}>{renderChild(child)}</div>

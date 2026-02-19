@@ -24,10 +24,10 @@ interface ComposedChartProps {
     data: (number | string | Date)[];
     label?: string;
     scaleType?: 'band' | 'linear' | 'log' | 'time';
-  
-  children?: React.ReactNode;
-  renderChild?: (child: any) => React.ReactNode;
-}>;
+
+    children?: React.ReactNode;
+    renderChild?: (child: any) => React.ReactNode;
+  }>;
   yAxis?: Array<{
     type?: string;
     name?: string;
@@ -80,8 +80,26 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
 
   // Detect dark mode
   const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+
+  const safeSeries = Array.isArray(series) ? series : [];
+  const safeXAxis = Array.isArray(xAxis) ? xAxis : [];
+  const safeYAxis = Array.isArray(yAxis) ? yAxis : [];
+
+  if (safeSeries.length === 0) {
+    return (
+      <div className="card rounded-card p-6 hover:shadow-hover transition-all duration-300">
+        <div className="flex justify-center items-center min-h-[300px] text-gray-600 dark:text-gray-300">
+          <div className="text-center">
+            <div className="text-4xl mb-2">📊</div>
+            <div>No data available</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Separate bar and line series
-  const barSeries = series.filter(s => s.type === 'bar').map(s => ({
+  const barSeries = safeSeries.filter(s => s.type === 'bar').map(s => ({
     type: 'bar' as const,
     data: s.data,
     label: s.name,
@@ -89,7 +107,7 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
     yAxisKey: s.yAxisIndex !== undefined ? `yAxis-${s.yAxisIndex}` : 'yAxis-0',
   }));
 
-  const lineSeries = series.filter(s => s.type === 'line').map(s => ({
+  const lineSeries = safeSeries.filter(s => s.type === 'line').map(s => ({
     type: 'line' as const,
     data: s.data,
     label: s.name,
@@ -105,7 +123,7 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
   const colorPalette = allSeries.map(s => s.color);
 
   // Configure x-axis
-  const xAxisConfig = xAxis.map((axis, index) => ({
+  const xAxisConfig = safeXAxis.map((axis, index) => ({
     id: `xAxis-${index}`,
     data: axis.data,
     scaleType: axis.scaleType || 'band' as const,
@@ -113,7 +131,7 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
   }));
 
   // Configure y-axes
-  const yAxisConfig = yAxis.map((axis, index) => ({
+  const yAxisConfig = safeYAxis.map((axis, index) => ({
     id: `yAxis-${index}`,
     label: axis.name,
     position: axis.position || (index === 0 ? 'left' : 'right') as 'left' | 'right',
@@ -121,7 +139,7 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
 
   // If no y-axis configured, create default ones
   if (yAxisConfig.length === 0) {
-    const hasMultipleYAxes = series.some(s => s.yAxisIndex === 1);
+    const hasMultipleYAxes = safeSeries.some(s => s.yAxisIndex === 1);
     if (hasMultipleYAxes) {
       yAxisConfig.push(
         { id: 'yAxis-0', label: undefined, position: 'left' as const },

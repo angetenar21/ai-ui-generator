@@ -41,8 +41,9 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
   variant = 'default',
   activeColor = 'primary',
 }) => {
+  const safeItems = Array.isArray(items) ? items : [];
   const [selectedValue, setSelectedValue] = useState(
-    defaultValue || items[0]?.value
+    defaultValue || safeItems[0]?.value
   );
 
   const variantClasses = {
@@ -56,7 +57,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
     secondary: 'text-gray-900 dark:text-white',
   };
 
-  if (items.length === 0) {
+  if (safeItems.length === 0) {
     return (
       <div className="card rounded-card p-8 text-center">
         <p className="text-gray-600 dark:text-gray-400">
@@ -71,18 +72,17 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
       className={`${variantClasses[variant]} fixed bottom-0 left-0 right-0 z-40 h-16`}
     >
       <div className="flex items-center justify-around h-full max-w-screen-xl mx-auto px-4">
-        {items.map((item) => {
+        {safeItems.map((item) => {
           const isActive = selectedValue === item.value;
 
           return (
             <button
               key={item.value}
               onClick={() => setSelectedValue(item.value)}
-              className={`flex flex-col items-center justify-center gap-1 min-w-[64px] h-full transition-colors ${
-                isActive
+              className={`flex flex-col items-center justify-center gap-1 min-w-[64px] h-full transition-colors ${isActive
                   ? activeColorClasses[activeColor]
                   : 'text-gray-600 dark:text-gray-400 hover:text-gray-600 dark:text-gray-300'
-              }`}
+                }`}
             >
               <div className="relative">
                 {item.icon && <span className="text-2xl">{item.icon}</span>}
@@ -94,9 +94,8 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
               </div>
               {showLabels && (
                 <span
-                  className={`text-xs font-medium ${
-                    isActive ? 'opacity-100' : 'opacity-70'
-                  }`}
+                  className={`text-xs font-medium ${isActive ? 'opacity-100' : 'opacity-70'
+                    }`}
                 >
                   {item.label}
                 </span>

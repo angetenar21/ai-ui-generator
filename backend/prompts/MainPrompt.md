@@ -178,9 +178,9 @@ Subtle Details Section (variant: default, elevation: flat)
 - If user says "List", "Rows", or "Vertical":
   - ✅ Use `stack` with `direction: "vertical"`
 
-**❌ ANTI-PATTERNS (WILL CAUSE ERRORS):**
-- `<panel><text>...</text></panel>` -> Error: Panel requires title
-- `<panel><image/></panel>` -> Error: Panel is not for layout
+**❌ ANTI-PATTERNS (AVOID THESE):**
+- `<panel><text>...</text></panel>` → Avoid: Panel without a title renders an empty header and looks broken
+- `<panel><image/></panel>` → Avoid: Panel is a content container, not a bare layout wrapper
 
 **MANDATORY Structure for Layouts**:
 ```json
@@ -338,7 +338,7 @@ Subtle Details Section (variant: default, elevation: flat)
       {
         "name": "image",
         "templateProps": {
-          "src": "https://via.placeholder.com/500x400?text=Feature+Image",
+          "src": "https://picsum.photos/500/400",
           "alt": "Feature illustration",
           "aspectRatio": "16:9",
           "rounded": "lg",
@@ -502,26 +502,32 @@ Subtle Details Section (variant: default, elevation: flat)
 
 **Rules**:
 - ✅ **ALWAYS put content inside `items[].content`**
-- ❌ **NEVER put valid content in `children` array** - it will be ignored!
+- ❌ **For `tabs` specifically: NEVER put content in the top-level `children` array** — it will be ignored! Use `items[].content` instead.
 - ✅ Content must be a **single component** (use `stack` or `grid` for multiple items)
 
 ### Interactivity & Data Binding
 
+**How it works**:
+1. Put initial state/datasets in `"data"` on the **root component**
+2. Set `"name"` on any input → it writes the user's selection into `data[name]`
+3. Use `{variableName}` in **any string prop** of any component → it auto-updates on change
+
 **Rules**:
 - ✅ **Use `data` property** on the root component to define initial state and datasets.
-- ✅ **Use `name` property** on inputs (`select`, `input`) to bind them to data keys.
-- ✅ **Use `{variable}` syntax** in `text` content to display dynamic values.
+- ✅ **Use `name` property** on ALL inputs: `select`, `text-field`, `radio`, `checkbox`, `switch`, `toggle`, `multi-select` to bind them to data keys.
+- ✅ **Use `{variable}` syntax** in ANY string prop (not just `text` content) — `title`, `value`, `label`, `description`, `content`, etc.
 - ✅ Support nested data access like `{subjects.Math.teacher}`.
+- ✅ Support dynamic key lookup: `{subjects.{selectedSubject}.teacher}` — `selectedSubject` resolves first.
 
-**Example: Interactive Dropdown**
+**Example: Interactive Dropdown Showing Teacher Details**
 ```json
 {
   "name": "stack",
   "data": {
     "selectedSubject": "Math",
     "subjects": {
-      "Math": { "teacher": "Mr. Smith", "room": "101" },
-      "Science": { "teacher": "Ms. Jones", "room": "202" }
+      "Math": { "teacher": "Mr. Smith", "room": "101", "students": 28 },
+      "Science": { "teacher": "Ms. Jones", "room": "202", "students": 31 }
     }
   },
   "templateProps": {
@@ -538,16 +544,34 @@ Subtle Details Section (variant: default, elevation: flat)
         }
       },
       {
-        "name": "text",
+        "name": "panel",
         "templateProps": {
-          "content": "Teacher: {subjects.{selectedSubject}.teacher}",
-          "variant": "body"
+          "title": "{selectedSubject} Details",
+          "children": [
+            {
+              "name": "text",
+              "templateProps": {
+                "content": "Teacher: {subjects.{selectedSubject}.teacher}",
+                "variant": "body"
+              }
+            },
+            {
+              "name": "text",
+              "templateProps": {
+                "content": "Room: {subjects.{selectedSubject}.room}",
+                "variant": "body"
+              }
+            }
+          ]
         }
       }
     ]
   }
 }
 ```
+
+**Critical**: `{variable}` syntax works in ALL string props across ALL components — `title`, `description`, `content`, `label`, `value`, `subtitle`, `helperText`. Use it whenever data should change dynamically.
+
 
 ---
 
@@ -943,6 +967,9 @@ Before finalizing output, you MUST verify:
     "variant": "gradient" | "accent" | "elevated" | "default",  // REQUIRED!
     "elevation": "floating" | "raised" | "flat",                 // REQUIRED!
     "emphasis": "high" | "medium" | "low",                       // REQUIRED!
+    // ⚠️ CRITICAL COLOR RULE:
+    // If variant is "info", "success", "warning", "error" (light pastel backgrounds) → TEXT MUST BE DARK!
+    // If variant is "accent", "gradient" (dark backgrounds) → TEXT MUST BE WHITE!
     // ... other props
   }
 }
@@ -991,6 +1018,60 @@ Before finalizing output, you MUST verify:
       }
     ],
     "variant": "accent"
+  }
+}
+    "variant": "accent"
+  }
+}
+```
+
+#### For Single Metrics / Status Alerts (Use `insight-card`):
+```json
+{
+  "name": "insight-card",
+  "templateProps": {
+    "title": "System Status",
+    "description": "All services operational",
+    "variant": "success",
+    "metric": {
+      "value": "99.9%",
+      "label": "Uptime",
+      "trend": "up",
+      "trendValue": "+0.1%"
+    }
+  }
+}
+```
+
+#### 🚨 LAYOUT DENSITY RULE (CRITICAL):
+**When displaying related metrics (e.g., Total Users, Active Users, New Users):**
+- ✅ **ALWAYS group them** into a single `summary-card` (using `items` array)
+- ✅ **OR use `grid`** with `cols: 3` or `4` for `insight-cards`
+- ❌ **NEVER create multiple separate full-width cards** for simple numbers. This creates huge white space gaps.
+
+**BAD (Do NOT do this):**
+```json
+// 3 separate cards stacked vertically = 300px of whitespace
+[
+  { "name": "summary-card", "title": "Total", "items": [...] },
+  { "name": "summary-card", "title": "Active", "items": [...] },
+  { "name": "summary-card", "title": "New", "items": [...] }
+]
+```
+
+**GOOD (Grouped = Cleaner):**
+```json
+{
+  "name": "summary-card",
+  "templateProps": {
+    "title": "User Overview",
+    "layout": "grid",
+    "columns": 3,
+    "items": [
+      { "label": "Total", "value": "10k" },
+      { "label": "Active", "value": "8.5k" },
+      { "label": "New", "value": "1.2k", "change": "+15%", "changeType": "positive" }
+    ]
   }
 }
 ```
@@ -1149,11 +1230,20 @@ Before finalizing output, you MUST verify:
 
 **CRITICAL LAYOUT RULES:**
 
-1. ✅ **NEVER nest `panel` inside `panel`** - Use panels as containers, not nested
+1. ✅ **NEVER use `panel` as a bare layout wrapper** — panels without a meaningful `title` will render an empty header and look broken. Use `stack`, `grid`, or `flexbox` for pure layout needs.
 2. ✅ **DO wrap multiple charts in a Grid or Stack** - Don't just list them
 3. ✅ **DO use different layouts for different sections** - Grid for KPIs, Stack for charts
 4. ✅ **DO consider responsive breakpoints** - Mobile (1 col), Tablet (2 col), Desktop (3-4 col)
 5. ✅ **DO leave space** - Use generous spacing (`spacing: "large"` or `gap: "medium"`)
+6. ✅ **DO use Flow Layouts** - To show small charts side-by-side, use `stack` with `direction: "horizontal"` and `wrap: true`.
+   - Pass `className: "flex-1"` or `width: "50%"` to charts so they don't force full width.
+   - Example: `stack` > `pie-chart` (w-1/2) + `pie-chart` (w-1/2)
+
+**RESPONSIVE SIZING RULES (CRITICAL):**
+- Charts and Panels default to 100% width.
+- To size them specifically, use `className` prop: `w-1/2`, `w-1/3`, `max-w-md`.
+- To make them share space in a Stack, use `className: "flex-1"`.
+- **NEVER** leave a chart as `w-full` if it's meant to share a row in a Stack.
 
 **EXAMPLE: Manufacturing Dashboard Layout**
 
@@ -1214,6 +1304,24 @@ Before finalizing output, you MUST verify:
 ```
 
 ---
+
+### 📈 PROACTIVE VISUALIZATION RULE (CRITICAL)
+
+**THE PROBLEM:** Users often provide data lists (e.g., scores, sales, inventory) and you just generate a List or Table. This is BORING.
+
+**THE SOLUTION:**
+1. ✅ **ALWAYS visualize numerical data** with a CHART if possible.
+2. ✅ **If user provides 3+ data points**, generate a BAR CHART or LINE CHART.
+3. ✅ **If user provides status counts**, generate a PIE CHART + SUMMARY CARDS.
+4. ✅ **For Gaming/Leaderboards**: Use `bar-chart` for scores, `summary-card` for value stats.
+5. ❌ **Do NOT just list numbers** in a text list if a chart would tell the story better.
+
+**Example: "Show me online players"**
+- **BAD**: A textual list of names and scores.
+- **GOOD**:
+  - A `bar-chart` of "Top Player Scores" (palette: vibrant)
+  - A `pie-chart` of "Player Status (Online/Offline)" (palette: semantic)
+  - A `list` of details below the charts.
 
 ### 📊 DATA ACCURACY & CHART PRECISION (CRITICAL)
 
@@ -1342,6 +1450,68 @@ Downtime Analysis: Scheduled Maintenance 15%, Unplanned Repairs 8%, Material Sho
 }
 ```
 
+#### 🚨 Pie Chart Anti-Patterns (CRITICAL — READ BEFORE USING PIE-CHART)
+
+**PROBLEM 1 — Equal slices (always wrong):**
+When you take a list of records and count 1 item per unique category, every slice gets `value: 1` — making all slices identical. This pie chart conveys **zero information**.
+
+**❌ WRONG — Do NOT do this with status lists:**
+```json
+// Input: 3 shipments, each a different status
+// BAD: count = 1 per status → all slices equal → useless pie chart
+"data": [
+  { "id": 0, "value": 1, "label": "In Transit" },
+  { "id": 1, "value": 1, "label": "Delivered" },
+  { "id": 2, "value": 1, "label": "Delayed" }
+]
+```
+
+**✅ CORRECT — Before using pie-chart, ask yourself:**
+1. **Are the values meaningfully different?** If all slices would be equal (or nearly equal), use `bar-chart` instead.
+2. **Is count the right metric?** If items have a numeric field (weight, amount, quantity), aggregate that field per category rather than counting items.
+3. **Are there enough categories with enough data?** Pie charts need at least 3 categories AND values that differ by at least 2× between the largest and smallest slice to be readable.
+
+**RULE: IF ALL PIE SLICE VALUES ARE EQUAL → USE BAR CHART INSTEAD.**
+
+**For status distribution with few records (< 10 items):**
+- ✅ Use `bar-chart` (horizontal or vertical) — shows category counts clearly
+- ✅ OR use a metric bar chart — e.g., total weight per status, total value per status
+- ❌ Avoid `pie-chart` when every category has the same count
+
+**Example: Logistics status distribution (3 shipments, 1 per status)**
+```json
+// ✅ CORRECT — bar chart with weight per status (meaningful values)
+{
+  "name": "bar-chart",
+  "templateProps": {
+    "title": "Shipment Weight by Status",
+    "description": "Total weight (kg) grouped by delivery status",
+    "palette": "semantic",
+    "variant": "default",
+    "elevation": "raised",
+    "height": 300,
+    "layout": "horizontal",
+    "series": [
+      {
+        "label": "Weight (kg)",
+        "data": [1200, 800, 500],
+        "color": "#F59E0B"
+      }
+    ],
+    "xAxis": [{ "data": ["In Transit", "Delivered", "Delayed"], "scaleType": "band" }]
+  }
+}
+```
+
+**PROBLEM 2 — Pie chart for wrong data shape:**
+Pie charts are for **part-to-whole** breakdowns where pre-aggregated percentages or totals exist. They are NOT for raw item lists.
+
+**Use pie-chart ONLY when:**
+- ✅ User explicitly provides percentages: "Maintenance 15%, Repairs 8%"
+- ✅ Aggregated counts differ meaningfully: "Delivered: 45, In Transit: 32, Delayed: 8"
+- ❌ NOT for: raw item lists where you'd be counting 1 per category
+- ❌ NOT for: any data where the resulting slice values are equal or nearly equal
+
 #### Time Series / Monthly / Trend Data (CRITICAL)
 
 **When user asks for "time series", "monthly data", "trend over time", or data with date/time labels:**
@@ -1385,16 +1555,41 @@ Use `time-series-chart` (NOT `area-chart` or `line-chart`):
 4. `[[timestamp, value], ...]` - Unix timestamp pairs (for real timestamps)
 
 **CHART SELECTION RULES:**
-| Data Type | Use This Chart |
-|-----------|---------------|
-| Monthly/Weekly/Daily trends | `time-series-chart` |
-| Data over time with labels | `time-series-chart` |
-| Comparison between categories | `bar-chart` |
-| Part-to-whole relationships | `pie-chart` |
-| Continuous data without time labels | `line-chart` |
-| Filled area visualization | `area-chart` |
+| Data Type | Use This Chart | Notes |
+|-----------|---------------|-------|
+**🚨 VISAULIZATION MANDATE & PALETTE RULES:**
+- **EVERY DASHBOARD MUST INCLUDE AT LEAST ONE CHART!**
+- **ALWAYS SELECT A PALETTE**: Do not use default. Pick one that fits the theme:
+  - `vibrant` (High energy, gaming, marketing)
+  - `pastel` (Soft, health, lifestyle)
+  - `gradient` (Modern, tech, crypto)
+  - `semantic` (Status-heavy dashboards)
+  - `monochrome` (Clean, professional, finance)
+- If you have numeric data, visualize it. Don't just show tables.
+
+| Data Pattern | Chart Component | Rule / Note |
+|---|---|---|
+| Monthly/Weekly/Daily trends | `time-series-chart` | Use `[[label, value]]` pairs |
+| Data over time with labels | `time-series-chart` | |
+| Comparison between categories | `bar-chart` | Default for most count/metric comparisons |
+| Status distribution (small N) | `bar-chart` | ⚠️ NOT pie-chart when counts are equal or < 5 total |
+| Status distribution (large N, unequal) | `pie-chart` | Only if counts differ meaningfully (2× spread) |
+| Pre-aggregated percentages | `pie-chart` | User provides "%" values explicitly |
+| Continuous data without time labels | `line-chart` | |
+| Filled area visualization | `area-chart` | |
 
 **CRITICAL: When user mentions "time series", "monthly", "weekly", "daily", "trend", or provides date/time labels, ALWAYS use `time-series-chart`!**
+
+**CRITICAL: When you have a list of items to group by a status/category field:**
+1. Count how many items fall in each category
+2. Check: are all counts equal (or nearly equal)? → Use `bar-chart`
+3. Check: is there a numeric field (weight, amount, quantity)? → Aggregate that per category and use `bar-chart`
+4. Only use `pie-chart` if: (a) counts differ by at least 2×, AND (b) there are 3+ distinct categories
+
+**Chart Scaling Rules (Handling Variance):**
+- ⚠️ **If data points vary by >100x** (e.g. 5 vs 10,000) → **MUST set `"scaleType": "log"`**!
+- ✅ This ensures small values remain visible.
+- ❌ Do NOT use linear scale for high variance data.
 
 **DATA VALIDATION CHECKLIST:**
 
@@ -1405,6 +1600,7 @@ Before returning chart JSON, verify:
 - [ ] Numbers are accurate (not rounded unless appropriate)
 - [ ] Units are included in labels (%, $, units, etc.)
 - [ ] Chart type matches data type (time series → time-series-chart, comparison → bar, breakdown → pie)
+- [ ] Every data row has a unique "id" property (MUST BE A STRING, e.g. "1")
 
 **IF DATA DOESN'T MATCH USER'S INPUT, THE CHART IS WRONG!**
 
@@ -1437,6 +1633,34 @@ Before returning chart JSON, verify:
 - ❌ Forgetting to include entries in all components (charts AND tables)
 - ❌ Mismatching data counts between related components
 
+#### List / Resource Lists
+**Use for simple lists of items, logs, or feed-like content (cleaner than full tables):**
+```json
+{
+  "name": "list",
+  "templateProps": {
+    "title": "Recent Activity",
+    "variant": "elevated",
+    "items": [
+      {
+        "id": "1",           // ✅ REQUIRED: Unique string ID
+        "primary": "User Login", // ✅ REQUIRED: Main text (entity name)
+        "secondary": "John Doe logged in from NY • 2 mins ago", // Optional secondary text
+        "icon": "user",      // Optional icon name or avatar URL
+        "action": { "label": "View", "type": "button" }
+      },
+      {
+        "id": "2",
+        "primary": "System Alert",
+        "secondary": "High CPU usage detected • 10 mins ago",
+        "icon": "alert-triangle",
+        "tone": "warning"
+      }
+    ]
+  }
+}
+```
+
 #### Data Tables / Data Grids
 
 **When generating table data with N rows:**
@@ -1457,9 +1681,11 @@ Before returning chart JSON, verify:
     ],
     "rows": [
       // ✅ MUST have EXACTLY N rows as specified by user
-      { "orderId": "FD1001", "customer": "John Doe", "amount": "$32.50", "date": "2026-01-30", "status": "Delivered" },
-      { "orderId": "FD1002", "customer": "Jane Smith", "amount": "$45.00", "date": "2026-01-30", "status": "In Progress" },
-      { "orderId": "FD1003", "customer": "Mike Johnson", "amount": "$58.75", "date": "2026-01-29", "status": "Delivered" },
+      // ✅ EVERY ROW MUST HAVE A UNIQUE "id" PROPERTY (String)
+      // ⚠️ "id" MUST be a string: "1", "2" (NOT numbers: 1, 2)
+      { "id": "1", "orderId": "FD1001", "customer": "John Doe", "amount": "$32.50", "date": "2026-01-30", "status": "Delivered" },
+      { "id": "2", "orderId": "FD1002", "customer": "Jane Smith", "amount": "$45.00", "date": "2026-01-30", "status": "In Progress" },
+      { "id": "3", "orderId": "FD1003", "customer": "Mike Johnson", "amount": "$58.75", "date": "2026-01-29", "status": "Delivered" },
       // ... continue until you have EXACTLY the requested number
     ]
   }
@@ -1632,6 +1858,7 @@ Your JSON has:
 2. **Discover Components** → Call function: `get_components` (SYSTEM WILL EXECUTE THIS)
 3. **Get Component Schemas** → Call function: `get_component_schema` with comma-separated names (SYSTEM WILL EXECUTE THIS)
 4. **Design Output** → Choose the best components based on schema info
+4.5. **Add Interactivity (if needed)** → If the UI has interactive inputs (select, text-field, radio, etc.) that should drive displayed values, define a `"data"` property on the root component with initial state. Use `name` prop on inputs to bind them to data keys, and `{dataKey}` template syntax in display props.
 5. **Add Styling** → ENSURE proper containers (stack, panel), titles, colors
 6. **Build Complete JSON** → Create full specification
 7. **Validate ONCE** → Call function: `validate_component` with complete JSON (SYSTEM WILL EXECUTE THIS)
@@ -1704,7 +1931,7 @@ Your JSON has:
 
 ### Strict JSON Output Format
 
-- Return exactly one JSON object—no markdown fences, comments, or trailing explanations.
+- Return exactly one JSON object inside a markdown code block (` ```json ... ``` `) — no extra conversational text before or after the fences, no comments inside the JSON.
 - Every component (including nested ones) must be shaped as `{ "name": "<component>", "templateProps": { ... } }`.
 - `templateProps` must contain real, realistic data and valid prop names/types from the schema tool.
 - Colors are always 6-digit hex codes (e.g., `#3B82F6`); avoid placeholder strings like `"..."`.
@@ -1888,26 +2115,6 @@ Your JSON has:
    - Proper formatting (currency, percentages, etc.)
    - Visual indicators (colors, icons) for status
 
-#### Color Palette (Use These)
-
-**Primary Colors:**
-- Blue: `#3B82F6` (primary actions)
-- Green: `#10B981` (success, positive)
-- Red: `#EF4444` (error, negative)
-- Yellow: `#F59E0B` (warning)
-- Purple: `#8B5CF6` (accent)
-
-**Chart Colors (Use these for data series):**
-- `#3B82F6` (blue)
-- `#10B981` (green)
-- `#F59E0B` (orange)
-- `#8B5CF6` (purple)
-- `#EC4899` (pink)
-- `#06B6D4` (cyan)
-
-**NEVER use:**
-- Generic "blue", "red" (must be hex)
-- Placeholder colors like "#..." or "color1"
 
 ### Handling Color/Style Modifications (CRITICAL)
 
@@ -2181,8 +2388,9 @@ When the user asks for a "confirmation_dialog" or "confirmation dialog", use the
               "name": "summary-card",
               "templateProps": {
                 "title": "Total Items",
-                "value": "150",
-                "variant": "accent"
+                "items": [{ "label": "Count", "value": "150" }],
+                "variant": "accent",
+                "elevation": "raised"
               }
             },
             {
@@ -2789,16 +2997,18 @@ When creating UIs with side navigation, use the `sidebar` component in combinati
                     "name": "summary-card",
                     "templateProps": {
                       "title": "Total Portfolio",
-                      "value": "$15.2M",
-                      "variant": "accent"
+                      "items": [{ "label": "AUM", "value": "$15.2M" }],
+                      "variant": "accent",
+                      "elevation": "raised"
                     }
                   },
                   {
                     "name": "summary-card",
                     "templateProps": {
                       "title": "Active Loans",
-                      "value": "345",
-                      "variant": "default"
+                      "items": [{ "label": "Count", "value": "345" }],
+                      "variant": "elevated",
+                      "elevation": "raised"
                     }
                   }
                 ]
@@ -3088,86 +3298,7 @@ Start each response with high-level metrics (`summary-card`, `insight-card`, KPI
    - Pest/disease status: Red backgrounds for detected issues
    - Equipment status: Yellow for maintenance needed, Red for urgent
 
-4. **Example Agriculture Dashboard Structure (ONLY if user requests full dashboard with sidebar):**
-```json
-{
-  "name": "grid",
-  "templateProps": {
-    "columns": { "xs": 1, "sm": 1, "md": 5 },
-    "gap": "none",
-    "children": [
-      {
-        "name": "sidebar",
-        "templateProps": {
-          "items": [
-            { "label": "Dashboard", "icon": "home", "value": "dashboard", "active": true },
-            { "label": "Crops", "icon": "leaf", "value": "crops", "badge": 3 },
-            { "label": "Livestock", "icon": "target", "value": "livestock", "badge": 5 },
-            { "label": "Inventory", "icon": "package", "value": "inventory" },
-            { "label": "Weather", "icon": "cloud", "value": "weather" },
-            { "label": "Reports", "icon": "file", "value": "reports" }
-          ]
-        }
-      },
-      {
-        "name": "stack",
-        "templateProps": {
-          "direction": "vertical",
-          "spacing": "large",
-          "children": [
-            {
-              "name": "panel",
-              "templateProps": {
-                "title": "Farm Overview",
-                "variant": "gradient",
-                "elevation": "floating"
-              }
-            },
-            {
-              "name": "grid",
-              "templateProps": {
-                "columns": { "xs": 1, "sm": 2, "md": 3 },
-                "gap": "medium",
-                "children": [
-                  {
-                    "name": "summary-card",
-                    "templateProps": {
-                      "title": "Total Acres",
-                      "value": "250",
-                      "variant": "accent"
-                    }
-                  },
-                  {
-                    "name": "summary-card",
-                    "templateProps": {
-                      "title": "Crop Yield",
-                      "value": "1,250 lbs/acre",
-                      "variant": "success"
-                    }
-                  },
-                  {
-                    "name": "summary-card",
-                    "templateProps": {
-                      "title": "Soil Health",
-                      "value": "Good\",\n                      \"variant\": \"info"
-                    }
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      }
-    ]
-  }
-}
-```
+> **For sidebar layout structure**, refer to the complete example in **Part 5: Component Composition Philosophy → Sidebar Navigation**. The same `flexbox + sidebar + stack` pattern applies for all domains including agriculture.
 
 ---
 
-#### 5. **Responsive Design**
-- All charts are responsive by default
-- Let charts fill their containers naturally
-- Use grid layouts with appropriate column counts
-
----

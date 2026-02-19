@@ -44,7 +44,7 @@ const Accordion: React.FC<AccordionProps> = ({
 }) => {
   const [expandedItems, setExpandedItems] = useState<Set<number>>(
     new Set(
-      items
+      (Array.isArray(items) ? items : [])
         .map((item, index) => (item.defaultExpanded ? index : -1))
         .filter((index) => index !== -1)
     )
@@ -77,7 +77,9 @@ const Accordion: React.FC<AccordionProps> = ({
     large: 'text-lg',
   };
 
-  if (items.length === 0) {
+  const safeItems = Array.isArray(items) ? items : [];
+
+  if (safeItems.length === 0) {
     return (
       <div className="card rounded-card p-8 text-center">
         <p className="text-gray-600 dark:text-gray-400">Accordion - Add items to display</p>
@@ -87,7 +89,7 @@ const Accordion: React.FC<AccordionProps> = ({
 
   return (
     <div className={`space-y-2 ${sizeClasses[size]}`}>
-      {items.map((item, index) => {
+      {safeItems.map((item, index) => {
         const isExpanded = expandedItems.has(index);
 
         return (
@@ -108,9 +110,8 @@ const Accordion: React.FC<AccordionProps> = ({
                 </span>
               </div>
               <svg
-                className={`w-5 h-5 text-gray-600 dark:text-gray-400 transition-transform ${
-                  isExpanded ? 'rotate-180' : ''
-                }`}
+                className={`w-5 h-5 text-gray-600 dark:text-gray-400 transition-transform ${isExpanded ? 'rotate-180' : ''
+                  }`}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -131,7 +132,7 @@ const Accordion: React.FC<AccordionProps> = ({
                     {item.content}
                   </p>
                 )}
-                {item.children && item.children.length > 0 && renderChild && (
+                {Array.isArray(item.children) && item.children.length > 0 && renderChild && (
                   <div className="space-y-3 mt-3">
                     {item.children.map((child, childIndex) => (
                       <div key={childIndex}>{renderChild(child)}</div>

@@ -130,7 +130,7 @@ const Widget: React.FC<WidgetProps> = ({
               </div>
             )}
 
-            {children && children.length > 0 && renderChild && (
+            {Array.isArray(children) && children.length > 0 && renderChild && (
               <div className="space-y-2">
                 {children.map((child, index) => (
                   <div key={index}>{renderChild(child)}</div>

@@ -1,5 +1,13 @@
 import React from 'react';
 
+const safeStr = (val: any): string => {
+  if (val === null || val === undefined) return '';
+  if (typeof val === 'string') return val;
+  if (typeof val === 'number' || typeof val === 'boolean') return String(val);
+  if (typeof val === 'object' && val.label) return String(val.label);
+  try { return JSON.stringify(val); } catch { return '[value]'; }
+};
+
 type TimelineOrientation = 'vertical' | 'horizontal';
 type TimelineAlign = 'left' | 'right' | 'alternate';
 type ItemStatus = 'completed' | 'active' | 'pending' | 'error';
@@ -32,6 +40,7 @@ const Timeline: React.FC<TimelineProps> = ({
   align = 'left',
   showConnector = true,
 }) => {
+  const safeItems = Array.isArray(items) ? items : [];
   const statusStyles: Record<ItemStatus, { bg: string; border: string; text: string }> = {
     completed: {
       bg: 'bg-green-600',
@@ -72,12 +81,12 @@ const Timeline: React.FC<TimelineProps> = ({
     return (
       <div className="card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 my-4 overflow-x-auto">
         {title && (
-          <h3 className="text-xl font-display font-semibold text-white mb-6">
+          <h3 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-6">
             {title}
           </h3>
         )}
         <div className="flex items-start gap-0 min-w-max pb-4">
-          {items.map((item, index) => {
+          {safeItems.map((item, index) => {
             const styles = getStatusStyles(item.status);
 
             return (
@@ -88,7 +97,7 @@ const Timeline: React.FC<TimelineProps> = ({
                       w-10 h-10 rounded-full
                       ${styles.bg}
                       flex items-center justify-center
-                      text-white font-semibold
+                      text-gray-900 dark:text-white font-semibold
                       border-4 border-gray-900
                       shadow-lg
                     `}
@@ -97,16 +106,16 @@ const Timeline: React.FC<TimelineProps> = ({
                   </div>
                   <div className="mt-4 max-w-[200px]">
                     <div className="text-white font-medium text-sm mb-1">
-                      {item.title}
+                      {safeStr(item.title)}
                     </div>
                     {item.timestamp && (
                       <div className="text-xs text-gray-400 mb-1">
-                        {item.timestamp}
+                        {safeStr(item.timestamp)}
                       </div>
                     )}
                     {item.description && (
                       <div className="text-xs text-gray-300 line-clamp-2">
-                        {item.description}
+                        {safeStr(item.description)}
                       </div>
                     )}
                     {item.content && (
@@ -114,7 +123,7 @@ const Timeline: React.FC<TimelineProps> = ({
                     )}
                   </div>
                 </div>
-                {showConnector && index < items.length - 1 && (
+                {showConnector && index < safeItems.length - 1 && (
                   <div className={`h-0.5 w-16 ${styles.bg} mx-2 mt-[-80px]`} />
                 )}
               </div>
@@ -129,15 +138,15 @@ const Timeline: React.FC<TimelineProps> = ({
   return (
     <div className="card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 my-4">
       {title && (
-        <h3 className="text-xl font-display font-semibold text-white mb-6">
+        <h3 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-6">
           {title}
         </h3>
       )}
       <div className="relative">
-        {items.map((item, index) => {
+        {safeItems.map((item, index) => {
           const styles = getStatusStyles(item.status);
           const itemAlign = getItemAlign(index);
-          const isLast = index === items.length - 1;
+          const isLast = index === safeItems.length - 1;
 
           return (
             <div key={item.id} className="relative pb-8">
@@ -161,7 +170,7 @@ const Timeline: React.FC<TimelineProps> = ({
                     flex-shrink-0 w-10 h-10 rounded-full
                     ${styles.bg}
                     flex items-center justify-center
-                    text-white font-semibold text-sm
+                    text-gray-900 dark:text-white font-semibold text-sm
                     border-4 border-gray-900
                     shadow-lg
                     z-10
@@ -176,18 +185,18 @@ const Timeline: React.FC<TimelineProps> = ({
                     flex-1 ${align === 'alternate' ? (itemAlign === 'right' ? 'text-right pl-8' : 'text-left pr-8 ml-14') : 'ml-0'}
                   `}
                 >
-                  <div className="bg-gray-800/30 rounded-lg p-4 hover:bg-gray-800/50 transition-colors">
+                  <div className="bg-gray-100 dark:bg-gray-800/30 rounded-lg p-4 hover:bg-gray-200 dark:hover:bg-gray-800/50 transition-colors">
                     {item.timestamp && (
                       <div className={`text-xs ${styles.text} mb-2`}>
-                        {item.timestamp}
+                        {safeStr(item.timestamp)}
                       </div>
                     )}
-                    <div className="text-white font-semibold text-base mb-2">
-                      {item.title}
+                    <div className="text-gray-900 dark:text-white font-semibold text-base mb-2">
+                      {safeStr(item.title)}
                     </div>
                     {item.description && (
-                      <div className="text-gray-300 text-sm">
-                        {item.description}
+                      <div className="text-gray-600 dark:text-gray-300 text-sm">
+                        {safeStr(item.description)}
                       </div>
                     )}
                     {item.content && (

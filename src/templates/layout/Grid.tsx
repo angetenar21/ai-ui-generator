@@ -69,7 +69,7 @@ const Grid: React.FC<GridProps> = ({
     }
 
     // Handle responsive object format: { xs: 1, sm: 2, md: 3, ... }
-    if (typeof columns === 'object') {
+    if (typeof columns === 'object' && columns !== null) {
       const classes: string[] = [];
       const colsObj = columns as Record<string, number>;
 
@@ -121,7 +121,7 @@ const Grid: React.FC<GridProps> = ({
       className={`grid w-full max-w-full ${getColumnClasses()} ${gapClasses[gap]} ${alignClasses[alignItems]} ${justifyClasses[justifyItems]}`}
       style={gridStyle}
     >
-      {children && children.length > 0 && renderChild ? (
+      {Array.isArray(children) && children.length > 0 && renderChild ? (
         children.map((child, index) => (
           <div key={index} className="min-w-0 w-full h-full flex flex-col overflow-hidden">
             {renderChild(child)}

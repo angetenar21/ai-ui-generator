@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useData } from '../core/DataContext';
 
 interface ToggleProps {
   /** Label for the toggle */
@@ -25,6 +26,9 @@ interface ToggleProps {
   /** Color variant */
   variant?: 'default' | 'primary' | 'success' | 'danger';
 
+  /** DataContext binding key */
+  name?: string;
+
   children?: React.ReactNode;
   renderChild?: (child: any) => React.ReactNode;
 }
@@ -38,7 +42,9 @@ const Toggle: React.FC<ToggleProps> = ({
   disabled = false,
   size = 'medium',
   variant = 'primary',
+  name,
 }) => {
+  const { setData } = useData();
   const [internalChecked, setInternalChecked] = useState(defaultChecked);
   const isChecked = controlledChecked !== undefined ? controlledChecked : internalChecked;
 
@@ -46,6 +52,7 @@ const Toggle: React.FC<ToggleProps> = ({
     if (disabled) return;
     const newValue = !isChecked;
     setInternalChecked(newValue);
+    if (name) setData(name, newValue);
     onChange?.(newValue);
   };
 

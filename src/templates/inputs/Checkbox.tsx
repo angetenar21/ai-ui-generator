@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useData } from '../core/DataContext';
 
 interface CheckboxProps {
   label?: string;
@@ -12,6 +13,7 @@ interface CheckboxProps {
   helperText?: string;
   color?: 'primary' | 'secondary' | 'success' | 'warning' | 'error';
   size?: 'small' | 'medium' | 'large';
+  name?: string;
   onChange?: (checked: boolean) => void;
 
   children?: React.ReactNode;
@@ -31,7 +33,9 @@ const Checkbox: React.FC<CheckboxProps> = ({
   color = 'primary',
   size = 'medium',
   onChange,
+  name,
 }) => {
+  const { setData } = useData();
   const [internalChecked, setInternalChecked] = useState(defaultChecked);
   const isChecked = checked !== undefined ? checked : internalChecked;
   const displayLabel = label || text;
@@ -39,6 +43,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newChecked = e.target.checked;
     setInternalChecked(newChecked);
+    if (name) setData(name, newChecked);
     if (onChange) onChange(newChecked);
   };
 

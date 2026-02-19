@@ -101,7 +101,7 @@ const Section: React.FC<SectionProps> = ({
         </>
       )}
 
-      {children && children.length > 0 && renderChild ? (
+      {Array.isArray(children) && children.length > 0 && renderChild ? (
         <div className={spacing === 'none' ? '' : 'space-y-4'}>
           {children.map((child, index) => (
             <div key={index}>{renderChild(child)}</div>

@@ -39,6 +39,9 @@ interface PanelProps {
 
   /** Function to render child component specs */
   renderChild?: (child: ComponentSpec) => React.ReactNode;
+
+  /** Optional CSS class names */
+  className?: string;
 }
 
 const Panel: React.FC<PanelProps> = ({
@@ -54,6 +57,7 @@ const Panel: React.FC<PanelProps> = ({
   tone,
   children,
   renderChild,
+  className = '',
 }) => {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
   const displayContent = content || description;
@@ -76,7 +80,7 @@ const Panel: React.FC<PanelProps> = ({
   const secondaryTextClass = 'text-gray-600 dark:text-gray-300';
 
   return (
-    <div className={`${surfaceClasses} rounded-xl overflow-hidden transition-all duration-300 w-full max-w-full ${textColorClass}`}>
+    <div className={`${surfaceClasses} rounded-xl overflow-hidden transition-all duration-300 ${className || 'w-full'} max-w-full ${textColorClass}`}>
       {/* Header */}
       <div
         className={`
@@ -164,5 +168,6 @@ export const metadata = {
     emphasis: 'EmphasisLevel - Visual emphasis: low | medium | high (default: medium)',
     tone: 'ToneVariant - Semantic tone: neutral | primary | accent | success | warning | error | info',
     children: 'ReactNode - Optional nested components',
+    className: 'string - Optional CSS class names',
   },
 };

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useData } from '../core/DataContext';
 
 interface SwitchProps {
   label?: string;
@@ -10,6 +11,7 @@ interface SwitchProps {
   color?: 'primary' | 'secondary' | 'success' | 'warning' | 'error';
   size?: 'small' | 'medium' | 'large';
   labelPosition?: 'left' | 'right';
+  name?: string;
   onChange?: (checked: boolean) => void;
 
   children?: React.ReactNode;
@@ -27,7 +29,9 @@ const Switch: React.FC<SwitchProps> = ({
   size = 'medium',
   labelPosition = 'right',
   onChange,
+  name,
 }) => {
+  const { setData } = useData();
   const [internalChecked, setInternalChecked] = useState(defaultChecked);
   const isChecked = checked !== undefined ? checked : internalChecked;
   const displayLabel = label || text;
@@ -36,6 +40,7 @@ const Switch: React.FC<SwitchProps> = ({
     if (!disabled) {
       const newChecked = !isChecked;
       setInternalChecked(newChecked);
+      if (name) setData(name, newChecked);
       if (onChange) onChange(newChecked);
     }
   };

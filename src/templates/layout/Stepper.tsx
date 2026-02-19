@@ -63,7 +63,9 @@ const Stepper: React.FC<StepperProps> = ({
     },
   };
 
-  if (steps.length === 0) {
+  const safeSteps = Array.isArray(steps) ? steps : [];
+
+  if (safeSteps.length === 0) {
     return (
       <div className="card rounded-card p-8 text-center">
         <p className="text-gray-600 dark:text-gray-400">Stepper - Add steps to display</p>
@@ -100,9 +102,9 @@ const Stepper: React.FC<StepperProps> = ({
   if (orientation === 'vertical') {
     return (
       <div className={`space-y-2 ${sizeClasses[size].text}`}>
-        {steps.map((step, index) => {
+        {safeSteps.map((step, index) => {
           const status = getStepStatus(index, step);
-          const isLast = index === steps.length - 1;
+          const isLast = index === safeSteps.length - 1;
 
           return (
             <div key={index} className="flex gap-4">
@@ -135,9 +137,9 @@ const Stepper: React.FC<StepperProps> = ({
   // Horizontal orientation
   return (
     <div className={`flex items-center ${sizeClasses[size].text}`}>
-      {steps.map((step, index) => {
+      {safeSteps.map((step, index) => {
         const status = getStepStatus(index, step);
-        const isLast = index === steps.length - 1;
+        const isLast = index === safeSteps.length - 1;
 
         return (
           <React.Fragment key={index}>

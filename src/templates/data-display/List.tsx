@@ -1,4 +1,13 @@
 import React from 'react';
+import DynamicIcon from '../core/Icon';
+
+const safeStr = (val: any): string => {
+  if (val === null || val === undefined) return '';
+  if (typeof val === 'string') return val;
+  if (typeof val === 'number' || typeof val === 'boolean') return String(val);
+  if (typeof val === 'object' && val.label) return String(val.label);
+  try { return JSON.stringify(val); } catch { return '[value]'; }
+};
 
 type ListVariant = 'default' | 'bordered' | 'divided';
 type ListDensity = 'compact' | 'comfortable' | 'spacious';
@@ -39,6 +48,7 @@ const List: React.FC<ListProps> = ({
   onSelect,
   onItemClick,
 }) => {
+  const safeItems = Array.isArray(items) ? items : [];
   const [selected, setSelected] = React.useState<string[]>(selectedIds);
 
   const densityStyles: Record<ListDensity, string> = {
@@ -72,7 +82,7 @@ const List: React.FC<ListProps> = ({
     <div className="card border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden my-4">
       {title && (
         <div className="px-6 py-4 border-b border-gray-700/50">
-          <h3 className="text-xl font-display font-semibold text-white">
+          <h3 className="text-xl font-display font-semibold text-gray-900 dark:text-white">
             {title}
           </h3>
         </div>
@@ -83,7 +93,7 @@ const List: React.FC<ListProps> = ({
           ${variant === 'bordered' ? 'border-x border-gray-700/50' : ''}
         `}
       >
-        {items.map((item, index) => (
+        {safeItems.filter(item => item && item.id).map((item, index) => (
           <li
             key={item.id}
             onClick={() => handleItemClick(item.id, item.disabled)}
@@ -91,7 +101,7 @@ const List: React.FC<ListProps> = ({
               ${densityStyles[density]}
               flex items-center gap-4
               transition-colors
-              ${variant === 'divided' && index !== items.length - 1 ? 'border-b border-gray-700/30' : ''}
+              ${variant === 'divided' && index !== safeItems.length - 1 ? 'border-b border-gray-700/30' : ''}
               ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''}
               ${!item.disabled && (selectable || onItemClick) ? 'cursor-pointer hover:bg-gray-800/30' : ''}
               ${isSelected(item.id) ? 'bg-blue-900/20 border-l-4 border-l-blue-500' : ''}
@@ -102,7 +112,7 @@ const List: React.FC<ListProps> = ({
                 <input
                   type="checkbox"
                   checked={isSelected(item.id)}
-                  onChange={() => {}}
+                  onChange={() => { }}
                   className="w-4 h-4 rounded border-gray-600 text-blue-600 focus:ring-orange-500 focus:ring-offset-gray-900"
                   disabled={item.disabled}
                 />
@@ -122,18 +132,18 @@ const List: React.FC<ListProps> = ({
             )}
 
             {item.icon && !item.avatar && (
-              <div className="flex-shrink-0 text-xl text-gray-400">
-                {item.icon}
+              <div className="flex-shrink-0 text-gray-400">
+                <DynamicIcon name={item.icon} className="w-5 h-5" />
               </div>
             )}
 
             <div className="flex-1 min-w-0">
-              <div className="text-white font-medium truncate">
-                {item.primary}
+              <div className="text-gray-900 dark:text-white font-medium truncate">
+                {safeStr(item.primary)}
               </div>
               {item.secondary && (
-                <div className="text-sm text-gray-400 truncate mt-0.5">
-                  {item.secondary}
+                <div className="text-sm text-gray-500 dark:text-gray-400 truncate mt-0.5">
+                  {safeStr(item.secondary)}
                 </div>
               )}
             </div>
@@ -145,7 +155,7 @@ const List: React.FC<ListProps> = ({
         ))}
       </ul>
 
-      {items.length === 0 && (
+      {safeItems.length === 0 && (
         <div className="text-center py-12 text-gray-400">
           No items to display
         </div>

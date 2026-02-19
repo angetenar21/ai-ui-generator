@@ -85,7 +85,10 @@ function buildInterfaceSchema(interfaceName, interfaces) {
     const tsType = propDef.type || '';
 
     // Determine JSON schema type
-    if (tsType === 'string' || tsType.includes("'")) {
+    if (tsType.includes('boolean') && tsType.includes("'")) {
+      // Handle union types like `boolean | 'sm' | 'md' | 'lg' | 'xl'`
+      propSchema = { description: propDef.description || '', anyOf: [{ type: 'boolean' }, { type: 'string' }] };
+    } else if (tsType === 'string' || tsType.includes("'")) {
       propSchema.type = 'string';
     } else if (tsType === 'number') {
       propSchema.type = 'number';
@@ -168,6 +171,10 @@ for (const [componentName, componentDef] of Object.entries(components)) {
     } else if (tsType.includes('[]') || propDef.type === 'array') {
       propSchema.type = 'array';
       propSchema.items = {};
+    } else if (tsType.includes('boolean') && tsType.includes("'")) {
+      // Handle union types like `boolean | 'sm' | 'md' | 'lg' | 'xl'`
+      // Allow both boolean and string values
+      propSchema = { description: propDef.description, anyOf: [{ type: 'boolean' }, { type: 'string' }] };
     } else if (tsType.includes("'") && !tsType.includes('Array') && !tsType.includes('[]')) {
       // If tsType contains single quotes (string literal union types like 'text' | 'email'), treat as string
       propSchema.type = 'string';
@@ -593,7 +600,7 @@ async function callGemini(userMessage, context = '', retryWithApiKey = false, si
       toolConfig,
       generationConfig: {
         temperature: 0.3, // Optimized for speed while maintaining quality
-        maxOutputTokens: 8192, // Balanced for speed and complex layouts
+        maxOutputTokens: 16384, // Increased to prevent JSON truncation for complex layouts
         topP: 0.85, // Optimized for faster sampling
         topK: 20, // Reduced for faster token selection
       },

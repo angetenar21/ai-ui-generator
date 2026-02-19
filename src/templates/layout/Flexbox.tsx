@@ -86,7 +86,7 @@ const Flexbox: React.FC<FlexboxProps> = ({
     <div
       className={`flex ${directionClasses[direction]} ${justifyClasses[justify]} ${alignClasses[align]} ${gapClasses[gap]} ${wrapClasses[wrap]} ${widthClass} ${heightClass}`}
     >
-      {children && children.length > 0 && renderChild ? (
+      {Array.isArray(children) && children.length > 0 && renderChild ? (
         children.map((child, index) => {
           // For horizontal layouts with 2 children (sidebar pattern), make second child flexible
           const isFlexContent = direction === 'row' && children.length === 2 && index === 1;

@@ -23,7 +23,7 @@ export const surfaces: Record<SurfaceVariant, string> = {
   gradient: 'bg-gradient-to-br from-orange-50 via-amber-50 to-orange-100 dark:bg-[#697565] border border-orange-200 dark:border-[#697565]',
 
   // Accent: Vibrant accent color for high emphasis
-  accent: 'bg-gradient-to-br from-orange-500 to-amber-600 dark:bg-[#697565] text-white dark:text-white border border-orange-600 dark:border-[#697565]',
+  accent: 'bg-white dark:bg-gray-900 border-2 border-orange-500 dark:border-orange-400 shadow-[0_0_15px_rgba(249,115,22,0.3)] dark:shadow-[0_0_20px_rgba(249,115,22,0.6)]',
 
   // Glass: Semi-transparent glassmorphism effect
   glass: 'bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl border border-white/20 dark:border-gray-800/20',

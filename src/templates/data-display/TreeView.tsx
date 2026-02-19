@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
 
+const safeStr = (val: any): string => {
+  if (val === null || val === undefined) return '';
+  if (typeof val === 'string') return val;
+  if (typeof val === 'number' || typeof val === 'boolean') return String(val);
+  if (typeof val === 'object' && val.label) return String(val.label);
+  try { return JSON.stringify(val); } catch { return '[value]'; }
+};
+
 interface TreeNode {
   id: string;
   label: string;
@@ -32,8 +40,9 @@ const TreeView: React.FC<TreeViewProps> = ({
   onNodeClick,
   onNodeSelect,
 }) => {
+  const safeData = Array.isArray(data) ? data : [];
   const [expanded, setExpanded] = useState<Set<string>>(
-    defaultExpandAll ? new Set(getAllNodeIds(data)) : new Set()
+    defaultExpandAll ? new Set(getAllNodeIds(safeData)) : new Set()
   );
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
@@ -152,9 +161,8 @@ const TreeView: React.FC<TreeViewProps> = ({
                 className="w-5 h-5 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
               >
                 <svg
-                  className={`w-4 h-4 transition-transform ${
-                    isExpanded ? 'rotate-90' : ''
-                  }`}
+                  className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-90' : ''
+                    }`}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -187,7 +195,7 @@ const TreeView: React.FC<TreeViewProps> = ({
               {node.icon && (
                 <span className="text-gray-400 text-lg">{node.icon}</span>
               )}
-              <span className="text-white text-sm">{node.label}</span>
+              <span className="text-white text-sm">{safeStr(node.label)}</span>
               {node.metadata?.count !== undefined && (
                 <span className="text-xs text-gray-500">
                   ({node.metadata.count})
@@ -223,7 +231,7 @@ const TreeView: React.FC<TreeViewProps> = ({
           </h3>
           <div className="flex gap-2">
             <button
-              onClick={() => setExpanded(new Set(getAllNodeIds(data)))}
+              onClick={() => setExpanded(new Set(getAllNodeIds(safeData)))}
               className="px-3 py-1 text-sm text-gray-300 hover:text-white transition-colors"
             >
               Expand All
@@ -239,18 +247,18 @@ const TreeView: React.FC<TreeViewProps> = ({
       )}
 
       <div className="relative">
-        {data.map((node, index) => (
+        {safeData.map((node, index) => (
           <TreeNodeComponent
             key={node.id}
             node={node}
             level={0}
-            isLast={index === data.length - 1}
+            isLast={index === safeData.length - 1}
             parentLines={[]}
           />
         ))}
       </div>
 
-      {data.length === 0 && (
+      {safeData.length === 0 && (
         <div className="text-center py-12 text-gray-400">
           No data to display
         </div>

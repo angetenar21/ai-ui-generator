@@ -47,16 +47,24 @@ const Select: React.FC<SelectProps> = ({
 }) => {
   const { data, setData } = useData();
 
-  // Initialize state from context if available and name is present
+  // useState MUST come before useEffect (Rules of Hooks)
+  const [internalValue, setInternalValue] = useState<string | number>(
+    // Initialize from context if name is provided and context has a value, else use defaultValue
+    () => {
+      return defaultValue || '';
+    }
+  );
+
+  const displayValue = value !== undefined ? value : internalValue;
+  // Guard against non-array options
+  const selectOptions = Array.isArray(options) ? options : Array.isArray(items) ? items : [];
+
+  // Sync from DataContext when context value changes (e.g. another component sets the same key)
   useEffect(() => {
-    if (name && data && data[name] !== undefined) {
+    if (name && data && data[name] !== undefined && data[name] !== internalValue) {
       setInternalValue(data[name]);
     }
-  }, [data, name]);
-
-  const [internalValue, setInternalValue] = useState<string | number>(defaultValue || '');
-  const displayValue = value !== undefined ? value : internalValue;
-  const selectOptions = options || items || [];
+  }, [data, name]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newValue = e.target.value;
@@ -109,7 +117,7 @@ const Select: React.FC<SelectProps> = ({
         <option value="" disabled hidden>
           {placeholder}
         </option>
-        {selectOptions.map((option, index) => (
+        {selectOptions.filter(opt => opt && typeof opt === 'object').map((option, index) => (
           <option
             key={index}
             value={option.value}
