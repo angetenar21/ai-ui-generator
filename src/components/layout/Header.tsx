@@ -32,18 +32,6 @@ const Header: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const getStatusColor = () => {
-    switch (connectionStatus) {
-      case 'connected':
-        return 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-400';
-      case 'disconnected':
-        return 'bg-red-500/10 border-red-500/30 text-red-700 dark:text-red-400';
-      case 'checking':
-        return 'bg-yellow-500/10 border-yellow-500/30 text-yellow-700 dark:text-yellow-400';
-      default:
-        return 'bg-gray-500/10 border-gray-500/30 text-gray-700 dark:text-gray-400';
-    }
-  };
 
   const getStatusText = () => {
     switch (connectionStatus) {
