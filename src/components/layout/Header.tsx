@@ -92,9 +92,11 @@ const Header: React.FC = () => {
 
       <div className="flex items-center gap-4">
         {/* Connection Status */}
-        <div className={`hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full text-sm backdrop-blur-sm transition-colors ${getStatusColor()}`}>
+        <div className={`group flex items-center gap-0 hover:gap-2 px-2 hover:px-3 py-1.5 rounded-full transition-all duration-300 bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 border border-transparent hover:border-gray-200 dark:hover:border-gray-700`}>
           <span className={`w-2 h-2 rounded-full ${getStatusDot()}`}></span>
-          <span className="font-medium">{getStatusText()}</span>
+          <span className="max-w-0 overflow-hidden group-hover:max-w-xs opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap text-sm font-medium text-gray-600 dark:text-gray-300">
+            {getStatusText()}
+          </span>
         </div>
 
         {/* Theme Toggle */}

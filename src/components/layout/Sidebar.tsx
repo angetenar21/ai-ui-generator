@@ -15,6 +15,10 @@ const Sidebar: React.FC = () => {
     { to: '/tester', icon: FlaskConical, label: 'Tester' },
   ];
 
+  // Compute active jobs for badge
+  const { activeThreads } = useAppStore();
+  const activeJobCount = Object.values(activeThreads).filter(t => t.isLoading).length;
+
   // Handle new chat
   const handleNewChat = () => {
     clearGeneratedComponents();
@@ -78,7 +82,7 @@ const Sidebar: React.FC = () => {
           <img
             src="/doc-e-logo.png"
             alt="Doc-E.ai"
-            className="w-8 h-8 rounded-xl object-contain flex-shrink-0"
+            className="w-8 h-8 object-contain flex-shrink-0"
           />
           {!sidebarCollapsed && (
             <span className="text-lg font-display font-bold whitespace-nowrap text-[#2F6BFF]">
@@ -86,6 +90,24 @@ const Sidebar: React.FC = () => {
             </span>
           )}
         </div>
+
+        {/* New Chat Button */}
+        <button
+          onClick={handleNewChat}
+          className={`w-full gradient-primary text-white font-semibold px-4 py-3 rounded-xl flex items-center gap-2 hover:scale-105 active:scale-95 transition-transform mb-6 shadow-md group relative
+                      ${sidebarCollapsed ? 'justify-center' : 'justify-center'}`}
+          title={sidebarCollapsed ? 'New Chat' : undefined}
+        >
+          <Plus className="w-5 h-5 flex-shrink-0" />
+          {!sidebarCollapsed && <span>New Chat</span>}
+
+          {/* Tooltip for collapsed state */}
+          {sidebarCollapsed && (
+            <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 dark:bg-gray-700 text-white dark:text-gray-200 text-sm rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+              New Chat
+            </div>
+          )}
+        </button>
 
         {/* Navigation */}
         <nav className="flex-1 space-y-2">
@@ -112,7 +134,18 @@ const Sidebar: React.FC = () => {
             >
               <item.icon className="w-5 h-5 flex-shrink-0" />
               {!sidebarCollapsed && (
-                <span className="font-medium">{item.label}</span>
+                <span className="font-medium flex-1">{item.label}</span>
+              )}
+
+              {/* Active Job Badge */}
+              {item.label === 'Chat' && activeJobCount > 0 && (
+                <div className={`
+                  flex items-center justify-center bg-orange-500 text-white text-[10px] font-bold rounded-full
+                  ${sidebarCollapsed ? 'absolute -top-1 -right-1 w-4 h-4' : 'px-2 py-0.5 ml-auto'}
+                  animate-pulse
+                `}>
+                  {sidebarCollapsed ? '' : `${activeJobCount} running`}
+                </div>
               )}
 
               {/* Tooltip for collapsed state */}
@@ -125,31 +158,6 @@ const Sidebar: React.FC = () => {
           ))}
         </nav>
 
-        {/* Divider */}
-        <div className="h-px bg-gray-200 dark:bg-gray-700 my-4" />
-
-        {/* New Chat Button */}
-        <button
-          onClick={handleNewChat}
-          className={`w-full gradient-primary text-white font-semibold px-4 py-3 rounded-xl flex items-center gap-2 hover:scale-105 active:scale-95 transition-transform mb-4 shadow-md group relative
-                      ${sidebarCollapsed ? 'justify-center' : 'justify-center'}`}
-          title={sidebarCollapsed ? 'New Chat' : undefined}
-        >
-          <Plus className="w-5 h-5 flex-shrink-0" />
-          {!sidebarCollapsed && <span>New Chat</span>}
-
-          {/* Tooltip for collapsed state */}
-          {sidebarCollapsed && (
-            <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 dark:bg-gray-700 text-white dark:text-gray-200 text-sm rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
-              New Chat
-            </div>
-          )}
-        </button>
-
-        {/* Footer */}
-        {!sidebarCollapsed && (
-          <div className="text-xs text-gray-700 dark:text-gray-400" />
-        )}
       </aside>
     </>
   );

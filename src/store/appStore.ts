@@ -35,6 +35,18 @@ interface AppState {
   triggerNewChat: () => void;
   resetNewChatTrigger: () => void;
 
+  // Active threads state (supporting concurrent generation)
+  activeThreads: Record<string, {
+    isLoading: boolean;
+    jobStatus: JobStatus | null;
+    queueStatus: QueueStatus | null;
+    jobId: string | null;
+    historyItemId: string | null;
+    abortController: AbortController | null;
+  }>;
+  setThreadState: (threadId: string, state: Partial<AppState['activeThreads'][string]>) => void;
+  clearThreadState: (threadId: string) => void;
+
   // Current chat draft (persistent while navigating)
   currentChatMessages: {
     id: string;
@@ -47,16 +59,6 @@ interface AppState {
   clearCurrentChatMessages: () => void;
   currentChatInput: string;
   setCurrentChatInput: (input: string) => void;
-  chatIsLoading: boolean;
-  setChatIsLoading: (isLoading: boolean) => void;
-  chatJobStatus: JobStatus | null;
-  setChatJobStatus: (status: JobStatus | null) => void;
-  chatQueueStatus: QueueStatus | null;
-  setChatQueueStatus: (status: QueueStatus | null) => void;
-  chatJobId: string | null;
-  setChatJobId: (jobId: string | null) => void;
-  chatHistoryItemId: string | null;
-  setChatHistoryItemId: (historyItemId: string | null) => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -92,6 +94,32 @@ export const useAppStore = create<AppState>((set) => ({
   triggerNewChat: () => set({ shouldStartNewChat: true }),
   resetNewChatTrigger: () => set({ shouldStartNewChat: false }),
 
+  // Active threads
+  activeThreads: {},
+  setThreadState: (threadId, partialState) =>
+    set((state) => ({
+      activeThreads: {
+        ...state.activeThreads,
+        [threadId]: {
+          ...(state.activeThreads[threadId] || {
+            isLoading: false,
+            jobStatus: null,
+            queueStatus: null,
+            jobId: null,
+            historyItemId: null,
+            abortController: null,
+          }),
+          ...partialState,
+        },
+      },
+    })),
+  clearThreadState: (threadId) =>
+    set((state) => {
+      const newThreads = { ...state.activeThreads };
+      delete newThreads[threadId];
+      return { activeThreads: newThreads };
+    }),
+
   // Current chat draft
   currentChatMessages: [],
   setCurrentChatMessages: (messages) => set({ currentChatMessages: messages }),
@@ -102,14 +130,4 @@ export const useAppStore = create<AppState>((set) => ({
   clearCurrentChatMessages: () => set({ currentChatMessages: [] }),
   currentChatInput: '',
   setCurrentChatInput: (input) => set({ currentChatInput: input }),
-  chatIsLoading: false,
-  setChatIsLoading: (isLoading) => set({ chatIsLoading: isLoading }),
-  chatJobStatus: null,
-  setChatJobStatus: (status) => set({ chatJobStatus: status }),
-  chatQueueStatus: null,
-  setChatQueueStatus: (status) => set({ chatQueueStatus: status }),
-  chatJobId: null,
-  setChatJobId: (jobId) => set({ chatJobId: jobId }),
-  chatHistoryItemId: null,
-  setChatHistoryItemId: (historyItemId) => set({ chatHistoryItemId: historyItemId }),
 }));
