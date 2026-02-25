@@ -2,29 +2,23 @@ import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Header from './Header';
 import Sidebar from './Sidebar';
-import { useTheme } from '../../hooks/useTheme';
 
 const AppLayout: React.FC = () => {
-  const { isDarkMode } = useTheme();
-
-  // Force background color based on theme
-  const backgroundColor = isDarkMode ? '#111827' : '#f9fafb';
-
   const location = useLocation();
   const isChatPage = location.pathname === '/';
 
   return (
-    <div
-      className="relative flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-900 transition-colors duration-300"
-      style={{ backgroundColor }}
-    >
-      {/* Sidebar */}
-      <Sidebar />
+    <div className="flex flex-col h-screen w-screen overflow-hidden bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      {/* 100% Width Full-Space Navbar */}
+      <Header />
 
-      <div className="flex-1 flex flex-col overflow-hidden relative z-10">
-        <Header />
+      {/* Play Area Container */}
+      <div className="flex-1 flex flex-row min-h-0 relative z-10 w-full">
+        {/* Sidebar */}
+        <Sidebar />
 
-        <main className={`flex-1 ${isChatPage ? 'overflow-hidden p-0' : 'overflow-y-auto p-6'}`}>
+        {/* Main Content Area */}
+        <main className={`flex-1 ${isChatPage ? 'overflow-hidden p-0' : 'overflow-y-auto p-6'} relative min-w-0 bg-transparent animate-fade-in`}>
           <Outlet />
         </main>
       </div>

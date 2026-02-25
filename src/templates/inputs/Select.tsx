@@ -48,16 +48,25 @@ const Select: React.FC<SelectProps> = ({
   const { data, setData } = useData();
 
   // useState MUST come before useEffect (Rules of Hooks)
-  const [internalValue, setInternalValue] = useState<string | number>(
-    // Initialize from context if name is provided and context has a value, else use defaultValue
-    () => {
-      return defaultValue || '';
+  // Normalize options: support both {label, value} objects and simple strings
+  const rawOptions = options || items || [];
+  const selectOptions = rawOptions.map(opt => {
+    if (typeof opt === 'string' || typeof opt === 'number') {
+      return { label: String(opt), value: opt };
     }
-  );
+    return opt;
+  }).filter(opt => opt && typeof opt === 'object');
+
+  // useState MUST come before useEffect (Rules of Hooks)
+  const [internalValue, setInternalValue] = useState<string | number>(() => {
+    // Priority: 1. Context data if name is provided, 2. defaultValue
+    if (name && data && data[name] !== undefined) {
+      return data[name];
+    }
+    return defaultValue !== undefined ? defaultValue : '';
+  });
 
   const displayValue = value !== undefined ? value : internalValue;
-  // Guard against non-array options
-  const selectOptions = Array.isArray(options) ? options : Array.isArray(items) ? items : [];
 
   // Sync from DataContext when context value changes (e.g. another component sets the same key)
   useEffect(() => {
@@ -117,7 +126,7 @@ const Select: React.FC<SelectProps> = ({
         <option value="" disabled hidden>
           {placeholder}
         </option>
-        {selectOptions.filter(opt => opt && typeof opt === 'object').map((option, index) => (
+        {selectOptions.map((option, index) => (
           <option
             key={index}
             value={option.value}

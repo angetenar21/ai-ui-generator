@@ -67,7 +67,7 @@ const Accordion: React.FC<AccordionProps> = ({
 
   const variantClasses = {
     default: 'bg-gray-50 dark:bg-gray-700',
-    bordered: 'bg-gray-50 dark:bg-gray-700 border border-orange-600',
+    bordered: 'bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600',
     elevated: 'bg-gray-50 dark:bg-gray-700 shadow-md',
   };
 
@@ -126,14 +126,14 @@ const Accordion: React.FC<AccordionProps> = ({
             </button>
 
             {isExpanded && (
-              <div className="px-4 pb-4 pt-2 border-t border-orange-600">
+              <div className="px-4 pb-4 pt-2 border-t border-gray-200 dark:border-gray-600 overflow-visible">
                 {item.content && (
-                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-wrap break-words">
                     {item.content}
                   </p>
                 )}
                 {Array.isArray(item.children) && item.children.length > 0 && renderChild && (
-                  <div className="space-y-3 mt-3">
+                  <div className="space-y-3 mt-3 overflow-visible">
                     {item.children.map((child, childIndex) => (
                       <div key={childIndex}>{renderChild(child)}</div>
                     ))}

@@ -80,9 +80,6 @@ const Stack: React.FC<StackProps> = ({
   // Get child wrapper classes
   const getChildWrapperClasses = () => {
     const classes = ['min-w-0'];
-    if (fullWidth && direction === 'vertical') {
-      classes.push('w-full');
-    }
     if (direction === 'horizontal' && !wrap) {
       classes.push('flex-shrink-0');
     }

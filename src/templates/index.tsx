@@ -11,7 +11,6 @@
  */
 
 import { registry, registerComponent } from './core/registry';
-import { renderComponent, renderComponents, ComponentRenderer } from './core/renderer';
 import { getComponentStats, logRegistryStats } from './core/utils';
 import type { ComponentMetadata } from './core/types';
 
@@ -51,7 +50,10 @@ if (registeredCount > 0) {
 }
 
 // Re-export core functionality
-export { renderComponent, renderComponents, ComponentRenderer };
+export {
+  RenderNode, RenderNodes, ComponentRenderer, useComponentRenderer,
+  renderComponent, renderComponents
+} from './core/renderer';
 export { registry, registerComponent };
 export type { ComponentMetadata } from './core/types';
 

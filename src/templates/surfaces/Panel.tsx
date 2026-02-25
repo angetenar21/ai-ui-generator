@@ -80,12 +80,13 @@ const Panel: React.FC<PanelProps> = ({
   const secondaryTextClass = 'text-gray-600 dark:text-gray-300';
 
   return (
-    <div className={`${surfaceClasses} rounded-xl overflow-hidden transition-all duration-300 ${className || 'w-full'} max-w-full ${textColorClass}`}>
+    <div className={`${surfaceClasses} rounded-xl transition-all duration-300 ${className || 'w-full'} max-w-full ${textColorClass} flex flex-col h-full`}>
       {/* Header */}
       <div
         className={`
           px-4 py-3 border-b border-gray-200 dark:border-gray-700
           ${collapsible ? 'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors' : ''}
+          rounded-t-xl ${isCollapsed && !footer ? 'rounded-b-xl border-b-0' : ''}
         `}
         onClick={() => collapsible && setIsCollapsed(!isCollapsed)}
       >
@@ -112,16 +113,16 @@ const Panel: React.FC<PanelProps> = ({
       {/* Content */}
       {!isCollapsed && (
         <>
-          <div className="px-4 py-3 overflow-hidden">
+          <div className="px-4 py-3">
             {displayContent && (
-              <div className={`${secondaryTextClass} text-sm leading-relaxed`}>
+              <div className={`${secondaryTextClass} text-sm leading-relaxed whitespace-pre-wrap break-words`}>
                 {displayContent}
               </div>
             )}
 
 
             {children && children.length > 0 && renderChild && (
-              <div className="space-y-3 overflow-hidden">
+              <div className="space-y-3 mt-2">
                 {children.map((child, index) => (
                   <div key={index}>{renderChild(child)}</div>
                 ))}
@@ -137,7 +138,7 @@ const Panel: React.FC<PanelProps> = ({
 
           {/* Footer */}
           {footer && (
-            <div className="px-4 py-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/30">
+            <div className={`px-4 py-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/30 rounded-b-xl`}>
               <div className={`${secondaryTextClass} text-xs`}>
                 {footer}
               </div>

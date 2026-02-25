@@ -1,13 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Send, Sparkles, RotateCcw, StopCircle, Mic } from 'lucide-react';
+import { Send, Sparkles, RotateCcw, StopCircle, Mic, LayoutDashboard, FormInput, BarChart3, PanelTop, Grid, Wand2 } from 'lucide-react';
 import ApiService from '../services/apiService';
 import StorageService from '../services/storageService';
 import SessionManager from '../services/sessionManager';
 import { ComponentRenderer } from '../templates';
 import { useAppStore } from '../store/appStore';
-import TypingIndicator from '../components/TypingIndicator';
+import { motion, AnimatePresence } from 'framer-motion';
 import ResponsiveComponentWrapper from '../components/ResponsiveComponentWrapper';
+import { DashboardSkeleton } from '../components/Skeleton';
 import type { ComponentSpec } from '../templates/core/types';
 import { generateUUID } from '../utils/uuid';
 
@@ -157,12 +158,11 @@ const ChatPage: React.FC = () => {
     });
   };
 
-  const handleRetry = async (originalPrompt: string) => {
-    setInput(originalPrompt);
-    await handleSend(originalPrompt);
+  const handleRetry = async (originalPrompt: string, contextComponents?: ComponentSpec[]) => {
+    await handleSend(originalPrompt, contextComponents);
   };
 
-  const handleSend = async (retryPrompt?: string) => {
+  const handleSend = async (retryPrompt?: string, overrideContext?: ComponentSpec[]) => {
     const promptText = retryPrompt || input;
     if (!promptText.trim() || isLoading) return;
 
@@ -235,7 +235,7 @@ const ChatPage: React.FC = () => {
         promptText,
         threadId,
         {
-          previousComponents: messages
+          previousComponents: overrideContext || messages
             .filter((m) => m.role === 'assistant' && typeof m.content === 'object')
             .map((m) => m.content as ComponentSpec),
         },
@@ -322,11 +322,11 @@ const ChatPage: React.FC = () => {
   };
 
   const quickStarts = [
-    { icon: '🎯', label: 'Dashboard', prompt: 'Create a modern analytics dashboard with KPIs and charts', gradient: 'from-orange-500 to-amber-600' },
-    { icon: '📋', label: 'Form', prompt: 'Create a beautiful user registration form', gradient: 'from-purple-500 to-pink-600' },
-    { icon: '📊', label: 'Chart', prompt: 'Create a sales performance chart', gradient: 'from-blue-500 to-cyan-600' },
-    { icon: '🧱', label: 'Card', prompt: 'Create a product showcase card', gradient: 'from-green-500 to-emerald-600' },
-    { icon: '🧩', label: 'Layout', prompt: 'Create a responsive grid layout', gradient: 'from-pink-500 to-rose-600' },
+    { icon: LayoutDashboard, label: 'Dashboard', prompt: 'Create a modern analytics dashboard with KPIs and charts', gradient: 'from-gray-700 to-gray-900 dark:from-gray-800 dark:to-black' },
+    { icon: FormInput, label: 'Form', prompt: 'Create a user registration form', gradient: 'from-slate-700 to-slate-900 dark:from-slate-800 dark:to-black' },
+    { icon: BarChart3, label: 'Chart', prompt: 'Create a sales performance chart', gradient: 'from-zinc-700 to-zinc-900 dark:from-zinc-800 dark:to-black' },
+    { icon: PanelTop, label: 'Card', prompt: 'Create a product showcase card', gradient: 'from-neutral-700 to-neutral-900 dark:from-neutral-800 dark:to-black' },
+    { icon: Grid, label: 'Layout', prompt: 'Create a responsive grid layout', gradient: 'from-stone-700 to-stone-900 dark:from-stone-800 dark:to-black' },
   ];
 
   // Scroll to bottom of the container
@@ -355,10 +355,10 @@ const ChatPage: React.FC = () => {
           /* Hero Section - Centered */
           <div className="min-h-full flex flex-col items-center justify-center px-4">
             {/* Badge */}
-            <div className="glass-light px-6 py-3 rounded-full mb-8 shadow-lg border border-orange-200/40 backdrop-blur-xl">
+            <div className="glass-light px-6 py-3 rounded-full mb-8 shadow-sm border border-orange-200/40 dark:border-orange-800/40 backdrop-blur-xl">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-orange-500" />
-                <span className="text-sm font-semibold bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   Modern • Beautiful • AI-Powered
                 </span>
               </div>
@@ -366,16 +366,18 @@ const ChatPage: React.FC = () => {
 
             {/* Main Heading */}
             <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 text-center max-w-4xl leading-tight">
-              <span className="inline-block animate-twinkle mr-3">✨</span>
-              <span className="bg-gradient-to-r from-gray-900 via-orange-700 to-amber-800 dark:from-white dark:via-orange-300 dark:to-amber-300 bg-clip-text text-transparent">
+              <span className="inline-flex items-center justify-center mr-4">
+                <Wand2 className="w-12 h-12 md:w-16 md:h-16 text-orange-500 animate-float drop-shadow-[0_0_15px_rgba(249,115,22,0.4)]" />
+              </span>
+              <span className="text-gray-900 dark:text-white">
                 What would you like to create?
               </span>
             </h1>
 
             {/* Subheading */}
-            <p className="text-gray-600 dark:text-gray-400 text-center mb-12 max-w-2xl leading-relaxed text-lg px-4">
+            <p className="text-gray-400 opacity-60 text-center mb-12 max-w-2xl leading-relaxed text-lg px-4 font-medium transition-all duration-300">
               Describe any UI component and watch AI generate it instantly with
-              <span className="font-semibold text-orange-600 dark:text-orange-400"> beautiful, production-ready designs</span>
+              <span className="text-gray-400 dark:text-gray-500 block mt-1"> beautiful, production-ready designs.</span>
             </p>
 
             {/* Quick Start Cards */}
@@ -394,9 +396,9 @@ const ChatPage: React.FC = () => {
                     animationDelay: `${index * 0.1}s`,
                   }}
                 >
-                  <span className="text-2xl group-hover:scale-125 transition-transform duration-300">
-                    {item.icon}
-                  </span>
+                  <div className="text-orange-500 group-hover:text-orange-400 drop-shadow-[0_0_8px_rgba(249,115,22,0.4)] group-hover:drop-shadow-[0_0_12px_rgba(249,115,22,0.8)] group-hover:scale-110 transition-all duration-300">
+                    <item.icon className="w-7 h-7" strokeWidth={1.5} />
+                  </div>
                   <div className="text-left">
                     <div className="font-bold text-base">{item.label}</div>
                     <div className="text-xs opacity-90 font-medium">Click to try</div>
@@ -413,10 +415,10 @@ const ChatPage: React.FC = () => {
               {/* Status Badge */}
               {jobStatus && (
                 <div className="flex justify-center animate-slide-up">
-                  <div className="inline-flex items-center gap-3 px-5 py-3 rounded-full bg-gradient-to-r from-orange-500/10 to-amber-500/10 border border-orange-200 dark:border-orange-800 backdrop-blur-xl shadow-lg">
+                  <div className="inline-flex items-center gap-3 px-5 py-3 rounded-full bg-white/50 dark:bg-gray-800/50 border border-orange-200/50 dark:border-orange-800/50 backdrop-blur-xl shadow-sm">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
-                      <span className="text-sm font-bold uppercase tracking-wider text-orange-700 dark:text-orange-300">
+                      <span className="text-sm font-medium tracking-wide text-gray-700 dark:text-gray-300">
                         {jobStatus}
                       </span>
                     </div>
@@ -439,7 +441,7 @@ const ChatPage: React.FC = () => {
                   {message.role === 'user' ? (
                     // User Message
                     <div className="max-w-[75%] md:max-w-[65%] relative group">
-                      <div className="bg-gradient-to-br from-orange-500 via-orange-600 to-amber-600 text-white px-6 py-4 rounded-3xl rounded-tr-md shadow-lg hover:shadow-xl transition-shadow duration-300">
+                      <div className="bg-gray-50/50 dark:bg-gray-900/30 text-gray-600 dark:text-gray-400 px-6 py-4 rounded-3xl rounded-tr-md shadow-sm border border-gray-100 dark:border-gray-800 backdrop-blur-sm transition-all duration-300 hover:bg-white dark:hover:bg-gray-800/50 hover:shadow-md">
                         <p className="text-sm md:text-base leading-relaxed font-medium">
                           {message.content as string}
                         </p>
@@ -456,31 +458,42 @@ const ChatPage: React.FC = () => {
                             </p>
                           </div>
                         ) : (
-                          <div className="w-full max-w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl rounded-tl-md p-4 md:p-6 shadow-2xl border border-gray-200/50 dark:border-gray-700/50 hover:shadow-3xl transition-shadow duration-300 overflow-hidden">
-                            <div className="w-full max-w-full overflow-x-auto overflow-y-auto" style={{ maxHeight: '80vh' }}>
+                          <motion.div
+                            initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                            className="inline-block max-w-[100%] bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl rounded-tl-md p-4 md:p-6 shadow-2xl border border-gray-200/50 dark:border-gray-700/50 hover:shadow-3xl transition-shadow duration-300 overflow-hidden"
+                          >
+                            <div className="w-full max-w-full overflow-x-auto">
                               <ResponsiveComponentWrapper maxWidth={1200}>
                                 <ComponentRenderer spec={message.content as ComponentSpec} />
                               </ResponsiveComponentWrapper>
                             </div>
-                          </div>
+                          </motion.div>
                         )}
                       </div>
 
                       {/* Action buttons for assistant messages */}
-                      {index === messages.length - 1 && !isLoading && (
+                      {!isLoading && (
                         <div className="flex items-center gap-2 ml-2">
                           <button
                             onClick={() => {
                               const previousUserMessage = messages.slice(0, index).reverse().find(m => m.role === 'user');
                               if (previousUserMessage) {
-                                handleRetry(previousUserMessage.content as string);
+                                // Filter components to only those that existed BEFORE this message
+                                const relevantComponents = messages
+                                  .slice(0, index)
+                                  .filter(m => m.role === 'assistant' && typeof m.content === 'object')
+                                  .map(m => m.content as ComponentSpec);
+
+                                handleRetry(previousUserMessage.content as string, relevantComponents);
                               }
                             }}
-                            className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
-                            title="Retry"
+                            className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800/50 rounded-lg transition-all duration-200"
+                            title="Regenerate this specific response"
                           >
                             <RotateCcw className="w-3.5 h-3.5" />
-                            <span>Retry</span>
+                            <span>Regenerate</span>
                           </button>
                         </div>
                       )}
@@ -488,36 +501,35 @@ const ChatPage: React.FC = () => {
                   )}
                 </div>
               ))}
-
-              {/* Typing Indicator */}
-              {isLoading && (
-                <div className="flex flex-col items-start gap-2 animate-slide-up">
-                  <div className="glass-light rounded-3xl rounded-tl-md px-6 py-4 shadow-lg border border-gray-200/50 dark:border-gray-700/50">
-                    <div className="flex items-center gap-4">
-                      <TypingIndicator status={jobStatus} />
-                      {queueStatus && (
-                        <div className="flex items-center gap-2 pl-4 border-l border-gray-300 dark:border-gray-600">
-                          <span className="text-xs text-gray-500 dark:text-gray-400">
-                            Queue: {queueStatus.jobs.queued}
-                          </span>
-                        </div>
-                      )}
+              {/* Loading Skeleton */}
+              <AnimatePresence>
+                {isLoading && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.98, transition: { duration: 0.15 } }}
+                    transition={{ type: "spring", stiffness: 350, damping: 20 }}
+                    className="flex flex-col items-start gap-4 w-full pb-8"
+                  >
+                    {/* Modern Skeleton UI */}
+                    <div className="w-full max-w-3xl bg-white/40 dark:bg-gray-800/40 backdrop-blur-xl rounded-[2rem] rounded-tl-md p-4 md:p-6 shadow-2xl border border-white/20 dark:border-gray-700/30 overflow-hidden">
+                      <DashboardSkeleton />
                     </div>
-                  </div>
 
-                  {/* Stop button during generation */}
-                  <div className="flex items-center gap-2 ml-2">
-                    <button
-                      onClick={handleStopGeneration}
-                      className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200"
-                      title="Stop generation"
-                    >
-                      <StopCircle className="w-3.5 h-3.5" />
-                      <span>Stop</span>
-                    </button>
-                  </div>
-                </div>
-              )}
+                    {/* Stop button during generation */}
+                    <div className="flex items-center gap-2 ml-2">
+                      <button
+                        onClick={handleStopGeneration}
+                        className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200"
+                        title="Stop generation"
+                      >
+                        <StopCircle className="w-3.5 h-3.5" />
+                        <span>Stop</span>
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               <div ref={messagesEndRef} />
             </div>
@@ -529,12 +541,11 @@ const ChatPage: React.FC = () => {
       <div className="absolute bottom-6 left-0 right-0 px-4 z-30 pointer-events-none">
         <div className="max-w-4xl mx-auto pointer-events-auto">
           <div className="relative">
-            {/* Gradient glow effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-amber-500/20 rounded-full blur-xl" />
+            {/* Subtle glow effect */}
+            <div className="absolute inset-0 bg-orange-500/10 dark:bg-orange-500/20 rounded-full blur-xl" />
 
             {/* Input container */}
-            {/* Input container */}
-            <div className="relative bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-2xl p-2 flex items-center gap-3 shadow-sm border border-gray-200/50 dark:border-gray-700/50 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all duration-300">
+            <div className="relative bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-2xl p-2 flex items-center gap-2 shadow-md border border-gray-200 dark:border-gray-800 focus-within:ring-1 focus-within:ring-orange-500/50 focus-within:border-orange-500/50 transition-all duration-300">
               <input
                 type="text"
                 value={input}
@@ -545,9 +556,9 @@ const ChatPage: React.FC = () => {
                     handleSend();
                   }
                 }}
-                placeholder="✨ Describe your perfect UI..."
+                placeholder="Describe your perfect UI..."
                 disabled={isLoading}
-                className="flex-1 bg-transparent border-0 outline-none text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 px-3 py-3 text-base font-medium"
+                className="flex-1 bg-transparent border-0 outline-none text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 px-4 py-3 text-base font-medium"
               />
 
               <button className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-gray-800/50">
@@ -557,7 +568,7 @@ const ChatPage: React.FC = () => {
               <button
                 onClick={() => handleSend()}
                 disabled={!input.trim() || isLoading}
-                className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 dark:disabled:bg-gray-700 text-white p-3 rounded-xl transition-all disabled:cursor-not-allowed flex items-center justify-center shadow-md hover:shadow-lg active:scale-95"
+                className="bg-orange-500 hover:bg-orange-600 disabled:bg-gray-200 dark:disabled:bg-gray-800 dark:disabled:text-gray-600 disabled:text-gray-400 text-white p-3 rounded-xl transition-all disabled:cursor-not-allowed flex items-center justify-center shadow-sm active:scale-95"
               >
                 <Send className="w-5 h-5" />
               </button>
@@ -565,7 +576,7 @@ const ChatPage: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

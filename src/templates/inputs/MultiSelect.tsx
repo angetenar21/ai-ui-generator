@@ -51,13 +51,29 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   onChange,
   name,
 }) => {
-  const { setData } = useData();
-  const [internalValue, setInternalValue] = useState<Array<string | number>>(defaultValue || []);
+  const { data, setData } = useData();
+
+  // Normalize options: support both {label, value} objects and simple strings
+  const rawOptions = options || items || [];
+  const selectOptions = rawOptions.map(opt => {
+    if (typeof opt === 'string' || typeof opt === 'number') {
+      return { label: String(opt), value: opt };
+    }
+    return opt;
+  }).filter(opt => opt && typeof opt === 'object');
+
+  const [internalValue, setInternalValue] = useState<Array<string | number>>(() => {
+    // Priority: 1. Context data if name is provided, 2. defaultValue
+    if (name && data && data[name] !== undefined && Array.isArray(data[name])) {
+      return data[name];
+    }
+    return defaultValue || [];
+  });
+
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const selectedValues = value !== undefined ? value : internalValue;
-  const selectOptions = (options || items || []).filter(opt => opt && typeof opt === 'object');
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

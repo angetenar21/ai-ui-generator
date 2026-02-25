@@ -101,13 +101,13 @@ const HistoryPage: React.FC = () => {
       {/* Header */}
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <p className="text-xs font-medium uppercase tracking-[0.18em] text-gray-700 dark:text-gray-400 mb-2" style={{ color: '#6B7280' }}>
+          <p className="text-xs font-medium uppercase tracking-[0.18em] text-gray-500 mb-2">
             History
           </p>
-          <h2 className="text-4xl font-display font-bold text-gray-900 dark:text-white mb-2" style={{ color: '#111827' }}>
+          <h2 className="text-4xl font-display font-bold text-gray-900 dark:text-white mb-2">
             Chat History
           </h2>
-          <p className="text-gray-700 dark:text-gray-300 text-lg" style={{ color: '#374151' }}>
+          <p className="text-gray-500 dark:text-gray-400 text-lg">
             Browse through your previous AI generations
           </p>
         </div>
@@ -127,13 +127,13 @@ const HistoryPage: React.FC = () => {
       {threads.length === 0 ? (
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="card rounded-card p-12 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full gradient-primary flex items-center justify-center text-white">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-900 dark:bg-gray-800 flex items-center justify-center text-orange-500 shadow-lg">
               <MessageSquare className="w-8 h-8" />
             </div>
-            <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2" style={{ color: '#111827' }}>
+            <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
               No History Found
             </h3>
-            <p className="text-gray-700 dark:text-gray-300" style={{ color: '#374151' }}>
+            <p className="text-gray-500 dark:text-gray-400">
               Create your first AI component to see it here
             </p>
           </div>
@@ -147,7 +147,7 @@ const HistoryPage: React.FC = () => {
               onClick={() => handleThreadClick(thread.id)}
             >
               <div className="flex items-start justify-between mb-3">
-                <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center text-white flex-shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-gray-900 dark:bg-gray-800 flex items-center justify-center text-orange-500 flex-shrink-0 shadow-sm transition-colors group-hover:bg-orange-500 group-hover:text-white">
                   <MessageSquare className="w-5 h-5" />
                 </div>
                 {thread.status === 'pending' && (
@@ -177,15 +177,15 @@ const HistoryPage: React.FC = () => {
                 </button>
               </div>
 
-              <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2" style={{ color: '#111827' }}>
+              <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
                 {thread.firstPrompt}
               </h3>
 
               <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-600 dark:text-gray-400" style={{ color: '#6B7280' }}>
+                <span className="text-gray-600 dark:text-gray-400">
                   {thread.items.length} {thread.items.length === 1 ? 'message' : 'messages'}
                 </span>
-                <span className="text-gray-500 dark:text-gray-500 text-xs" style={{ color: '#9CA3AF' }}>
+                <span className="text-gray-400 dark:text-gray-500 text-xs">
                   {formatDate(thread.lastTimestamp)}
                 </span>
               </div>

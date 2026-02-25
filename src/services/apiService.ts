@@ -476,6 +476,11 @@ class ApiService {
       metadata,
     };
 
+    // Preserve data block if present (for scavenging)
+    if (data.data) {
+      (componentSpec as any).data = data.data;
+    }
+
     if (children && children.length > 0) {
       componentSpec.children = children;
     }

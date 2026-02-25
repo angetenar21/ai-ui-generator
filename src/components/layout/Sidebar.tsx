@@ -42,22 +42,24 @@ const Sidebar: React.FC = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed lg:static top-0 left-0 h-full card-elevated
-                   transform transition-all duration-300 z-30 rounded-card m-5 p-5
-                   flex flex-col
-                   ${sidebarCollapsed ? 'w-20' : 'w-64'}
+        className={`relative bg-white dark:bg-gray-900 
+                   border border-gray-200 dark:border-gray-800
+                   transform transition-all duration-300 z-30
+                   flex flex-col flex-shrink-0 animate-slide-in-left
+                   h-[calc(100%-1rem)] ml-4 mt-2 mb-4 rounded-2xl shadow-xl
+                   ${sidebarCollapsed ? 'w-20' : 'w-56'}
                    ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
         {/* Collapse/Expand Button - Desktop Only */}
         <button
           onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
           className="hidden lg:flex absolute -right-3 top-8 w-6 h-6 rounded-full
-                     bg-white/10 dark:bg-gray-800/50 backdrop-blur-md border border-white/20 dark:border-gray-600/30
+                     bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700
                      items-center justify-center
-                     hover:bg-white/20 dark:hover:bg-gray-700/50 hover:scale-110
+                     hover:bg-gray-50 dark:hover:bg-gray-700 hover:scale-110
                      active:scale-95
                      transition-all duration-200
-                     text-gray-700 dark:text-gray-300 shadow-lg z-40"
+                     text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 shadow-sm z-40"
           title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
           {sidebarCollapsed ? (
@@ -68,95 +70,102 @@ const Sidebar: React.FC = () => {
         </button>
 
         {/* Mobile close button */}
-        <div className="lg:hidden flex justify-end mb-4">
+        <div className="lg:hidden flex justify-end mb-4 p-4 pb-0">
           <button
             onClick={() => setSidebarOpen(false)}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-gray-700 dark:text-gray-300"
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors text-gray-500 dark:text-gray-400"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Logo */}
-        <div className={`flex items-center mb-6 px-2 transition-all duration-300 ${sidebarCollapsed ? 'justify-center' : 'gap-3'}`}>
-          <img
-            src="/doc-e-logo.png"
-            alt="Doc-E.ai"
-            className="w-8 h-8 object-contain flex-shrink-0"
-          />
-          {!sidebarCollapsed && (
-            <span className="text-lg font-display font-bold whitespace-nowrap text-[#2F6BFF]">
-              Doc-E.ai
-            </span>
-          )}
-        </div>
+        <div className="flex-1 flex flex-col p-4 pt-6 overflow-y-auto">
 
-        {/* New Chat Button */}
-        <button
-          onClick={handleNewChat}
-          className={`w-full gradient-primary text-white font-semibold px-4 py-3 rounded-xl flex items-center gap-2 hover:scale-105 active:scale-95 transition-transform mb-6 shadow-md group relative
-                      ${sidebarCollapsed ? 'justify-center' : 'justify-center'}`}
-          title={sidebarCollapsed ? 'New Chat' : undefined}
-        >
-          <Plus className="w-5 h-5 flex-shrink-0" />
-          {!sidebarCollapsed && <span>New Chat</span>}
+          {/* New Chat Button */}
+          <button
+            onClick={handleNewChat}
+            className={`bg-orange-500 hover:bg-orange-600 dark:bg-orange-500 dark:hover:bg-orange-600 text-white font-medium rounded-xl flex items-center justify-center shadow-sm group relative transition-all duration-300 flex-shrink-0
+                        ${sidebarCollapsed ? 'w-12 h-12 p-0 mx-auto mb-8' : 'w-full py-3 px-4 mb-8'}`}
+            title={sidebarCollapsed ? 'New Chat' : undefined}
+          >
+            <Plus className="w-5 h-5 flex-shrink-0" />
 
-          {/* Tooltip for collapsed state */}
-          {sidebarCollapsed && (
-            <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 dark:bg-gray-700 text-white dark:text-gray-200 text-sm rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
-              New Chat
-            </div>
-          )}
-        </button>
-
-        {/* Navigation */}
-        <nav className="flex-1 space-y-2">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
-                 hover:translate-x-1 group relative
-                 ${sidebarCollapsed ? 'justify-center' : ''}
-                 ${isActive
-                  ? 'bg-orange-500 text-white'
-                  : 'text-gray-900 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
-                }`
-              }
-              onClick={() => {
-                // Close sidebar on mobile after navigation
-                if (window.innerWidth < 1024) {
-                  setSidebarOpen(false);
-                }
-              }}
-              title={sidebarCollapsed ? item.label : undefined}
+            {/* Smooth CSS Transition for Label */}
+            <span
+              className={`transition-all duration-300 overflow-hidden whitespace-nowrap
+                ${sidebarCollapsed ? 'max-w-0 opacity-0 ml-0' : 'max-w-[200px] opacity-100 ml-2'}
+              `}
             >
-              <item.icon className="w-5 h-5 flex-shrink-0" />
-              {!sidebarCollapsed && (
-                <span className="font-medium flex-1">{item.label}</span>
-              )}
+              New Chat
+            </span>
 
-              {/* Active Job Badge */}
-              {item.label === 'Chat' && activeJobCount > 0 && (
-                <div className={`
-                  flex items-center justify-center bg-orange-500 text-white text-[10px] font-bold rounded-full
-                  ${sidebarCollapsed ? 'absolute -top-1 -right-1 w-4 h-4' : 'px-2 py-0.5 ml-auto'}
-                  animate-pulse
-                `}>
-                  {sidebarCollapsed ? '' : `${activeJobCount} running`}
-                </div>
-              )}
+            {/* Tooltip for collapsed state */}
+            {sidebarCollapsed && (
+              <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 dark:bg-gray-700 text-white dark:text-gray-200 text-sm rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+                New Chat
+              </div>
+            )}
+          </button>
 
-              {/* Tooltip for collapsed state */}
-              {sidebarCollapsed && (
-                <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 dark:bg-gray-700 text-white dark:text-gray-200 text-sm rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
-                  {item.label}
-                </div>
-              )}
-            </NavLink>
-          ))}
-        </nav>
+          {/* Navigation */}
+          <nav className="flex-1 space-y-2">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) =>
+                  `flex items-center rounded-xl transition-all duration-200
+                   hover:translate-x-1 group relative flex-shrink-0
+                   ${sidebarCollapsed ? 'justify-center p-0 w-12 h-12 mx-auto' : 'gap-3 px-4 py-3 w-full'}
+                   ${isActive
+                    ? 'bg-gray-900 dark:bg-gray-800 text-white shadow-sm'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
+                  }`
+                }
+                onClick={() => {
+                  // Close sidebar on mobile after navigation
+                  if (window.innerWidth < 1024) {
+                    setSidebarOpen(false);
+                  }
+                }}
+                title={sidebarCollapsed ? item.label : undefined}
+              >
+                {({ isActive }) => (
+                  <>
+                    <item.icon className={`w-5 h-5 flex-shrink-0 transition-colors ${isActive ? 'text-orange-500' : ''}`} />
+
+                    {/* Smooth CSS Transition for Label */}
+                    <span
+                      className={`font-medium transition-all duration-300 overflow-hidden whitespace-nowrap
+                        ${sidebarCollapsed ? 'max-w-0 opacity-0 ml-0' : 'max-w-[200px] opacity-100 flex-1'}
+                      `}
+                    >
+                      {item.label}
+                    </span>
+
+                    {/* Active Job Badge */}
+                    {item.label === 'Chat' && activeJobCount > 0 && (
+                      <div className={`
+                      flex items-center justify-center bg-orange-500 text-white text-[10px] font-bold rounded-full
+                      ${sidebarCollapsed ? 'absolute -top-1 -right-1 w-4 h-4' : 'px-2 py-0.5 ml-auto'}
+                      animate-pulse shadow-sm
+                    `}>
+                        {sidebarCollapsed ? '' : `${activeJobCount} running`}
+                      </div>
+                    )}
+
+                    {/* Tooltip for collapsed state */}
+                    {sidebarCollapsed && (
+                      <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 dark:bg-gray-700 text-white dark:text-gray-200 text-sm rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+                        {item.label}
+                      </div>
+                    )}
+                  </>
+                )}
+              </NavLink>
+            ))}
+          </nav>
+        </div>
 
       </aside>
     </>

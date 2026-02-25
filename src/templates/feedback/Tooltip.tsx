@@ -101,7 +101,7 @@ const Tooltip: React.FC<TooltipProps> = ({
         </button>
 
         {visible && (
-          <div className={`absolute ${positionClasses[tooltipPosition]} z-50 whitespace-nowrap pointer-events-none`}>
+          <div className={`absolute ${positionClasses[tooltipPosition]} z-[9999] whitespace-nowrap pointer-events-none`}>
             <div className={`px-3 py-2 text-sm rounded-lg border shadow-lg ${variantClasses[variant]}`}>
               {tooltipText}
               {arrow && (

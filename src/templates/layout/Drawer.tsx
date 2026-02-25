@@ -20,6 +20,9 @@ interface DrawerProps {
   /** Show backdrop */
   backdrop?: boolean;
 
+  /** Text for a button that opens the drawer */
+  triggerText?: string;
+
   /** Child components */
   children?: ComponentSpec[];
 
@@ -34,6 +37,7 @@ const Drawer: React.FC<DrawerProps> = ({
   size = 'medium',
   variant = 'default',
   backdrop = true,
+  triggerText,
   children,
   renderChild,
 }) => {
@@ -94,26 +98,38 @@ const Drawer: React.FC<DrawerProps> = ({
   };
 
   return (
-    <div className="relative">
-      {/* Toggle Button for Demo */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
-      >
-        {isOpen ? 'Close' : 'Open'} {position} Drawer
-      </button>
+    <div className="relative inline-block">
+      {/* Trigger Button */}
+      {triggerText && (
+        <button
+          onClick={() => setIsOpen(true)}
+          className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors font-medium border border-transparent shadow-[0_2px_4px_rgba(234,88,12,0.15)]"
+        >
+          {triggerText}
+        </button>
+      )}
+
+      {/* Default Fallback Toggle Button */}
+      {!triggerText && (
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="px-4 py-2 bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors border border-gray-300 dark:border-gray-600 shadow-sm"
+        >
+          {isOpen ? 'Close' : 'Open'} {position} Drawer
+        </button>
+      )}
 
       {/* Backdrop */}
       {backdrop && isOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 transition-opacity"
+          className="fixed inset-0 bg-black/50 z-[9998] transition-opacity backdrop-blur-sm"
           onClick={() => setIsOpen(false)}
         />
       )}
 
       {/* Drawer */}
       <aside
-        className={`fixed ${positionClasses[position]} ${sizeClasses[position][size]} ${variantClasses[variant]} ${borderClasses[position]} ${transformClasses[position]} transition-transform duration-300 z-50 overflow-y-auto`}
+        className={`fixed ${positionClasses[position]} ${sizeClasses[position][size]} ${variantClasses[variant]} ${borderClasses[position]} ${transformClasses[position]} transition-transform duration-300 z-[9999] overflow-y-auto`}
       >
         <div className="flex items-center justify-between p-4 border-b border-orange-600">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h2>

@@ -1,0 +1,34 @@
+
+> ai-ui-generator@0.0.0 dev:frontend
+> vite
+
+
+  VITE v7.2.0  ready in 159 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+1:56:04 PM [vite] (client) hmr update /src/index.css
+1:57:02 PM [vite] (client) hmr update /src/index.css
+
+> ai-ui-generator@0.0.0 dev:backend
+> node backend/server.js
+
+[INFO] Backend server initializing... 
+[INFO] Backend server running on http://localhost:4000 
+[INFO] API Endpoints: {
+  endpoints: [
+    'POST /api/agent - Enqueue new job',
+    'GET /api/agent/:jobId - Get job status',
+    'GET /api/queue/status - Queue statistics'
+  ]
+}
+Backend server running on http://localhost:4000
+API Endpoints:
+  POST /api/agent - Enqueue new job
+  GET  /api/agent/:jobId - Get job status
+  GET  /api/queue/status - Queue statistics
+
+Logs are being written to: logs/backend.log
+[INFO] Worker process started 

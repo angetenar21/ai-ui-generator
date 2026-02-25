@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import DynamicIcon from '../core/Icon';
 
 interface NotificationProps {
   title?: string;
@@ -14,10 +15,11 @@ interface NotificationProps {
   autoHide?: boolean;
   closable?: boolean;
   onClose?: () => void;
-  action?: { label: string; onClick?: () => void 
-  children?: React.ReactNode;
-  renderChild?: (child: any) => React.ReactNode;
-};
+  action?: {
+    label: string; onClick?: () => void
+    children?: React.ReactNode;
+    renderChild?: (child: any) => React.ReactNode;
+  };
 }
 
 const Notification: React.FC<NotificationProps> = ({
@@ -58,60 +60,60 @@ const Notification: React.FC<NotificationProps> = ({
 
   const typeConfig = {
     info: {
-      icon: icon || 'ℹ️',
-      container: 'border border-blue-300 dark:border-blue-700/60',
-      chip: 'bg-blue-100 dark:bg-blue-900/40',
-      text: 'text-blue-700 dark:text-blue-400',
+      icon: icon || 'info',
+      container: 'border border-blue-200/50 dark:border-blue-500/20 bg-white/95 dark:bg-gray-900/95',
+      chip: 'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400',
+      text: 'text-gray-900 dark:text-white',
     },
     success: {
-      icon: icon || '✓',
-      container: 'border border-green-300 dark:border-green-700/60',
-      chip: 'bg-green-100 dark:bg-green-900/40',
-      text: 'text-green-700 dark:text-green-400',
+      icon: icon || 'check-circle',
+      container: 'border border-green-200/50 dark:border-green-500/20 bg-white/95 dark:bg-gray-900/95',
+      chip: 'bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400',
+      text: 'text-gray-900 dark:text-white',
     },
     warning: {
-      icon: icon || '⚠️',
-      container: 'border border-amber-300 dark:border-amber-700/60',
-      chip: 'bg-amber-100 dark:bg-amber-900/40',
-      text: 'text-amber-700 dark:text-amber-400',
+      icon: icon || 'alert-triangle',
+      container: 'border border-amber-200/50 dark:border-amber-500/20 bg-white/95 dark:bg-gray-900/95',
+      chip: 'bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400',
+      text: 'text-gray-900 dark:text-white',
     },
     error: {
-      icon: icon || '✕',
-      container: 'border border-red-300 dark:border-red-700/60',
-      chip: 'bg-red-100 dark:bg-red-900/40',
-      text: 'text-red-700 dark:text-red-400',
+      icon: icon || 'x-circle',
+      container: 'border border-red-200/50 dark:border-red-500/20 bg-white/95 dark:bg-gray-900/95',
+      chip: 'bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400',
+      text: 'text-gray-900 dark:text-white',
     },
   };
 
   const positionClasses = {
-    'top-left': 'justify-start',
-    'top-right': 'justify-end',
-    'bottom-left': 'justify-start',
-    'bottom-right': 'justify-end',
+    'top-left': 'top-4 left-4',
+    'top-right': 'top-4 right-4',
+    'bottom-left': 'bottom-4 left-4',
+    'bottom-right': 'bottom-4 right-4',
   };
 
   const config = typeConfig[notificationType];
 
   return (
-    <div className={`relative flex ${positionClasses[position]} w-full mb-4`}>
-      <div className={`card ${config.container} rounded-xl shadow-lg overflow-hidden max-w-md`}>
-        <div className="p-4">
-          <div className="flex items-start gap-3">
-            <div className={`flex-shrink-0 w-10 h-10 rounded-lg ${config.chip} flex items-center justify-center`}>
-              <span className="text-xl">{config.icon}</span>
+    <div className={`fixed ${positionClasses[position]} z-[10000] pointer-events-none w-full sm:w-auto p-4`}>
+      <div className={`backdrop-blur-xl ${config.container} rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.4)] overflow-hidden w-full sm:w-[380px] pointer-events-auto animate-slide-in-right`}>
+        <div className="p-4 sm:p-5">
+          <div className="flex items-start gap-4">
+            <div className={`flex-shrink-0 w-10 h-10 rounded-full ${config.chip} flex items-center justify-center mt-0.5`}>
+              <DynamicIcon name={config.icon} size={20} />
             </div>
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 pt-0.5">
               {title && (
-                <h4 className={`text-sm font-semibold ${config.text} mb-1`}>{title}</h4>
+                <h4 className={`text-sm font-semibold tracking-tight ${config.text} mb-1`}>{title}</h4>
               )}
-              <p className="text-sm text-gray-700 dark:text-gray-300">{displayMessage}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{displayMessage}</p>
               {action && (
                 <button
                   onClick={() => {
                     if (action.onClick) action.onClick();
                     handleClose();
                   }}
-                  className={`mt-2 text-xs font-semibold ${config.text} hover:underline`}
+                  className="mt-3 text-sm font-medium text-gray-900 dark:text-white hover:opacity-80 transition-opacity"
                 >
                   {action.label}
                 </button>
@@ -120,9 +122,10 @@ const Notification: React.FC<NotificationProps> = ({
             {closable && (
               <button
                 onClick={handleClose}
-                className="flex-shrink-0 text-gray-400 hover:text-white transition-colors"
+                className="flex-shrink-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors p-1"
+                aria-label="Close notification"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>

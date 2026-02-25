@@ -138,12 +138,12 @@ const BarChart: React.FC<BarChartProps> = ({
   const paletteColors = getChartColors(palette);
 
   // Process series colors with palette
-  const processedSeries = processSeriesColors(
+  const processedSeries = series && Array.isArray(series) ? processSeriesColors(
     series.map((s, index) => ({
       ...s,
       color: s.color || paletteColors[index % paletteColors.length],
     }))
-  );
+  ) : [];
 
   // Process axes based on layout
   let processedXAxis = xAxis;
@@ -198,9 +198,42 @@ const BarChart: React.FC<BarChartProps> = ({
   const titleTextColor = getTextColorForBackground(cardBackgroundColor);
   const descriptionTextColor = getSecondaryTextColorForBackground(cardBackgroundColor);
 
+  // Validation
+  // Ensure we have at least one numeric value that isn't 0 (to avoid flatlines being rendered as "No Data" by MUI inner internals)
+  const hasValidData = series && series.length > 0 && series.some(s =>
+    s.data && s.data.length > 0 && s.data.some((val: any) => val !== 0 && val !== null)
+  );
+
+  if (!hasValidData) {
+    return (
+      <div className={`${surfaceClasses} rounded-xl p-6 transition-all duration-300`}>
+        {(title || description) && (
+          <div className="mb-6">
+            {title && (
+              <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
+                {title}
+              </h3>
+            )}
+            {description && (
+              <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                {description}
+              </p>
+            )}
+          </div>
+        )}
+        <div className="flex justify-center items-center min-h-[300px] text-gray-600 dark:text-gray-300">
+          <div className="text-center">
+            <div className="text-4xl mb-2">📊</div>
+            <div>No data available</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
-      className={`${surfaceClasses} rounded-xl p-4 transition-all duration-300 ${className || 'w-full'} max-w-full overflow-hidden`}
+      className={`${surfaceClasses} rounded-xl p-4 transition-all duration-300 ${className || 'w-full'} max-w-full overflow-hidden h-full flex flex-col`}
       style={cardBgColor ? { backgroundColor: cardBgColor } : undefined}
     >
       {/* Header */}

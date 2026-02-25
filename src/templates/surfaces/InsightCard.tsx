@@ -17,10 +17,10 @@ interface InsightCardProps {
     label: string;
     trend?: 'up' | 'down' | 'neutral';
     trendValue?: string;
-  
-  children?: React.ReactNode;
-  renderChild?: (child: any) => React.ReactNode;
-};
+
+    children?: React.ReactNode;
+    renderChild?: (child: any) => React.ReactNode;
+  };
 
   /** Show icon */
   showIcon?: boolean;
@@ -85,42 +85,42 @@ const InsightCard: React.FC<InsightCardProps> = ({
   };
 
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-xl p-6 border ${config.bgClass} hover:shadow-lg transition-all duration-200 text-gray-900 dark:text-white`}>
-      <div className="flex items-start gap-4">
+    <div className={`h-full flex flex-col bg-white dark:bg-gray-800 rounded-xl p-6 border ${config.bgClass} hover:shadow-lg transition-all duration-200 text-gray-900 dark:text-white`}>
+      <div className="flex-1 flex flex-col items-start gap-4">
         {/* Icon */}
         {showIcon && (
-          <div className={`flex-shrink-0 w-12 h-12 rounded-xl ${config.bgClass} flex items-center justify-center`}>
+          <div className={`flex-shrink-0 w-12 h-12 rounded-xl ${config.bgClass} flex items-center justify-center mb-2`}>
             <Icon className={`w-6 h-6 ${config.iconClass}`} />
           </div>
         )}
 
         {/* Content */}
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 w-full flex flex-col min-w-0">
           <h4 className={`text-lg font-display font-semibold ${config.textClass} mb-2`}>
             {title}
           </h4>
-          <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4">
+          <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-6">
             {description}
           </p>
 
-          {/* Metric */}
+          {/* Metric (Pushed to bottom using mt-auto) */}
           {metric && (
-            <div className="flex items-end gap-4 pt-3 border-t border-gray-200 dark:border-gray-700">
+            <div className="mt-auto flex justify-between items-end gap-4 pt-4 border-t border-gray-100 dark:border-gray-700/50">
               <div>
-                <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">
-                  {metric.value}
-                </div>
-                <div className="text-xs text-gray-500 dark:text-gray-300 uppercase tracking-wide">
+                <div className="text-xs text-gray-500 dark:text-gray-400 font-semibold tracking-wider mb-1">
                   {metric.label}
+                </div>
+                <div className="text-3xl font-display font-bold text-gray-900 dark:text-white">
+                  {metric.value}
                 </div>
               </div>
 
               {metric.trend && metric.trendValue && (
-                <div className="flex items-center gap-1.5 mb-1">
+                <div className="flex items-center gap-1.5 pb-1 block">
                   {getTrendIcon()}
                   <span className={`text-sm font-semibold ${metric.trend === 'up' ? 'text-green-600 dark:text-green-400' :
-                      metric.trend === 'down' ? 'text-red-600 dark:text-red-400' :
-                        'text-gray-500 dark:text-gray-400'
+                    metric.trend === 'down' ? 'text-red-600 dark:text-red-400' :
+                      'text-gray-500 dark:text-gray-400'
                     }`}>
                     {metric.trendValue}
                   </span>

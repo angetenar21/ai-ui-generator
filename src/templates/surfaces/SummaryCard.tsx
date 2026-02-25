@@ -98,7 +98,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
     : getSurfaceClasses(variant, elevation);
 
   return (
-    <div className={`${surfaceClasses} rounded-xl p-6 transition-all duration-300`}>
+    <div className={`${surfaceClasses} rounded-xl p-6 transition-all duration-300 h-full flex flex-col`}>
       {/* Header */}
       <div className={`mb-6 pb-4 border-b ${isDarkSurface ? 'border-white/20' : 'border-gray-200 dark:border-gray-700'}`}>
         <h3 className={`text-xl font-display font-semibold mb-2 ${isDarkSurface ? 'text-white' : 'text-gray-900 dark:text-white'}`}>

@@ -1,0 +1,100 @@
+  "error": "Request had invalid authentication credentials. Expected OAuth 2 access token, login cookie or other valid authentication credential. See https://developers.google.com/identity/sign-in/web/devconsole-project."
+}
+[2026-02-25T12:46:40.231Z] [INFO] Gemini Request: gemini-2.5-flash
+{
+  "prompt": "Create credit sales & outstanding dashboard for this week. Show daily credit given, collection received, net outstanding change for top 55 credit customers this week.,\"This Week Credit Management Dash...",
+  "context": "{\"previousComponents\":[]}",
+  "promptLength": 801,
+  "contextLength": 25
+}
+[2026-02-25T12:46:40.232Z] [DEBUG] Gemini Full Prompt
+{
+  "fullPrompt": "Create credit sales & outstanding dashboard for this week. Show daily credit given, collection received, net outstanding change for top 55 credit customers this week.,\"This Week Credit Management Dashboard (Feb 2-8 2026)\",\"{}\",\"[{\"\"type\"\":\"\"line_chart\"\",\"\"title\"\":\"\"Daily Credit Given vs Collected This Week\"\"},{\"\"type\"\":\"\"table\"\",\"\"title\"\":\"\"55 Credit Customers Activity This Week\"\",\"\"columns\"\":[\"\"Customer\"\",\"\"Credit Given ₹\"\",\"\"Collected ₹\"\",\"\"Net Change ₹\"\"]}]\",\"{\"\"this_week_credit\"\":[{\"\"customer\":\"C014\",\"given\":3200,\"collected\":1800,\"net_change\":1400},{\"customer\":\"C006\",\"given\":2800,\"collected\":2400,\"net_change\":400},{\"customer\":\"C030\",\"given\":4100,\"collected\":3100,\"net_change\":1000},... (52 more realistic credit entries: given ₹800–₹5200, collected 50–100% of given) ...],\"total_rows\":55}\"",
+  "fullContext": "{\"previousComponents\":[]}"
+}
+[2026-02-25T12:46:40.232Z] [INFO] Starting Gemini tool-calling loop (maxIterations: 16)
+[2026-02-25T12:46:43.090Z] [WARN] Empty final response, prompting Gemini to respond
+{
+  "iterationCount": 1
+}
+[2026-02-25T12:46:45.021Z] [WARN] Empty final response, prompting Gemini to respond
+{
+  "iterationCount": 2
+}
+[2026-02-25T12:46:46.968Z] [ERROR] Job Failed: 9eb9fd5f-c9d7-4fb0-851b-40bdb555d4b5
+{
+  "error": "Gemini returned consecutive empty responses without calling any tools or producing output.",
+  "durationMs": 9413
+}
+[2026-02-25T12:54:11.929Z] [INFO] Job Enqueued: fc953560-b8c6-46ab-bac1-9a81a12f1e7b
+{
+  "sessionId": "test-session",
+  "message": "Create a product performance dashboard for 1450 SKUs sold in 2025. Show units sold, revenue, gross m..."
+}
+[2026-02-25T12:54:11.931Z] [DEBUG] Queue length: 1
+[2026-02-25T12:54:11.949Z] [INFO] Job Processing: fc953560-b8c6-46ab-bac1-9a81a12f1e7b
+[2026-02-25T12:54:11.950Z] [INFO] Gemini Request: gemini-2.5-flash
+{
+  "prompt": "Create a product performance dashboard for 1450 SKUs sold in 2025. Show units sold, revenue, gross margin %, current stock qty, days of stock left (based on last 90 days avg sale), alert if days_left ...",
+  "context": "{\"previousComponents\":[]}",
+  "promptLength": 815,
+  "contextLength": 25
+}
+[2026-02-25T12:54:11.950Z] [DEBUG] Gemini Full Prompt
+{
+  "fullPrompt": "Create a product performance dashboard for 1450 SKUs sold in 2025. Show units sold, revenue, gross margin %, current stock qty, days of stock left (based on last 90 days avg sale), alert if days_left < 8 or margin < 10%. Include bar chart top 40 revenue products and pie chart category share.,\"Kirana 2025 Product & Inventory Dashboard\",\"{\"low_stock_alert\":\"days_left < 8\",\"low_margin_alert\":\"margin < 10\"}\",\"[{\"type\":\"bar_chart\",\"title\":\"Top 40 Products by Revenue 2025\"},{\"type\":\"pie_chart\",\"title\":\"Category Revenue Share 2025\"},{\"type\":\"table\",\"title\":\"All 1450 Products\",\"columns\":[\"Product Name\",\"Category\",\"Units Sold\",\"Revenue ₹\",\"Margin %\",\"Stock Qty\",\"Days Left\",\"Alert\"]}],\"products\":[{\"name\":\"Parle-G 100g\",\"category\":\"Biscuits\",\"units\":12480,\"revenue\":374400,\"margin\":22.4,\"stock\":1560,\"days_left\":12}]",
+  "fullContext": "{\"previousComponents\":[]}"
+}
+[2026-02-25T12:54:11.950Z] [INFO] Starting Gemini tool-calling loop (maxIterations: 16)
+[2026-02-25T12:54:13.205Z] [ERROR] Gemini Error: gemini-2.5-flash
+{
+  "error": "Request had invalid authentication credentials. Expected OAuth 2 access token, login cookie or other valid authentication credential. See https://developers.google.com/identity/sign-in/web/devconsole-project.",
+  "responseData": {
+    "error": {
+      "code": 401,
+      "message": "Request had invalid authentication credentials. Expected OAuth 2 access token, login cookie or other valid authentication credential. See https://developers.google.com/identity/sign-in/web/devconsole-project.",
+      "status": "UNAUTHENTICATED",
+      "details": [
+        {
+          "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+          "reason": "ACCESS_TOKEN_TYPE_UNSUPPORTED",
+          "metadata": {
+            "method": "google.cloud.aiplatform.v1.PredictionService.GenerateContent",
+            "service": "aiplatform.googleapis.com"
+          }
+        }
+      ]
+    }
+  }
+}
+[2026-02-25T12:54:13.206Z] [WARN] OAuth authentication failed, attempting fallback to API key
+{
+  "status": 401,
+  "error": "Request had invalid authentication credentials. Expected OAuth 2 access token, login cookie or other valid authentication credential. See https://developers.google.com/identity/sign-in/web/devconsole-project."
+}
+[2026-02-25T12:54:13.206Z] [INFO] Gemini Request: gemini-2.5-flash
+{
+  "prompt": "Create a product performance dashboard for 1450 SKUs sold in 2025. Show units sold, revenue, gross margin %, current stock qty, days of stock left (based on last 90 days avg sale), alert if days_left ...",
+  "context": "{\"previousComponents\":[]}",
+  "promptLength": 815,
+  "contextLength": 25
+}
+[2026-02-25T12:54:13.215Z] [DEBUG] Gemini Full Prompt
+{
+  "fullPrompt": "Create a product performance dashboard for 1450 SKUs sold in 2025. Show units sold, revenue, gross margin %, current stock qty, days of stock left (based on last 90 days avg sale), alert if days_left < 8 or margin < 10%. Include bar chart top 40 revenue products and pie chart category share.,\"Kirana 2025 Product & Inventory Dashboard\",\"{\"low_stock_alert\":\"days_left < 8\",\"low_margin_alert\":\"margin < 10\"}\",\"[{\"type\":\"bar_chart\",\"title\":\"Top 40 Products by Revenue 2025\"},{\"type\":\"pie_chart\",\"title\":\"Category Revenue Share 2025\"},{\"type\":\"table\",\"title\":\"All 1450 Products\",\"columns\":[\"Product Name\",\"Category\",\"Units Sold\",\"Revenue ₹\",\"Margin %\",\"Stock Qty\",\"Days Left\",\"Alert\"]}],\"products\":[{\"name\":\"Parle-G 100g\",\"category\":\"Biscuits\",\"units\":12480,\"revenue\":374400,\"margin\":22.4,\"stock\":1560,\"days_left\":12}]",
+  "fullContext": "{\"previousComponents\":[]}"
+}
+[2026-02-25T12:54:13.215Z] [INFO] Starting Gemini tool-calling loop (maxIterations: 16)
+[2026-02-25T12:54:15.684Z] [WARN] Empty final response, prompting Gemini to respond
+{
+  "iterationCount": 1
+}
+[2026-02-25T12:54:17.556Z] [WARN] Empty final response, prompting Gemini to respond
+{
+  "iterationCount": 2
+}
+[2026-02-25T12:54:21.007Z] [ERROR] Job Failed: fc953560-b8c6-46ab-bac1-9a81a12f1e7b
+{
+  "error": "Gemini returned consecutive empty responses without calling any tools or producing output.",
+  "durationMs": 9058
+}

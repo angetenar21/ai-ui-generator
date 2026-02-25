@@ -131,37 +131,43 @@ for (const [componentName, componentDef] of Object.entries(components)) {
 
     // Check for tuple types like [number, number] or [string, number]
     if (tsType.match(/^\s*\[\s*[^\]]+\s*,\s*[^\]]+\s*\]\s*$/)) {
-      propSchema.type = 'array';
-      // For tuples, we can't validate the exact structure easily, so accept any array
-      propSchema.items = {};
+      propSchema.anyOf = [
+        { type: 'array', items: {} },
+        { type: 'string' }
+      ];
     }
     // Check if this references an interface (e.g., Column[], Row[])
     else if (tsType.match(/^(\w+)\[\]$/)) {
       const arrayMatch = tsType.match(/^(\w+)\[\]$/);
       const interfaceName = arrayMatch[1];
-      propSchema.type = 'array';
 
-      // If we have the interface definition, use it for items schema
+      let itemsSchema = {};
       if (interfaces[interfaceName]) {
-        propSchema.items = buildInterfaceSchema(interfaceName, interfaces);
-      } else {
-        propSchema.items = {};
+        itemsSchema = buildInterfaceSchema(interfaceName, interfaces);
       }
+
+      propSchema.anyOf = [
+        { type: 'array', items: itemsSchema },
+        { type: 'string' }
+      ];
     } else if (tsType.includes('Array<')) {
       // Handle Array<InterfaceName> syntax
       const genericMatch = tsType.match(/Array<(\w+)>/);
       if (genericMatch) {
         const interfaceName = genericMatch[1];
-        propSchema.type = 'array';
-
+        let itemsSchema = {};
         if (interfaces[interfaceName]) {
-          propSchema.items = buildInterfaceSchema(interfaceName, interfaces);
-        } else {
-          propSchema.items = {};
+          itemsSchema = buildInterfaceSchema(interfaceName, interfaces);
         }
+        propSchema.anyOf = [
+          { type: 'array', items: itemsSchema },
+          { type: 'string' }
+        ];
       } else {
-        propSchema.type = 'array';
-        propSchema.items = {};
+        propSchema.anyOf = [
+          { type: 'array', items: {} },
+          { type: 'string' }
+        ];
       }
     } else if (tsType.includes('{') || propDef.type === 'object') {
       // Check for object types BEFORE checking for arrays
@@ -169,8 +175,10 @@ for (const [componentName, componentDef] of Object.entries(components)) {
       // from being incorrectly classified as arrays
       propSchema.type = 'object';
     } else if (tsType.includes('[]') || propDef.type === 'array') {
-      propSchema.type = 'array';
-      propSchema.items = {};
+      propSchema.anyOf = [
+        { type: 'array', items: {} },
+        { type: 'string' }
+      ];
     } else if (tsType.includes('boolean') && tsType.includes("'")) {
       // Handle union types like `boolean | 'sm' | 'md' | 'lg' | 'xl'`
       // Allow both boolean and string values
@@ -247,7 +255,8 @@ function validateSpec(spec) {
   // Recursively validate children
   if (props.children && Array.isArray(props.children)) {
     for (let i = 0; i < props.children.length; i++) {
-      const childSpec = props.children[i];
+      const childSpec = normalizeSpec(props.children[i]);
+      props.children[i] = childSpec; // Update in-place to keep healed version
       const childValidation = validateSpec(childSpec);
       if (!childValidation.valid) {
         errors.push(...childValidation.errors.map(err => `children[${i}]: ${err}`));
@@ -261,10 +270,53 @@ function validateSpec(spec) {
   };
 }
 
+/**
+ * Wraps raw/naked JSON data that lacks a component name into a default UI component.
+ */
+function autoHealSpec(spec) {
+  if (!spec || typeof spec !== 'object' || spec === null) return spec;
+
+  // If it already has identifying fields, no need to heal
+  const name = spec.name || spec.type || spec.component;
+  if (name) return spec;
+
+  // Naked JSON detected. If it has ANY properties, wrap it.
+  const keys = Object.keys(spec);
+  if (keys.length > 0) {
+    Logger.info('[Auto-Heal] Naked JSON detected, wrapping in Callout', { keys: keys.slice(0, 5) });
+
+    // Create a descriptive message based on available fields if possible
+    const taskTitle = spec.task || spec.intent || spec.title || 'Project Data';
+    const content = `I've analyzed your request and generated the following data structure. Since the AI returned raw JSON without a UI container, I've automatically wrapped it in this preview for you.`;
+
+    return {
+      name: 'callout',
+      data: spec, // Put original data in root 'data' for scavenging
+      templateProps: {
+        title: `Raw Data Detected: ${taskTitle}`,
+        content: content,
+        tone: 'info',
+        variant: 'elevated',
+        emphasis: 'medium'
+      },
+      metadata: {
+        componentId: 'auto-healed-' + Date.now(),
+        generatedAt: new Date().toISOString(),
+        autoHealed: true,
+        originalKeys: keys
+      }
+    };
+  }
+
+  return spec;
+}
+
 function normalizeSpec(spec) {
   if (!spec || typeof spec !== 'object') return spec;
 
-  const normalized = { ...spec };
+  // Auto-heal if possible
+  const healed = autoHealSpec(spec);
+  const normalized = { ...healed };
   const name = normalized.name || normalized.type || normalized.component;
   if (name && COMPONENT_ALIASES[name]) {
     normalized.name = COMPONENT_ALIASES[name];
@@ -421,7 +473,20 @@ function getToolDeclarations() {
         required: ['componentNames'],
       },
     },
-
+    {
+      name: 'validate_component',
+      description: 'Validates a component specification against the JSON schema. Use this to ensure your JSON is correct before returning it.',
+      parameters: {
+        type: 'object',
+        properties: {
+          spec: {
+            type: 'object',
+            description: 'The complete component specification JSON object to validate.',
+          },
+        },
+        required: ['spec'],
+      },
+    },
   ];
 }
 
@@ -591,6 +656,8 @@ async function callGemini(userMessage, context = '', retryWithApiKey = false, si
   let maxIterations = 16; // Increased for complex layouts with sidebars and nested components
   let iterations = 0;
 
+  Logger.info(`Starting Gemini tool-calling loop (maxIterations: ${maxIterations})`);
+
   while (iterations < maxIterations) {
     iterations++;
 
@@ -734,16 +801,11 @@ THIS IS NOT A PYTHON ENVIRONMENT. You must use the native Gemini function callin
 ❌ Any Python code: import, def, print, etc.
 
 ✅ CORRECT SYNTAX (Gemini function calling):
-The system automatically manages function execution. You just need to request the function call by specifying:
-- The function name (get_components, get_component_schema, validate_component)
-- The parameters needed
+Request functions by name in the function call section. Do NOT write code.
 
-The system will automatically execute the function and return results.
+The system will automatically execute the tool and return the result.
 
-Example: If you need a schema, just indicate you want to call get_component_schema with specific component names. 
-The system will handle it - you don't write code.
-
-RESUME YOUR RESPONSE using the correct function calling format.`
+RESUME YOUR RESPONSE using the correct function calling format. Do NOT repeat this error.`
             : `ERROR: Malformed function call detected at iteration ${iterations}.
 
 The function declaration is not properly formatted. Ensure:
@@ -794,6 +856,15 @@ RESTART and use the correct format for function calls.`
         continue; // Try again
       }
 
+      // Check if the response is conversational (no JSON artifact)
+      if (!textPart.text.includes('{') && lastValidatedSpec) {
+        Logger.warn('Gemini returned conversational text instead of JSON. Falling back to lastValidatedSpec.', {
+          text: textPart.text,
+          iterationCount: iterations
+        });
+        return JSON.stringify(lastValidatedSpec, null, 2);
+      }
+
       Logger.geminiResponse(GEMINI_MODEL, response, textPart.text);
       return textPart.text;
     }
@@ -834,6 +905,63 @@ RESTART and use the correct format for function calls.`
     }))
   });
   throw new Error(`Max iterations (${maxIterations}) reached in function calling loop`);
+}
+
+/**
+ * Attempts to repair a truncated JSON string by closing open braces and brackets.
+ * Uses a simple stack-based approach and handles being inside a string.
+ */
+function repairTruncatedJson(str) {
+  if (!str || typeof str !== 'string') return str;
+
+  let stack = [];
+  let inString = false;
+  let escaped = false;
+
+  for (let i = 0; i < str.length; i++) {
+    const char = str[i];
+
+    if (escaped) {
+      escaped = false;
+      continue;
+    }
+
+    if (char === '\\') {
+      escaped = true;
+      continue;
+    }
+
+    if (char === '"') {
+      inString = !inString;
+      continue;
+    }
+
+    if (!inString) {
+      if (char === '{' || char === '[') {
+        stack.push(char === '{' ? '}' : ']');
+      } else if (char === '}' || char === ']') {
+        if (stack.length > 0 && stack[stack.length - 1] === char) {
+          stack.pop();
+        }
+      }
+    }
+  }
+
+  let repaired = str;
+
+  // If we ended mid-string, close the string first
+  if (inString) {
+    repaired += '"';
+  }
+
+  // Close all open structures in reverse order
+  if (stack.length > 0) {
+    const closing = stack.reverse().join('');
+    Logger.info(`[JSON-Repair] Attempting to close ${stack.length} open structures: ${closing}`);
+    repaired += closing;
+  }
+
+  return repaired;
 }
 
 // Wrapper for callGemini with exponential backoff retry
@@ -1034,6 +1162,18 @@ function extractJsonObject(text) {
     }
   }
 
+  // LAST RESORT: Try to repair truncated JSON
+  if (!parsed && (trimmed.includes('{') || trimmed.includes('['))) {
+    try {
+      Logger.debug('Attempting to repair potentially truncated JSON');
+      const repaired = repairTruncatedJson(fixJsonString(preprocessed));
+      parsed = JSON.parse(repaired);
+      Logger.info('Successfully parsed JSON after performing truncation repair');
+    } catch (e) {
+      Logger.debug('JSON repair failed', { error: e.message });
+    }
+  }
+
   if (!parsed) {
     Logger.error('Failed to parse JSON from Gemini output', {
       textLength: trimmed.length,
@@ -1106,26 +1246,55 @@ async function processJob(job) {
     });
 
     // Race between job completion and timeout
-    const modelText = await Promise.race([
-      callGeminiWithRetry(message, contextString, 3, controller.signal),
-      timeoutPromise
-    ]);
+    let modelText;
+    let spec;
+    let validation;
+    let attempts = 0;
+    const MAX_ATTEMPTS = 3;
+    let currentPrompt = message;
 
-    if (controller.signal.aborted) {
-      throw new Error('Job cancelled');
+    while (attempts < MAX_ATTEMPTS) {
+      attempts++;
+
+      modelText = await Promise.race([
+        callGeminiWithRetry(currentPrompt, contextString, 3, controller.signal),
+        timeoutPromise
+      ]);
+
+      if (controller.signal.aborted) {
+        throw new Error('Job cancelled');
+      }
+
+      spec = normalizeSpec(extractJsonObject(modelText));
+
+      // Validate spec
+      validation = validateSpec(spec);
+      Logger.validation(spec, validation);
+
+      // Save the response to file (regardless of validation result)
+      Logger.saveGeminiResponse(`${jobId}-attempt-${attempts}`, currentPrompt, modelText, spec, validation);
+
+      if (validation.valid) {
+        break;
+      }
+
+      Logger.warn(`Self-healing attempt ${attempts} for job ${jobId} due to validation errors`, {
+        errors: validation.errors
+      });
+
+      // Prepare correction prompt for next attempt
+      currentPrompt = `SYSTEM: The JSON you previously generated failed schema validation with the following errors. 
+Please fix them and return ONLY the corrected, full component JSON. 
+
+ERRORS:
+${validation.errors.map(err => `- ${err}`).join('\n')}
+
+REQUIRED FIX: Ensure all properties match the component library schema perfectly.
+ORIGINAL USER REQUEST: ${message}`;
     }
 
-    const spec = normalizeSpec(extractJsonObject(modelText));
-
-    // Validate spec
-    const validation = validateSpec(spec);
-    Logger.validation(spec, validation);
-
-    // Save the response to file (regardless of validation result)
-    Logger.saveGeminiResponse(jobId, message, modelText, spec, validation);
-
     if (!validation.valid) {
-      throw new Error(`Validation failed: ${validation.errors.join(', ')}`);
+      throw new Error(`Validation failed after ${MAX_ATTEMPTS} attempts: ${validation.errors.join(', ')}`);
     }
 
     // Update job with result

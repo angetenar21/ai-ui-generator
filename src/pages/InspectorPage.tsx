@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Copy, Check, Eye, Maximize2, Minimize2, Columns2, Code2, Monitor } from 'lucide-react';
 import { useAppStore } from '../store/appStore';
 import StorageService from '../services/storageService';
-import { renderComponent } from '../templates';
+import { ComponentRenderer } from '../templates';
 import type { ComponentSpec } from '../templates/core/types';
 
 type ViewMode = 'split' | 'code' | 'preview';
@@ -55,7 +55,7 @@ const InspectorPage: React.FC = () => {
     [
       'inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium btn-press transition-all',
       viewMode === mode
-        ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-card rounded-lg'
+        ? 'bg-gray-900 dark:bg-gray-800 text-white shadow-card rounded-lg'
         : 'card-sub text-text-secondary hover:bg-bg-card rounded-pill',
     ].join(' ');
 
@@ -88,7 +88,7 @@ const InspectorPage: React.FC = () => {
       {allComponents.length === 0 ? (
         <div className="flex-1 flex items-center justify-center">
           <div className="card rounded-card p-12 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full gradient-primary flex items-center justify-center text-white">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-900 dark:bg-gray-800 flex items-center justify-center text-orange-500 shadow-lg">
               <Eye className="w-8 h-8" />
             </div>
             <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
@@ -120,7 +120,7 @@ const InspectorPage: React.FC = () => {
                         'w-full text-left px-3 py-2.5 rounded-xl text-xs md:text-sm btn-press transition-all',
                         'flex flex-col gap-0.5',
                         isActive
-                          ? 'bg-bg-card border border-accent-from/40 text-text-primary shadow-card'
+                          ? 'bg-gray-900 dark:bg-gray-800 border border-orange-500/40 text-white shadow-card'
                           : 'card-sub text-text-secondary hover:bg-bg-card',
                       ].join(' ')}
                     >
@@ -262,7 +262,7 @@ const InspectorPage: React.FC = () => {
                         </span>
                       </div>
                       <div className="bg-white rounded-card shadow-card p-4 md:p-6 min-h-[260px]">
-                        {renderComponent(selectedComponent)}
+                        <ComponentRenderer spec={selectedComponent} />
                       </div>
                     </div>
                   )}

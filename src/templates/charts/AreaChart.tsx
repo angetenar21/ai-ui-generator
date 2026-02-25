@@ -13,10 +13,10 @@ interface AreaChartProps {
     data: (number | string | Date)[];
     label?: string;
     scaleType?: 'band' | 'linear' | 'log' | 'time';
-  
-  children?: React.ReactNode;
-  renderChild?: (child: any) => React.ReactNode;
-}>;
+
+    children?: React.ReactNode;
+    renderChild?: (child: any) => React.ReactNode;
+  }>;
 
   /** Series data for the areas */
   series: Array<{
@@ -106,7 +106,12 @@ const AreaChart: React.FC<AreaChartProps> = ({
   }, [propWidth]);
 
   // Validation and error handling
-  if (!series || series.length === 0 || !series[0].data || series[0].data.length === 0) {
+  // Ensure we have at least one numeric value that isn't 0
+  const hasValidData = series && series.length > 0 && series.some(s =>
+    s.data && s.data.length > 0 && s.data.some((val: any) => val !== 0 && val !== null)
+  );
+
+  if (!hasValidData) {
     console.warn('[AreaChart] No valid series data provided:', { series });
     return (
       <div className="card rounded-card p-6 hover:shadow-hover transition-all duration-300">

@@ -14,10 +14,10 @@ interface DonutChartProps {
     value: number;
     label?: string;
     color?: string;
-  
-  children?: React.ReactNode;
-  renderChild?: (child: any) => React.ReactNode;
-}>;
+
+    children?: React.ReactNode;
+    renderChild?: (child: any) => React.ReactNode;
+  }>;
 
   /** Inner radius percentage (creates the donut hole) */
   innerRadius?: number;
@@ -100,6 +100,37 @@ const DonutChart: React.FC<DonutChartProps> = ({
   // Detect dark mode for chart styling
   const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
   const legendTextColor = isDarkMode ? '#E5E7EB' : '#374151';
+
+  // Validation
+  // Ensure we have at least one numeric value that isn't 0
+  const hasValidData = data && Array.isArray(data) && data.length > 0 && data.some((item: any) => item.value !== 0 && item.value !== null && item.value !== undefined);
+
+  if (!hasValidData) {
+    return (
+      <div className="w-full h-full p-6 card rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex flex-col">
+        {(title || description) && (
+          <div className="mb-6 text-center">
+            {title && (
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
+                {title}
+              </h3>
+            )}
+            {description && (
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                {description}
+              </p>
+            )}
+          </div>
+        )}
+        <div className="flex justify-center items-center flex-1 min-h-[250px] text-gray-600 dark:text-gray-300">
+          <div className="text-center">
+            <div className="text-4xl mb-2 opacity-50">📊</div>
+            <div className="text-sm font-medium">No valid data to display</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-full flex flex-col">

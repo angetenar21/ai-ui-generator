@@ -137,7 +137,12 @@ const LineChart: React.FC<LineChartProps> = ({
   const descriptionTextColor = getSecondaryTextColorForBackground(cardBackgroundColor);
 
   // Validation and error handling
-  if (!series || series.length === 0 || !series[0].data || series[0].data.length === 0) {
+  // Ensure we have at least one numeric value that isn't 0
+  const hasValidData = series && series.length > 0 && series.some(s =>
+    s.data && s.data.length > 0 && s.data.some((val: any) => val !== 0 && val !== null)
+  );
+
+  if (!hasValidData) {
     console.warn('[LineChart] No valid series data provided:', { series });
     return (
       <div className={`${surfaceClasses} rounded-xl p-6 transition-all duration-300`}>
@@ -215,7 +220,7 @@ const LineChart: React.FC<LineChartProps> = ({
 
   return (
     <div
-      className={`${surfaceClasses} rounded-xl p-4 transition-all duration-300 ${className || 'w-full'} max-w-full overflow-hidden`}
+      className={`${surfaceClasses} rounded-xl p-4 transition-all duration-300 ${className || 'w-full'} max-w-full overflow-hidden h-full flex flex-col`}
       style={cardBgColor ? { backgroundColor: cardBgColor } : undefined}
     >
       {/* Header */}

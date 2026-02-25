@@ -13,10 +13,10 @@ interface ScatterChartProps {
     min?: number;
     max?: number;
     label?: string;
-  
-  children?: React.ReactNode;
-  renderChild?: (child: any) => React.ReactNode;
-}>;
+
+    children?: React.ReactNode;
+    renderChild?: (child: any) => React.ReactNode;
+  }>;
 
   /** Y-axis configuration */
   yAxis?: Array<{
@@ -106,7 +106,12 @@ const ScatterChart: React.FC<ScatterChartProps> = ({
   }, [width]);
 
   // Validation and error handling
-  if (!series || series.length === 0 || !series[0].data || series[0].data.length === 0) {
+  // Ensure we have at least one numeric value that isn't 0
+  const hasValidData = series && series.length > 0 && series.some(s =>
+    s.data && s.data.length > 0 && s.data.some((val: any) => val !== 0 && val !== null)
+  );
+
+  if (!hasValidData) {
     console.warn('[ScatterChart] No valid series data provided:', { series });
     return (
       <div className="card rounded-card p-6 hover:shadow-hover transition-all duration-300">
@@ -225,9 +230,9 @@ const ScatterChart: React.FC<ScatterChartProps> = ({
                 slotProps={{
                   legend: legend
                     ? {
-                        direction: 'horizontal' as const,
-                        position: { vertical: 'top', horizontal: 'center' } as const,
-                      }
+                      direction: 'horizontal' as const,
+                      position: { vertical: 'top', horizontal: 'center' } as const,
+                    }
                     : undefined,
                 }}
                 sx={{

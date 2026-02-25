@@ -72,12 +72,12 @@ const Popover: React.FC<PopoverProps> = ({
           <>
             {/* Backdrop */}
             <div
-              className="fixed inset-0 z-40"
+              className="fixed inset-0 z-[9998]"
               onClick={() => setVisible(false)}
             />
 
             {/* Popover */}
-            <div className={`absolute ${positionClasses[popoverPosition]} z-50`}>
+            <div className={`absolute ${positionClasses[popoverPosition]} z-[9999]`}>
               <div
                 className="relative bg-gray-900 dark:bg-gray-800 border border-gray-800 dark:border-gray-700 rounded-md shadow-lg px-3 py-2 max-w-[200px]"
                 onClick={handleContentClick}

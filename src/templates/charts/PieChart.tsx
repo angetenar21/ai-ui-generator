@@ -95,6 +95,39 @@ const PieChart: React.FC<PieChartProps> = ({
   const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
   const legendTextColor = isDarkMode ? '#E5E7EB' : '#374151';
 
+  // Validation
+  // Ensure we have at least one numeric value that isn't 0
+  const hasValidData = series && series.length > 0 && series.some(s =>
+    s.data && s.data.length > 0 && s.data.some((item: any) => item.value !== 0 && item.value !== null)
+  );
+
+  if (!hasValidData) {
+    return (
+      <div className={`${className || 'w-full h-full'} card rounded-card p-6`}>
+        {(title || description) && (
+          <div className="mb-6 text-center">
+            {title && (
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
+                {title}
+              </h3>
+            )}
+            {description && (
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                {description}
+              </p>
+            )}
+          </div>
+        )}
+        <div className="flex justify-center items-center min-h-[300px] text-gray-600 dark:text-gray-300">
+          <div className="text-center">
+            <div className="text-4xl mb-2">📊</div>
+            <div>No data available</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={`${className || 'w-full h-full'} flex flex-col`}>
       {(title || description) && (

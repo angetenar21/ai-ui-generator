@@ -13,12 +13,12 @@ const ResponsiveComponentWrapper: React.FC<ResponsiveComponentWrapperProps> = ({
   // This prevents layout issues from transform scaling
   return (
     <div
-      className="w-full max-w-full overflow-hidden"
+      className="inline-block align-top max-w-full overflow-hidden"
       style={{
         maxWidth: `${maxWidth}px`,
       }}
     >
-      <div className="w-full max-w-full overflow-hidden">
+      <div className="inline-block align-top max-w-full overflow-hidden">
         {children}
       </div>
     </div>

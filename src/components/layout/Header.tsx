@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Menu } from 'lucide-react';
 import { useAppStore } from '../../store/appStore';
 import ThemeToggle from '../ThemeToggle';
 import ApiService from '../../services/apiService';
@@ -60,7 +61,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="glass-light backdrop-blur-md mx-5 mt-5 mb-0 rounded-xl px-6 py-3 flex items-center justify-between sticky top-0 z-10">
+    <header className="w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 px-6 py-1.5 flex items-center justify-between sticky top-0 z-20 flex-shrink-0 animate-slide-in-top">
       <div className="flex items-center gap-3">
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -70,12 +71,13 @@ const Header: React.FC = () => {
           <Menu className="w-5 h-5 text-gray-700 dark:text-gray-300" />
         </button>
 
-        <div className="flex items-center gap-2">
-          <Sparkles className="w-6 h-6 text-blue-400" />
-          <h1 className="text-xl font-display font-bold text-gray-900 dark:text-white">
-            AI UI Generator
-          </h1>
-        </div>
+        <Link to="/" className="flex items-center justify-center gap-2 transition-transform hover:scale-105 active:scale-95" title="Go Home">
+          <img
+            src="/doc-e-logo.png"
+            alt="Doc-E.ai"
+            className="w-10 h-10 object-contain flex-shrink-0"
+          />
+        </Link>
       </div>
 
       <div className="flex items-center gap-4">

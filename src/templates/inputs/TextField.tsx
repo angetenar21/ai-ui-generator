@@ -82,15 +82,16 @@ const TextField: React.FC<TextFieldProps> = ({
           {required && <span className="text-red-400 ml-1">*</span>}
         </label>
       )}
-      <div className="relative">
-        {prefix && (
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-            {prefix}
-          </div>
-        )}
-        {icon && (
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-            {icon}
+      <div className={`
+        flex items-center
+        ${variantClasses[variant]}
+        rounded-lg transition-all duration-200
+        focus-within:ring-2 focus-within:ring-orange-500/50
+        ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+      `.trim().replace(/\s+/g, ' ')}>
+        {(prefix || icon) && (
+          <div className="pl-3 pr-2 text-gray-400 flex-shrink-0">
+            {prefix || icon}
           </div>
         )}
         <input
@@ -105,18 +106,16 @@ const TextField: React.FC<TextFieldProps> = ({
           required={required}
           className={`
             ${sizeClasses[size]}
-            ${variantClasses[variant]}
-            ${prefix || icon ? 'pl-10' : ''}
-            ${suffix ? 'pr-10' : ''}
-            ${fullWidth ? 'w-full' : 'max-w-md'}
-            rounded-lg text-white placeholder-gray-400
-            focus:outline-none focus:ring-2 focus:ring-orange-500/50
-            disabled:opacity-50 disabled:cursor-not-allowed
-            transition-all duration-200
+            flex-1 bg-transparent
+            ${!(prefix || icon) ? 'pl-4' : 'pl-0'}
+            ${!suffix ? 'pr-4' : 'pr-0'}
+            text-white placeholder-gray-400
+            focus:outline-none 
+            disabled:cursor-not-allowed
           `.trim().replace(/\s+/g, ' ')}
         />
         {suffix && (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+          <div className="px-3 text-gray-400 flex-shrink-0">
             {suffix}
           </div>
         )}

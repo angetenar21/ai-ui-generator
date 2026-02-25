@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ClipboardPaste, RefreshCcw, Play, AlertTriangle } from 'lucide-react';
 import ResponsiveComponentWrapper from '../components/ResponsiveComponentWrapper';
-import { renderComponent } from '../templates';
+import { RenderNode } from '../templates';
 import type { ComponentSpec } from '../templates/core/types';
 
 const STORAGE_KEY = 'tester:last-json';
@@ -140,10 +140,10 @@ const TesterPage: React.FC = () => {
         <p className="text-xs font-medium uppercase tracking-[0.18em] text-text-muted mb-2">
           Tester
         </p>
-        <h1 className="text-3xl md:text-4xl font-display font-bold text-text-primary mb-3">
+        <h1 className="text-3xl md:text-4xl font-display font-bold text-gray-900 dark:text-white mb-3">
           JSON Component Tester
         </h1>
-        <p className="text-text-secondary max-w-2xl">
+        <p className="text-gray-500 dark:text-gray-400 max-w-2xl">
           Paste the raw JSON returned by your n8n workflow to preview the rendered components instantly.
           No API calls are made on this page.
         </p>
@@ -184,9 +184,9 @@ const TesterPage: React.FC = () => {
               <button
                 type="button"
                 onClick={parseInput}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-white gradient-primary hover:scale-[1.01] active:scale-95 transition-transform"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-white bg-gray-900 dark:bg-gray-800 hover:bg-orange-500 transition-all hover:scale-[1.01] active:scale-95 shadow-sm group"
               >
-                <Play className="w-4 h-4" />
+                <Play className="w-4 h-4 text-orange-500 group-hover:text-white transition-colors" />
                 Render
               </button>
               <button
@@ -204,18 +204,18 @@ const TesterPage: React.FC = () => {
                     current.trim()
                       ? current
                       : JSON.stringify(
-                          {
-                            parsed: {
-                              name: 'text',
-                              templateProps: {
-                                content: 'Paste your JSON here!',
-                                variant: 'markdown',
-                              },
+                        {
+                          parsed: {
+                            name: 'text',
+                            templateProps: {
+                              content: 'Paste your JSON here!',
+                              variant: 'markdown',
                             },
                           },
-                          null,
-                          2,
-                        ),
+                        },
+                        null,
+                        2,
+                      ),
                   )
                 }
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-text-secondary border border-dashed border-border-primary hover:bg-gray-50"
@@ -249,7 +249,7 @@ const TesterPage: React.FC = () => {
               <div className="space-y-8">
                 {components.map((spec, index) => (
                   <div key={spec.metadata?.componentId ?? `${spec.name ?? spec.type}-${index}`} className="rounded-2xl bg-white/70 p-4 border border-gray-100 shadow-sm">
-                    <ResponsiveComponentWrapper>{renderComponent(spec)}</ResponsiveComponentWrapper>
+                    <ResponsiveComponentWrapper><RenderNode spec={spec} /></ResponsiveComponentWrapper>
                   </div>
                 ))}
               </div>

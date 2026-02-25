@@ -24,7 +24,35 @@ export const DataProvider: React.FC<DataProviderProps> = ({
   // Update local state when initialData changes (e.g. from parent re-render)
   useEffect(() => {
     if (initialData && Object.keys(initialData).length > 0) {
-      setDataState(prev => ({ ...prev, ...initialData }));
+      setDataState(prev => {
+        const updates: Record<string, any> = {};
+        for (const [key, val] of Object.entries(initialData)) {
+          // STRATEGY:
+          // 1. If key doesn't exist, always add it.
+          // 2. If key exists but the NEW value is a complex object/array, 
+          //    AI probably updated the dataset. Update it.
+          // 3. If key exists and is a simple string/number, check if it changed.
+          //    Avoid overwriting if AI is resetting to default value (e.g. empty string)
+          //    but user has a value.
+
+          const isComplex = val && typeof val === 'object';
+          const isDefaultValue = val === '' || val === null || val === undefined;
+
+          if (prev[key] === undefined) {
+            updates[key] = val;
+          } else if (isComplex) {
+            // Check for structural changes
+            if (JSON.stringify(prev[key]) !== JSON.stringify(val)) {
+              updates[key] = val;
+            }
+          } else if (!isDefaultValue && prev[key] !== val) {
+            // Simple value update (if not a "reset" to default)
+            updates[key] = val;
+          }
+        }
+        if (Object.keys(updates).length === 0) return prev;
+        return { ...prev, ...updates };
+      });
     }
   }, [initialData]);
 
@@ -75,38 +103,84 @@ export const useData = () => {
  * e.g. "Hello {user.name}" -> "Hello John"
  * Supports nested keys: "Teacher: {subjects.{selectedSubject}[0].teacher}"
  */
-export const resolveVariables = (template: string, data: Record<string, any>): string => {
+export const resolveVariables = (template: string, data: Record<string, any>): any => {
   if (!template || typeof template !== 'string') return template;
 
-  let result = template;
-  const maxIterations = 5; // Prevent infinite loops
+  let currentTemplate = template;
   let iteration = 0;
+  const maxIterations = 5;
 
-  // Regex to find the innermost {variable}
-  // It looks for { followed by anything that doesn't contain { or } followed by }
-  const variableRegex = /\{([^{}]+)\}/g;
+  while (iteration < maxIterations) {
+    // 1. EXACT MATCH SHORT-CIRCUIT Check
+    // If the entire *current* string is exactly one variable, e.g., "{subjects.Mathematics}"
+    const exactMatch = currentTemplate.match(/^\{([^{}]+)\}$/);
+    if (exactMatch) {
+      const path = exactMatch[1];
+      const keys = path.trim().replace(/\[(\w+|\d+)\]/g, '.$1').split('.').filter(Boolean);
+      let value = data;
+      let valid = true;
+      for (const key of keys) {
+        if (value === undefined || value === null) {
+          valid = false;
+          break;
+        }
 
-  // console.log('[resolveVariables] Input:', template);
-  // console.log('[resolveVariables] Data keys:', Object.keys(data || {}));
+        // Resiliency Logic
+        if (Array.isArray(value) && isNaN(Number(key))) {
+          value = value[0];
+          if (value === undefined || value === null) {
+            valid = false;
+            break;
+          }
+        } else if (typeof value === 'object' && !Array.isArray(value) && key === '0') {
+          continue;
+        }
 
-  while (variableRegex.test(result) && iteration < maxIterations) {
-    result = result.replace(variableRegex, (match, path) => {
-      // console.log('[resolveVariables] Match:', match, 'Path:', path);
+        value = (value as any)[key];
+      }
 
-      // Remove any array brackets for splitting, but keep index logic
-      // e.g. "subjects.Math[0].teacher" -> ["subjects", "Math", "0", "teacher"]
-      const keys = path.replace(/\[(\d+)\]/g, '.$1').split('.');
+      if (valid && value !== undefined) {
+        return value; // Return raw Object/Array/Number/String
+      }
+      return currentTemplate;
+    }
+
+    // 2. MIXED STRING RESOLUTION & NESTED BRACKETS
+    // If not an exact match or has nested braces like "{subjects.{selected}}", we resolve the innermost braces first.
+    const innermostBraces = /\{([^{}]+)\}/g;
+    if (!innermostBraces.test(currentTemplate)) {
+      break;
+    }
+
+    // Replace innermost brackets - this is a string replacement
+    const nextTemplate = currentTemplate.replace(innermostBraces, (match, path) => {
+      const cleanPath = path.trim().replace(/\[(\w+|\d+)\]/g, '.$1');
+      const keys = cleanPath.split('.').filter(Boolean);
 
       let value = data;
       for (const key of keys) {
         if (value === undefined || value === null) return match;
-        value = value[key];
+
+        if (Array.isArray(value) && isNaN(Number(key))) {
+          value = value[0];
+          if (value === undefined || value === null) return match;
+        } else if (typeof value === 'object' && !Array.isArray(value) && key === '0') {
+          continue;
+        }
+
+        value = (value as any)[key];
       }
 
       return value !== undefined ? String(value) : match;
     });
+
+    if (nextTemplate === currentTemplate) {
+      break; // Stop if no changes
+    }
+
+    currentTemplate = nextTemplate;
     iteration++;
   }
 
-  return result;
+  return currentTemplate;
 };
