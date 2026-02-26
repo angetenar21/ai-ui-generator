@@ -3,7 +3,6 @@ import { useLocation } from 'react-router-dom';
 import { Send, Sparkles, RotateCcw, StopCircle, Mic, LayoutDashboard, FormInput, BarChart3, PanelTop, Grid, Wand2 } from 'lucide-react';
 import ApiService from '../services/apiService';
 import StorageService from '../services/storageService';
-import SessionManager from '../services/sessionManager';
 import { ComponentRenderer } from '../templates';
 import { useAppStore } from '../store/appStore';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -83,17 +82,25 @@ const ChatPage: React.FC = () => {
 
   // Load thread history when currentThreadId changes
   useEffect(() => {
-    if (currentThreadId && messages.length === 0) {
+    if (currentThreadId) {
+      // Clear existing messages when switching threads to prevent bleed-through
+      setMessages([]);
+
       const threadHistory = StorageService.getHistoryByThread(currentThreadId);
       if (threadHistory.length > 0) {
         const loadedMessages: ChatMessage[] = [];
         threadHistory.forEach(item => {
+          // ALWAYS push the user prompt, even if the generation is still pending
           loadedMessages.push({
             id: `${item.id}-user`,
             role: 'user',
             content: item.prompt,
             timestamp: item.timestamp,
           });
+
+          // Skip pushing the assistant message for pending items in the UI (isLoading skeleton handles this)
+          if (item.status === 'pending') return;
+
           loadedMessages.push({
             id: item.id,
             role: 'assistant',
@@ -103,8 +110,11 @@ const ChatPage: React.FC = () => {
         });
         setMessages(loadedMessages);
       }
+    } else {
+      // If we move to a 'new chat' state (currentThreadId is null), clear messages
+      setMessages([]);
     }
-  }, [currentThreadId, messages.length, setMessages]);
+  }, [currentThreadId, setMessages]);
 
   const handleStopGeneration = () => {
     if (!currentThreadId || !activeThreads[currentThreadId]) return;
@@ -164,7 +174,15 @@ const ChatPage: React.FC = () => {
 
   const handleSend = async (retryPrompt?: string, overrideContext?: ComponentSpec[]) => {
     const promptText = retryPrompt || input;
-    if (!promptText.trim() || isLoading) return;
+
+    // 1. Synchronous Guard: Check direct store state to prevent multiple prompts in same thread
+    // while one is still initializing and before React has re-rendered the UI.
+    const threadId = currentThreadId || generateUUID();
+    const currentState = useAppStore.getState().activeThreads[threadId];
+    if (!promptText.trim() || currentState?.isLoading) {
+      console.log(`[ChatPage] Blocking concurrent send for thread ${threadId}`);
+      return;
+    }
 
     let historyId: string | null = null;
 
@@ -180,8 +198,7 @@ const ChatPage: React.FC = () => {
       setInput('');
     }
 
-    // Determine thread ID
-    const threadId = currentThreadId || generateUUID();
+    // 2. Thread initialization
     if (!currentThreadId) {
       setCurrentThreadId(threadId);
     }
@@ -200,27 +217,14 @@ const ChatPage: React.FC = () => {
       historyId = generateUUID();
       setThreadState(threadId, { historyItemId: historyId });
 
-      const pendingResponse: ComponentSpec = {
-        name: 'panel',
-        templateProps: {
-          title: 'Processing…',
-          content: 'This generation is still running. Check back soon.',
-          tone: 'info',
-          variant: 'subtle',
-        },
-        metadata: {
-          componentId: `pending-${historyId}`,
-          generatedAt: new Date().toISOString(),
-        },
-      };
-
+      // Persist to history immediately so prompt isn't lost on navigation
       StorageService.saveToHistory({
         id: historyId,
-        prompt: userMessage.content as string,
-        response: pendingResponse,
+        prompt: promptText,
+        response: { name: 'panel', templateProps: { title: 'Generating...' } },
         timestamp: Date.now(),
         threadId,
-        sessionId: SessionManager.getSessionId(),
+        sessionId: 'current-session',
         status: 'pending',
       });
 
@@ -249,6 +253,13 @@ const ChatPage: React.FC = () => {
         }
       );
 
+      // Verify we are still looking for THIS response
+      const latestLock = useAppStore.getState().activeThreads[threadId]?.historyItemId;
+      if (latestLock !== historyId) {
+        console.warn(`[ChatPage] Discarding stale response for thread ${threadId}. Local: ${historyId}, Store: ${latestLock}`);
+        return;
+      }
+
       const assistantMessage: ChatMessage = {
         id: historyId,
         role: 'assistant',
@@ -257,20 +268,19 @@ const ChatPage: React.FC = () => {
       };
 
       // Only add message to UI if we are still viewing this thread
-      // (Though in a real app we might want to update the store's message list for that thread even if not active)
-      // Since messages are currently global in store, check if we are active:
-      // Note: This needs improvement in a future pass to scope messages to threads in the store too.
-      // For now, we rely on StorageService persistence.
       if (useAppStore.getState().currentThreadId === threadId) {
         addChatMessage(assistantMessage);
       }
 
       StorageService.updateHistoryItem(assistantMessage.id, {
+        prompt: promptText, // Ensure prompt is kept/set
         response: response,
         timestamp: Date.now(),
         status: 'completed',
+        threadId,
       });
-      setThreadState(threadId, { historyItemId: null });
+
+      // Note: We don't unset historyItemId here anymore, that's done in the finally block
 
       addGeneratedComponent(response);
     } catch (error) {
@@ -302,31 +312,37 @@ const ChatPage: React.FC = () => {
         addChatMessage(errorMessage);
       }
 
-      if (historyId) {
+      if (historyId && useAppStore.getState().activeThreads[threadId]?.historyItemId === historyId) {
         StorageService.updateHistoryItem(historyId, {
+          prompt: promptText,
           response: errorMessage.content as ComponentSpec,
           timestamp: Date.now(),
           status: 'error',
+          threadId,
         });
-        setThreadState(threadId, { historyItemId: null });
       }
     } finally {
-      setThreadState(threadId, {
-        isLoading: false,
-        jobStatus: null,
-        queueStatus: null,
-        jobId: null,
-        abortController: null
-      });
+      // Only reset loading state if this specific request is the latest one
+      // If a newer request has already taken over, we leave its loading state alone
+      if (useAppStore.getState().activeThreads[threadId]?.historyItemId === historyId || !historyId) {
+        setThreadState(threadId, {
+          isLoading: false,
+          jobStatus: null,
+          queueStatus: null,
+          jobId: null,
+          abortController: null,
+          historyItemId: null
+        });
+      }
     }
   };
 
   const quickStarts = [
-    { icon: LayoutDashboard, label: 'Dashboard', prompt: 'Create a modern analytics dashboard with KPIs and charts', gradient: 'from-gray-700 to-gray-900 dark:from-gray-800 dark:to-black' },
-    { icon: FormInput, label: 'Form', prompt: 'Create a user registration form', gradient: 'from-slate-700 to-slate-900 dark:from-slate-800 dark:to-black' },
-    { icon: BarChart3, label: 'Chart', prompt: 'Create a sales performance chart', gradient: 'from-zinc-700 to-zinc-900 dark:from-zinc-800 dark:to-black' },
-    { icon: PanelTop, label: 'Card', prompt: 'Create a product showcase card', gradient: 'from-neutral-700 to-neutral-900 dark:from-neutral-800 dark:to-black' },
-    { icon: Grid, label: 'Layout', prompt: 'Create a responsive grid layout', gradient: 'from-stone-700 to-stone-900 dark:from-stone-800 dark:to-black' },
+    { icon: LayoutDashboard, label: 'Dashboard', prompt: 'Create a modern analytics dashboard with KPIs and charts', gradient: 'from-cyan-500 to-blue-600 dark:from-cyan-600 dark:to-blue-700' },
+    { icon: FormInput, label: 'Form', prompt: 'Create a user registration form', gradient: 'from-cyan-500 to-blue-600 dark:from-cyan-600 dark:to-blue-700' },
+    { icon: BarChart3, label: 'Chart', prompt: 'Create a sales performance chart', gradient: 'from-cyan-500 to-blue-600 dark:from-cyan-600 dark:to-blue-700' },
+    { icon: PanelTop, label: 'Card', prompt: 'Create a product showcase card', gradient: 'from-cyan-500 to-blue-600 dark:from-cyan-600 dark:to-blue-700' },
+    { icon: Grid, label: 'Layout', prompt: 'Create a responsive grid layout', gradient: 'from-cyan-500 to-blue-600 dark:from-cyan-600 dark:to-blue-700' },
   ];
 
   // Scroll to bottom of the container
@@ -351,13 +367,13 @@ const ChatPage: React.FC = () => {
     <div className="relative h-full flex flex-col bg-[#f9fafb] dark:bg-gray-900 overflow-hidden">
       {/* Unified Scroll Container */}
       <div className="flex-1 overflow-y-auto scrollbar-thin pb-32">
-        {messages.length === 0 ? (
+        {!currentThreadId ? (
           /* Hero Section - Centered */
           <div className="min-h-full flex flex-col items-center justify-center px-4">
             {/* Badge */}
-            <div className="glass-light px-6 py-3 rounded-full mb-8 shadow-sm border border-orange-200/40 dark:border-orange-800/40 backdrop-blur-xl">
+            <div className="glass-light px-6 py-3 rounded-full mb-8 shadow-sm border border-cyan-200/40 dark:border-cyan-800/40 backdrop-blur-xl">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-orange-500" />
+                <Sparkles className="w-4 h-4 text-cyan-500" />
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   Modern • Beautiful • AI-Powered
                 </span>
@@ -367,7 +383,7 @@ const ChatPage: React.FC = () => {
             {/* Main Heading */}
             <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 text-center max-w-4xl leading-tight">
               <span className="inline-flex items-center justify-center mr-4">
-                <Wand2 className="w-12 h-12 md:w-16 md:h-16 text-orange-500 animate-float drop-shadow-[0_0_15px_rgba(249,115,22,0.4)]" />
+                <Wand2 className="w-12 h-12 md:w-16 md:h-16 text-cyan-500 animate-float drop-shadow-[0_0_15px_rgba(0,216,255,0.4)]" />
               </span>
               <span className="text-gray-900 dark:text-white">
                 What would you like to create?
@@ -396,7 +412,7 @@ const ChatPage: React.FC = () => {
                     animationDelay: `${index * 0.1}s`,
                   }}
                 >
-                  <div className="text-orange-500 group-hover:text-orange-400 drop-shadow-[0_0_8px_rgba(249,115,22,0.4)] group-hover:drop-shadow-[0_0_12px_rgba(249,115,22,0.8)] group-hover:scale-110 transition-all duration-300">
+                  <div className="text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.6)] group-hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.9)] group-hover:scale-110 transition-all duration-300">
                     <item.icon className="w-7 h-7" strokeWidth={1.5} />
                   </div>
                   <div className="text-left">
@@ -415,9 +431,9 @@ const ChatPage: React.FC = () => {
               {/* Status Badge */}
               {jobStatus && (
                 <div className="flex justify-center animate-slide-up">
-                  <div className="inline-flex items-center gap-3 px-5 py-3 rounded-full bg-white/50 dark:bg-gray-800/50 border border-orange-200/50 dark:border-orange-800/50 backdrop-blur-xl shadow-sm">
+                  <div className="inline-flex items-center gap-3 px-5 py-3 rounded-full bg-white/50 dark:bg-gray-800/50 border border-cyan-200/50 dark:border-cyan-800/50 backdrop-blur-xl shadow-sm">
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+                      <div className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
                       <span className="text-sm font-medium tracking-wide text-gray-700 dark:text-gray-300">
                         {jobStatus}
                       </span>
@@ -442,11 +458,34 @@ const ChatPage: React.FC = () => {
                     // User Message
                     <div className="max-w-[75%] md:max-w-[65%] relative group">
                       <div className="bg-gray-50/50 dark:bg-gray-900/30 text-gray-600 dark:text-gray-400 px-6 py-4 rounded-3xl rounded-tr-md shadow-sm border border-gray-100 dark:border-gray-800 backdrop-blur-sm transition-all duration-300 hover:bg-white dark:hover:bg-gray-800/50 hover:shadow-md">
-                        <p className="text-sm md:text-base leading-relaxed font-medium">
-                          {message.content as string}
-                        </p>
+                        {(() => {
+                          const rawContent = message.content as string;
+                          // Detect JSON — try to parse the string
+                          let parsed: any = null;
+                          try {
+                            parsed = JSON.parse(rawContent);
+                          } catch {
+                            // not JSON, render as plain text
+                          }
+                          if (parsed !== null && typeof parsed === 'object') {
+                            return (
+                              <div>
+                                <div className="text-[10px] uppercase tracking-widest text-gray-400 dark:text-gray-500 font-semibold mb-2">JSON Input</div>
+                                <pre className="text-xs font-mono bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl p-3 overflow-x-auto max-h-48 whitespace-pre leading-relaxed">
+                                  {JSON.stringify(parsed, null, 2)}
+                                </pre>
+                              </div>
+                            );
+                          }
+                          return (
+                            <p className="text-sm md:text-base leading-relaxed font-medium">
+                              {rawContent}
+                            </p>
+                          );
+                        })()}
                       </div>
                     </div>
+
                   ) : (
                     // Assistant Message
                     <div className="flex flex-col items-start w-full max-w-[90%] gap-2">
@@ -462,10 +501,10 @@ const ChatPage: React.FC = () => {
                             initial={{ opacity: 0, y: 10, scale: 0.98 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                            className="inline-block max-w-[100%] bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl rounded-tl-md p-4 md:p-6 shadow-2xl border border-gray-200/50 dark:border-gray-700/50 hover:shadow-3xl transition-shadow duration-300 overflow-hidden"
+                            className="w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl rounded-tl-md p-4 md:p-8 shadow-2xl border border-gray-200/50 dark:border-gray-700/50 hover:shadow-3xl transition-shadow duration-300"
                           >
-                            <div className="w-full max-w-full overflow-x-auto">
-                              <ResponsiveComponentWrapper maxWidth={1200}>
+                            <div className="w-full min-w-0 p-1 md:p-2">
+                              <ResponsiveComponentWrapper>
                                 <ComponentRenderer spec={message.content as ComponentSpec} />
                               </ResponsiveComponentWrapper>
                             </div>
@@ -542,10 +581,10 @@ const ChatPage: React.FC = () => {
         <div className="max-w-4xl mx-auto pointer-events-auto">
           <div className="relative">
             {/* Subtle glow effect */}
-            <div className="absolute inset-0 bg-orange-500/10 dark:bg-orange-500/20 rounded-full blur-xl" />
+            <div className="absolute inset-0 bg-cyan-500/10 dark:bg-cyan-500/20 rounded-full blur-xl" />
 
             {/* Input container */}
-            <div className="relative bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-2xl p-2 flex items-center gap-2 shadow-md border border-gray-200 dark:border-gray-800 focus-within:ring-1 focus-within:ring-orange-500/50 focus-within:border-orange-500/50 transition-all duration-300">
+            <div className="relative bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-2xl p-2 flex items-center gap-2 shadow-md border border-gray-200 dark:border-gray-800 focus-within:ring-1 focus-within:ring-cyan-500/50 focus-within:border-cyan-500/50 transition-all duration-300">
               <input
                 type="text"
                 value={input}
@@ -568,7 +607,7 @@ const ChatPage: React.FC = () => {
               <button
                 onClick={() => handleSend()}
                 disabled={!input.trim() || isLoading}
-                className="bg-orange-500 hover:bg-orange-600 disabled:bg-gray-200 dark:disabled:bg-gray-800 dark:disabled:text-gray-600 disabled:text-gray-400 text-white p-3 rounded-xl transition-all disabled:cursor-not-allowed flex items-center justify-center shadow-sm active:scale-95"
+                className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 disabled:from-gray-200 disabled:to-gray-200 dark:disabled:from-gray-800 dark:disabled:to-gray-800 dark:disabled:text-gray-600 disabled:text-gray-400 text-white p-3 rounded-xl transition-all disabled:cursor-not-allowed flex items-center justify-center shadow-sm active:scale-95"
               >
                 <Send className="w-5 h-5" />
               </button>

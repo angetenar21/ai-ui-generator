@@ -144,17 +144,17 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   };
 
   const variantClasses = {
-    outlined: `border-2 ${error ? 'border-red-500' : 'border-gray-600'} focus:border-blue-500 bg-transparent`,
-    filled: `border-b-2 ${error ? 'border-red-500' : 'border-gray-600'} focus:border-blue-500 bg-gray-800/50`,
-    standard: `border-b-2 ${error ? 'border-red-500' : 'border-gray-600'} focus:border-blue-500 bg-transparent`,
+    outlined: `border-2 ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-white dark:bg-gray-800`,
+    filled: `border-b-2 ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-gray-100 dark:bg-gray-800/50`,
+    standard: `border-b-2 ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-transparent`,
   };
 
   return (
     <div className={`my-4 ${fullWidth ? 'w-full' : 'max-w-md'}`} ref={wrapperRef}>
       {label && (
-        <label className="block text-sm font-medium text-gray-300 mb-2">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           {label}
-          {required && <span className="text-red-400 ml-1">*</span>}
+          {required && <span className="text-red-500 dark:text-red-400 ml-1">*</span>}
         </label>
       )}
       <div className="relative">
@@ -176,7 +176,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
             ${variantClasses[variant]}
             ${fullWidth ? 'w-full' : 'w-full'}
             pr-10
-            rounded-lg text-white placeholder-gray-400
+            rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500
             focus:outline-none focus:ring-2 focus:ring-orange-500/50
             disabled:opacity-50 disabled:cursor-not-allowed
             transition-all duration-200
@@ -188,14 +188,14 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
           </svg>
         </div>
         {isOpen && filteredOptions.length > 0 && (
-          <div className="absolute z-10 w-full mt-1 bg-gray-800 border-2 border-gray-600 rounded-lg shadow-lg max-h-60 overflow-auto">
+          <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-xl max-h-60 overflow-auto">
             {filteredOptions.map((option, index) => (
               <div
                 key={index}
                 onClick={() => handleOptionClick(option)}
                 className={`
                   px-4 py-2 cursor-pointer transition-colors
-                  ${highlightedIndex === index ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700'}
+                  ${highlightedIndex === index ? 'bg-orange-500 text-white' : 'text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}
                 `.trim().replace(/\s+/g, ' ')}
               >
                 {option.label}

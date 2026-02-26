@@ -821,17 +821,41 @@ RESTART and use the correct format for function calls.`
       continue; // Try again in next iteration
     }
 
-    // Add model's response to conversation
-    contents.push(candidate.content);
-
     // Check for function calls
     const parts = candidate.content?.parts || [];
     const functionCalls = parts.filter(part => part.functionCall);
 
+    const isCompletelyEmptyText = parts.length === 1 && parts[0].text && !parts[0].text.trim();
+
+    if (parts.length === 0 || isCompletelyEmptyText) {
+      Logger.warn('Gemini returned an empty response. Prompting for retry.', {
+        iterationCount: iterations,
+        isCompletelyEmptyText
+      });
+      // CRITICAL: Do NOT push candidate.content to contents if it's completely empty.
+      // Doing so breaks Gemini's chat history constraints and locks it in an empty-response loop.
+      contents.push({
+        role: 'user',
+        parts: [{
+          text: 'Your last response was completely empty. You MUST either call a function (validate_component, get_components, get_component_schema) or return the final JSON component.'
+        }]
+      });
+      continue;
+    }
+
+    // Add model's valid response to conversation
+    contents.push(candidate.content);
+
     if (functionCalls.length === 0) {
       // No more function calls - extract final text response
       const textPart = parts.find(part => part.text);
+
       if (!textPart || !textPart.text.trim()) {
+        Logger.error('Gemini Candidate has NO function calls and NO text parts', {
+          candidateContent: JSON.stringify(candidate.content, null, 2),
+          allParts: JSON.stringify(parts, null, 2)
+        });
+
         // Check if we have a validated spec as fallback
         if (lastValidatedSpec) {
           Logger.warn('Empty response after validation, using fallback validated spec', {
@@ -842,8 +866,8 @@ RESTART and use the correct format for function calls.`
           return JSON.stringify(lastValidatedSpec, null, 2);
         }
 
-        // Prompt Gemini one more time to return the JSON
-        Logger.warn('Empty final response, prompting Gemini to return JSON', {
+        // Prompt Gemini one more time to return the JSON if we reached here unexpectedly
+        Logger.warn('Empty text response unexpectedly reached, prompting Gemini to return JSON', {
           iterationCount: iterations
         });
 

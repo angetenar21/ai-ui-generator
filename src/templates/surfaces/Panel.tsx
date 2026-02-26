@@ -34,6 +34,9 @@ interface PanelProps {
   /** Semantic tone */
   tone?: ToneVariant;
 
+  /** Header variant: 'default' = with border-bottom, 'minimal' = no border (clean dashboard look) */
+  headerVariant?: 'default' | 'minimal';
+
   /** Optional children (for nested components) */
   children?: ComponentSpec[];
 
@@ -55,6 +58,7 @@ const Panel: React.FC<PanelProps> = ({
   elevation = 'raised',
   emphasis = 'medium',
   tone,
+  headerVariant = 'default',
   children,
   renderChild,
   className = '',
@@ -80,18 +84,19 @@ const Panel: React.FC<PanelProps> = ({
   const secondaryTextClass = 'text-gray-600 dark:text-gray-300';
 
   return (
-    <div className={`${surfaceClasses} rounded-xl transition-all duration-300 ${className || 'w-full'} max-w-full ${textColorClass} flex flex-col h-full`}>
+    <div className={`${surfaceClasses} rounded-2xl transition-all duration-300 ${className || 'w-full'} max-w-full ${textColorClass} flex flex-col`}>
       {/* Header */}
       <div
         className={`
-          px-4 py-3 border-b border-gray-200 dark:border-gray-700
+          px-6 py-5
+          ${headerVariant === 'default' ? 'border-b border-gray-100 dark:border-gray-800' : ''}
           ${collapsible ? 'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors' : ''}
-          rounded-t-xl ${isCollapsed && !footer ? 'rounded-b-xl border-b-0' : ''}
+          rounded-t-2xl ${isCollapsed && !footer ? 'rounded-b-2xl' : ''}
         `}
         onClick={() => collapsible && setIsCollapsed(!isCollapsed)}
       >
         <div className="flex items-center justify-between">
-          <h3 className={`${textColorClass} font-semibold text-sm truncate`}>
+          <h3 className={`${textColorClass} font-bold text-base leading-snug tracking-tight`}>
             {title}
           </h3>
 
@@ -113,16 +118,16 @@ const Panel: React.FC<PanelProps> = ({
       {/* Content */}
       {!isCollapsed && (
         <>
-          <div className="px-4 py-3">
+          <div className="px-5 py-4">
             {displayContent && (
-              <div className={`${secondaryTextClass} text-sm leading-relaxed whitespace-pre-wrap break-words`}>
+              <div className={`${secondaryTextClass} text-sm leading-relaxed`}>
                 {displayContent}
               </div>
             )}
 
 
             {children && children.length > 0 && renderChild && (
-              <div className="space-y-3 mt-2">
+              <div className="space-y-4 mt-3">
                 {children.map((child, index) => (
                   <div key={index}>{renderChild(child)}</div>
                 ))}
@@ -130,7 +135,7 @@ const Panel: React.FC<PanelProps> = ({
             )}
 
             {!displayContent && (!children || children.length === 0) && (
-              <div className="text-gray-400 dark:text-gray-500 text-xs text-center py-2">
+              <div className="text-gray-400 dark:text-gray-500 text-xs text-center py-4">
                 No content
               </div>
             )}
@@ -138,7 +143,7 @@ const Panel: React.FC<PanelProps> = ({
 
           {/* Footer */}
           {footer && (
-            <div className={`px-4 py-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/30 rounded-b-xl`}>
+            <div className={`px-5 py-3 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/30 rounded-b-2xl`}>
               <div className={`${secondaryTextClass} text-xs`}>
                 {footer}
               </div>

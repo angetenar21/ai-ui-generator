@@ -7,18 +7,15 @@ interface ResponsiveComponentWrapperProps {
 
 const ResponsiveComponentWrapper: React.FC<ResponsiveComponentWrapperProps> = ({
   children,
-  maxWidth = 900,
+  maxWidth,
 }) => {
-  // Simple wrapper that constrains content without scaling
-  // This prevents layout issues from transform scaling
+  // Fluid wrapper that doesn't restrict shadow bleed via overflow-hidden
   return (
     <div
-      className="inline-block align-top max-w-full overflow-hidden"
-      style={{
-        maxWidth: `${maxWidth}px`,
-      }}
+      className="w-full relative"
+      style={maxWidth ? { maxWidth: `${maxWidth}px`, margin: '0 auto' } : undefined}
     >
-      <div className="inline-block align-top max-w-full overflow-hidden">
+      <div className="w-full relative">
         {children}
       </div>
     </div>

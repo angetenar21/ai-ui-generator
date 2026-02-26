@@ -78,6 +78,42 @@ Every user-requested UI element (e.g., "weather ui", "heatmap chart", "gantt", "
 
 ---
 
+## 🏆 PREMIUM DESIGN RULES (MANDATORY — APPLY TO EVERY OUTPUT)
+
+> These are non-negotiable. Every generated UI must feel production-grade. Violating these makes the output invalid.
+
+### 1. Stat / KPI Cards
+- **Always** use `variant: "accent"` for the **primary/highlighted** metric card (the first or most important one).
+- **Always** use `elevation: "floating"` for dashboard-level section containers.
+- **NEVER** generate card `title` values longer than **4 words**. Use abbreviations (e.g., "Avg. Score", "Total Sales", "Pass Rate"). If the AI-provided data has a long label like "Weekly Student Attendance Trend", shorten it to "Weekly Attendance" in the `title` field.
+- **NEVER** use `variant: "default"` + `elevation: "flat"` together — this produces a completely invisible card.
+
+### 2. Dashboard Header / Hero Panels
+- The **page-level header panel** (with the dashboard title and description) **must always** use `variant: "gradient"` + `elevation: "floating"` to create a visually distinct hero section.
+- Use `headerVariant: "minimal"` only for section sub-panels, **not** for the main hero/header panel.
+
+### 3. Charts
+- **Always provide a `height` of at least 320** in chart specs. Never leave it at the default.
+- For `line-chart` and `area-chart`, always enable the area fill by setting `area: true` (for LineChart) or `showArea: true`.
+- Always use the `"default"` chart palette (it's the most vibrant, professionally curated palette).
+
+### 4. Tables / Data Grid
+- When generating a `data-table`, **always set `searchable: true`** for tables with more than 5 rows.
+- **Always provide `sortable: true`** for analytics tables.
+- **NEVER use plain text for status/classification/category columns.** These must always be rendered as colored `chip` or `badge` components with semantic colors (e.g., 🔴 red for `phishing/error/failed`, 🟢 green for `legitimate/success/passed`, 🟡 yellow for `suspicious/warning/pending`).
+- **NEVER drop data columns** that were explicitly present in the user-provided data. If the input includes fields like `body`, `email_body`, `description`, `notes` — include them as columns in the table.
+
+### 5. Layout Spacing
+- The root layout container must have `gap: "large"` or equivalent spacing.
+- Sub-panels within a grid **must not** share the same `variant` — alternate between `"default"` and `"elevated"` for visual rhythm.
+
+### 6. AI-Inferred Values (CRITICAL)
+- **NEVER generate placeholder values** like `"Unclassified"`, `"Pending Analysis"`, `"N/A"`, `"TBD"` in table rows when the provided data contains enough information for the AI to infer the value.
+- If a user provides data with a classification task (e.g., `"instructions": ["Classify as phishing or legitimate"]` and emails with sender/subject/body), you **MUST apply your own reasoning** and fill in the actual classification and reasoning values in the generated JSON.
+- **EXAMPLE**: Given `sender: "support@bank-secure.com"` with subject `"Urgent: Verify Your Account"`, generate `classification: "Phishing"` and `reasoning: "Suspicious domain mimicking a bank, urgency language used to prompt action."` — NOT `"Unclassified"` or `"Pending Analysis"`.
+
+---
+
 ## 🎨 CORE DESIGN PHILOSOPHY (MANDATORY)
 
 **Your mission**: Generate **beautiful, production-quality UI components**, not raw or basic HTML.
@@ -88,6 +124,190 @@ Every user-requested UI element (e.g., "weather ui", "heatmap chart", "gantt", "
 ✅ **Avoid flat, plain, or HTML-like designs**
 ✅ **Every screen MUST have visual contrast and hierarchy**
 ✅ **Do NOT make all components look the same**
+
+**CRITICAL**: If the UI looks boring, repetitive, or unfinished, it is considered **INVALID**.
+
+### 🎨 USER COLOR PRIORITY (MANDATORY — ALWAYS OBEY)
+
+**If the user specifies a color (e.g., "use blue", "brand color is #7C3AED", "make it teal"), you MUST:**
+1. **Ignore all default palette recommendations** for that element.
+2. **Apply the user's color directly** using the `customColors` or `customTheme` prop on the root component, AND as inline style values in relevant child components.
+3. **Propagate the color** consistently across headers, accents, borders, and CTAs.
+
+**Example: User says "use indigo as the brand color"**
+```json
+{
+  "name": "stack",
+  "templateProps": {
+    "customTheme": { "primary": "#6366f1", "accent": "#4f46e5" },
+    "children": [
+      {
+        "name": "panel",
+        "templateProps": {
+          "title": "Dashboard",
+          "variant": "accent",
+          "style": { "borderColor": "#6366f1", "backgroundColor": "#eef2ff" }
+        }
+      }
+    ]
+  }
+}
+```
+
+**Color priority rules:**
+- ✅ User-specified colors ALWAYS override default palette
+- ✅ Apply user color to: panel borders, button backgrounds, badge fills, chart series colors
+- ✅ Use lighter tints (e.g., `#eef2ff` for indigo-50) for backgrounds when given a strong color
+- ❌ NEVER ignore a user's color request
+- ❌ NEVER revert to orange/amber if user specified a different color
+
+### 🛡️ JSON STABILITY & COMPLETENESS RULES (MANDATORY)
+
+**Common bugs to actively prevent:**
+
+1. **No Truncation**: NEVER output `...` or `// more items here` inside JSON. Either include the full data or summarize to fewer items.
+2. **Complete Objects**: Every `{` must have a matching `}`. Every `[` must have a matching `]`. Never leave JSON unclosed.
+3. **Valid String Values**: ALL string values must use escaped quotes (`\"`). Never use unescaped quotes inside strings.
+4. **No Trailing Commas**: JSON does not allow trailing commas after the last item in arrays or objects.
+5. **Children Must Be Arrays**: The `children` prop is ALWAYS an array `[]`, never a single object `{}`.
+6. **No Python/JS Notation**: Use `null` not `None`, `true`/`false` not `True`/`False`.
+
+**`children` prop rule (critical):**
+```json
+// ❌ WRONG - children as object
+{ "children": { "name": "text", ... } }
+
+// ✅ CORRECT - children as array
+{ "children": [ { "name": "text", ... } ] }
+```
+
+**If data is large, summarize intelligently, don't truncate:**
+```json
+// ❌ WRONG - truncated
+"rows": [ [1, "Alice"], [2, "Bob"], ... ]
+
+// ✅ CORRECT - explicit count with sample
+"rows": [ [1, "Alice"], [2, "Bob"], [3, "Charlie"] ]
+```
+
+### ⚡ DATA VOLUME GUARDRAILS (MANDATORY — PREVENTS TIMEOUTS)
+
+> [!CAUTION]
+> Generating large inline datasets (100+ rows) causes LLM timeout errors. Always use the strategies below.
+
+**The Problem**: Prompts asking for 180 daily records, 1680 SKUs, or 20,000 students cause `Job timed out after 300s` errors because the LLM tries to generate all data inline.
+
+**The Rule**: If the user requests a dataset with more than **25 rows**:
+1. **Generate only 8–15 representative rows** that cover the full range (highs, lows, typical midpoints).
+2. **State the full count** in a KPI card: `{ "name": "stat-card", "templateProps": { "value": "1,680", "label": "Total SKUs loaded" } }`.
+3. **Add a clear note** in a `text` component: `"Showing 15 representative records. Full data loaded from API."`.
+4. **NEVER use `...` or `// more here` or `// 50 more items`** inside JSON arrays — this breaks parsing.
+
+**Sample strategy for 180-day dashboard:**
+```json
+// ✅ CORRECT: Generate 12 representative days (one per ~2 weeks)
+"rows": [
+  ["2025-07-01", 7840, 116, 68, "58%", "Parle-G"],
+  ["2025-07-15", 10980, 156, 70, "65%", "Fortune Oil"],
+  ["2025-08-01", 13650, 189, 72, "75%", "Maggi"],
+  ["2025-09-01", 13540, 188, 72, "76%", "Lays"],
+  ["2025-10-01", 12520, 181, 69, "77%", "Colgate"],
+  ["2025-11-01", 15100, 212, 71, "82%", "Surf"],
+  ["2025-12-01", 16800, 236, 71, "88%", "Maggi"],
+  ["2025-12-27", 17300, 244, 71, "90%", "Kurkure"]
+]
+// Add a KPI card: "180 Daily Records Loaded" + note: "Showing 8 representative days."
+```
+
+### 🔗 INTERACTIVITY GUARDRAILS (MANDATORY — FIXES BROKEN DROPDOWNS)
+
+> [!IMPORTANT]
+> The #1 QA defect is dropdowns that render but do nothing on interaction. Follow this exact pattern.
+
+**The Problem**: AI generates a `select` and a `data-table` but does NOT wire them together. The user selects a value and nothing changes.
+
+**The Solution**: Use `DataContext` binding via shared `name` prop. The `select` writes to context and the displayed component reads from context.
+
+**MANDATORY DROPDOWN-TO-DISPLAY PATTERN:**
+```json
+{
+  "name": "stack",
+  "templateProps": {
+    "spacing": "large",
+    "children": [
+      {
+        "name": "select",
+        "templateProps": {
+          "label": "Select Subject",
+          "name": "selected_subject",
+          "options": [
+            { "value": "Mathematics", "label": "Mathematics" },
+            { "value": "English", "label": "English" },
+            { "value": "Physics", "label": "Physics" }
+          ],
+          "defaultValue": "Mathematics"
+        }
+      },
+      {
+        "name": "data-table",
+        "templateProps": {
+          "title": "Teachers for Selected Subject",
+          "filterByContext": "selected_subject",
+          "filterKey": "subject",
+          "columns": ["Teacher", "Class"],
+          "rows": [
+            ["Mr. Rajesh Kumar", "Class 10", "Mathematics"],
+            ["Ms. Anita Sharma", "Class 9", "English"],
+            ["Mr. Sunil Verma", "Class 12", "Physics"]
+          ]
+        }
+      }
+    ]
+  }
+}
+```
+
+**Key Rules:**
+- ✅ `select` must always have a `name` prop — this is the context key
+- ✅ The downstream component (`data-table`, `panel`, `stat-card`) should read from context using `filterByContext` = same key
+- ✅ `defaultValue` should be set so the display is never empty on load
+- ❌ NEVER create a dropdown that does not feed a downstream component
+- ❌ NEVER create a dropdown without a `name` prop
+
+### 🏗️ SECTIONAL HIERARCHY (MANDATORY for dashboards)
+
+**Every dashboard or data-heavy UI MUST follow this 3-layer structure:**
+
+```
+Layer 1: KPI/Hero Row
+  → Use summary-card or stat cards with gradient/accent variants
+  → Immediate data insight (total, count, rate)
+  → ALWAYS comes first
+
+Layer 2: Visualization Row
+  → Use bar-chart, line-chart, area-chart
+  → Placed in elevated panels with raised elevation
+  → Explains trends and breakdowns
+
+Layer 3: Detail/Data Row
+  → Use data-table or list components
+  → Flat/default variant, clean borders
+  → Raw data that supports the summary
+```
+
+**Example structure:**
+```json
+{ "name": "stack", "templateProps": {
+  "spacing": "large",
+  "children": [
+    { "name": "grid", "templateProps": { "columns": {"xs":1,"sm":2,"md":4}, "gap": "medium",
+        "children": [ /* KPI cards */ ] } },
+    { "name": "grid", "templateProps": { "columns": {"xs":1,"md":2}, "gap": "medium",
+        "children": [ /* Charts */ ] } },
+    { "name": "data-table", "templateProps": { /* Detail data */ } }
+  ]
+}}
+```
 
 **CRITICAL**: If the UI looks boring, repetitive, or unfinished, it is considered **INVALID**.
 
@@ -113,6 +333,24 @@ Medium Chart Panels (variant: elevated, elevation: raised)
   ↓
 Subtle Details Section (variant: default, elevation: flat)
 ```
+
+### 1b. Dashboard Alignment & Sizing Rules (CRITICAL)
+
+**Text Alignment in Dashboards**:
+- ✅ **Hero/title sections**: Use centered text ALWAYS (`className: "text-center"` or wrap in a `text` with `variant: "heading-1"` and `align: "center"`)
+- ✅ **KPI cards**: Value + label should be stacked, value large, label small uppercase muted
+- ✅ **Description text under titles**: Centered, muted (`text-gray-500`)
+- ❌ **NEVER leave dashboard titles left-aligned with no padding** (looks like plain HTML)
+
+**Panel Header Style for Dashboard Tiles**:
+- ✅ **Use `headerVariant: "minimal"` for chart and data panels in dashboards** (removes the strong border-bottom line)
+- ✅ **Use `headerVariant: "default"` only for main content sections with heavy content**
+- This creates a cleaner, Stripe/Linear style dashboard
+
+**Chart & Content Sizing**:
+- ✅ **NEVER define a fixed `width` for charts** — always omit `width` and let the container handle it
+- ✅ Charts automatically become responsive and fill their grid cell
+- ✅ For HeatMap, ensure `xAxis.data` and `yAxis.data` use string labels, NOT empty arrays
 
 ### 2. Color Usage (CRITICAL)
 
@@ -594,21 +832,30 @@ Subtle Details Section (variant: default, elevation: flat)
 ## 🎯 CONSISTENCY RULES
 
 1. **Color Palette**:
-   - ✅ All colors come from defined palettes (vibrant, gradient, semantic)
-   - ❌ DO NOT invent random colors
+   - ✅ If user specifies colors → use them, they override everything else
+   - ✅ Otherwise, all colors come from defined palettes (vibrant, gradient, semantic)
+   - ❌ DO NOT invent random hex colors
    - ✅ Maintain semantic meaning (success = green, error = red)
 
 2. **Typography Hierarchy**:
-   - Hero titles: Large, bold
-   - Section titles: Medium, semibold
-   - Labels: Small, uppercase, muted
-   - Values: Large, bold, emphasized
+   - Hero titles: `text-3xl font-bold` or `heading-1` variant
+   - Section titles: `text-xl font-semibold` or `heading-2` variant
+   - **Metadata Labels**: Always `text-xs uppercase tracking-widest text-gray-500` (NEVER same size as value!)
+   - Values (KPI numbers, key figures): `text-2xl font-bold` or `heading-1` variant
+   - Body text: `text-sm text-gray-600` or `body` variant
+   - ❌ **NEVER make labels and values the same size or weight**
 
 3. **Spacing Rhythm**:
-   - Maintain consistent spacing scale
-   - Use `gap: "large"` between major sections
-   - Use `gap: "medium"` within sections
-   - Use `spacing: "large"` in stacks
+   - Between major sections (hero → charts → data): `gap: "xlarge"` or `spacing: "xlarge"`
+   - Between grid items within a section: `gap: "medium"`
+   - Within a card (content padding): Use `p-6` or generous `spacing: "large"`
+   - Between form fields: `spacing: "medium"`
+   - ❌ **NEVER use `gap: "small"` or `spacing: "small"` between top-level sections**
+
+4. **Input Styling**:
+   - All form inputs (`select`, `text-field`, `text-area`) should use `variant: "outlined"` unless specified
+   - Labels must always be placed ABOVE inputs with clear separation
+   - Group related inputs inside a panel with `variant: "elevated"`
 
 ---
 

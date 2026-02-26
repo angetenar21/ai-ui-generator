@@ -13,11 +13,11 @@ export default {
           elevated: '#FAFAFA', // slightly off-white / elevated dark
         },
 
-        // Primary Accent (Warm Analytical)
+        // Primary Accent (Cool Analytical)
         accent: {
-          from: '#F59E0B',   // warm amber
-          to: '#EA580C',     // deep orange
-          solid: '#F97316',  // orange-600
+          from: '#00D8FF',   // cyan logo
+          to: '#007BFF',     // deeper blue
+          solid: '#0ea5e9',  // sky-500
         },
 
         // Semantic colors
@@ -58,13 +58,13 @@ export default {
           strong: '#D1D5DB',
         },
 
-        // Data visualization palette (no hard blues)
+        // Data visualization palette
         chart: {
-          primary: '#F97316',   // orange
+          primary: '#0ea5e9',   // blue/sky
           secondary: '#10B981', // green
           tertiary: '#EC4899',  // pink
           quaternary: '#8B5CF6',// purple
-          accent1: '#F59E0B',   // amber
+          accent1: '#00D8FF',   // cyan
           accent2: '#22C55E',   // jade
           accent3: '#A855F7',   // violet
           neutral: '#6B7280',   // gray

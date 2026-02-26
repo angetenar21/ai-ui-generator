@@ -69,17 +69,17 @@ const TextField: React.FC<TextFieldProps> = ({
   };
 
   const variantClasses = {
-    outlined: `border-2 ${error ? 'border-red-500' : 'border-gray-600'} focus:border-blue-500 bg-transparent`,
-    filled: `border-b-2 ${error ? 'border-red-500' : 'border-gray-600'} focus:border-blue-500 bg-gray-800/50`,
-    standard: `border-b-2 ${error ? 'border-red-500' : 'border-gray-600'} focus:border-blue-500 bg-transparent`,
+    outlined: `border-2 ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-white dark:bg-gray-800`,
+    filled: `border-b-2 ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-gray-100 dark:bg-gray-800/50`,
+    standard: `border-b-2 ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-transparent`,
   };
 
   return (
     <div className={`my-4 ${fullWidth ? 'w-full' : 'max-w-md'}`}>
       {label && (
-        <label className="block text-sm font-medium text-gray-300 mb-2">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           {label}
-          {required && <span className="text-red-400 ml-1">*</span>}
+          {required && <span className="text-red-500 dark:text-red-400 ml-1">*</span>}
         </label>
       )}
       <div className={`
@@ -109,7 +109,7 @@ const TextField: React.FC<TextFieldProps> = ({
             flex-1 bg-transparent
             ${!(prefix || icon) ? 'pl-4' : 'pl-0'}
             ${!suffix ? 'pr-4' : 'pr-0'}
-            text-white placeholder-gray-400
+            text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500
             focus:outline-none 
             disabled:cursor-not-allowed
           `.trim().replace(/\s+/g, ' ')}
@@ -121,7 +121,7 @@ const TextField: React.FC<TextFieldProps> = ({
         )}
       </div>
       {(helperText || (error && errorMessage)) && (
-        <p className={`mt-1 text-xs ${error ? 'text-red-400' : 'text-gray-400'}`}>
+        <p className={`mt-1 text-xs ${error ? 'text-red-500 dark:text-red-400' : 'text-gray-500 dark:text-gray-400'}`}>
           {error && errorMessage ? errorMessage : helperText}
         </p>
       )}

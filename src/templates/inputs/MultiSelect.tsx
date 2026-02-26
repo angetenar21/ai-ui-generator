@@ -123,17 +123,17 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   };
 
   const variantClasses = {
-    outlined: `border-2 ${error ? 'border-red-500' : 'border-gray-600'} focus:border-blue-500 bg-transparent`,
-    filled: `border-b-2 ${error ? 'border-red-500' : 'border-gray-600'} focus:border-blue-500 bg-gray-800/50`,
-    standard: `border-b-2 ${error ? 'border-red-500' : 'border-gray-600'} focus:border-blue-500 bg-transparent`,
+    outlined: `border-2 ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-white dark:bg-gray-800`,
+    filled: `border-b-2 ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-gray-100 dark:bg-gray-800/50`,
+    standard: `border-b-2 ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-transparent`,
   };
 
   return (
     <div className={`my-4 ${fullWidth ? 'w-full' : 'max-w-md'}`} ref={wrapperRef}>
       {label && (
-        <label className="block text-sm font-medium text-gray-300 mb-2">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           {label}
-          {required && <span className="text-red-400 ml-1">*</span>}
+          {required && <span className="text-red-500 dark:text-red-400 ml-1">*</span>}
         </label>
       )}
       <div className="relative">
@@ -143,7 +143,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
             ${sizeClasses[size]}
             ${variantClasses[variant]}
             ${fullWidth ? 'w-full' : 'w-full'}
-            rounded-lg text-white
+            rounded-lg text-gray-900 dark:text-white
             focus:outline-none focus:ring-2 focus:ring-orange-500/50
             ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
             transition-all duration-200
@@ -156,7 +156,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
             getSelectedLabels().map((label, index) => (
               <span
                 key={index}
-                className="inline-flex items-center gap-1 px-2 py-1 bg-blue-600 text-white text-sm rounded"
+                className="inline-flex items-center gap-1 px-2 py-1 bg-orange-500 text-white text-sm rounded-md"
               >
                 {label}
                 <button
@@ -181,7 +181,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
           </svg>
         </div>
         {isOpen && (
-          <div className="absolute z-10 w-full mt-1 bg-gray-800 border-2 border-gray-600 rounded-lg shadow-lg max-h-60 overflow-auto">
+          <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-xl max-h-60 overflow-auto">
             {selectOptions.map((option, index) => {
               const isSelected = selectedValues.includes(option.value);
               const isDisabled = disabled || option.disabled || (maxSelections !== undefined && selectedValues.length >= maxSelections && !isSelected);
@@ -192,8 +192,8 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
                   onClick={() => !isDisabled && handleToggleOption(option.value)}
                   className={`
                     px-4 py-2 flex items-center gap-2
-                    ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-700'}
-                    ${isSelected ? 'bg-gray-700' : ''}
+                    ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-orange-50 dark:hover:bg-gray-700'}
+                    ${isSelected ? 'bg-orange-50 dark:bg-gray-700' : ''}
                     transition-colors
                   `.trim().replace(/\s+/g, ' ')}
                 >
@@ -203,10 +203,10 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
                       checked={isSelected}
                       onChange={() => { }}
                       disabled={isDisabled}
-                      className="w-4 h-4 rounded border-2 border-gray-600 bg-gray-800 text-blue-600 focus:ring-orange-500 cursor-pointer"
+                      className="w-4 h-4 rounded border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-orange-500 focus:ring-orange-500 cursor-pointer"
                     />
                   )}
-                  <span className="text-gray-300">{option.label}</span>
+                  <span className="text-gray-800 dark:text-gray-300">{option.label}</span>
                 </div>
               );
             })}
@@ -214,7 +214,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
         )}
       </div>
       {(helperText || (error && errorMessage)) && (
-        <p className={`mt-1 text-xs ${error ? 'text-red-400' : 'text-gray-400'}`}>
+        <p className={`mt-1 text-xs ${error ? 'text-red-500 dark:text-red-400' : 'text-gray-500 dark:text-gray-400'}`}>
           {error && errorMessage ? errorMessage : helperText}
         </p>
       )}

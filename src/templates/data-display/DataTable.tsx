@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useData } from '../core/DataContext';
 
 interface DataTableColumn {
   id?: string;
@@ -19,6 +20,14 @@ interface DataTableProps {
   sortable?: boolean;
   searchable?: boolean;
 
+  /** Context key written by a Select/MultiSelect to filter rows. Matches against filterKey column. */
+  filterByContext?: string;
+  /** Column name or index to match filterByContext value against (default: first column) */
+  filterKey?: string | number;
+
+  /** Show at most this many rows (useful for large datasets) */
+  maxRows?: number;
+
   children?: React.ReactNode;
   renderChild?: (child: any) => React.ReactNode;
 }
@@ -29,7 +38,11 @@ const DataTable: React.FC<DataTableProps> = ({
   rows = [],
   sortable = false,
   searchable = false,
+  filterByContext,
+  filterKey,
+  maxRows,
 }) => {
+  const { data } = useData();
   // Normalize columns: handle both string[] and Column[] formats
   const normalizedColumns: string[] = useMemo(() => {
     if (!columns || !Array.isArray(columns)) return [];
@@ -145,6 +158,34 @@ const DataTable: React.FC<DataTableProps> = ({
 
   let displayRows = [...normalizedRows];
 
+  // Filter by DataContext value (dropdown-driven filtering)
+  if (filterByContext && data) {
+    const contextValue = data[filterByContext];
+    if (contextValue !== undefined && contextValue !== '' && contextValue !== null) {
+      const filterVal = String(contextValue).toLowerCase();
+      // Determine which column index to filter on
+      let filterColIndex: number = 0;
+      if (filterKey !== undefined) {
+        if (typeof filterKey === 'number') {
+          filterColIndex = filterKey;
+        } else {
+          // Find by column name
+          const idx = normalizedColumns.findIndex(
+            col => col.toLowerCase() === String(filterKey).toLowerCase()
+          );
+          filterColIndex = idx >= 0 ? idx : 0;
+        }
+      }
+      displayRows = displayRows.filter(row => {
+        // Check the specified column first
+        const colMatch = String(row[filterColIndex] ?? '').toLowerCase().includes(filterVal);
+        // If no match in specified col, also do full-row search for flexibility
+        const anyMatch = row.some(cell => String(cell ?? '').toLowerCase().includes(filterVal));
+        return colMatch || anyMatch;
+      });
+    }
+  }
+
   // Filter by search
   if (searchable && searchQuery) {
     displayRows = displayRows.filter((row) =>
@@ -166,44 +207,55 @@ const DataTable: React.FC<DataTableProps> = ({
     });
   }
 
+  const totalFilteredRows = displayRows.length;
+  const isLimited = Boolean(maxRows && displayRows.length >= maxRows && totalFilteredRows >= maxRows);
+  const displayedCount = isLimited ? maxRows! : displayRows.length;
+
+  // Apply maxRows cap
+  if (maxRows && displayRows.length > maxRows) {
+    displayRows = displayRows.slice(0, maxRows);
+  }
+
   return (
-    <div className="w-full max-w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 my-2 overflow-hidden">
+    <div className="w-full max-w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden my-2">
       {title && (
-        <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3 truncate">
-          {title}
-        </h3>
+        <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-800">
+          <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
+            {title}
+          </h3>
+        </div>
       )}
 
       {searchable && (
-        <div className="mb-3">
+        <div className="px-5 py-3 border-b border-gray-100 dark:border-gray-800">
           <input
             type="text"
             placeholder="Search table..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg
-                     bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400
+            className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-xl
+                     bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400
                      focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent"
           />
         </div>
       )}
 
-      <div className="overflow-x-auto overflow-y-hidden">
-        <table className="w-full border-collapse min-w-0">
-          <thead>
-            <tr className="bg-gray-50 dark:bg-gray-900">
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse">
+          <thead className="sticky top-0 z-10">
+            <tr className="bg-gray-50/90 dark:bg-gray-800/90 backdrop-blur-sm">
               {normalizedColumns.map((column, index) => (
                 <th
                   key={index}
                   onClick={() => handleSort(index)}
-                  className={`px-3 py-2 text-left text-xs font-semibold text-gray-700 dark:text-gray-300
+                  className={`px-5 py-3.5 text-left text-[11px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest
                            border-b border-gray-200 dark:border-gray-700 whitespace-nowrap
-                           ${sortable ? 'cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800' : ''}`}
+                           ${sortable ? 'cursor-pointer hover:text-gray-900 dark:hover:text-gray-100 select-none' : ''}`}
                 >
                   <div className="flex items-center gap-1">
                     {column}
                     {sortable && sortColumn === index && (
-                      <span className="text-xs text-orange-500">
+                      <span className="text-xs text-orange-500 font-bold">
                         {sortDirection === 'asc' ? '↑' : '↓'}
                       </span>
                     )}
@@ -216,15 +268,23 @@ const DataTable: React.FC<DataTableProps> = ({
             {displayRows.map((row, rowIndex) => (
               <tr
                 key={rowIndex}
-                className="hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors"
+                className={`
+                  transition-colors duration-150
+                  hover:bg-orange-50/30 dark:hover:bg-orange-900/10
+                  ${rowIndex % 2 === 0 ? 'bg-white dark:bg-gray-900' : 'bg-gray-50/60 dark:bg-gray-800/30'}
+                `}
               >
                 {row.map((cell, cellIndex) => (
                   <td
                     key={cellIndex}
-                    className="px-3 py-2 text-xs text-gray-700 dark:text-gray-300
-                             border-b border-gray-100 dark:border-gray-700/50 whitespace-nowrap"
+                    className="px-5 py-3.5 text-sm text-gray-700 dark:text-gray-300
+                             border-b border-gray-100 dark:border-gray-800/60
+                             max-w-[240px]"
+                    title={typeof cell === 'string' || typeof cell === 'number' ? String(cell) : undefined}
                   >
-                    {renderCellValue(cell)}
+                    <div className="truncate">
+                      {renderCellValue(cell)}
+                    </div>
                   </td>
                 ))}
               </tr>
@@ -233,11 +293,27 @@ const DataTable: React.FC<DataTableProps> = ({
         </table>
 
         {displayRows.length === 0 && (
-          <div className="text-center py-4 text-gray-400 text-sm">
-            No data found
+          <div className="text-center py-12 text-gray-400 text-sm">
+            {filterByContext ? 'No matching records.' : 'No data found'}
           </div>
         )}
       </div>
+
+      {/* Footer: row count indicator */}
+      {displayRows.length > 0 && (
+        <div className="px-5 py-2.5 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between">
+          <span className="text-xs text-gray-400 dark:text-gray-500">
+            {isLimited
+              ? `Showing ${displayedCount} rows (representative sample)`
+              : `${displayedCount} ${displayedCount === 1 ? 'row' : 'rows'}`}
+          </span>
+          {filterByContext && data && data[filterByContext] && (
+            <span className="text-xs text-orange-500 font-medium">
+              Filtered by: {String(data[filterByContext])}
+            </span>
+          )}
+        </div>
+      )}
     </div>
   );
 };

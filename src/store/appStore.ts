@@ -23,6 +23,7 @@ interface AppState {
 
   // Current thread context
   currentThreadId: string | null;
+  lastActiveThreadId: string | null;
   setCurrentThreadId: (threadId: string | null) => void;
 
   // Component generation history (in-memory for current session)
@@ -80,7 +81,14 @@ export const useAppStore = create<AppState>((set) => ({
   setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
 
   currentThreadId: null,
-  setCurrentThreadId: (threadId) => set({ currentThreadId: threadId }),
+  lastActiveThreadId: null,
+  setCurrentThreadId: (threadId) => set(() => {
+    // If setting a real thread ID, remember it as the last active one
+    if (threadId !== null) {
+      return { currentThreadId: threadId, lastActiveThreadId: threadId };
+    }
+    return { currentThreadId: threadId };
+  }),
 
   generatedComponents: [],
   addGeneratedComponent: (component) =>

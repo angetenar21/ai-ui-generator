@@ -90,7 +90,7 @@ const BarChart: React.FC<BarChartProps> = ({
   xAxis,
   series,
   width: propWidth,
-  height = 280,
+  height = 360,
   backgroundColor,
   cardBackgroundColor,
   layout = 'vertical',
@@ -180,6 +180,15 @@ const BarChart: React.FC<BarChartProps> = ({
   // Use theme-aware background colors
   const cardBgColor = cardBackgroundColor;
 
+  // Auto-detect label density to prevent overlap
+  const totalXPoints = xAxis && xAxis[0]?.data?.length || 0;
+  const labelRotation = totalXPoints > 20 ? -45 : 0;
+  const tickInterval = totalXPoints > 50 ? Math.ceil(totalXPoints / 20) : totalXPoints > 20 ? 2 : 1;
+  const bottomMargin = totalXPoints > 20
+    ? Math.max((margin?.bottom || 40), 80)
+    : (margin?.bottom || 40);
+  const effectiveMargin = { ...margin, bottom: bottomMargin };
+
   // Detect dark mode for chart styling
   const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
   const chartColors = {
@@ -256,14 +265,19 @@ const BarChart: React.FC<BarChartProps> = ({
       <div ref={containerRef} className="w-full overflow-x-auto overflow-y-hidden">
         <div className="flex justify-center items-center min-h-[200px]">
           <MuiBarChart
-            xAxis={layout === 'horizontal' ? [{ scaleType }] : processedXAxis}
+            xAxis={layout === 'horizontal' ? [{ scaleType }] : (processedXAxis || []).map((axis: any) => ({
+              ...axis,
+              tickInterval: tickInterval > 1
+                ? (_value: any, index: number) => index % tickInterval === 0
+                : undefined,
+            }))}
             yAxis={layout === 'horizontal' ? processedYAxis : [{ scaleType }]}
             series={processedSeries}
             width={chartWidth}
             height={height}
             layout={layout}
             grid={grid}
-            margin={margin}
+            margin={effectiveMargin}
             slotProps={{
               legend: legend
                 ? {
@@ -287,6 +301,10 @@ const BarChart: React.FC<BarChartProps> = ({
                 fill: chartColors.tickLabel,
                 fontSize: '13px',
                 fontWeight: 500,
+                ...(labelRotation !== 0 ? {
+                  transform: `rotate(${labelRotation}deg)`,
+                  textAnchor: 'end',
+                } : {}),
               },
               '& .MuiChartsLegend-root': {
                 display: 'flex',

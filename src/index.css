@@ -140,32 +140,31 @@
     backdrop-filter: blur(16px);
   }
 
-  /* Gradient utilities - Warm Analytical */
+  /* Gradient utilities - Cool Analytical */
   .gradient-primary {
-    background: linear-gradient(135deg, #F59E0B, #EA580C);
+    background: linear-gradient(135deg, #00D8FF, #007BFF);
   }
 
   .dark .gradient-primary {
-    background: #697565;
+    background: linear-gradient(135deg, #00D8FF, #007BFF);
   }
 
   .gradient-accent {
-    background: linear-gradient(to right, #F59E0B, #EA580C);
+    background: linear-gradient(to right, #00D8FF, #007BFF);
   }
 
   .dark .gradient-accent {
-    background: #697565;
+    background: linear-gradient(to right, #00D8FF, #007BFF);
   }
 
   .gradient-text {
-    /* darker warm gradient so it’s visible on white */
-    background: linear-gradient(135deg, #EA580C, #7C2D12);
+    background: linear-gradient(135deg, #00D8FF, #0056b3);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
   .dark .gradient-text {
-    background: #697565;
+    background: linear-gradient(135deg, #80dfff, #007BFF);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -182,8 +181,8 @@
     padding: 1px;
     background: linear-gradient(
       180deg,
-      rgba(245, 158, 11, 0.2),
-      rgba(234, 88, 12, 0.05)
+      rgba(0, 216, 255, 0.4),
+      rgba(0, 123, 255, 0.1)
     );
     -webkit-mask:
       linear-gradient(#fff 0 0) content-box,
@@ -199,8 +198,8 @@
   .dark .gradient-border::before {
     background: linear-gradient(
       180deg,
-      rgba(105, 117, 101, 0.3),
-      rgba(105, 117, 101, 0.1)
+      rgba(0, 216, 255, 0.4),
+      rgba(0, 123, 255, 0.1)
     );
   }
 
@@ -212,26 +211,26 @@
   @keyframes glow {
     from {
       box-shadow:
-        0 0 20px rgba(245, 158, 11, 0.18),
-        0 0 40px rgba(234, 88, 12, 0.12);
+        0 0 20px rgba(0, 216, 255, 0.3),
+        0 0 40px rgba(0, 123, 255, 0.2);
     }
     to {
       box-shadow:
-        0 0 30px rgba(245, 158, 11, 0.3),
-        0 0 60px rgba(234, 88, 12, 0.18);
+        0 0 30px rgba(0, 216, 255, 0.5),
+        0 0 60px rgba(0, 123, 255, 0.3);
     }
   }
 
   @keyframes glow-dark {
     from {
       box-shadow:
-        0 0 20px rgba(105, 117, 101, 0.25),
-        0 0 40px rgba(105, 117, 101, 0.15);
+        0 0 20px rgba(0, 216, 255, 0.4),
+        0 0 40px rgba(0, 123, 255, 0.2);
     }
     to {
       box-shadow:
-        0 0 30px rgba(105, 117, 101, 0.35),
-        0 0 60px rgba(105, 117, 101, 0.25);
+        0 0 30px rgba(0, 216, 255, 0.6),
+        0 0 60px rgba(0, 123, 255, 0.4);
     }
   }
 

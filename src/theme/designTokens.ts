@@ -16,20 +16,20 @@
 export type SurfaceVariant = 'default' | 'gradient' | 'accent' | 'glass' | 'elevated' | 'subtle';
 
 export const surfaces: Record<SurfaceVariant, string> = {
-  // Default: Clean white surface with subtle border
-  default: 'bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800',
+  // Default: Clean white surface with subtle ring highlight for depth
+  default: 'bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-800 ring-1 ring-black/[0.04] dark:ring-white/[0.04]',
 
-  // Gradient: Warm gradient background for emphasis
-  gradient: 'bg-gradient-to-br from-orange-50 via-amber-50 to-orange-100 dark:bg-[#697565] border border-orange-200 dark:border-[#697565]',
+  // Gradient: Rich warm gradient background for dashboard hero panels
+  gradient: 'bg-gradient-to-br from-orange-50 via-amber-50/80 to-white dark:bg-[#697565] border border-orange-200/60 dark:border-[#697565] shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]',
 
-  // Accent: Vibrant accent color for high emphasis
-  accent: 'bg-white dark:bg-gray-900 border-2 border-orange-500 dark:border-orange-400 shadow-[0_0_15px_rgba(249,115,22,0.3)] dark:shadow-[0_0_20px_rgba(249,115,22,0.6)]',
+  // Accent: Vibrant orange border glow for primary KPI emphasis
+  accent: 'bg-white dark:bg-gray-900 border-2 border-orange-500 dark:border-orange-400 shadow-[0_0_0_4px_rgba(249,115,22,0.08),0_4px_16px_rgba(249,115,22,0.15)] dark:shadow-[0_0_0_4px_rgba(249,115,22,0.15),0_4px_20px_rgba(249,115,22,0.4)]',
 
-  // Glass: Semi-transparent glassmorphism effect
-  glass: 'bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl border border-white/20 dark:border-gray-800/20',
+  // Glass: Semi-transparent glassmorphism with warm inner glow
+  glass: 'bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl border border-white/40 dark:border-gray-800/40 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]',
 
-  // Elevated: Subtle background elevation
-  elevated: 'bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700',
+  // Elevated: Tinted background for section-level depth
+  elevated: 'bg-gray-50/80 dark:bg-gray-800 border border-gray-200 dark:border-gray-700',
 
   // Subtle: Minimal visual weight
   subtle: 'bg-transparent border border-gray-100 dark:border-gray-800',
@@ -45,14 +45,14 @@ export const elevation: Record<ElevationLevel, string> = {
   // Flat: No shadow
   flat: 'shadow-none',
 
-  // Raised: Subtle shadow for cards
-  raised: 'shadow-md hover:shadow-lg transition-shadow duration-300',
+  // Raised: Warm layered shadow for cards
+  raised: 'shadow-[0_2px_8px_rgba(0,0,0,0.05),0_8px_24px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.07),0_12px_32px_rgba(0,0,0,0.1)] transition-shadow duration-300',
 
-  // Floating: Medium shadow for elevated elements
-  floating: 'shadow-xl hover:shadow-2xl transition-shadow duration-300',
+  // Floating: Deep shadow for dashboard panels
+  floating: 'shadow-[0_4px_16px_rgba(0,0,0,0.07),0_16px_48px_rgba(0,0,0,0.1),0_1px_3px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.1),0_24px_64px_rgba(0,0,0,0.14)] transition-shadow duration-300',
 
-  // Overlay: Strong shadow for modals and overlays
-  overlay: 'shadow-2xl',
+  // Overlay: Strong atmospheric shadow for modals and hero sections
+  overlay: 'shadow-[0_8px_32px_rgba(0,0,0,0.12),0_32px_80px_rgba(0,0,0,0.16),0_1px_4px_rgba(0,0,0,0.06)]',
 };
 
 // ============================================================================

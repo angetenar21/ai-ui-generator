@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 
 interface HeatMapChartProps {
   /** Chart title */
@@ -10,10 +10,10 @@ interface HeatMapChartProps {
   /** X-axis labels */
   xAxis?: {
     data: string[];
-  
-  children?: React.ReactNode;
-  renderChild?: (child: any) => React.ReactNode;
-};
+
+    children?: React.ReactNode;
+    renderChild?: (child: any) => React.ReactNode;
+  };
 
   /** Y-axis labels */
   yAxis?: {
@@ -23,7 +23,7 @@ interface HeatMapChartProps {
   /** Series data with heatmap values */
   series: Array<{
     name?: string;
-    data: Array<[number, number, number]>; // [x, y, value]
+    data: Array<[number | string, number | string, number]>; // [x, y, value]
   }>;
 
   /** Visual mapping configuration */
@@ -35,7 +35,7 @@ interface HeatMapChartProps {
     };
   };
 
-  /** Chart width */
+  /** Chart width (ignored - always responsive) */
   width?: number;
 
   /** Chart height */
@@ -49,16 +49,30 @@ const HeatMapChart: React.FC<HeatMapChartProps> = ({
   yAxis,
   series,
   visualMap,
-  width = 800,
-  height = 400,
+  height = 300,
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = useState(0);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      if (containerRef.current) {
+        setContainerWidth(containerRef.current.getBoundingClientRect().width);
+      }
+    };
+    updateWidth();
+    const observer = new ResizeObserver(updateWidth);
+    if (containerRef.current) observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   // Validate
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
-      <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6">
-        {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>}
-        <div className="text-center text-gray-400">
-          <p className="text-sm">No series data for heatmap</p>
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6">
+        {title && <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">{title}</h3>}
+        <div className="flex items-center justify-center h-32 text-gray-400 text-sm">
+          No heatmap data provided
         </div>
       </div>
     );
@@ -68,136 +82,197 @@ const HeatMapChart: React.FC<HeatMapChartProps> = ({
   const yLabels = yAxis?.data || [];
   const firstSeries = series[0];
 
-  // Find min/max for color scaling
-  const values = firstSeries.data.map((d) => (Array.isArray(d) && d.length >= 3 ? Number(d[2]) || 0 : 0));
-  const minValue = visualMap?.min ?? Math.min(...values);
-  const maxValue = visualMap?.max ?? Math.max(...values);
+  if (!firstSeries?.data?.length || xLabels.length === 0 || yLabels.length === 0) {
+    return (
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6">
+        {title && <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">{title}</h3>}
+        <div className="flex items-center justify-center h-32 text-gray-400 text-sm">
+          Requires xAxis.data, yAxis.data, and series data
+        </div>
+      </div>
+    );
+  }
 
-  // Color scale
-  const getColor = (value: number): string => {
-    const colors = visualMap?.inRange?.color || ['#3b82f6', '#8b5cf6', '#ec4899', '#ef4444'];
-    const normalized = maxValue === minValue ? 0.5 : (value - minValue) / (maxValue - minValue);
-    const index = Math.min(Math.floor(normalized * colors.length), colors.length - 1);
-    return colors[index];
-  };
-
-  // Build grid
-  const grid: { [key: string]: number } = {};
+  // Build grid — support both numeric index and string label references
+  const grid: Map<string, number> = new Map();
   firstSeries.data.forEach((d) => {
-    if (Array.isArray(d) && d.length >= 3) {
-      const [x, y, value] = d;
-      grid[`${x}-${y}`] = Number(value) || 0;
+    if (!Array.isArray(d) || d.length < 3) return;
+    const [rawX, rawY, value] = d;
+    let xKey: string;
+    let yKey: string;
+
+    if (typeof rawX === 'number') {
+      xKey = xLabels[rawX] ?? String(rawX);
+    } else {
+      xKey = String(rawX);
     }
+
+    if (typeof rawY === 'number') {
+      yKey = yLabels[rawY] ?? String(rawY);
+    } else {
+      yKey = String(rawY);
+    }
+
+    grid.set(`${xKey}|||${yKey}`, Number(value) || 0);
   });
 
-  const cellWidth = width / (xLabels.length || 10);
-  const cellHeight = height / (yLabels.length || 10);
+  // Find min/max for color scaling
+  const allValues = Array.from(grid.values());
+  const minValue = visualMap?.min ?? (allValues.length > 0 ? Math.min(...allValues) : 0);
+  const maxValue = visualMap?.max ?? (allValues.length > 0 ? Math.max(...allValues) : 1);
+
+  // Smooth color interpolation
+  const defaultColors = visualMap?.inRange?.color || ['#dbeafe', '#3b82f6', '#1d4ed8'];
+
+  const hexToRgb = (hex: string): [number, number, number] => {
+    const clean = hex.replace('#', '');
+    const r = parseInt(clean.substring(0, 2), 16);
+    const g = parseInt(clean.substring(2, 4), 16);
+    const b = parseInt(clean.substring(4, 6), 16);
+    return [r, g, b];
+  };
+
+  const getColor = (value: number): string => {
+    const normalized = maxValue === minValue ? 0.5 : (value - minValue) / (maxValue - minValue);
+    const colors = defaultColors;
+    const scaled = normalized * (colors.length - 1);
+    const lo = Math.floor(scaled);
+    const hi = Math.min(lo + 1, colors.length - 1);
+    const t = scaled - lo;
+    const [r1, g1, b1] = hexToRgb(colors[lo]);
+    const [r2, g2, b2] = hexToRgb(colors[hi]);
+    const r = Math.round(r1 + (r2 - r1) * t);
+    const g = Math.round(g1 + (g2 - g1) * t);
+    const b = Math.round(b1 + (b2 - b1) * t);
+    return `rgb(${r},${g},${b})`;
+  };
+
+  const getTextColor = (value: number): string => {
+    const normalized = maxValue === minValue ? 0.5 : (value - minValue) / (maxValue - minValue);
+    return normalized > 0.55 ? '#ffffff' : '#374151';
+  };
+
+  // Responsive cell size
+  const yLabelWidth = 80;
+  const availableWidth = containerWidth > 0 ? containerWidth - yLabelWidth - 16 : 400;
+  const cellWidth = Math.max(30, availableWidth / xLabels.length);
+  const cellHeight = Math.max(28, Math.min(cellWidth * 0.7, height / yLabels.length));
+  const showValueText = cellWidth >= 36;
 
   return (
-    <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6">
-      {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 text-center">{title}</h3>}
-      {description && (
-        <p className="text-sm text-gray-400 mb-4 text-center">{description}</p>
+    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden">
+      {(title || description) && (
+        <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-800">
+          {title && <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{title}</h3>}
+          {description && <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{description}</p>}
+        </div>
       )}
 
-      <div className="overflow-x-auto">
-        <div style={{ display: 'flex', minWidth: 'fit-content' }}>
-          {/* Y-axis labels */}
-          <div style={{ width: 80, flexShrink: 0 }}>
-            {/* Empty space for top-left corner */}
-            <div style={{ height: 30, marginBottom: 8 }} />
+      <div className="p-4" ref={containerRef}>
+        <div className="overflow-x-auto">
+          <div style={{ display: 'flex', minWidth: 'fit-content' }}>
             {/* Y-axis labels */}
-            {yLabels.map((yLabel, y) => (
-              <div
-                key={y}
-                style={{
-                  height: cellHeight,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'flex-end',
-                  paddingRight: 8,
-                  fontSize: '11px',
-                  color: '#9ca3af',
-                  marginBottom: 2,
-                }}
-              >
-                {yLabel}
-              </div>
-            ))}
-          </div>
-
-          {/* Chart area */}
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {/* X-axis labels */}
-            <div style={{ display: 'flex', marginBottom: 8, height: 30 }}>
-              {xLabels.map((label, i) => (
+            <div style={{ width: yLabelWidth, flexShrink: 0 }}>
+              <div style={{ height: 32 }} /> {/* Header row spacer */}
+              {yLabels.map((yLabel, y) => (
                 <div
-                  key={i}
+                  key={y}
                   style={{
-                    width: cellWidth,
-                    textAlign: 'center',
-                    fontSize: '11px',
-                    color: '#9ca3af',
+                    height: cellHeight,
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center',
+                    justifyContent: 'flex-end',
+                    paddingRight: 10,
+                    fontSize: '11px',
+                    color: '#9ca3af',
+                    marginBottom: 2,
+                    whiteSpace: 'nowrap',
                   }}
                 >
-                  {label}
+                  {yLabel}
                 </div>
               ))}
             </div>
 
-            {/* Heatmap grid */}
-            {yLabels.map((yLabel, y) => (
-              <div key={y} style={{ display: 'flex', marginBottom: 2 }}>
-                {xLabels.map((xLabel, x) => {
-                  const value = grid[`${x}-${y}`] ?? 0;
-                  return (
-                    <div
-                      key={x}
-                      style={{
-                        width: cellWidth,
-                        height: cellHeight,
-                        backgroundColor: getColor(value),
-                        border: '1px solid #374151',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '10px',
-                        color: '#fff',
-                        fontWeight: 'bold',
-                        cursor: 'pointer',
-                      }}
-                      title={`${xLabel} - ${yLabel}: ${value.toFixed(2)}`}
-                    >
-                      {value.toFixed(1)}
-                    </div>
-                  );
-                })}
+            {/* Chart area */}
+            <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+              {/* X-axis labels */}
+              <div style={{ display: 'flex', marginBottom: 4, height: 32 }}>
+                {xLabels.map((xLabel, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      width: cellWidth,
+                      textAlign: 'center',
+                      fontSize: '10px',
+                      color: '#9ca3af',
+                      display: 'flex',
+                      alignItems: 'flex-end',
+                      justifyContent: 'center',
+                      paddingBottom: 4,
+                      overflow: 'hidden',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <span style={{ maxWidth: cellWidth - 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {xLabel}
+                    </span>
+                  </div>
+                ))}
               </div>
-            ))}
+
+              {/* Heatmap grid */}
+              {yLabels.map((yLabel, y) => (
+                <div key={y} style={{ display: 'flex', marginBottom: 2 }}>
+                  {xLabels.map((xLabel, x) => {
+                    const cellValue = grid.get(`${xLabel}|||${yLabel}`) ?? grid.get(`${x}|||${y}`) ?? 0;
+                    const bgColor = getColor(cellValue);
+                    const textColor = getTextColor(cellValue);
+                    return (
+                      <div
+                        key={x}
+                        style={{
+                          width: cellWidth,
+                          height: cellHeight,
+                          backgroundColor: bgColor,
+                          borderRadius: 3,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '10px',
+                          color: textColor,
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          flexShrink: 0,
+                          marginRight: 2,
+                          transition: 'opacity 0.15s ease',
+                        }}
+                        title={`${xLabel} × ${yLabel}: ${cellValue}`}
+                      >
+                        {showValueText && cellValue !== 0 ? cellValue.toFixed(0) : ''}
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Legend */}
-      <div className="flex items-center justify-center mt-4 gap-2">
-        <span className="text-xs text-gray-400">Low</span>
-        <div className="flex gap-1">
-          {(visualMap?.inRange?.color || ['#3b82f6', '#8b5cf6', '#ec4899', '#ef4444']).map((color, i) => (
-            <div
-              key={i}
-              style={{
-                width: 30,
-                height: 15,
-                backgroundColor: color,
-                border: '1px solid #374151',
-              }}
-            />
-          ))}
+        {/* Legend */}
+        <div className="flex items-center justify-center mt-4 gap-2">
+          <span className="text-xs text-gray-400">Low</span>
+          <div
+            style={{
+              width: 120,
+              height: 12,
+              borderRadius: 6,
+              background: `linear-gradient(to right, ${defaultColors.join(', ')})`,
+              border: '1px solid rgba(0,0,0,0.06)',
+            }}
+          />
+          <span className="text-xs text-gray-400">High</span>
         </div>
-        <span className="text-xs text-gray-400">High</span>
       </div>
     </div>
   );
@@ -209,16 +284,15 @@ export const metadata = {
   name: 'heatmap-chart',
   category: 'charts' as const,
   component: HeatMapChart,
-  description: 'Heat map visualization for 2D data density. Shows values with color intensity.',
-  tags: ['chart', 'heatmap', 'density', '2d'],
+  description: 'Responsive heat map visualization for 2D data density. Shows values with smooth color gradient intensity.',
+  tags: ['chart', 'heatmap', 'density', '2d', 'matrix'],
   propTypes: {
     title: 'string',
     description: 'string',
     xAxis: '{ data: string[] }',
     yAxis: '{ data: string[] }',
-    series: 'Array<{ data: [[x, y, value], ...] }>',
+    series: 'Array<{ data: [[xIndex|label, yIndex|label, value], ...] }>',
     visualMap: '{ min?, max?, inRange?: { color?: string[] } }',
-    width: 'number',
     height: 'number',
   },
 };

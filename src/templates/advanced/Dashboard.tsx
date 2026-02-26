@@ -79,18 +79,6 @@ const Dashboard: React.FC<DashboardProps> = ({
     }
   };
 
-  const getChangeColor = (changeType?: string) => {
-    switch (changeType) {
-      case 'positive':
-        return 'text-success';
-      case 'negative':
-        return 'text-error';
-      case 'neutral':
-        return 'text-gray-600 dark:text-gray-400';
-      default:
-        return 'text-gray-600 dark:text-gray-400';
-    }
-  };
 
   const getSizeClasses = (size?: string) => {
     switch (size) {
@@ -108,12 +96,12 @@ const Dashboard: React.FC<DashboardProps> = ({
       {/* Dashboard Header */}
       {title && (
         <div className="mb-6">
-          <h2 className="text-gray-900 dark:text-white text-2xl font-bold">{title}</h2>
+          <h2 className="text-gray-900 dark:text-white text-2xl font-bold font-display tracking-tight">{title}</h2>
         </div>
       )}
 
       {/* Widgets Grid */}
-      <div className={`grid ${getGridColumns()} ${compact ? 'gap-3' : 'gap-4'}`}>
+      <div className={`grid ${getGridColumns()} ${compact ? 'gap-3' : 'gap-5'}`}>
         {widgets.map((widget) => {
           const IconComponent = widget.icon ? iconMap[widget.icon] : Activity;
 
@@ -121,40 +109,49 @@ const Dashboard: React.FC<DashboardProps> = ({
             <div
               key={widget.id}
               className={`
-                card border border-gray-200 dark:border-gray-700 rounded-lg
-                ${compact ? 'p-4' : 'p-6'}
-                hover:border-gray-600/50 transition-all
+                bg-white dark:bg-gray-900
+                border border-gray-200/80 dark:border-gray-800
+                ring-1 ring-black/[0.04] dark:ring-white/[0.04]
+                rounded-2xl
+                ${compact ? 'p-4' : 'p-5'}
+                shadow-[0_2px_8px_rgba(0,0,0,0.05),0_8px_24px_rgba(0,0,0,0.06)]
+                hover:shadow-[0_4px_12px_rgba(0,0,0,0.07),0_12px_32px_rgba(0,0,0,0.1)]
+                hover:border-gray-300 dark:hover:border-gray-600
+                transition-all duration-300
                 ${getSizeClasses(widget.size)}
               `}
             >
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex-1">
-                  <div className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-1">
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex-1 min-w-0 pr-3">
+                  <div className="text-[11px] uppercase tracking-widest font-semibold text-gray-400 dark:text-gray-500 mb-1.5 truncate">
                     {widget.title}
                   </div>
-                  <div className="text-gray-900 dark:text-white text-2xl font-bold">
+                  <div className="text-3xl font-black tracking-tight text-gray-900 dark:text-white leading-none">
                     {widget.value}
                   </div>
                 </div>
 
-                {widget.icon && (
-                  <div className="p-2 rounded-lg bg-orange-100 dark:bg-orange-900/20">
-                    <IconComponent className="w-5 h-5 text-orange-600 dark:text-orange-400" />
-                  </div>
-                )}
+                <div className="flex-shrink-0 p-2.5 rounded-xl bg-orange-50 dark:bg-orange-900/20 ring-1 ring-orange-200/60 dark:ring-orange-800/40">
+                  <IconComponent className="w-5 h-5 text-orange-500 dark:text-orange-400" />
+                </div>
               </div>
 
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-2">
                 {widget.subtitle && (
-                  <div className="text-gray-600 dark:text-gray-400 text-xs">
+                  <div className="text-gray-400 dark:text-gray-500 text-xs truncate">
                     {widget.subtitle}
                   </div>
                 )}
 
                 {widget.change && (
-                  <div className={`text-xs font-medium ${getChangeColor(widget.changeType)}`}>
-                    {widget.changeType === 'positive' && '↑ '}
-                    {widget.changeType === 'negative' && '↓ '}
+                  <div className={`
+                    flex items-center gap-0.5 px-2 py-0.5 rounded-full text-xs font-semibold flex-shrink-0
+                    ${widget.changeType === 'positive' ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400' : ''}
+                    ${widget.changeType === 'negative' ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400' : ''}
+                    ${widget.changeType === 'neutral' || !widget.changeType ? 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400' : ''}
+                  `}>
+                    {widget.changeType === 'positive' && <span>↑</span>}
+                    {widget.changeType === 'negative' && <span>↓</span>}
                     {widget.change}
                   </div>
                 )}
@@ -162,11 +159,6 @@ const Dashboard: React.FC<DashboardProps> = ({
             </div>
           );
         })}
-      </div>
-
-      {/* Footer Stats */}
-      <div className="mt-6 text-gray-600 dark:text-gray-400 text-xs text-center">
-        {widgets.length} {widgets.length === 1 ? 'widget' : 'widgets'} displayed
       </div>
     </div>
   );

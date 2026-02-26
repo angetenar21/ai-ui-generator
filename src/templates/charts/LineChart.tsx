@@ -86,7 +86,7 @@ const LineChart: React.FC<LineChartProps> = ({
   xAxis,
   series,
   width: propWidth,
-  height = 280,
+  height = 360,
   backgroundColor,
   cardBackgroundColor,
   grid = { horizontal: true, vertical: false },

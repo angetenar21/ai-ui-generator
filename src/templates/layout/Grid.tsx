@@ -123,7 +123,7 @@ const Grid: React.FC<GridProps> = ({
     >
       {Array.isArray(children) && children.length > 0 && renderChild ? (
         children.map((child, index) => (
-          <div key={index} className="min-w-0 w-full h-full flex flex-col overflow-hidden">
+          <div key={index} className="min-w-0 w-full h-full flex flex-col">
             {renderChild(child)}
           </div>
         ))

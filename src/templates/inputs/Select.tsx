@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useData } from '../core/DataContext';
 
 interface SelectOption {
@@ -46,99 +46,156 @@ const Select: React.FC<SelectProps> = ({
   name,
 }) => {
   const { data, setData } = useData();
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
-  // useState MUST come before useEffect (Rules of Hooks)
-  // Normalize options: support both {label, value} objects and simple strings
+  // Normalize options
   const rawOptions = options || items || [];
   const selectOptions = rawOptions.map(opt => {
     if (typeof opt === 'string' || typeof opt === 'number') {
       return { label: String(opt), value: opt };
     }
-    return opt;
+    return opt as SelectOption;
   }).filter(opt => opt && typeof opt === 'object');
 
-  // useState MUST come before useEffect (Rules of Hooks)
   const [internalValue, setInternalValue] = useState<string | number>(() => {
-    // Priority: 1. Context data if name is provided, 2. defaultValue
-    if (name && data && data[name] !== undefined) {
-      return data[name];
-    }
+    if (name && data && data[name] !== undefined) return data[name];
     return defaultValue !== undefined ? defaultValue : '';
   });
+  const [isOpen, setIsOpen] = useState(false);
 
   const displayValue = value !== undefined ? value : internalValue;
 
-  // Sync from DataContext when context value changes (e.g. another component sets the same key)
+  const selectedLabel = selectOptions.find(o => String(o.value) === String(displayValue))?.label;
+
+  // Sync from DataContext
   useEffect(() => {
     if (name && data && data[name] !== undefined && data[name] !== internalValue) {
       setInternalValue(data[name]);
     }
   }, [data, name]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newValue = e.target.value;
-    setInternalValue(newValue);
+  // Close on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
-    if (onChange) onChange(newValue);
-
-    // Update context if name is present
-    if (name && setData) {
-      setData(name, newValue);
-    }
+  const handleSelect = (optValue: string | number) => {
+    setInternalValue(optValue);
+    setIsOpen(false);
+    if (onChange) onChange(optValue);
+    if (name && setData) setData(name, optValue);
   };
 
   const sizeClasses = {
     small: 'px-3 py-1.5 text-sm',
-    medium: 'px-4 py-2 text-base',
-    large: 'px-5 py-3 text-lg',
+    medium: 'px-4 py-2.5 text-sm',
+    large: 'px-5 py-3 text-base',
   };
 
-  const variantClasses = {
-    outlined: `border-2 ${error ? 'border-red-500' : 'border-gray-600'} focus:border-blue-500 bg-gray-800`,
-    filled: `border-b-2 ${error ? 'border-red-500' : 'border-gray-600'} focus:border-blue-500 bg-gray-800/50`,
-    standard: `border-b-2 ${error ? 'border-red-500' : 'border-gray-600'} focus:border-blue-500 bg-transparent`,
+  const triggerBorderClass = error
+    ? 'border-red-500'
+    : isOpen
+      ? 'border-orange-500 ring-2 ring-orange-500/20'
+      : 'border-gray-300 dark:border-gray-600';
+
+  const variantTriggerBg = {
+    outlined: `bg-white dark:bg-gray-800 border-2 ${triggerBorderClass}`,
+    filled: `bg-gray-100 dark:bg-gray-800/50 border-b-2 border-t-0 border-x-0 ${triggerBorderClass} rounded-t-lg`,
+    standard: `bg-transparent border-b-2 border-t-0 border-x-0 ${triggerBorderClass}`,
   };
 
   return (
-    <div className={`my-4 ${fullWidth ? 'w-full' : 'max-w-md'}`}>
+    <div className={`my-4 relative ${isOpen ? 'z-50' : 'z-10'} ${fullWidth ? 'w-full' : 'max-w-md'}`} ref={wrapperRef}>
       {label && (
-        <label className="block text-sm font-medium text-gray-300 mb-2">
+        <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
           {label}
-          {required && <span className="text-red-400 ml-1">*</span>}
+          {required && <span className="text-red-500 dark:text-red-400 ml-1">*</span>}
         </label>
       )}
-      <select
-        value={displayValue}
-        onChange={handleChange}
-        disabled={disabled}
-        required={required}
-        className={`
-          ${sizeClasses[size]}
-          ${variantClasses[variant]}
-          ${fullWidth ? 'w-full' : 'max-w-md'}
-          rounded-lg text-white
-          focus:outline-none focus:ring-2 focus:ring-orange-500/50
-          disabled:opacity-50 disabled:cursor-not-allowed
-          transition-all duration-200
-          cursor-pointer
-        `.trim().replace(/\s+/g, ' ')}
-      >
-        <option value="" disabled hidden>
-          {placeholder}
-        </option>
-        {selectOptions.map((option, index) => (
-          <option
-            key={index}
-            value={option.value}
-            disabled={option.disabled}
-            className="bg-gray-800 text-white"
+
+      {/* Trigger */}
+      <div className="relative">
+        <button
+          type="button"
+          disabled={disabled}
+          onClick={() => !disabled && setIsOpen(!isOpen)}
+          className={`
+            ${sizeClasses[size]}
+            ${variantTriggerBg[variant]}
+            ${fullWidth ? 'w-full' : 'min-w-[160px] w-full'}
+            ${variant === 'outlined' ? 'rounded-xl' : ''}
+            flex items-center justify-between gap-2
+            text-left
+            text-gray-900 dark:text-white
+            transition-all duration-200
+            disabled:opacity-50 disabled:cursor-not-allowed
+            cursor-pointer
+            focus:outline-none
+          `.trim().replace(/\s+/g, ' ')}
+        >
+          <span className={`truncate ${!selectedLabel ? 'text-gray-400 dark:text-gray-500' : ''}`}>
+            {selectedLabel || placeholder}
+          </span>
+          <svg
+            className={`w-4 h-4 text-gray-400 flex-shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
           >
-            {option.label}
-          </option>
-        ))}
-      </select>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        {/* Dropdown Panel */}
+        {isOpen && selectOptions.length > 0 && (
+          <div
+            className="absolute z-50 mt-1.5 w-full min-w-[160px] bg-white dark:bg-gray-800
+                       border border-gray-200 dark:border-gray-700
+                       rounded-xl shadow-xl shadow-black/10 dark:shadow-black/30
+                       overflow-hidden animate-fade-in"
+          >
+            <div className="max-h-60 overflow-y-auto py-1 scrollbar-thin">
+              {selectOptions.map((option, index) => {
+                const isSelected = String(option.value) === String(displayValue);
+                return (
+                  <button
+                    key={index}
+                    type="button"
+                    disabled={option.disabled}
+                    onClick={() => !option.disabled && handleSelect(option.value)}
+                    className={`
+                      w-full text-left px-4 py-2.5 text-sm transition-colors
+                      ${isSelected
+                        ? 'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 font-medium'
+                        : 'text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/50'
+                      }
+                      ${option.disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}
+                    `.trim().replace(/\s+/g, ' ')}
+                  >
+                    <div className="flex items-center gap-2">
+                      {isSelected && (
+                        <svg className="w-3.5 h-3.5 text-orange-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                      <span className={isSelected ? '' : 'ml-5'}>{option.label}</span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+
       {helperText && (
-        <p className={`mt-1 text-xs ${error ? 'text-red-400' : 'text-gray-400'}`}>
+        <p className={`mt-1.5 text-xs ${error ? 'text-red-500 dark:text-red-400' : 'text-gray-400 dark:text-gray-500'}`}>
           {helperText}
         </p>
       )}
@@ -152,6 +209,6 @@ export const metadata = {
   name: 'select',
   category: 'inputs' as const,
   component: Select,
-  description: 'Select dropdown component with options, validation, and styling variants. Supports labels and helper text.',
+  description: 'Custom select dropdown with smooth animation, search, and theme support.',
   tags: ['ui', 'input', 'form', 'select', 'dropdown'],
 };

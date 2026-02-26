@@ -98,43 +98,47 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
     : getSurfaceClasses(variant, elevation);
 
   return (
-    <div className={`${surfaceClasses} rounded-xl p-6 transition-all duration-300 h-full flex flex-col`}>
+    <div className={`${surfaceClasses} rounded-2xl p-6 transition-all duration-300 h-full flex flex-col`}>
       {/* Header */}
-      <div className={`mb-6 pb-4 border-b ${isDarkSurface ? 'border-white/20' : 'border-gray-200 dark:border-gray-700'}`}>
-        <h3 className={`text-xl font-display font-semibold mb-2 ${isDarkSurface ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+      <div className={`mb-6 pb-4 border-b ${isDarkSurface ? 'border-white/20' : 'border-gray-100 dark:border-gray-800'}`}>
+        <h3 className={`text-lg font-display font-bold mb-1 leading-snug ${isDarkSurface ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
           {title}
         </h3>
         {description && (
-          <p className={`text-sm ${isDarkSurface ? 'text-white/75' : 'text-gray-600 dark:text-gray-300'}`}>
+          <p className={`text-sm leading-relaxed ${isDarkSurface ? 'text-white/70' : 'text-gray-500 dark:text-gray-400'}`}>
             {description}
           </p>
         )}
       </div>
 
       {/* Summary Items */}
-      <div className={getLayoutClasses()}>
+      <div className={`${getLayoutClasses()} mt-auto`}>
         {safeItems.map((item, index) => (
           <div
             key={index}
             className={`
-              ${layout === 'horizontal' ? 'flex-1 min-w-[200px]' : ''}
-              ${layout === 'grid' ? '' : 'py-3'}
-              group
+              ${layout === 'horizontal' ? 'flex-1 min-w-[180px]' : ''}
+              ${layout === 'grid' ? 'p-4 rounded-xl bg-gray-50/60 dark:bg-gray-800/40 border border-gray-100 dark:border-gray-700/50' : 'py-3'}
+              group relative
             `}
           >
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <div className={`text-xs uppercase tracking-wide mb-2 ${isDarkSurface ? 'text-white/60' : 'text-gray-500 dark:text-gray-300'}`}>
-                  {safeStr(item.label)}
+            {/* Subtle left accent bar for vertical/horizontal layouts */}
+            {layout !== 'grid' && (
+              <div className="absolute left-0 top-3 bottom-3 w-0.5 bg-gradient-to-b from-orange-400/60 to-orange-200/20 rounded-full" />
+            )}
+            <div className={`flex items-start justify-between ${layout !== 'grid' ? 'pl-3' : ''}`}>
+              <div className="flex-1 min-w-0">
+                <div className={`text-[10px] uppercase tracking-widest font-semibold mb-1.5 ${isDarkSurface ? 'text-white/50' : 'text-gray-400 dark:text-gray-500'}`}>
+                  <span className="truncate block">{safeStr(item.label)}</span>
                 </div>
-                <div className={`text-2xl font-bold mb-1 transition-colors ${isDarkSurface
-                  ? 'text-white group-hover:text-white/80'
+                <div className={`text-3xl font-black tracking-tight leading-none mb-1 transition-colors ${isDarkSurface
+                  ? 'text-white'
                   : 'text-gray-900 dark:text-white group-hover:text-orange-500'
                   }`}>
                   {safeStr(item.value)}
                 </div>
                 {item.subtext && (
-                  <div className={`text-xs mt-1 ${isDarkSurface ? 'text-white/50' : 'text-gray-500 dark:text-gray-400'}`}>
+                  <div className={`text-xs mt-1.5 ${isDarkSurface ? 'text-white/50' : 'text-gray-400 dark:text-gray-500'}`}>
                     {safeStr(item.subtext)}
                   </div>
                 )}
@@ -142,10 +146,10 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
 
               {item.change && (
                 <div className={`
-                  flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium
-                  ${item.changeType === 'positive' ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400' : ''}
+                  flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ml-2 flex-shrink-0
+                  ${item.changeType === 'positive' ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400' : ''}
                   ${item.changeType === 'negative' ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400' : ''}
-                  ${item.changeType === 'neutral' ? 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400' : ''}
+                  ${item.changeType === 'neutral' || !item.changeType ? 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400' : ''}
                 `}>
                   {getChangeIcon(item.changeType)}
                   <span>{safeStr(item.change)}</span>

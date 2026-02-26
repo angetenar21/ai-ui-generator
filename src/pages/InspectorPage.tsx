@@ -55,7 +55,7 @@ const InspectorPage: React.FC = () => {
     [
       'inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium btn-press transition-all',
       viewMode === mode
-        ? 'bg-gray-900 dark:bg-gray-800 text-white shadow-card rounded-lg'
+        ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-card rounded-lg'
         : 'card-sub text-text-secondary hover:bg-bg-card rounded-pill',
     ].join(' ');
 
@@ -88,8 +88,8 @@ const InspectorPage: React.FC = () => {
       {allComponents.length === 0 ? (
         <div className="flex-1 flex items-center justify-center">
           <div className="card rounded-card p-12 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-900 dark:bg-gray-800 flex items-center justify-center text-orange-500 shadow-lg">
-              <Eye className="w-8 h-8" />
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg">
+              <Eye className="w-8 h-8 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
             </div>
             <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
               No components yet
@@ -120,7 +120,7 @@ const InspectorPage: React.FC = () => {
                         'w-full text-left px-3 py-2.5 rounded-xl text-xs md:text-sm btn-press transition-all',
                         'flex flex-col gap-0.5',
                         isActive
-                          ? 'bg-gray-900 dark:bg-gray-800 border border-orange-500/40 text-white shadow-card'
+                          ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md'
                           : 'card-sub text-text-secondary hover:bg-bg-card',
                       ].join(' ')}
                     >

@@ -111,7 +111,9 @@ class StorageService {
    */
   static getHistoryByThread(threadId: string): GenerationHistory[] {
     const history = this.getHistory();
-    return history.filter(item => item.threadId === threadId);
+    return history
+      .filter(item => (item.threadId || item.id) === threadId)
+      .sort((a, b) => a.timestamp - b.timestamp);
   }
 
   /**

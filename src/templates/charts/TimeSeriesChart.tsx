@@ -13,10 +13,11 @@ interface TimeSeriesChartProps {
     name?: string;
     label?: string;
     color?: string;
-    data: Array<[number | string, number]> | Array<{ x: number | string; y: number 
-  children?: React.ReactNode;
-  renderChild?: (child: any) => React.ReactNode;
-}> | Array<{ date: string; value: number }> | Array<{ month: string; value: number }> | number[];
+    data: Array<[number | string, number]> | Array<{
+      x: number | string; y: number
+      children?: React.ReactNode;
+      renderChild?: (child: any) => React.ReactNode;
+    }> | Array<{ date: string; value: number }> | Array<{ month: string; value: number }> | number[];
   }>;
 
   /** X-axis configuration */
@@ -166,11 +167,98 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
       };
     }
 
+    // Generic Object Fallback: [{ "Monday": 90 }, { "Tuesday": 92 }]
+    // Scans for the first numeric value in the object and uses its key as the label
+    if (typeof firstItem === 'object' && !Array.isArray(firstItem)) {
+      const isArrayOfObjects = data.every(item => typeof item === 'object' && !Array.isArray(item) && item !== null);
+
+      if (isArrayOfObjects) {
+        const labels: string[] = [];
+        const values: number[] = [];
+
+        for (const item of data as Array<Record<string, any>>) {
+          const keys = Object.keys(item);
+          // If perfectly single-key object:
+          if (keys.length === 1) {
+            labels.push(keys[0]);
+            values.push(Number(item[keys[0]]) || 0);
+          } else {
+            // Find first numeric key
+            const numericKey = keys.find(k => typeof item[k] === 'number');
+            if (numericKey) {
+              labels.push(numericKey); // Use the key where the number was found as the label maybe? Or find the first string for label?
+              values.push(item[numericKey]);
+            } else {
+              // Just fallback to the first two keys if one is string and other is number
+              const strKey = keys.find(k => typeof item[k] === 'string');
+              const numKey = keys.find(k => typeof Number(item[k]) === 'number' && !isNaN(Number(item[k])));
+              if (strKey && numKey) {
+                labels.push(item[strKey]);
+                values.push(Number(item[numKey]));
+              }
+            }
+          }
+        }
+
+        if (labels.length > 0 && values.length > 0) {
+          return { labels, values };
+        }
+      }
+    }
+
+    // Format: { "Week 1": 100, "Week 2": 200, ... } — plain object
+    if (typeof firstItem !== 'object' || !Array.isArray(firstItem)) {
+      // If we got here, data might be a plain object passed incorrectly.
+      // Handle case where s.data itself is a plain object (not an array)
+      const rawData = s.data as any;
+      if (typeof rawData === 'object' && !Array.isArray(rawData)) {
+        const entries = Object.entries(rawData);
+        return {
+          labels: entries.map(([k]) => k),
+          values: entries.map(([, v]) => (typeof v === 'number' ? v : Number(v) || 0)),
+        };
+      }
+    }
+
     return { labels: [] as string[], values: [] as number[] };
   };
 
+  // Handle case where entire series[i].data is a plain object (backend sends {"Week 1": 100})
+  const normalizedSeries = series.map(s => {
+    const raw = (s as any).data;
+    if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
+      const entries = Object.entries(raw);
+      return {
+        ...s,
+        data: entries.map(([k, v]) => [k, typeof v === 'number' ? v : Number(v) || 0] as [string, number]),
+      };
+    }
+    return s;
+  });
+
   // Process all series to extract data
-  const processedData = series.map(s => normalizeSeriesData(s));
+  const processedData = normalizedSeries.map(s => normalizeSeriesData(s));
+
+  // Guard: if all series have empty values, show friendly fallback
+  const hasValidData = processedData.some(d => d.values && d.values.length > 0);
+  if (!hasValidData) {
+    console.warn('[TimeSeriesChart] No valid data after normalization:', { series });
+    return (
+      <div className="card rounded-card p-6 hover:shadow-hover transition-all duration-300">
+        {title && (
+          <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
+            {title}
+          </h3>
+        )}
+        <div className="flex justify-center items-center min-h-[300px] text-gray-600 dark:text-gray-300">
+          <div className="text-center">
+            <div className="text-4xl mb-2">📊</div>
+            <div>No data available</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Use labels from first series or from xAxis if provided
   let xAxisLabels: (string | number | Date)[] = xAxis?.data || processedData[0]?.labels || [];
@@ -187,7 +275,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   }
 
   // Transform series for MUI Charts
-  const transformedSeries = series.map((s, idx) => ({
+  const transformedSeries = normalizedSeries.map((s, idx) => ({
     data: processedData[idx].values,
     label: s.label || s.name || `Series ${idx + 1}`,
     color: s.color,

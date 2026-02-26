@@ -1,11 +1,12 @@
 import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { MessageSquare, Grid3x3, Code, History, FlaskConical, X, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useAppStore } from '../../store/appStore';
 
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
-  const { sidebarOpen, setSidebarOpen, sidebarCollapsed, setSidebarCollapsed, clearGeneratedComponents, setCurrentThreadId, triggerNewChat } = useAppStore();
+  const location = useLocation();
+  const { sidebarOpen, setSidebarOpen, sidebarCollapsed, setSidebarCollapsed, clearGeneratedComponents, setCurrentThreadId, triggerNewChat, currentThreadId, lastActiveThreadId } = useAppStore();
 
   const navItems = [
     { to: '/', icon: MessageSquare, label: 'Chat' },
@@ -29,6 +30,8 @@ const Sidebar: React.FC = () => {
       setSidebarOpen(false);
     }
   };
+
+  const isNewChatActive = location.pathname === '/' && currentThreadId === null;
 
   return (
     <>
@@ -84,7 +87,8 @@ const Sidebar: React.FC = () => {
           {/* New Chat Button */}
           <button
             onClick={handleNewChat}
-            className={`bg-orange-500 hover:bg-orange-600 dark:bg-orange-500 dark:hover:bg-orange-600 text-white font-medium rounded-xl flex items-center justify-center shadow-sm group relative transition-all duration-300 flex-shrink-0
+            className={`font-medium rounded-xl flex items-center justify-center shadow-sm group relative transition-all duration-300 flex-shrink-0
+                        ${isNewChatActive ? 'bg-gradient-to-r from-cyan-500 to-blue-600' : 'bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600'} text-white 
                         ${sidebarCollapsed ? 'w-12 h-12 p-0 mx-auto mb-8' : 'w-full py-3 px-4 mb-8'}`}
             title={sidebarCollapsed ? 'New Chat' : undefined}
           >
@@ -113,16 +117,24 @@ const Sidebar: React.FC = () => {
               <NavLink
                 key={item.to}
                 to={item.to}
-                className={({ isActive }) =>
-                  `flex items-center rounded-xl transition-all duration-200
+                className={({ isActive }) => {
+                  const actualIsActive = item.to === '/' ? (isActive && currentThreadId !== null) : isActive;
+                  return `flex items-center rounded-xl transition-all duration-200
                    hover:translate-x-1 group relative flex-shrink-0
                    ${sidebarCollapsed ? 'justify-center p-0 w-12 h-12 mx-auto' : 'gap-3 px-4 py-3 w-full'}
-                   ${isActive
-                    ? 'bg-gray-900 dark:bg-gray-800 text-white shadow-sm'
-                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
-                  }`
-                }
-                onClick={() => {
+                   ${actualIsActive
+                      ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
+                    }`;
+                }}
+                onClick={(e) => {
+                  // If clicking Chat while on New Chat screen, attempt to restore last active chat
+                  if (item.label === 'Chat' && currentThreadId === null && lastActiveThreadId) {
+                    e.preventDefault(); // Prevent standard router nav that might overwrite state inappropriately before our effect
+                    setCurrentThreadId(lastActiveThreadId);
+                    navigate('/');
+                  }
+
                   // Close sidebar on mobile after navigation
                   if (window.innerWidth < 1024) {
                     setSidebarOpen(false);
@@ -130,38 +142,41 @@ const Sidebar: React.FC = () => {
                 }}
                 title={sidebarCollapsed ? item.label : undefined}
               >
-                {({ isActive }) => (
-                  <>
-                    <item.icon className={`w-5 h-5 flex-shrink-0 transition-colors ${isActive ? 'text-orange-500' : ''}`} />
+                {({ isActive }) => {
+                  const actualIsActive = item.to === '/' ? (isActive && currentThreadId !== null) : isActive;
+                  return (
+                    <>
+                      <item.icon className={`w-5 h-5 flex-shrink-0 transition-all duration-300 ${actualIsActive ? 'text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]' : ''}`} />
 
-                    {/* Smooth CSS Transition for Label */}
-                    <span
-                      className={`font-medium transition-all duration-300 overflow-hidden whitespace-nowrap
+                      {/* Smooth CSS Transition for Label */}
+                      <span
+                        className={`font-medium transition-all duration-300 overflow-hidden whitespace-nowrap
                         ${sidebarCollapsed ? 'max-w-0 opacity-0 ml-0' : 'max-w-[200px] opacity-100 flex-1'}
                       `}
-                    >
-                      {item.label}
-                    </span>
+                      >
+                        {item.label}
+                      </span>
 
-                    {/* Active Job Badge */}
-                    {item.label === 'Chat' && activeJobCount > 0 && (
-                      <div className={`
-                      flex items-center justify-center bg-orange-500 text-white text-[10px] font-bold rounded-full
+                      {/* Active Job Badge */}
+                      {item.label === 'Chat' && activeJobCount > 0 && (
+                        <div className={`
+                      flex items-center justify-center bg-blue-500 text-white text-[10px] font-bold rounded-full
                       ${sidebarCollapsed ? 'absolute -top-1 -right-1 w-4 h-4' : 'px-2 py-0.5 ml-auto'}
                       animate-pulse shadow-sm
                     `}>
-                        {sidebarCollapsed ? '' : `${activeJobCount} running`}
-                      </div>
-                    )}
+                          {sidebarCollapsed ? '' : `${activeJobCount} running`}
+                        </div>
+                      )}
 
-                    {/* Tooltip for collapsed state */}
-                    {sidebarCollapsed && (
-                      <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 dark:bg-gray-700 text-white dark:text-gray-200 text-sm rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
-                        {item.label}
-                      </div>
-                    )}
-                  </>
-                )}
+                      {/* Tooltip for collapsed state */}
+                      {sidebarCollapsed && (
+                        <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 dark:bg-gray-700 text-white dark:text-gray-200 text-sm rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+                          {item.label}
+                        </div>
+                      )}
+                    </>
+                  );
+                }}
               </NavLink>
             ))}
           </nav>
