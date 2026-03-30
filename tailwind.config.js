@@ -7,10 +7,10 @@ export default {
       colors: {
         // Background layers (Light/Dark Theme)
         bg: {
-          page: '#ffffffff',   // light gray / dark gray
-          card: '#FFFFFF',   // white / dark card
-          sub: '#F9FAFB',    // very light gray / darker sub
-          elevated: '#FAFAFA', // slightly off-white / elevated dark
+          page: 'var(--theme-bg-page)',
+          card: 'var(--theme-bg-card)',
+          sub: 'var(--theme-bg-sub)',
+          elevated: 'var(--theme-bg-elevated)',
         },
 
         // Primary Accent (Cool Analytical)
@@ -28,7 +28,7 @@ export default {
         },
         warning: {
           DEFAULT: '#F59E0B',
-          light: '#FBBF24',  // ✅ fixed typo
+          light: '#FBBF24',
           dark: '#D97706',
         },
         error: {
@@ -45,17 +45,17 @@ export default {
 
         // Text hierarchy (Light/Dark)
         text: {
-          primary: '#111827',   // dark gray / light text
-          secondary: '#374151', // medium gray / muted light
-          muted: '#6B7280',     // light gray / darker muted
+          primary: 'var(--theme-text-primary)',
+          secondary: 'var(--theme-text-secondary)',
+          muted: 'var(--theme-text-muted)',
           disabled: '#9CA3AF',  // very light gray / disabled dark
         },
 
         // Borders & dividers
         border: {
-          subtle: '#E5E7EB',
-          default: 'rgba(209, 213, 219, 0.9)',
-          strong: '#D1D5DB',
+          subtle: 'var(--theme-border-subtle)',
+          default: 'var(--theme-border-default)',
+          strong: 'var(--theme-border-strong)',
         },
 
         // Data visualization palette

@@ -140,10 +140,10 @@ const TesterPage: React.FC = () => {
         <p className="text-xs font-medium uppercase tracking-[0.18em] text-text-muted mb-2">
           Tester
         </p>
-        <h1 className="text-3xl md:text-4xl font-display font-bold text-gray-900 dark:text-white mb-3">
+        <h1 className="text-3xl md:text-4xl font-display font-bold text-text-primary mb-3">
           JSON Component Tester
         </h1>
-        <p className="text-gray-500 dark:text-gray-400 max-w-2xl">
+        <p className="text-text-secondary max-w-2xl">
           Paste the raw JSON returned by your n8n workflow to preview the rendered components instantly.
           No API calls are made on this page.
         </p>

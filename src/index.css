@@ -7,6 +7,36 @@
 
 /* Base reset + page styling */
 @layer base {
+  :root {
+    --theme-text-primary: #111827;
+    --theme-text-secondary: #374151;
+    --theme-text-muted: #6B7280;
+
+    --theme-bg-page: #F3F4F6;
+    --theme-bg-card: #FFFFFF;
+    --theme-bg-sub: #F9FAFB;
+    --theme-bg-elevated: #FAFAFA;
+
+    --theme-border-subtle: #E5E7EB;
+    --theme-border-default: rgba(209, 213, 219, 0.9);
+    --theme-border-strong: #D1D5DB;
+  }
+
+  .dark {
+    --theme-text-primary: #F9FAFB;
+    --theme-text-secondary: #D1D5DB;
+    --theme-text-muted: #9CA3AF;
+
+    --theme-bg-page: #0F172A;
+    --theme-bg-card: #1E293B;
+    --theme-bg-sub: #334155;
+    --theme-bg-elevated: #1E293B;
+
+    --theme-border-subtle: #334155;
+    --theme-border-default: rgba(51, 65, 85, 0.9);
+    --theme-border-strong: #475569;
+  }
+
   * {
     box-sizing: border-box;
   }
@@ -19,8 +49,8 @@
 
   body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    color: #111827;          /* text-gray-900 */
-    background: #F3F4F6;     /* bg-gray-100 */
+    color: var(--theme-text-primary);
+    background: var(--theme-bg-page);
     overflow-x: hidden;
     overflow-y: auto;        /* allow scrolling for feed */
     transition: background-color 0.3s ease, color 0.3s ease;
@@ -28,8 +58,8 @@
 
   /* Dark mode styles */
   .dark body {
-    color: #F9FAFB;          /* light text */
-    background: #111827;     /* dark background */
+    color: var(--theme-text-primary);
+    background: var(--theme-bg-page);
   }
 }
 

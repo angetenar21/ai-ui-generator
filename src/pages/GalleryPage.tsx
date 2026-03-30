@@ -32,13 +32,13 @@ const GalleryPage: React.FC = () => {
     <div className="max-w-page mx-auto px-6 pt-8 pb-24">
       {/* Header */}
       <div className="mb-8">
-        <p className="text-xs font-medium uppercase tracking-[0.18em] text-gray-700 dark:text-gray-400 mb-2" style={{ color: '#6B7280' }}>
+        <p className="text-xs font-medium uppercase tracking-[0.18em] text-text-muted mb-2">
           Templates
         </p>
-        <h2 className="text-4xl font-display font-bold text-gray-900 dark:text-white mb-2" style={{ color: '#111827' }}>
+        <h2 className="text-4xl font-display font-bold text-text-primary mb-2">
           Template Gallery
         </h2>
-        <p className="text-gray-700 dark:text-gray-300 text-lg" style={{ color: '#374151' }}>
+        <p className="text-text-secondary text-lg">
           Browse pre-built templates to quickly generate UI components.
         </p>
       </div>
@@ -46,14 +46,13 @@ const GalleryPage: React.FC = () => {
       {/* Search */}
       <div className="mb-6">
         <div className="card-sub flex items-center gap-3 px-4 py-3 rounded-card">
-          <Search className="w-5 h-5 text-gray-600 dark:text-gray-400" style={{ color: '#6B7280' }} />
+          <Search className="w-5 h-5 text-text-muted" />
           <input
             type="text"
             placeholder="Search templates..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="flex-1 bg-transparent border-0 outline-none text-gray-900 dark:text-white placeholder:text-gray-600 dark:placeholder:text-gray-400"
-            style={{ color: '#111827' }}
+            className="flex-1 bg-transparent border-0 outline-none text-text-primary placeholder:text-text-muted"
           />
         </div>
       </div>
@@ -68,17 +67,17 @@ const GalleryPage: React.FC = () => {
               onClick={() => {
                 setSelectedCategory(category.id);
                 setSearchQuery('');
-                }}
-                className={[
+              }}
+              className={[
                 'px-4 py-1.5 rounded-pill text-sm font-medium btn-press transition-all',
                 'flex items-center gap-1',
                 isActive
                   ? 'bg-gradient-to-r from-green-400 via-green-500 to-green-600 text-white shadow-card'
                   : 'bg-white text border border-border-subtle text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-bg-sub',
-                ].join(' ')}
-              >
+              ].join(' ')}
+            >
               <span>{category.label}</span>
-              <span className="text-gray-600 dark:text-gray-400 text-xs" style={{ color: '#6B7280' }}>({category.count})</span>
+              <span className="text-text-muted text-xs">({category.count})</span>
             </button>
           );
         })}
@@ -93,7 +92,7 @@ const GalleryPage: React.FC = () => {
             className="card hover-lift cursor-pointer transition-shadow duration-200 p-6 rounded-card group"
           >
             <div className="flex items-start justify-between mb-3">
-              <h3 className="text-base font-semibold text-gray-900 dark:text-white group-hover:text-gray-900 dark:group-hover:text-white" style={{ color: '#111827' }}>
+              <h3 className="text-base font-semibold text-text-primary group-hover:text-text-primary">
                 {template.title}
               </h3>
 
@@ -102,7 +101,7 @@ const GalleryPage: React.FC = () => {
               </span>
             </div>
 
-            <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 leading-relaxed" style={{ color: '#374151' }}>
+            <p className="text-sm text-text-secondary mb-4 leading-relaxed">
               {template.description}
             </p>
 
@@ -110,8 +109,7 @@ const GalleryPage: React.FC = () => {
               {template.tags.slice(0, 3).map((tag) => (
                 <span
                   key={tag}
-                  className="px-2 py-1 text-[11px] rounded-pill bg-bg-sub text-gray-600 dark:text-gray-400 border border-border-subtle"
-                  style={{ color: '#6B7280' }}
+                  className="px-2 py-1 text-[11px] rounded-pill bg-bg-sub text-text-muted border border-border-subtle"
                 >
                   {tag}
                 </span>
@@ -119,7 +117,7 @@ const GalleryPage: React.FC = () => {
             </div>
 
             <div className="pt-3 mt-1 border-t border-border-subtle">
-              <p className="text-xs text-gray-600 dark:text-gray-400 italic line-clamp-2" style={{ color: '#6B7280' }}>
+              <p className="text-xs text-text-muted italic line-clamp-2">
                 “{template.prompt}”
               </p>
             </div>
@@ -129,7 +127,7 @@ const GalleryPage: React.FC = () => {
 
       {filteredTemplates.length === 0 && (
         <div className="mt-12 card-sub rounded-card text-center py-16">
-          <p className="text-gray-700 dark:text-gray-300 text-lg" style={{ color: '#374151' }}>
+          <p className="text-text-secondary text-lg">
             No templates found matching your criteria.
           </p>
         </div>
