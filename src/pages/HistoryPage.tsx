@@ -101,13 +101,13 @@ const HistoryPage: React.FC = () => {
       {/* Header */}
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <p className="text-xs font-medium uppercase tracking-[0.18em] text-gray-500 mb-2">
+          <p className="text-xs font-medium uppercase tracking-[0.18em] text-text-muted mb-2">
             History
           </p>
-          <h2 className="text-4xl font-display font-bold text-gray-900 dark:text-white mb-2">
+          <h2 className="text-4xl font-display font-bold text-text-primary mb-2">
             Chat History
           </h2>
-          <p className="text-gray-500 dark:text-gray-400 text-lg">
+          <p className="text-text-secondary text-lg">
             Browse through your previous AI generations
           </p>
         </div>
@@ -130,10 +130,10 @@ const HistoryPage: React.FC = () => {
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg">
               <MessageSquare className="w-8 h-8 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
             </div>
-            <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
+            <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
               No History Found
             </h3>
-            <p className="text-gray-500 dark:text-gray-400">
+            <p className="text-text-secondary">
               Create your first AI component to see it here
             </p>
           </div>
@@ -177,15 +177,15 @@ const HistoryPage: React.FC = () => {
                 </button>
               </div>
 
-              <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+              <h3 className="text-base font-semibold text-text-primary mb-2 line-clamp-2">
                 {thread.firstPrompt}
               </h3>
 
               <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-600 dark:text-gray-400">
+                <span className="text-text-secondary">
                   {thread.items.length} {thread.items.length === 1 ? 'message' : 'messages'}
                 </span>
-                <span className="text-gray-400 dark:text-gray-500 text-xs">
+                <span className="text-text-muted text-xs">
                   {formatDate(thread.lastTimestamp)}
                 </span>
               </div>
