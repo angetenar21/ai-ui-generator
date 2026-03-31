@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Send, Sparkles, RotateCcw, StopCircle, Mic, LayoutDashboard, FormInput, BarChart3, PanelTop, Grid, Wand2 } from 'lucide-react';
+import { Send, Sparkles, RotateCcw, StopCircle, LayoutDashboard, FormInput, BarChart3, PanelTop, Grid, Wand2 } from 'lucide-react';
 import ApiService from '../services/apiService';
 import StorageService from '../services/storageService';
 import { ComponentRenderer } from '../templates';
@@ -52,10 +52,7 @@ const ChatPage: React.FC = () => {
     if (messagesEndRef.current) {
       const container = messagesEndRef.current.parentElement?.parentElement;
       if (container) {
-        container.scrollTo({
-          top: container.scrollHeight,
-          behavior: 'smooth'
-        });
+        container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
       }
     }
   }, [messages]);
@@ -76,7 +73,6 @@ const ChatPage: React.FC = () => {
       setInput('');
       setCurrentThreadId(null);
       resetNewChatTrigger();
-      // Do NOT clear fetching state here - let background jobs finish
     }
   }, [shouldStartNewChat, resetNewChatTrigger, setCurrentThreadId, clearCurrentChatMessages, setInput]);
 
@@ -224,7 +220,7 @@ const ChatPage: React.FC = () => {
         response: { name: 'panel', templateProps: { title: 'Generating...' } },
         timestamp: Date.now(),
         threadId,
-        sessionId: 'current-session',
+        sessionId: useAppStore.getState().currentSessionId,
         status: 'pending',
       });
 
@@ -246,7 +242,6 @@ const ChatPage: React.FC = () => {
         {
           onStatusUpdate: (status) => {
             setThreadState(threadId, { jobStatus: status });
-            console.log(`[ChatPage] Thread ${threadId} status: ${status}`);
           },
           onJobId: (jobId) => setThreadState(threadId, { jobId }),
           signal: abortController.signal,
@@ -323,7 +318,6 @@ const ChatPage: React.FC = () => {
       }
     } finally {
       // Only reset loading state if this specific request is the latest one
-      // If a newer request has already taken over, we leave its loading state alone
       if (useAppStore.getState().activeThreads[threadId]?.historyItemId === historyId || !historyId) {
         setThreadState(threadId, {
           isLoading: false,
@@ -333,35 +327,28 @@ const ChatPage: React.FC = () => {
           abortController: null,
           historyItemId: null
         });
+        // Fix #7: Remove stale thread entry to prevent AbortController memory leak
+        useAppStore.getState().clearThreadState(threadId);
       }
     }
   };
 
   const quickStarts = [
-    { icon: LayoutDashboard, label: 'Dashboard', prompt: 'Create a modern analytics dashboard with KPIs and charts', gradient: 'from-cyan-500 to-blue-600 dark:from-cyan-600 dark:to-blue-700' },
-    { icon: FormInput, label: 'Form', prompt: 'Create a user registration form', gradient: 'from-cyan-500 to-blue-600 dark:from-cyan-600 dark:to-blue-700' },
-    { icon: BarChart3, label: 'Chart', prompt: 'Create a sales performance chart', gradient: 'from-cyan-500 to-blue-600 dark:from-cyan-600 dark:to-blue-700' },
-    { icon: PanelTop, label: 'Card', prompt: 'Create a product showcase card', gradient: 'from-cyan-500 to-blue-600 dark:from-cyan-600 dark:to-blue-700' },
-    { icon: Grid, label: 'Layout', prompt: 'Create a responsive grid layout', gradient: 'from-cyan-500 to-blue-600 dark:from-cyan-600 dark:to-blue-700' },
+    { icon: LayoutDashboard, label: 'Dashboard', prompt: 'Create a modern analytics dashboard with KPIs and charts', gradient: 'from-violet-500 to-purple-600 dark:from-violet-600 dark:to-purple-700' },
+    { icon: FormInput,       label: 'Form',      prompt: 'Create a user registration form',                         gradient: 'from-emerald-500 to-teal-600 dark:from-emerald-600 dark:to-teal-700' },
+    { icon: BarChart3,       label: 'Chart',     prompt: 'Create a sales performance chart',                        gradient: 'from-cyan-500 to-blue-600 dark:from-cyan-600 dark:to-blue-700' },
+    { icon: PanelTop,        label: 'Card',      prompt: 'Create a product showcase card',                          gradient: 'from-orange-500 to-rose-600 dark:from-orange-600 dark:to-rose-700' },
+    { icon: Grid,            label: 'Layout',    prompt: 'Create a responsive grid layout',                         gradient: 'from-pink-500 to-fuchsia-600 dark:from-pink-600 dark:to-fuchsia-700' },
   ];
 
-  // Scroll to bottom of the container
+  // Scroll to bottom of the container — used only for non-message triggers if needed
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
       const container = messagesEndRef.current.parentElement?.parentElement;
-      if (container) {
-        container.scrollTo({
-          top: container.scrollHeight,
-          behavior: 'smooth'
-        });
-      }
+      if (container) { container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' }); }
     }
   };
-
-  // Auto-scroll when messages change
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  void scrollToBottom; // suppress unused-var lint warning — kept for future imperative use
 
   return (
     <div className="relative h-full flex flex-col bg-[#f9fafb] dark:bg-gray-900 overflow-hidden">
@@ -401,7 +388,11 @@ const ChatPage: React.FC = () => {
               {quickStarts.map((item, index) => (
                 <button
                   key={item.label}
-                  onClick={() => setInput(item.prompt)}
+                  onClick={() => {
+                    setInput(item.prompt);
+                    // Auto-submit so users get results in one click
+                    setTimeout(() => handleSend(item.prompt), 50);
+                  }}
                   className={`
                     group relative px-6 py-4 rounded-2xl transition-all duration-300
                     hover:scale-105 hover:-translate-y-2 flex items-center gap-3
@@ -600,9 +591,7 @@ const ChatPage: React.FC = () => {
                 className="flex-1 bg-transparent border-0 outline-none text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 px-4 py-3 text-base font-medium"
               />
 
-              <button className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-gray-800/50">
-                <Mic className="w-5 h-5" />
-              </button>
+              {/* Mic button removed — voice recording not yet implemented */}
 
               <button
                 onClick={() => handleSend()}

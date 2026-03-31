@@ -3,6 +3,7 @@ import { LineChart as MuiLineChart } from '@mui/x-charts/LineChart';
 import { processSeriesColors } from '../core/utils';
 import { getSurfaceClasses, getChartColors } from '@/theme/designTokens';
 import { getTextColorForBackground, getSecondaryTextColorForBackground } from '../core/colorUtils';
+import { useAppStore } from '@/store/appStore';
 import type { SurfaceVariant, ElevationLevel, EmphasisLevel, ChartPaletteType } from '../core/types';
 
 interface LineChartProps {
@@ -207,8 +208,9 @@ const LineChart: React.FC<LineChartProps> = ({
   // Use theme-aware background colors
   const cardBgColor = cardBackgroundColor;
 
-  // Detect dark mode for chart styling
-  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  // Reactive dark mode via Zustand — updates when user toggles theme
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
   const chartColors = {
     axisLine: isDarkMode ? '#9CA3AF' : '#6B7280',
     axisTick: isDarkMode ? '#9CA3AF' : '#6B7280',
@@ -251,7 +253,13 @@ const LineChart: React.FC<LineChartProps> = ({
                   width={chartWidth}
                   height={height}
                   grid={grid}
-                  margin={margin}
+                  margin={{ ...margin, left: Math.max(margin.left ?? 20, 56) }}
+                  yAxis={[{
+                    valueFormatter: (v: number) =>
+                      Math.abs(v) >= 1_000_000 ? `${(v / 1_000_000).toFixed(1)}M`
+                      : Math.abs(v) >= 1_000 ? `${(v / 1_000).toFixed(0)}K`
+                      : String(v),
+                  }]}
                   slotProps={{
                     legend: legend
                       ? {

@@ -70,7 +70,6 @@ export const useAppStore = create<AppState>((set) => ({
 
   theme: 'light', // Ensure default is light
   setTheme: (theme) => {
-    console.log('Store: Setting theme to', theme);
     set({ theme });
   },
 
@@ -93,7 +92,8 @@ export const useAppStore = create<AppState>((set) => ({
   generatedComponents: [],
   addGeneratedComponent: (component) =>
     set((state) => ({
-      generatedComponents: [...state.generatedComponents, component],
+      // Cap at 50 to prevent unbounded memory growth
+      generatedComponents: [...state.generatedComponents, component].slice(-50),
     })),
   clearGeneratedComponents: () => set({ generatedComponents: [] }),
 

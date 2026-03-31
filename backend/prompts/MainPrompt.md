@@ -94,7 +94,7 @@ Every user-requested UI element (e.g., "weather ui", "heatmap chart", "gantt", "
 
 ### 3. Charts
 - **Always provide a `height` of at least 320** in chart specs. Never leave it at the default.
-- For `line-chart` and `area-chart`, always enable the area fill by setting `area: true` (for LineChart) or `showArea: true`.
+- **NEVER set `area: true` in the series of a `line-chart`** — this turns it into an unintended area chart. For filled area visualizations, use the `area-chart` component instead.
 - Always use the `"default"` chart palette (it's the most vibrant, professionally curated palette).
 
 ### 4. Tables / Data Grid

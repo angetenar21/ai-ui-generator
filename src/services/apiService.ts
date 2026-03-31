@@ -96,8 +96,6 @@ class ApiService {
       }
 
       const data: JobEnqueueResponse = await response.json();
-      console.log(`[ApiService] Job ${data.jobId} enqueued successfully`);
-
       return data.jobId;
     } catch (error) {
       console.error('[ApiService] Error enqueuing job:', error);
@@ -120,7 +118,6 @@ class ApiService {
     let lastStatus: JobStatus | null = null;
     let adaptiveInterval = pollInterval;
 
-    console.log(`[ApiService] Starting to poll job ${jobId}`);
 
     while (true) {
       // Check timeout
@@ -179,7 +176,6 @@ class ApiService {
             if (!status.result) {
               throw new Error('Job completed but no result returned');
             }
-            console.log(`[ApiService] Job ${jobId} completed successfully`);
             return status.result;
 
           case 'failed':
@@ -309,11 +305,9 @@ class ApiService {
 
       // CRITICAL FIX: Check if spec is a string and parse it
       if (typeof spec === 'string') {
-        console.warn('[ApiService] Spec is a string, parsing JSON:', spec.substring(0, 100));
         try {
           spec = JSON.parse(spec);
         } catch (parseError) {
-          console.error('[ApiService] Failed to parse stringified spec:', parseError);
           throw new Error('Spec is a string but failed to parse as JSON');
         }
       }
@@ -323,13 +317,11 @@ class ApiService {
 
       // Validate spec has minimum required structure
       if (!this.isValidComponentData(spec)) {
-        console.error('[ApiService] Invalid component spec received:', spec);
         throw new Error('Invalid component specification');
       }
 
       // Normalize to ComponentSpec format
       const normalized = this.normalizeToComponentSpec(spec as Record<string, unknown>);
-      console.log('[ApiService] Normalized spec:', normalized);
       return normalized;
 
     } catch (error) {

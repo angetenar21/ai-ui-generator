@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+
+=======
+>>>>>>> ec55e114 (--)
 import { DataProvider, useData, resolveVariables } from '../templates/core/DataContext';
 
 const DebugConsumer = () => {
