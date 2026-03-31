@@ -1622,8 +1622,8 @@ app.delete('/api/agent/:jobId', (req, res) => {
   return res.json({ message: 'Job cancelled successfully' });
 });
 
-// GET /health - Surface backend + queue health metadata
-app.get('/health', (_, res) => {
+// GET /api/health - Surface backend + queue health metadata
+app.get('/api/health', (_, res) => {
   try {
     return res.json(buildHealthPayload());
   } catch (error) {

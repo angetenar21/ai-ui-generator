@@ -292,7 +292,7 @@ const ChatPage: React.FC = () => {
         content: {
           type: 'text',
           props: {
-            content: `Error: ${error instanceof Error ? error.message : 'Failed to generate UI'}. Please check your backend connection at ${ApiService.getApiUrl()}`,
+            content: `Error: ${error instanceof Error ? error.message : 'Failed to generate UI'}.`,
             variant: 'body',
           },
           metadata: {
