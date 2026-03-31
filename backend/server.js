@@ -18,7 +18,12 @@ Logger.info('Backend server initializing...');
 
 const APP_PORT = Number(process.env.BACKEND_PORT || 4000);
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-pro';
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+// Convert comma-separated string to array, remove empties, and trim spaces
+const rawApiKeys = process.env.GEMINI_API_KEYS || process.env.GEMINI_API_KEY || '';
+const API_KEYS_POOL = rawApiKeys.split(',').map(k => k.trim()).filter(Boolean);
+
+let currentKeyIndex = 0; // State variable to track the current active key in the pool
+
 const GEMINI_ACCESS_TOKEN = process.env.GEMINI_ACCESS_TOKEN;
 const GEMINI_PROJECT_ID = process.env.GEMINI_PROJECT_ID;
 const GEMINI_LOCATION = process.env.GEMINI_LOCATION || 'us-central1';
@@ -560,12 +565,13 @@ function executeToolCall(toolCall) {
 
 function buildGeminiRequestConfig(forceApiKey = false) {
   const hasAccessToken = Boolean(GEMINI_ACCESS_TOKEN) && !forceApiKey;
-  const hasApiKey = Boolean(GEMINI_API_KEY);
+  const currentKey = API_KEYS_POOL[currentKeyIndex];
+  const hasApiKey = Boolean(currentKey);
   const useVertex = (GEMINI_USE_VERTEX || Boolean(GEMINI_PROJECT_ID)) && !forceApiKey;
 
-  if (!hasAccessToken && !hasApiKey) {
+  if (!hasAccessToken && API_KEYS_POOL.length === 0) {
     Logger.error('No Gemini credentials provided');
-    throw new Error('Gemini credentials are required. Set GEMINI_API_KEY or GEMINI_ACCESS_TOKEN in .env.');
+    throw new Error('Gemini credentials are required. Set GEMINI_API_KEYS (comma separated) or GEMINI_ACCESS_TOKEN in .env.');
   }
 
   if (useVertex && !GEMINI_PROJECT_ID) {
@@ -587,11 +593,11 @@ function buildGeminiRequestConfig(forceApiKey = false) {
   } else {
     endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
     if (!hasAccessToken && hasApiKey) {
-      endpoint += `?key=${GEMINI_API_KEY}`;
+      endpoint += `?key=${currentKey}`;
     }
   }
 
-  return { endpoint, headers, useVertex, hasAccessToken, hasApiKey };
+  return { endpoint, headers, useVertex, hasAccessToken, hasApiKey, currentKey };
 }
 
 async function callGemini(userMessage, context = '', retryWithApiKey = false, signal) {
@@ -655,6 +661,7 @@ async function callGemini(userMessage, context = '', retryWithApiKey = false, si
   // Complex layouts with sidebars, toggles, and multiple sections may need more iterations
   let maxIterations = 16; // Increased for complex layouts with sidebars and nested components
   let iterations = 0;
+  let delay = 1000;
 
   Logger.info(`Starting Gemini tool-calling loop (maxIterations: ${maxIterations})`);
 
@@ -700,7 +707,37 @@ async function callGemini(userMessage, context = '', retryWithApiKey = false, si
 
     if (!response.ok) {
       const errorMessage = data?.error?.message || `HTTP ${response.status}`;
+      const errorObj = data?.error || {};
       Logger.geminiError(GEMINI_MODEL, new Error(errorMessage), data);
+
+      // Handle key exhaustion/rotation
+      if (
+        errorObj.code === 429 && 
+        errorObj.status === 'RESOURCE_EXHAUSTED' &&
+        API_KEYS_POOL.length > 1 &&
+        config.hasApiKey
+      ) {
+        if (!config.keyRotationsThisRequest) config.keyRotationsThisRequest = 0;
+        
+        if (config.keyRotationsThisRequest < API_KEYS_POOL.length) {
+          // Depletion happens across keys when pooling, quickly swap to next!
+          currentKeyIndex = (currentKeyIndex + 1) % API_KEYS_POOL.length;
+          Logger.warn(`API Key depleted/rate limited! Rotating to key index ${currentKeyIndex}/${API_KEYS_POOL.length - 1} and retrying...`);
+          
+          // Re-build config so the endpoint picks up the new currentKeyIndex
+          const oldRotations = config.keyRotationsThisRequest;
+          config = buildGeminiRequestConfig(retryWithApiKey);
+          config.keyRotationsThisRequest = oldRotations + 1;
+          endpoint = config.endpoint; // update local endpoint variable for the next loop
+          headers = config.headers;
+          
+          // Reset delay so we don't punish UX for back-end rotation
+          delay = 1000;
+          continue;
+        } else {
+          Logger.error('All API keys in the pool are depleted!');
+        }
+      }
 
       // Check for OAuth/authentication failures that could benefit from fallback
       const isOAuthError = (
@@ -714,7 +751,7 @@ async function callGemini(userMessage, context = '', retryWithApiKey = false, si
       );
 
       // If OAuth failed and we have an API key and haven't tried it yet, retry with API key
-      if (isOAuthError && !retryWithApiKey && hasAccessToken && GEMINI_API_KEY) {
+      if (isOAuthError && !retryWithApiKey && hasAccessToken && API_KEYS_POOL.length > 0) {
         Logger.warn('OAuth authentication failed, attempting fallback to API key', {
           status: response.status,
           error: errorMessage
