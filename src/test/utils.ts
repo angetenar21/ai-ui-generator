@@ -160,7 +160,7 @@ export const createTestData = {
   }),
 
   layout: () => ({
-    name: 'layout',
+    name: 'stack',
     templateProps: {
       layoutType: 'stack',
       gap: 'medium',

@@ -37,6 +37,7 @@ export default defineConfig([
       // Downgrade other noisy-but-safe rules to warnings
       '@typescript-eslint/ban-ts-comment': 'warn',
       'no-case-declarations': 'warn',
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
     },
   },
 ])

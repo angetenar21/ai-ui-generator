@@ -60,13 +60,13 @@ const Text: React.FC<TextProps> = ({
   };
 
   // Detect if it's a section header (h2)
-  const isSectionHeader = markdown && resolvedContent.trim().startsWith('##');
+  const isSectionHeader = markdown && typeof resolvedContent === 'string' && resolvedContent.trim().startsWith('##');
   const containerClasses = isSectionHeader
     ? "p-2"  // Minimal padding for headers
     : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6";  // Normal padding for content
 
   // VISUAL DEBUGGING: Show error if variables match failed
-  const showDebug = resolvedContent.includes('{') && resolvedContent.includes('}');
+  const showDebug = typeof resolvedContent === 'string' && resolvedContent.includes('{') && resolvedContent.includes('}');
 
   return (
     <div className={containerClasses}>

@@ -49,7 +49,7 @@ describe('Component Registry', () => {
       'line-chart',
       'bar-chart', 
       'data-table',
-      'layout'
+      'stack'
     ];
 
     expectedComponents.forEach(name => {
@@ -96,7 +96,7 @@ describe('Component Renderer', () => {
 
   test('should handle nested components', () => {
     const spec = {
-      name: 'layout',
+      name: 'stack',
       templateProps: {
         layoutType: 'stack',
         children: [
@@ -175,7 +175,7 @@ describe('Component Name Extraction', () => {
 
   test('should extract nested component names', () => {
     const spec = {
-      name: 'layout',
+      name: 'stack',
       templateProps: {
         children: [
           { name: 'text', templateProps: { content: 'Test' } },
@@ -185,7 +185,7 @@ describe('Component Name Extraction', () => {
     };
 
     const names = extractComponentNames(spec);
-    expect(names).toContain('layout');
+    expect(names).toContain('stack');
     expect(names).toContain('text');
     expect(names).toContain('line-chart');
   });

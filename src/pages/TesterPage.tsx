@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ClipboardPaste, RefreshCcw, Play, AlertTriangle } from 'lucide-react';
 import ResponsiveComponentWrapper from '../components/ResponsiveComponentWrapper';
-import { RenderNode } from '../templates';
+import { ComponentRenderer } from '../templates';
 import type { ComponentSpec } from '../templates/core/types';
 
 const STORAGE_KEY = 'tester:last-json';
@@ -134,6 +134,41 @@ const TesterPage: React.FC = () => {
     return `${components.length} Components`;
   }, [components]);
 
+  const handleLoadExample = () => {
+    const exampleStr = JSON.stringify(
+      {
+        parsed: {
+          name: 'text',
+          templateProps: {
+            content: 'Paste your JSON here!',
+            variant: 'markdown',
+          },
+        },
+      },
+      null,
+      2
+    );
+    setRawInput(exampleStr);
+    setError(null);
+    
+    // Automatically parse the example for a better UX
+    setTimeout(() => {
+      try {
+        const parsed = JSON.parse(exampleStr);
+        const specs = extractComponentSpecs(parsed);
+        if (specs.length > 0) {
+          setComponents(specs);
+          setLastParseAt(Date.now());
+          if (typeof window !== 'undefined') {
+            localStorage.setItem(STORAGE_KEY, exampleStr);
+          }
+        }
+      } catch {
+        // Safe fallback
+      }
+    }, 50);
+  };
+
   return (
     <div className="max-w-page mx-auto px-6 pt-8 pb-10 flex flex-col gap-6">
       <header>
@@ -199,25 +234,7 @@ const TesterPage: React.FC = () => {
               </button>
               <button
                 type="button"
-                onClick={() =>
-                  setRawInput((current) =>
-                    current.trim()
-                      ? current
-                      : JSON.stringify(
-                        {
-                          parsed: {
-                            name: 'text',
-                            templateProps: {
-                              content: 'Paste your JSON here!',
-                              variant: 'markdown',
-                            },
-                          },
-                        },
-                        null,
-                        2,
-                      ),
-                  )
-                }
+                onClick={handleLoadExample}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-text-secondary border border-dashed border-border-primary hover:bg-gray-50"
               >
                 <ClipboardPaste className="w-4 h-4" />
@@ -249,7 +266,7 @@ const TesterPage: React.FC = () => {
               <div className="space-y-8">
                 {components.map((spec, index) => (
                   <div key={spec.metadata?.componentId ?? `${spec.name ?? spec.type}-${index}`} className="rounded-2xl bg-white/70 p-4 border border-gray-100 shadow-sm">
-                    <ResponsiveComponentWrapper><RenderNode spec={spec} /></ResponsiveComponentWrapper>
+                    <ResponsiveComponentWrapper><ComponentRenderer spec={spec} /></ResponsiveComponentWrapper>
                   </div>
                 ))}
               </div>

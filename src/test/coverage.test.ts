@@ -63,7 +63,7 @@ describe('Component Registry Coverage', () => {
     const layoutComponents = registryHelpers.getComponentsByCategory('layout');
     
     const expectedLayoutComponents = [
-      'layout',
+      'stack',
       'container',
       'grid',
       'stack',
@@ -105,7 +105,7 @@ describe('Component Registry Coverage', () => {
 
   test('should log comprehensive registry statistics', () => {
     const allComponents = registryHelpers.getRegisteredComponents();
-    const categories = ['charts', 'data-display', 'layout', 'feedback', 'inputs', 'surfaces', 'navigation', 'media', 'advanced'];
+    const categories = ['charts', 'data-display', 'stack', 'feedback', 'inputs', 'surfaces', 'navigation', 'media', 'advanced'];
     
     console.log('\n=== COMPONENT REGISTRY STATISTICS ===');
     console.log(`Total registered components: ${allComponents.length}`);

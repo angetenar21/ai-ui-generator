@@ -286,7 +286,7 @@ export const testFixtures = {
   // LAYOUT COMPONENTS
   layout: {
     simpleStack: {
-      name: 'layout',
+      name: 'stack',
       templateProps: {
         layoutType: 'stack',
         gap: 'large',
@@ -313,7 +313,7 @@ export const testFixtures = {
       }
     },
     complexDashboard: {
-      name: 'layout',
+      name: 'stack',
       templateProps: {
         layoutType: 'grid',
         columns: 2,
@@ -381,7 +381,7 @@ export const testFixtures = {
 export const complexScenarios = {
   // Example 1: Simple Request → Rich Response
   trafficAnalysis: {
-    name: 'layout',
+    name: 'stack',
     templateProps: {
       layoutType: 'stack',
       gap: 'large',
@@ -409,7 +409,7 @@ export const complexScenarios = {
 
   // Example 2: Error Analysis
   errorAnalysis: {
-    name: 'layout',
+    name: 'stack',
     templateProps: {
       layoutType: 'stack',
       gap: 'large',
@@ -455,18 +455,18 @@ export const edgeCases = {
     }
   },
   deeplyNested: {
-    name: 'layout',
+    name: 'stack',
     templateProps: {
       layoutType: 'stack',
       children: [
         {
-          name: 'layout',
+          name: 'stack',
           templateProps: {
             layoutType: 'grid',
             columns: 2,
             children: [
               {
-                name: 'layout',
+                name: 'stack',
                 templateProps: {
                   layoutType: 'stack',
                   children: [

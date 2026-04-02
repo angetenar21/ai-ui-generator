@@ -224,7 +224,7 @@ describe('Legacy Format Support', () => {
 
   test('should support mixed format in nested components', () => {
     const mixedSpec = {
-      name: 'layout',
+      name: 'stack',
       templateProps: {
         layoutType: 'stack',
         children: [

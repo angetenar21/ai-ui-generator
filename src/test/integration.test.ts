@@ -24,7 +24,7 @@ describe('Complete Workflow Integration', () => {
     test('should contain all expected components', () => {
       const componentNames = extractComponentNames(scenario);
       
-      expect(componentNames).toContain('layout');
+      expect(componentNames).toContain('stack');
       expect(componentNames).toContain('summary-card');
       expect(componentNames).toContain('text');
       expect(componentNames).toContain('line-chart');
@@ -69,7 +69,7 @@ describe('Complete Workflow Integration', () => {
     test('should contain all expected components', () => {
       const componentNames = extractComponentNames(scenario);
       
-      expect(componentNames).toContain('layout');
+      expect(componentNames).toContain('stack');
       expect(componentNames).toContain('alert');
       expect(componentNames).toContain('bar-chart');
       expect(componentNames).toContain('data-table');
@@ -92,7 +92,7 @@ describe('Complete Workflow Integration', () => {
   describe('Format Compatibility', () => {
     test('should handle mixed old/new format in complex scenarios', () => {
       const mixedFormatScenario = {
-        name: 'layout',
+        name: 'stack',
         templateProps: {
           layoutType: 'stack',
           children: [
@@ -113,13 +113,14 @@ describe('Complete Workflow Integration', () => {
             },
             // Nested mixed format
             {
-              name: 'layout',
+              name: 'stack',
               templateProps: {
                 layoutType: 'horizontal',
                 children: [
                   {
                     type: 'bar-chart',
                     props: {
+                      xAxis: [{ data: ['A', 'B', 'C'], scaleType: 'band' }],
                       series: [{ data: [1, 2, 3] }]
                     }
                   }
@@ -196,7 +197,7 @@ describe('Complete Workflow Integration', () => {
     test('should validate all MainPrompt examples', () => {
       // Example from MainPrompt.md - Part 7
       const mainPromptExample = {
-        name: 'layout',
+        name: 'stack',
         templateProps: {
           layoutType: 'stack',
           gap: 'large',
@@ -256,7 +257,7 @@ describe('Complete Workflow Integration', () => {
 
       // Should contain all expected components
       const componentNames = extractComponentNames(mainPromptExample);
-      expect(componentNames).toContain('layout');
+      expect(componentNames).toContain('stack');
       expect(componentNames).toContain('summary-card');
       expect(componentNames).toContain('text');
       expect(componentNames).toContain('line-chart');
@@ -267,12 +268,12 @@ describe('Complete Workflow Integration', () => {
   describe('Performance and Scalability', () => {
     test('should handle complex nested layouts efficiently', () => {
       const complexNested = {
-        name: 'layout',
+        name: 'stack',
         templateProps: {
           layoutType: 'grid',
           columns: 3,
           children: Array.from({ length: 9 }, (_, i) => ({
-            name: 'layout',
+            name: 'stack',
             templateProps: {
               layoutType: 'stack',
               children: [
@@ -317,7 +318,7 @@ describe('Complete Workflow Integration', () => {
   describe('Error Recovery and Robustness', () => {
     test('should gracefully handle partial component failures', () => {
       const partiallyBrokenSpec = {
-        name: 'layout',
+        name: 'stack',
         templateProps: {
           layoutType: 'stack',
           children: [

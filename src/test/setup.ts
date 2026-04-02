@@ -20,6 +20,14 @@ beforeAll(() => {
     }
     originalError.call(console, ...args);
   };
+
+  // Mock ResizeObserver for JSDOM
+  class ResizeObserverMock {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  }
+  globalThis.ResizeObserver = ResizeObserverMock as any;
 });
 
 // Cleanup after each test

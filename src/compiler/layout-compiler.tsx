@@ -731,6 +731,7 @@ const HEALING_STRATEGIES: HealingStrategy[] = [
     description: 'Match tabs and panels arrays',
     applicableErrors: [ValidationErrorCode.TABS_MISMATCH],
     heal: (schema, _error) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const tabs = schema.templateProps?.tabs as string[] | undefined;
       const panels = schema.templateProps?.panels as { content: string }[] | undefined;
 
@@ -764,6 +765,7 @@ const HEALING_STRATEGIES: HealingStrategy[] = [
     description: 'Add placeholder items when grid has too few children',
     applicableErrors: [ValidationErrorCode.GRID_MIN_CHILDREN],
     heal: (schema, _error) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const currentChildren = schema.children || [];
       const needed = 2 - currentChildren.length;
 
@@ -787,6 +789,7 @@ const HEALING_STRATEGIES: HealingStrategy[] = [
     description: 'Wrap orphaned components in a container',
     applicableErrors: [ValidationErrorCode.COMPONENT_OUTSIDE_LAYOUT],
     heal: (schema, _error) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       return {
         type: NodeType.CONTAINER,
         templateProps: { title: 'Container' },
@@ -800,6 +803,7 @@ const HEALING_STRATEGIES: HealingStrategy[] = [
     description: 'Wrap components in a section for semantic grouping',
     applicableErrors: [ValidationErrorCode.MISSING_SECTION],
     heal: (schema, _error) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       return {
         type: NodeType.SECTION,
         templateProps: { title: 'Section' },
