@@ -23,13 +23,9 @@ function App() {
           <Route path="gallery" element={<GalleryPage />} />
           <Route path="inspector" element={<InspectorPage />} />
           <Route path="history" element={<HistoryPage />} />
-          {/* Debug & Tester pages are only accessible in development builds */}
-          {import.meta.env.DEV && (
-            <>
-              <Route path="tester" element={<Suspense fallback={null}><TesterPage /></Suspense>} />
-              <Route path="debug" element={<Suspense fallback={null}><DebugPage /></Suspense>} />
-            </>
-          )}
+          {/* Debug & Tester pages are now accessible in production to allow testing on VM */}
+          <Route path="tester" element={<Suspense fallback={null}><TesterPage /></Suspense>} />
+          <Route path="debug" element={<Suspense fallback={null}><DebugPage /></Suspense>} />
         </Route>
       </Routes>
     </BrowserRouter>
