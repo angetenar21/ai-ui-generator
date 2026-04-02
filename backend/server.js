@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 import Logger from './logger.js';
+import { getFewShotForMessage, getRelevantComponents } from './fewShotExamples.js';
 
 // Load environment variables from .env when running locally
 // Try multiple locations: backend/.env, project root .env
@@ -600,6 +601,51 @@ function buildGeminiRequestConfig(forceApiKey = false) {
   return { endpoint, headers, useVertex, hasAccessToken, hasApiKey, currentKey };
 }
 
+// ─── IMPROVEMENT 3: Output Quality Scorer ────────────────────────────────────
+/**
+ * Analyzes a raw JSON string (Gemini's final text output) for visual quality issues.
+ * Returns an array of issue strings. Empty array = quality pass.
+ */
+function scoreOutputSpec(rawText) {
+  const issues = [];
+
+  // Try to extract JSON from the text
+  let spec;
+  try {
+    const match = rawText.match(/```json\s*([\s\S]*?)\s*```/) || rawText.match(/(\{[\s\S]*\})/);
+    const jsonStr = match ? match[1] : rawText;
+    spec = JSON.parse(jsonStr);
+  } catch {
+    // Can't parse — skip scoring so we don't block valid outputs
+    return [];
+  }
+
+  if (!spec || typeof spec !== 'object') return [];
+
+  const rawStr = JSON.stringify(spec);
+
+  // Check 1: Does the output have at least one gradient or accent variant?
+  const hasRichVariant = rawStr.includes('"gradient"') || rawStr.includes('"accent"');
+  if (!hasRichVariant) {
+    issues.push('No gradient or accent variant found. The main container must use variant: "gradient" or variant: "accent" — not plain "default".');
+  }
+
+  // Check 2: Does the output have at least one elevated surface?
+  const hasElevation = rawStr.includes('"floating"') || rawStr.includes('"raised"');
+  if (!hasElevation) {
+    issues.push('No elevation found. At least one panel or card must use elevation: "floating" or elevation: "raised".');
+  }
+
+  // Check 3: Is every panel using variant "default" (all-same = boring)?
+  const variantDefaultCount = (rawStr.match(/"default"/g) || []).length;
+  const variantTotalCount = (rawStr.match(/"variant"/g) || []).length;
+  if (variantTotalCount > 2 && variantDefaultCount === variantTotalCount) {
+    issues.push('All containers are using variant: "default". Vary the styling — use gradient, accent, or elevated variants for visual hierarchy.');
+  }
+
+  return issues;
+}
+
 async function callGemini(userMessage, context = '', retryWithApiKey = false, signal) {
   let config;
   try {
@@ -631,6 +677,44 @@ async function callGemini(userMessage, context = '', retryWithApiKey = false, si
       role: 'user',
       parts: [{ text: `Context: ${context}` }],
     });
+  }
+
+  // ── IMPROVEMENT 1: Dynamic Few-Shot Injection ────────────────────────────
+  // Inject a golden example before the user message so Gemini has a concrete
+  // pattern to follow, not just abstract rules.
+  const fewShotPrompt = getFewShotForMessage(userMessage);
+  if (fewShotPrompt) {
+    contents.push({
+      role: 'user',
+      parts: [{ text: fewShotPrompt }],
+    });
+    contents.push({
+      role: 'model',
+      parts: [{ text: 'Understood. I have studied this golden example and will apply the same quality: gradient hero, varied variants, proper elevation hierarchy, and visual contrast. I will NOT copy the example literally but follow its design standard.' }],
+    });
+    Logger.info('[FewShot] Injected golden example for intent', { intent: userMessage.substring(0, 60) });
+  }
+
+  // ── IMPROVEMENT 2: Component-Scoped Retrieval ────────────────────────────
+  // Pre-load relevant component schemas based on detected intent so Gemini
+  // has focused context without wasting token budget on irrelevant components.
+  const relevantComponentNames = getRelevantComponents(userMessage);
+  if (relevantComponentNames && relevantComponentNames.length > 0) {
+    const scopedSchemas = {};
+    for (const name of relevantComponentNames) {
+      if (components[name]) scopedSchemas[name] = components[name];
+    }
+    if (Object.keys(scopedSchemas).length > 0) {
+      contents.push({
+        role: 'user',
+        parts: [{ text: `## PRE-LOADED COMPONENT SCHEMAS\n\nI have pre-loaded the schemas for the components most likely needed for this request:\n\n${JSON.stringify(scopedSchemas, null, 2)}\n\nYou may call get_component_schema for any additional components you need.` }],
+      });
+      contents.push({
+        role: 'model',
+        parts: [{ text: 'Thank you. I have the component schemas. I will use these along with any additional schemas I need.' }],
+      });
+      Logger.info('[ScopedRetrieval] Pre-loaded schemas', { components: relevantComponentNames });
+    }
   }
 
   // Add user message
@@ -927,6 +1011,24 @@ RESTART and use the correct format for function calls.`
       }
 
       Logger.geminiResponse(GEMINI_MODEL, response, textPart.text);
+
+      // ── IMPROVEMENT 3: Output Scoring / Auto-Feedback ──────────────────────
+      // Before returning, check if the output meets visual quality standards.
+      // If not, give Gemini one correction chance.
+      const qualityIssues = scoreOutputSpec(textPart.text);
+      if (qualityIssues.length > 0 && iterations < maxIterations) {
+        Logger.warn('[OutputScore] Quality issues detected, requesting correction', { issues: qualityIssues });
+        contents.push(candidate.content);
+        contents.push({
+          role: 'user',
+          parts: [{
+            text: `QUALITY CHECK FAILED. The output has visual hierarchy problems:\n\n${qualityIssues.map((q, i) => `${i + 1}. ${q}`).join('\n')}\n\nFix ALL of these issues and return the corrected JSON. Remember:\n- Use variant: "gradient" or variant: "accent" on the main container (NOT variant: "default")
+- Add elevation: "floating" or elevation: "raised" to panels\n- Ensure the submit/primary button is fullWidth: true for forms\n- Use spacing: "large" on the root stack`
+          }]
+        });
+        continue; // Let Gemini fix it in one more iteration
+      }
+
       return textPart.text;
     }
 
