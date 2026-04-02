@@ -103,6 +103,9 @@ const LineChart: React.FC<LineChartProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const [chartWidth, setChartWidth] = useState(propWidth || 500);
 
+  // Reactive dark mode via Zustand — must be at top level, before any early return
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
   useEffect(() => {
     const updateWidth = () => {
       const measuredWidth = containerRef.current?.getBoundingClientRect().width || 0;
@@ -207,10 +210,6 @@ const LineChart: React.FC<LineChartProps> = ({
 
   // Use theme-aware background colors
   const cardBgColor = cardBackgroundColor;
-
-  // Reactive dark mode via Zustand — updates when user toggles theme
-  const theme = useAppStore(state => state.theme);
-  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
   const chartColors = {
     axisLine: isDarkMode ? '#9CA3AF' : '#6B7280',
     axisTick: isDarkMode ? '#9CA3AF' : '#6B7280',

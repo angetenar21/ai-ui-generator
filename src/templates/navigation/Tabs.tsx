@@ -29,6 +29,13 @@ const Tabs: React.FC<TabsProps> = ({
 }) => {
   const tabItems = tabs || items || [];
 
+  const initialIndex = typeof defaultTab === 'number'
+    ? defaultTab
+    : tabItems.findIndex(t => t.value === defaultTab || t.label === defaultTab);
+
+  // Hook must be declared unconditionally — before any early return
+  const [activeTab, setActiveTab] = useState(Math.max(0, initialIndex));
+
   if (!tabItems || tabItems.length === 0) {
     return (
       <div className="card rounded-card p-6 my-4">
@@ -38,12 +45,6 @@ const Tabs: React.FC<TabsProps> = ({
       </div>
     );
   }
-
-  const initialIndex = typeof defaultTab === 'number'
-    ? defaultTab
-    : tabItems.findIndex(t => t.value === defaultTab || t.label === defaultTab);
-
-  const [activeTab, setActiveTab] = useState(Math.max(0, initialIndex));
 
   const variantClasses = {
     default: {
