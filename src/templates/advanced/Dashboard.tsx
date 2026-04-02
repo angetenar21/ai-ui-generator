@@ -131,8 +131,8 @@ const Dashboard: React.FC<DashboardProps> = ({
                   </div>
                 </div>
 
-                <div className="flex-shrink-0 p-2.5 rounded-xl bg-orange-50 dark:bg-orange-900/20 ring-1 ring-orange-200/60 dark:ring-orange-800/40">
-                  <IconComponent className="w-5 h-5 text-orange-500 dark:text-orange-400" />
+                <div className="flex-shrink-0 p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 ring-1 ring-emerald-200/60 dark:ring-emerald-800/40">
+                  <IconComponent className="w-5 h-5 text-emerald-500 dark:text-emerald-400" />
                 </div>
               </div>
 

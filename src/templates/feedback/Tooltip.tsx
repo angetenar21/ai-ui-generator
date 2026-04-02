@@ -62,7 +62,7 @@ const Tooltip: React.FC<TooltipProps> = ({
     light: 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-700',
     info: 'bg-blue-600 dark:bg-blue-600 text-white border-blue-700 dark:border-blue-700',
     success: 'bg-green-600 dark:bg-green-600 text-white border-green-700 dark:border-green-700',
-    warning: 'bg-amber-600 dark:bg-amber-600 text-white border-amber-700 dark:border-amber-700',
+    warning: 'bg-teal-600 dark:bg-teal-600 text-white border-teal-700 dark:border-teal-700',
     error: 'bg-red-600 dark:bg-red-600 text-white border-red-700 dark:border-red-700',
   };
 
@@ -93,7 +93,7 @@ const Tooltip: React.FC<TooltipProps> = ({
     <div className="inline-flex items-center justify-center my-4">
       <div className="relative inline-block">
         <button
-          className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg cursor-pointer transition-colors duration-200 font-medium shadow-md hover:shadow-lg"
+          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg cursor-pointer transition-colors duration-200 font-medium shadow-md hover:shadow-lg"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >

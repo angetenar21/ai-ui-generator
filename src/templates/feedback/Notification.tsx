@@ -73,8 +73,8 @@ const Notification: React.FC<NotificationProps> = ({
     },
     warning: {
       icon: icon || 'alert-triangle',
-      container: 'border border-amber-200/50 dark:border-amber-500/20 bg-white/95 dark:bg-gray-900/95',
-      chip: 'bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400',
+      container: 'border border-teal-200/50 dark:border-teal-500/20 bg-white/95 dark:bg-gray-900/95',
+      chip: 'bg-teal-50 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400',
       text: 'text-gray-900 dark:text-white',
     },
     error: {

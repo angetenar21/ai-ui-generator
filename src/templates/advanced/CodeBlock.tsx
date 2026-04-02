@@ -62,7 +62,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
     javascript: 'text-yellow-600 dark:text-yellow-400',
     typescript: 'text-blue-600 dark:text-blue-400',
     python: 'text-green-600 dark:text-green-400',
-    java: 'text-orange-600 dark:text-orange-400',
+    java: 'text-emerald-600 dark:text-emerald-400',
     html: 'text-pink-600 dark:text-pink-400',
     css: 'text-purple-600 dark:text-purple-400',
     json: 'text-cyan-600 dark:text-cyan-400',

@@ -59,7 +59,7 @@ const Container: React.FC<ContainerProps> = ({
 
   const centerClass = center ? 'mx-auto' : '';
   const backgroundClass = background ? 'bg-gray-50 dark:bg-gray-700' : '';
-  const borderClass = border ? 'border border-orange-600 rounded-card' : '';
+  const borderClass = border ? 'border border-emerald-600 rounded-card' : '';
   const shadowClass = shadow ? 'shadow-lg' : '';
 
   return (

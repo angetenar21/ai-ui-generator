@@ -83,19 +83,19 @@ const Stepper: React.FC<StepperProps> = ({
   const getStepColor = (status: string) => {
     switch (status) {
       case 'completed':
-        return 'bg-orange-600 text-white border-orange-600';
+        return 'bg-emerald-600 text-white border-emerald-600';
       case 'active':
         return 'bg-accent-from text-white border-accent-from';
       case 'error':
         return 'bg-red-500 text-white border-red-500';
       default:
-        return 'bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-400 border-orange-600';
+        return 'bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-400 border-emerald-600';
     }
   };
 
   const getConnectorColor = (index: number) => {
     return index < activeStep
-      ? 'bg-orange-600'
+      ? 'bg-emerald-600'
       : 'bg-border-primary';
   };
 

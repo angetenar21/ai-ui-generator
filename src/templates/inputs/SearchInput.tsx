@@ -92,7 +92,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
         flex items-center
         ${variantClasses[variant]}
         rounded-lg transition-all duration-200
-        focus-within:ring-2 focus-within:ring-orange-500/50
+        focus-within:ring-2 focus-within:ring-emerald-500/50
         ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
       `.trim().replace(/\s+/g, ' ')}>
         <div className="pl-3 pr-2 text-gray-400 flex-shrink-0">

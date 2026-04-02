@@ -68,7 +68,7 @@ const Spacer: React.FC<SpacerProps> = ({
   if (showIndicator) {
     return (
       <div
-        className={`${sizeClasses[orientation][size]} ${orientationClass} ${flexibleClass} border-2 border-dashed border-orange-600 rounded flex items-center justify-center`}
+        className={`${sizeClasses[orientation][size]} ${orientationClass} ${flexibleClass} border-2 border-dashed border-emerald-600 rounded flex items-center justify-center`}
         style={style}
       >
         <span className="text-xs text-gray-600 dark:text-gray-400 font-mono">

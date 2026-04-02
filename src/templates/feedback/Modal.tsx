@@ -69,7 +69,7 @@ const Modal: React.FC<ModalProps> = ({
       {triggerText && (
         <button
           onClick={() => setIsVisible(true)}
-          className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition-colors border border-transparent"
+          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-colors border border-transparent"
         >
           {triggerText}
         </button>

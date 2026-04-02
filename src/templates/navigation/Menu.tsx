@@ -70,7 +70,7 @@ const Menu: React.FC<MenuProps> = ({
   };
 
   const triggerVariantClasses = {
-    primary: 'bg-orange-600 hover:bg-orange-700 text-white',
+    primary: 'bg-emerald-600 hover:bg-emerald-700 text-white',
     secondary: 'bg-gray-700 hover:bg-gray-600 text-white dark:bg-gray-700 dark:hover:bg-gray-600',
     ghost: 'bg-transparent hover:bg-gray-200 dark:hover:bg-gray-700/50 text-gray-700 dark:text-gray-300',
   };

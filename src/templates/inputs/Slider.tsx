@@ -64,10 +64,10 @@ const Slider: React.FC<SliderProps> = ({
     if (error) return '#EF4444'; // red-500
 
     const colorMap: Record<string, string> = {
-      primary: '#F97316',   // orange-600
+      primary: '#10B981',   // emerald-600
       secondary: '#6B7280', // gray-500
       success: '#10B981',   // green-500
-      warning: '#F59E0B',   // amber-500
+      warning: '#F59E0B',   // teal-500
       error: '#EF4444',     // red-500
     };
 

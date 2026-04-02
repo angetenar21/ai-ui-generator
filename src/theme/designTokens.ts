@@ -19,11 +19,12 @@ export const surfaces: Record<SurfaceVariant, string> = {
   // Default: Clean white surface with subtle ring highlight for depth
   default: 'bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-800 ring-1 ring-black/[0.04] dark:ring-white/[0.04]',
 
-  // Gradient: Rich warm gradient background for dashboard hero panels
-  gradient: 'bg-gradient-to-br from-orange-50 via-amber-50/80 to-white dark:bg-[#697565] border border-orange-200/60 dark:border-[#697565] shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]',
+  // Gradient: Rich cool gradient background for dashboard hero panels
+  gradient: 'bg-gradient-to-br from-emerald-100 via-teal-50 to-cyan-50/30 dark:from-emerald-950/40 dark:via-gray-900 dark:to-gray-900 border border-emerald-200/60 dark:border-emerald-500/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]',
 
-  // Accent: Vibrant orange border glow for primary KPI emphasis
-  accent: 'bg-white dark:bg-gray-900 border-2 border-orange-500 dark:border-orange-400 shadow-[0_0_0_4px_rgba(249,115,22,0.08),0_4px_16px_rgba(249,115,22,0.15)] dark:shadow-[0_0_0_4px_rgba(249,115,22,0.15),0_4px_20px_rgba(249,115,22,0.4)]',
+
+  // Accent: Vibrant emerald border glow for primary KPI emphasis
+  accent: 'bg-white dark:bg-gray-900 border-2 border-emerald-500 dark:border-emerald-400 shadow-[0_0_0_4px_rgba(16,185,129,0.08),0_4px_16px_rgba(16,185,129,0.15)] dark:shadow-[0_0_0_4px_rgba(16,185,129,0.15),0_4px_20px_rgba(16,185,129,0.4)]',
 
   // Glass: Semi-transparent glassmorphism with warm inner glow
   glass: 'bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl border border-white/40 dark:border-gray-800/40 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]',
@@ -72,7 +73,7 @@ export const emphasis: Record<EmphasisLevel, { scale: string; border: string }> 
   },
   high: {
     scale: 'scale-100 hover:scale-[1.03] transition-transform duration-300',
-    border: 'border-2 ring-2 ring-orange-500/20',
+    border: 'border-2 ring-2 ring-emerald-500/20',
   },
 };
 
@@ -89,14 +90,14 @@ export const tones: Record<ToneVariant, { bg: string; border: string; text: stri
     text: 'text-gray-900 dark:text-gray-100',
   },
   primary: {
-    bg: 'bg-orange-50 dark:bg-[#697565]',
-    border: 'border-orange-200 dark:border-[#697565]',
-    text: 'text-orange-900 dark:text-white',
+    bg: 'bg-emerald-50 dark:bg-[#1A2E26]',
+    border: 'border-emerald-200 dark:border-[#1A2E26]',
+    text: 'text-emerald-900 dark:text-white',
   },
   accent: {
-    bg: 'bg-amber-50 dark:bg-[#697565]',
-    border: 'border-amber-200 dark:border-[#697565]',
-    text: 'text-amber-900 dark:text-white',
+    bg: 'bg-teal-50 dark:bg-[#152D2E]',
+    border: 'border-teal-200 dark:border-[#152D2E]',
+    text: 'text-teal-900 dark:text-white',
   },
   success: {
     bg: 'bg-green-50 dark:bg-green-950',
@@ -129,19 +130,19 @@ export type ChartPaletteType = 'default' | 'vibrant' | 'pastel' | 'gradient' | '
 export const chartPalettes: Record<ChartPaletteType, string[]> = {
   // Default: Balanced, professional colors
   default: [
-    '#F97316', // Orange
-    '#10B981', // Green
-    '#EC4899', // Pink
+    '#10B981', // Emerald
+    '#3B82F6', // Blue
+    '#06b6d4', // Cyan
     '#8B5CF6', // Purple
     '#14B8A6', // Teal
-    '#F59E0B', // Amber
-    '#3B82F6', // Blue
-    '#EF4444', // Red
+    '#6366f1', // Indigo
+    '#EC4899', // Pink
+    '#F59E0B', // Teal
   ],
 
   // Vibrant: High saturation, energetic
   vibrant: [
-    '#FF6B35', // Vibrant Orange
+    '#FF6B35', // Vibrant Emerald
     '#00D9FF', // Cyan
     '#FF006E', // Magenta
     '#8338EC', // Purple
@@ -165,26 +166,26 @@ export const chartPalettes: Record<ChartPaletteType, string[]> = {
 
   // Gradient: Colors designed for gradient charts
   gradient: [
-    '#FF6B6B', // Red-Orange
+    '#FF6B6B', // Red-Emerald
     '#FFD93D', // Yellow
     '#6BCB77', // Green
     '#4D96FF', // Blue
     '#C65BCF', // Purple
-    '#FF8C42', // Orange
+    '#FF8C42', // Emerald
     '#45B7D1', // Cyan
     '#F67280', // Pink
   ],
 
-  // Monochrome: Shades of orange (brand color)
+  // Monochrome: Shades of emerald (brand color)
   monochrome: [
-    '#FFF4E6', // Lightest
-    '#FFE4CC', // Lighter
-    '#FFC299', // Light
-    '#FF9F66', // Medium-Light
-    '#F97316', // Base
-    '#DC5A00', // Medium-Dark
-    '#B94800', // Dark
-    '#8B3600', // Darkest
+    '#ECFDF5', // Lightest
+    '#D1FAE5', // Lighter
+    '#A7F3D0', // Light
+    '#6EE7B7', // Medium-Light
+    '#10B981', // Base
+    '#059669', // Medium-Dark
+    '#047857', // Dark
+    '#064E3B', // Darkest
   ],
 
   // Semantic: Purpose-driven colors
@@ -205,12 +206,12 @@ export const chartPalettes: Record<ChartPaletteType, string[]> = {
 // ============================================================================
 
 export const chartGradients = {
-  orange: {
-    from: '#FF6B35',
-    to: '#F59E0B',
+  emerald: {
+    from: '#10B981',
+    to: '#06b6d4',
     stops: [
-      { offset: '0%', color: '#FF6B35', opacity: 0.8 },
-      { offset: '100%', color: '#F59E0B', opacity: 0.2 },
+      { offset: '0%', color: '#10B981', opacity: 0.8 },
+      { offset: '100%', color: '#06b6d4', opacity: 0.2 },
     ],
   },
   green: {
@@ -336,13 +337,13 @@ export function getChartColors(palette: ChartPaletteType = 'default'): string[] 
  */
 export function getGradientColors(baseColor: string, count: number = 8): string[] {
   const gradients = {
-    orange: chartGradients.orange,
+    emerald: chartGradients.emerald,
     green: chartGradients.green,
     purple: chartGradients.purple,
     blue: chartGradients.blue,
   };
 
-  const gradient = gradients[baseColor as keyof typeof gradients] || gradients.orange;
+  const gradient = gradients[baseColor as keyof typeof gradients] || gradients.emerald;
 
   // Generate interpolated colors
   const colors: string[] = [];

@@ -23,7 +23,7 @@ const DEFAULT_COLORS = [
   '#10b981', // emerald
   '#22c55e', // green
   '#eab308', // yellow
-  '#f97316', // orange
+  '#10B981', // emerald
   '#ef4444', // red
   '#ec4899', // pink
 ];

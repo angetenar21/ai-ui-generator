@@ -89,8 +89,9 @@ const Panel: React.FC<PanelProps> = ({
       <div
         className={`
           px-6 py-5
-          ${headerVariant === 'default' ? 'border-b border-gray-100 dark:border-gray-800' : ''}
-          ${collapsible ? 'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors' : ''}
+          ${headerVariant === 'default' && variant !== 'gradient' && variant !== 'accent' ? 'border-b border-gray-100 dark:border-gray-800' : ''}
+          ${collapsible && variant !== 'gradient' && variant !== 'accent' ? 'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors' : ''}
+          ${collapsible && (variant === 'gradient' || variant === 'accent') ? 'cursor-pointer transition-colors' : ''}
           rounded-t-2xl ${isCollapsed && !footer ? 'rounded-b-2xl' : ''}
         `}
         onClick={() => collapsible && setIsCollapsed(!isCollapsed)}
@@ -99,6 +100,7 @@ const Panel: React.FC<PanelProps> = ({
           <h3 className={`${textColorClass} font-bold text-base leading-snug tracking-tight`}>
             {title}
           </h3>
+
 
           {collapsible && (
             <button

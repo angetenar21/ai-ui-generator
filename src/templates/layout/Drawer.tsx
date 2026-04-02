@@ -85,7 +85,7 @@ const Drawer: React.FC<DrawerProps> = ({
   };
 
   const variantClasses = {
-    default: 'bg-gray-50 dark:bg-gray-700 border-orange-600',
+    default: 'bg-gray-50 dark:bg-gray-700 border-emerald-600',
     elevated: 'bg-gray-50 dark:bg-gray-700 shadow-2xl',
     overlay: 'bg-gray-50 dark:bg-gray-700/95 backdrop-blur-sm',
   };
@@ -103,7 +103,7 @@ const Drawer: React.FC<DrawerProps> = ({
       {triggerText && (
         <button
           onClick={() => setIsOpen(true)}
-          className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors font-medium border border-transparent shadow-[0_2px_4px_rgba(234,88,12,0.15)]"
+          className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium border border-transparent shadow-[0_2px_4px_rgba(234,88,12,0.15)]"
         >
           {triggerText}
         </button>
@@ -131,7 +131,7 @@ const Drawer: React.FC<DrawerProps> = ({
       <aside
         className={`fixed ${positionClasses[position]} ${sizeClasses[position][size]} ${variantClasses[variant]} ${borderClasses[position]} ${transformClasses[position]} transition-transform duration-300 z-[9999] overflow-y-auto`}
       >
-        <div className="flex items-center justify-between p-4 border-b border-orange-600">
+        <div className="flex items-center justify-between p-4 border-b border-emerald-600">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h2>
           <button
             onClick={() => setIsOpen(false)}

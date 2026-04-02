@@ -109,12 +109,12 @@ const SankeyChart: React.FC<SankeyChartProps> = ({
   const colors = [
     '#3b82f6', // blue
     '#10b981', // green
-    '#f59e0b', // amber
+    '#f59e0b', // teal
     '#ef4444', // red
     '#8b5cf6', // purple
     '#ec4899', // pink
     '#14b8a6', // teal
-    '#f97316', // orange
+    '#10B981', // emerald
     '#06b6d4', // cyan
     '#6366f1', // indigo
   ];

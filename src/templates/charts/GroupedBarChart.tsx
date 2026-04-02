@@ -59,7 +59,7 @@ const GroupedBarChart: React.FC<GroupedBarChartProps> = ({ title, description, d
               </span>
             )}
           />
-          <Bar dataKey="value" fill="#F97316" />
+          <Bar dataKey="value" fill="#10B981" />
         </BarChart>
       </ResponsiveContainer>
     </div>

@@ -101,7 +101,7 @@ const Select: React.FC<SelectProps> = ({
   const triggerBorderClass = error
     ? 'border-red-500'
     : isOpen
-      ? 'border-orange-500 ring-2 ring-orange-500/20'
+      ? 'border-emerald-500 ring-2 ring-emerald-500/20'
       : 'border-gray-300 dark:border-gray-600';
 
   const variantTriggerBg = {
@@ -172,7 +172,7 @@ const Select: React.FC<SelectProps> = ({
                     className={`
                       w-full text-left px-4 py-2.5 text-sm transition-colors
                       ${isSelected
-                        ? 'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 font-medium'
+                        ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 font-medium'
                         : 'text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                       }
                       ${option.disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}
@@ -180,7 +180,7 @@ const Select: React.FC<SelectProps> = ({
                   >
                     <div className="flex items-center gap-2">
                       {isSelected && (
-                        <svg className="w-3.5 h-3.5 text-orange-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <svg className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
                       )}

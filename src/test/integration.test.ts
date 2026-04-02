@@ -154,7 +154,7 @@ describe('Complete Workflow Integration', () => {
               Math.floor(Math.random() * 40) + 30
             ),
             label: 'CPU Usage (%)',
-            color: '#F97316',
+            color: '#10B981',
             curve: 'natural'
           }],
           width: 800,
@@ -231,7 +231,7 @@ describe('Complete Workflow Integration', () => {
                 series: [{
                   data: [245, 189, 156, 298, 345, 445, 320, 278],
                   label: 'Bytes (millions)',
-                  color: '#F97316',
+                  color: '#10B981',
                   curve: 'natural',
                   area: true
                 }],

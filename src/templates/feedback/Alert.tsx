@@ -44,10 +44,10 @@ const Alert: React.FC<AlertProps> = ({
     },
     warning: {
       icon: 'alert-triangle',
-      bg: 'bg-amber-50/80 dark:bg-amber-900/20',
-      border: 'border-amber-200/50 dark:border-amber-500/30',
-      text: 'text-amber-800 dark:text-amber-300',
-      filled: 'bg-amber-500 dark:bg-amber-500 text-white',
+      bg: 'bg-teal-50/80 dark:bg-teal-900/20',
+      border: 'border-teal-200/50 dark:border-teal-500/30',
+      text: 'text-teal-800 dark:text-teal-300',
+      filled: 'bg-teal-500 dark:bg-teal-500 text-white',
     },
     error: {
       icon: 'x-circle',

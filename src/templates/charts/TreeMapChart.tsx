@@ -41,10 +41,10 @@ interface TreeMapChartProps {
 }
 
 const COLORS = [
-  '#e9833bff', // Orange - good contrast with white text
+  '#e9833bff', // Emerald - good contrast with white text
   '#1E40AF', // Darker blue - better contrast than #3B82F6
   '#059669', // Darker green - better contrast than #10b981
-  '#D97706', // Darker amber - better contrast than #f59e0b
+  '#D97706', // Darker teal - better contrast than #f59e0b
   '#DC2626', // Darker red - better contrast than #ef4444
   '#BE185D', // Darker pink - better contrast than #ec4899
 ];

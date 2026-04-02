@@ -257,7 +257,7 @@ describe('Color Palette Validation', () => {
       templateProps: {
         series: [{
           data: [1, 2, 3],
-          color: '#F97316'  // Valid hex color from MainPrompt.md
+          color: '#10B981'  // Valid hex color from MainPrompt.md
         }]
       }
     };
@@ -267,7 +267,7 @@ describe('Color Palette Validation', () => {
   });
 
   test('should handle semantic colors from palette', () => {
-    const colors = ['#F97316', '#10B981', '#3B82F6', '#8B5CF6', '#EC4899', '#06B6D4', '#F59E0B'];
+    const colors = ['#10B981', '#10B981', '#3B82F6', '#8B5CF6', '#EC4899', '#06B6D4', '#F59E0B'];
     
     colors.forEach(color => {
       const spec = {

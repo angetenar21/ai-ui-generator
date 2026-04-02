@@ -70,16 +70,16 @@ const Hero: React.FC<HeroProps> = ({
       return 'bg-cover bg-center';
     }
     if (backgroundStyle === 'gradient') {
-      return 'bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900';
+      return 'bg-gradient-to-br from-teal-50 via-emerald-50 to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900';
     }
     return 'bg-white dark:bg-gray-800';
   };
 
   const getButtonVariantClass = (variant: string = 'primary') => {
     const variants = {
-      primary: 'bg-orange-600 hover:bg-orange-700 text-white shadow-md hover:shadow-lg',
+      primary: 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-md hover:shadow-lg',
       secondary: 'bg-gray-600 hover:bg-gray-700 text-white shadow-md hover:shadow-lg',
-      outline: 'border-2 border-orange-600 text-orange-600 dark:text-orange-400 hover:bg-orange-600/10',
+      outline: 'border-2 border-emerald-600 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-600/10',
     };
     return variants[variant as keyof typeof variants] || variants.primary;
   };
@@ -112,7 +112,7 @@ const Hero: React.FC<HeroProps> = ({
         <div className={`max-w-4xl mx-auto flex flex-col gap-6 ${alignClasses[align]}`}>
           {/* Subtitle/Eyebrow */}
           {subtitle && (
-            <div className="text-orange-600 dark:text-orange-400 font-semibold text-sm md:text-base uppercase tracking-wider">
+            <div className="text-emerald-600 dark:text-emerald-400 font-semibold text-sm md:text-base uppercase tracking-wider">
               {subtitle}
             </div>
           )}
@@ -144,7 +144,7 @@ const Hero: React.FC<HeroProps> = ({
                     px-6 py-3 rounded-lg font-semibold
                     flex items-center gap-2
                     transition-all duration-200 transform hover:-translate-y-0.5
-                    focus:outline-none focus:ring-2 focus:ring-orange-600 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-900
+                    focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-900
                   `}
                 >
                   {button.label}

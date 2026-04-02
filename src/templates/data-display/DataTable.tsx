@@ -235,7 +235,7 @@ const DataTable: React.FC<DataTableProps> = ({
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-xl
                      bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400
-                     focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent"
+                     focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-transparent"
           />
         </div>
       )}
@@ -255,7 +255,7 @@ const DataTable: React.FC<DataTableProps> = ({
                   <div className="flex items-center gap-1">
                     {column}
                     {sortable && sortColumn === index && (
-                      <span className="text-xs text-orange-500 font-bold">
+                      <span className="text-xs text-emerald-500 font-bold">
                         {sortDirection === 'asc' ? '↑' : '↓'}
                       </span>
                     )}
@@ -270,7 +270,7 @@ const DataTable: React.FC<DataTableProps> = ({
                 key={rowIndex}
                 className={`
                   transition-colors duration-150
-                  hover:bg-orange-50/30 dark:hover:bg-orange-900/10
+                  hover:bg-emerald-50/30 dark:hover:bg-emerald-900/10
                   ${rowIndex % 2 === 0 ? 'bg-white dark:bg-gray-900' : 'bg-gray-50/60 dark:bg-gray-800/30'}
                 `}
               >
@@ -308,7 +308,7 @@ const DataTable: React.FC<DataTableProps> = ({
               : `${displayedCount} ${displayedCount === 1 ? 'row' : 'rows'}`}
           </span>
           {filterByContext && data && data[filterByContext] && (
-            <span className="text-xs text-orange-500 font-medium">
+            <span className="text-xs text-emerald-500 font-medium">
               Filtered by: {String(data[filterByContext])}
             </span>
           )}

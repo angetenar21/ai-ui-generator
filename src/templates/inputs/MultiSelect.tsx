@@ -144,7 +144,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
             ${variantClasses[variant]}
             ${fullWidth ? 'w-full' : 'w-full'}
             rounded-lg text-gray-900 dark:text-white
-            focus:outline-none focus:ring-2 focus:ring-orange-500/50
+            focus:outline-none focus:ring-2 focus:ring-emerald-500/50
             ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
             transition-all duration-200
             min-h-[2.5rem] flex items-center flex-wrap gap-1
@@ -156,7 +156,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
             getSelectedLabels().map((label, index) => (
               <span
                 key={index}
-                className="inline-flex items-center gap-1 px-2 py-1 bg-orange-500 text-white text-sm rounded-md"
+                className="inline-flex items-center gap-1 px-2 py-1 bg-emerald-500 text-white text-sm rounded-md"
               >
                 {label}
                 <button
@@ -192,8 +192,8 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
                   onClick={() => !isDisabled && handleToggleOption(option.value)}
                   className={`
                     px-4 py-2 flex items-center gap-2
-                    ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-orange-50 dark:hover:bg-gray-700'}
-                    ${isSelected ? 'bg-orange-50 dark:bg-gray-700' : ''}
+                    ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-emerald-50 dark:hover:bg-gray-700'}
+                    ${isSelected ? 'bg-emerald-50 dark:bg-gray-700' : ''}
                     transition-colors
                   `.trim().replace(/\s+/g, ' ')}
                 >
@@ -203,7 +203,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
                       checked={isSelected}
                       onChange={() => { }}
                       disabled={isDisabled}
-                      className="w-4 h-4 rounded border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-orange-500 focus:ring-orange-500 cursor-pointer"
+                      className="w-4 h-4 rounded border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-emerald-500 focus:ring-emerald-500 cursor-pointer"
                     />
                   )}
                   <span className="text-gray-800 dark:text-gray-300">{option.label}</span>

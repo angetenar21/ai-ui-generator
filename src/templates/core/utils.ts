@@ -242,13 +242,13 @@ export function isValidComponent(value: any): boolean {
  * Default color palette for charts (matches the design system)
  */
 export const DEFAULT_CHART_COLORS = [
-  '#F97316', // Primary orange
+  '#10B981', // Primary emerald
   '#10B981', // Green
   '#3B82F6', // Blue
   '#8B5CF6', // Purple
   '#EC4899', // Pink
   '#06B6D4', // Cyan
-  '#F59E0B', // Amber
+  '#F59E0B', // Teal
   '#22C55E', // Jade
 ];
 

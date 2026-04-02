@@ -80,7 +80,7 @@ const Chat: React.FC<ChatProps> = ({
   };
 
   const getMessageBg = (sender: string) => {
-    if (sender === 'user') return 'bg-orange-600 dark:bg-orange-600 text-white';
+    if (sender === 'user') return 'bg-emerald-600 dark:bg-emerald-600 text-white';
     if (sender === 'system') return 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-center';
     return 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white';
   };
@@ -136,9 +136,9 @@ const Chat: React.FC<ChatProps> = ({
                         className="w-8 h-8 rounded-full"
                       />
                     ) : (
-                      <div className="w-8 h-8 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
                         {message.sender === 'bot' ? (
-                          <Bot className="w-4 h-4 text-orange-600 dark:text-orange-400" />
+                          <Bot className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                         ) : (
                           <User className="w-4 h-4 text-gray-700 dark:text-gray-300" />
                         )}
@@ -192,7 +192,7 @@ const Chat: React.FC<ChatProps> = ({
                 flex-1 px-4 py-2 rounded-lg
                 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600
                 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400
-                focus:outline-none focus:ring-2 focus:ring-orange-500
+                focus:outline-none focus:ring-2 focus:ring-emerald-500
               "
             />
             <button
@@ -200,7 +200,7 @@ const Chat: React.FC<ChatProps> = ({
               disabled={!inputValue.trim()}
               className="
                 px-4 py-2 rounded-lg
-                bg-orange-600 hover:bg-orange-700 dark:bg-orange-600 dark:hover:bg-orange-700
+                bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-700
                 text-white font-medium
                 disabled:opacity-50 disabled:cursor-not-allowed
                 transition-colors

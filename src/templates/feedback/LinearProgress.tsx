@@ -44,10 +44,10 @@ const LinearProgress: React.FC<LinearProgressProps> = ({
   } as const;
 
   const colorClasses = {
-    primary: 'bg-orange-600 dark:bg-orange-500',
+    primary: 'bg-emerald-600 dark:bg-emerald-500',
     secondary: 'bg-gray-500 dark:bg-gray-500',
     success: 'bg-green-600 dark:bg-green-500',
-    warning: 'bg-amber-600 dark:bg-amber-500',
+    warning: 'bg-teal-600 dark:bg-teal-500',
     error: 'bg-red-600 dark:bg-red-500',
   } as const;
 

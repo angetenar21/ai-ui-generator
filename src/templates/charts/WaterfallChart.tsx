@@ -278,7 +278,7 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
               >
                 {chartData.map((entry, index) => {
                   const fill = entry.isTotal
-                    ? '#F97316' // Orange for totals
+                    ? '#10B981' // Emerald for totals
                     : entry.positive
                       ? '#10B981' // Green for increases
                       : '#EF4444'; // Red for decreases
@@ -300,7 +300,7 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
               <span className="text-gray-700 dark:text-gray-300 font-medium">Decrease</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-orange-600 rounded" />
+              <div className="w-4 h-4 bg-emerald-600 rounded" />
               <span className="text-gray-700 dark:text-gray-300 font-medium">Total</span>
             </div>
           </div>

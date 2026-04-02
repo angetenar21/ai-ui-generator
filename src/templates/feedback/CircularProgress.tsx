@@ -39,10 +39,10 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
   };
 
   const colorClasses = {
-    primary: 'text-orange-600 dark:text-orange-500',
+    primary: 'text-emerald-600 dark:text-emerald-500',
     secondary: 'text-gray-500 dark:text-gray-500',
     success: 'text-green-600 dark:text-green-500',
-    warning: 'text-amber-600 dark:text-amber-500',
+    warning: 'text-teal-600 dark:text-teal-500',
     error: 'text-red-600 dark:text-red-500',
   };
 

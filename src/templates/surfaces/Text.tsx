@@ -50,7 +50,7 @@ const Text: React.FC<TextProps> = ({
     primary: 'text-gray-900 dark:text-gray-100',
     secondary: 'text-gray-600 dark:text-gray-400',
     muted: 'text-gray-500 dark:text-gray-500',
-    accent: 'text-orange-500 dark:text-orange-400',
+    accent: 'text-emerald-500 dark:text-emerald-400',
   };
 
   const alignClasses = {
@@ -94,8 +94,8 @@ const Text: React.FC<TextProps> = ({
               ul: ({ children }) => <ul className="list-disc list-inside mb-3 space-y-1">{children}</ul>,
               ol: ({ children }) => <ol className="list-decimal list-inside mb-3 space-y-1">{children}</ol>,
               li: ({ children }) => <li className="leading-relaxed">{children}</li>,
-              blockquote: ({ children }) => <blockquote className="border-l-4 border-orange-500 pl-4 italic my-3">{children}</blockquote>,
-              a: ({ href, children }) => <a href={href} className="text-orange-500 hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300 underline" target="_blank" rel="noopener noreferrer">{children}</a>,
+              blockquote: ({ children }) => <blockquote className="border-l-4 border-emerald-500 pl-4 italic my-3">{children}</blockquote>,
+              a: ({ href, children }) => <a href={href} className="text-emerald-500 hover:text-emerald-600 dark:text-emerald-400 dark:hover:text-emerald-300 underline" target="_blank" rel="noopener noreferrer">{children}</a>,
             }}
           >
             {resolvedContent}

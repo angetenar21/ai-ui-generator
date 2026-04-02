@@ -337,7 +337,7 @@ const ChatPage: React.FC = () => {
     { icon: LayoutDashboard, label: 'Dashboard', prompt: 'Create a modern analytics dashboard with KPIs and charts', gradient: 'from-violet-500 to-purple-600 dark:from-violet-600 dark:to-purple-700' },
     { icon: FormInput,       label: 'Form',      prompt: 'Create a user registration form',                         gradient: 'from-emerald-500 to-teal-600 dark:from-emerald-600 dark:to-teal-700' },
     { icon: BarChart3,       label: 'Chart',     prompt: 'Create a sales performance chart',                        gradient: 'from-cyan-500 to-blue-600 dark:from-cyan-600 dark:to-blue-700' },
-    { icon: PanelTop,        label: 'Card',      prompt: 'Create a product showcase card',                          gradient: 'from-orange-500 to-rose-600 dark:from-orange-600 dark:to-rose-700' },
+    { icon: PanelTop,        label: 'Card',      prompt: 'Create a product showcase card',                          gradient: 'from-emerald-500 to-rose-600 dark:from-emerald-600 dark:to-rose-700' },
     { icon: Grid,            label: 'Layout',    prompt: 'Create a responsive grid layout',                         gradient: 'from-pink-500 to-fuchsia-600 dark:from-pink-600 dark:to-fuchsia-700' },
   ];
 

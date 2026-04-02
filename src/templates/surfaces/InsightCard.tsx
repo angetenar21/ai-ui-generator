@@ -61,7 +61,7 @@ const InsightCard: React.FC<InsightCardProps> = ({
     neutral: {
       bgClass: 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700',
       textClass: 'text-gray-900 dark:text-gray-100',
-      iconClass: 'text-orange-500 dark:text-orange-400',
+      iconClass: 'text-emerald-500 dark:text-emerald-400',
       Icon: Info,
     },
   };

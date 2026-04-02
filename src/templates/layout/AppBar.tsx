@@ -59,7 +59,7 @@ const AppBar: React.FC<AppBarProps> = ({
   };
 
   const variantClasses = {
-    default: 'bg-gray-50 dark:bg-gray-700 border-b border-orange-600',
+    default: 'bg-gray-50 dark:bg-gray-700 border-b border-emerald-600',
     elevated: 'bg-gray-50 dark:bg-gray-700 shadow-lg',
     transparent: 'bg-transparent',
   };

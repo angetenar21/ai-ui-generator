@@ -62,7 +62,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
 }) => {
   const safeItems = Array.isArray(items) ? items : [];
 
-  // Only the 'accent' surface variant has a dark/vivid orange background.
+  // Only the 'accent' surface variant has a dark/vivid emerald background.
   // Tone variants (success, error, etc.) use light pastel backgrounds — they need dark text.
   // If a tone is present, it overrides the variant's background, so we must ensure text is dark.
   // UPDATE: Accent is now a "Neon Glow" bordered style, so it also needs dark text in light mode.
@@ -124,17 +124,24 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
           >
             {/* Subtle left accent bar for vertical/horizontal layouts */}
             {layout !== 'grid' && (
-              <div className="absolute left-0 top-3 bottom-3 w-0.5 bg-gradient-to-b from-orange-400/60 to-orange-200/20 rounded-full" />
+              <div className="absolute left-0 top-3 bottom-3 w-0.5 bg-gradient-to-b from-emerald-400/60 to-teal-300/20 rounded-full" />
             )}
             <div className={`flex items-start justify-between ${layout !== 'grid' ? 'pl-3' : ''}`}>
               <div className="flex-1 min-w-0">
                 <div className={`text-[10px] uppercase tracking-widest font-semibold mb-1.5 ${isDarkSurface ? 'text-white/50' : 'text-gray-400 dark:text-gray-500'}`}>
                   <span className="truncate block">{safeStr(item.label)}</span>
                 </div>
-                <div className={`text-3xl font-black tracking-tight leading-none mb-1 transition-colors ${isDarkSurface
-                  ? 'text-white'
-                  : 'text-gray-900 dark:text-white group-hover:text-orange-500'
-                  }`}>
+                <div className={`font-black tracking-tight leading-none mb-1 transition-colors break-words min-w-0 ${
+                  isDarkSurface
+                    ? 'text-white'
+                    : 'text-gray-900 dark:text-white group-hover:text-emerald-500'
+                  } ${
+                  // Semantic sizing: If the value looks like a KPI metric (mostly numbers/symbols like $1.2M, +12%, 1,400)
+                  // make it large (3xl). If it's normal text (Role, URL, Name), make it readable (base/lg).
+                  /^[\d.,$€£%+\-\sKkMmBb]+$/.test(String(safeStr(item.value)))
+                    ? 'text-3xl' 
+                    : 'text-base sm:text-lg !font-bold leading-tight'
+                }`}>
                   {safeStr(item.value)}
                 </div>
                 {item.subtext && (

@@ -141,7 +141,7 @@ const OTPInput: React.FC<OTPInputProps> = ({
               ${error ? 'border-red-500' : 'border-gray-600 focus:border-blue-500'}
               text-center font-mono font-bold text-white bg-transparent
               border-2 rounded-lg
-              focus:outline-none focus:ring-2 focus:ring-orange-500/50
+              focus:outline-none focus:ring-2 focus:ring-emerald-500/50
               disabled:opacity-50 disabled:cursor-not-allowed
               transition-all duration-200
             `.trim().replace(/\s+/g, ' ')}

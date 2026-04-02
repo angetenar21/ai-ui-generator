@@ -46,13 +46,13 @@ interface PolarChartProps {
 
 // Color palette - semantic colors that work well in both light and dark modes
 const COLOR_PALETTE = [
-  '#F97316', // Orange
+  '#10B981', // Emerald
   '#10B981', // Emerald
   '#3B82F6', // Blue
   '#8B5CF6', // Violet
   '#EC4899', // Pink
   '#06B6D4', // Cyan
-  '#F59E0B', // Amber
+  '#F59E0B', // Teal
   '#14B8A6', // Teal
   '#6366F1', // Indigo
   '#D946EF', // Fuchsia

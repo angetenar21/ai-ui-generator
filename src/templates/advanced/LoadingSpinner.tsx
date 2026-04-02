@@ -40,11 +40,11 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   };
 
   const colorClasses = {
-    primary: 'text-orange-600 dark:text-orange-400',
+    primary: 'text-emerald-600 dark:text-emerald-400',
     secondary: 'text-gray-600 dark:text-gray-300',
     accent: 'text-teal-500 dark:text-teal-400',
     success: 'text-green-600 dark:text-green-400',
-    warning: 'text-amber-600 dark:text-amber-400',
+    warning: 'text-teal-600 dark:text-teal-400',
     error: 'text-red-600 dark:text-red-400',
   };
 

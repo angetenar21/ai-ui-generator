@@ -121,7 +121,7 @@ const JsxHighlight: React.FC<{ code: string }> = ({ code }) => {
     .replace(/(\/&gt;)/g, '<span class="text-blue-400">$1</span>')
     // standalone booleans / numbers inside {}
     .replace(/\{(true|false|\d[\d.]*)?\}/g, (m) =>
-      `<span class="text-orange-500">${m}</span>`);
+      `<span class="text-emerald-500">${m}</span>`);
 
   return (
     <code
@@ -137,7 +137,7 @@ const JsonHighlight: React.FC<{ json: string }> = ({ json }) => {
   const highlighted = json.replace(
     /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?|[{}[\],:])/g,
     (match) => {
-      let cls = 'text-orange-600'; // number
+      let cls = 'text-emerald-600'; // number
       if (/^"/.test(match)) {
         cls = /:$/.test(match) ? 'text-violet-600 font-medium' : 'text-emerald-700';
       } else if (/true|false/.test(match)) {

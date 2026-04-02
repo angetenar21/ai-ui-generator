@@ -130,7 +130,7 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
   gaugeValue = Math.max(valueMin, Math.min(valueMax, gaugeValue));
 
   // Determine gauge color based on levels, colorStops, or prop
-  let gaugeColor = propColor || '#F97316';
+  let gaugeColor = propColor || '#10B981';
 
   // Check levels first (new format)
   if (levels && levels.length > 0) {

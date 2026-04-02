@@ -15,6 +15,7 @@ const INTENT_KEYWORDS = {
   chart: ['chart', 'graph', 'line chart', 'bar chart', 'pie chart', 'area chart', 'histogram', 'trend', 'visualization', 'plot'],
   table: ['table', 'data table', 'grid', 'list', 'records', 'rows', 'columns', 'spreadsheet', 'inventory', 'catalogue'],
   modal: ['modal', 'dialog', 'popup', 'confirmation', 'alert dialog', 'drawer', 'overlay'],
+  team: ['team', 'member', 'people', 'our team', 'about us', 'staff', 'employee', 'profile card', 'bio', 'person card'],
   landing: ['landing', 'hero', 'homepage', 'marketing', 'product page', 'feature', 'pricing', 'cta', 'call to action'],
 };
 
@@ -22,10 +23,11 @@ const INTENT_KEYWORDS = {
 // Used by component-scoped retrieval to pre-load relevant schemas
 export const INTENT_COMPONENTS = {
   form: ['text-field', 'textarea', 'button', 'panel', 'select', 'checkbox', 'switch', 'stack', 'grid', 'callout'],
-  dashboard: ['panel', 'stat-card', 'summary-card', 'bar-chart', 'line-chart', 'data-table', 'grid', 'stack', 'badge'],
-  chart: ['line-chart', 'bar-chart', 'area-chart', 'pie-chart', 'time-series-chart', 'panel', 'grid', 'stat-card'],
-  table: ['data-table', 'panel', 'grid', 'badge', 'chip', 'stat-card', 'select', 'stack'],
+  dashboard: ['panel', 'summary-card', 'bar-chart', 'line-chart', 'data-table', 'grid', 'stack', 'badge'],
+  chart: ['line-chart', 'bar-chart', 'area-chart', 'pie-chart', 'time-series-chart', 'panel', 'grid', 'summary-card'],
+  table: ['data-table', 'panel', 'grid', 'badge', 'chip', 'summary-card', 'select', 'stack'],
   modal: ['modal', 'button', 'text', 'stack', 'callout', 'badge'],
+  team: ['summary-card', 'grid', 'stack', 'avatar', 'text', 'badge', 'panel'],
   landing: ['panel', 'grid', 'stack', 'text', 'button', 'image', 'summary-card', 'badge'],
 };
 
@@ -160,10 +162,10 @@ const FEW_SHOT_EXAMPLES = {
           "columns": { "xs": 1, "sm": 2, "md": 4 },
           "gap": "medium",
           "children": [
-            { "name": "stat-card", "templateProps": { "label": "Total Revenue", "value": "$128,450", "trend": "+12%", "variant": "accent", "elevation": "floating" } },
-            { "name": "stat-card", "templateProps": { "label": "Active Orders", "value": "1,284", "trend": "+5%", "variant": "elevated", "elevation": "raised" } },
-            { "name": "stat-card", "templateProps": { "label": "Avg. Order", "value": "$99.80", "trend": "-2%", "variant": "elevated", "elevation": "raised" } },
-            { "name": "stat-card", "templateProps": { "label": "Conversion", "value": "3.4%", "trend": "+0.6%", "variant": "elevated", "elevation": "raised" } }
+            { "name": "summary-card", "templateProps": { "title": "Total Revenue", "items": [{ "label": "Amount", "value": "$128,450", "change": "+12%", "changeType": "positive" }], "variant": "accent", "elevation": "floating" } },
+            { "name": "summary-card", "templateProps": { "title": "Active Orders", "items": [{ "label": "Orders", "value": "1,284", "change": "+5%", "changeType": "positive" }], "variant": "elevated", "elevation": "raised" } },
+            { "name": "summary-card", "templateProps": { "title": "Avg. Order", "items": [{ "label": "Value", "value": "$99.80", "change": "-2%", "changeType": "negative" }], "variant": "elevated", "elevation": "raised" } },
+            { "name": "summary-card", "templateProps": { "title": "Conversion", "items": [{ "label": "Rate", "value": "3.4%", "change": "+0.6%", "changeType": "positive" }], "variant": "elevated", "elevation": "raised" } }
           ]
         }
       },
@@ -249,9 +251,9 @@ const FEW_SHOT_EXAMPLES = {
           "columns": { "xs": 1, "sm": 3 },
           "gap": "medium",
           "children": [
-            { "name": "stat-card", "templateProps": { "label": "Total Users", "value": "2,481", "variant": "accent", "elevation": "floating" } },
-            { "name": "stat-card", "templateProps": { "label": "Active", "value": "2,104", "variant": "elevated", "elevation": "raised" } },
-            { "name": "stat-card", "templateProps": { "label": "Admins", "value": "12", "variant": "elevated", "elevation": "raised" } }
+            { "name": "summary-card", "templateProps": { "title": "Total Users", "items": [{ "label": "Count", "value": "2,481" }], "variant": "accent", "elevation": "floating" } },
+            { "name": "summary-card", "templateProps": { "title": "Active", "items": [{ "label": "Users", "value": "2,104" }], "variant": "elevated", "elevation": "raised" } },
+            { "name": "summary-card", "templateProps": { "title": "Admins", "items": [{ "label": "Users", "value": "12" }], "variant": "elevated", "elevation": "raised" } }
           ]
         }
       },
@@ -266,6 +268,107 @@ const FEW_SHOT_EXAMPLES = {
             ["Alice Johnson", "alice@example.com", "Admin", { "type": "badge", "label": "Active", "color": "green" }],
             ["Bob Smith", "bob@example.com", "Editor", { "type": "badge", "label": "Active", "color": "green" }],
             ["Carol White", "carol@example.com", "Viewer", { "type": "badge", "label": "Inactive", "color": "gray" }]
+          ]
+        }
+      }
+    ]
+  }
+}`,
+  },
+
+  // ── TEAM MEMBERS ─────────────────────────────────────────────────────────────
+  team: {
+    userPrompt: 'Create team member cards showing name, role, bio, and social links for 4 team members.',
+    idealOutput: `{
+  "name": "stack",
+  "templateProps": {
+    "spacing": "large",
+    "children": [
+      {
+        "name": "panel",
+        "templateProps": {
+          "title": "Meet Our Team",
+          "variant": "gradient",
+          "elevation": "floating",
+          "emphasis": "high",
+          "children": [
+            {
+              "name": "text",
+              "templateProps": {
+                "variant": "body",
+                "content": "The talented people behind our product.",
+                "align": "center"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "grid",
+        "templateProps": {
+          "columns": { "xs": 1, "sm": 2, "md": 2, "lg": 4 },
+          "gap": "medium",
+          "children": [
+            {
+              "name": "summary-card",
+              "templateProps": {
+                "title": "Jane Doe",
+                "description": "CEO — 20 years in tech. Drives strategic direction and innovation across the company.",
+                "variant": "elevated",
+                "elevation": "raised",
+                "emphasis": "medium",
+                "items": [
+                  { "label": "Role", "value": "Chief Executive Officer" },
+                  { "label": "LinkedIn", "value": "linkedin.com/in/janedoe" },
+                  { "label": "Twitter", "value": "@janedoe" }
+                ]
+              }
+            },
+            {
+              "name": "summary-card",
+              "templateProps": {
+                "title": "John Smith",
+                "description": "CTO — Architect of our scalable platform. Leads engineering with a passion for robust systems.",
+                "variant": "accent",
+                "elevation": "raised",
+                "emphasis": "medium",
+                "items": [
+                  { "label": "Role", "value": "Chief Technology Officer" },
+                  { "label": "GitHub", "value": "github.com/johnsmith" },
+                  { "label": "Twitter", "value": "@johnsmith" }
+                ]
+              }
+            },
+            {
+              "name": "summary-card",
+              "templateProps": {
+                "title": "Emily White",
+                "description": "VP of Product — Bridges user needs and technical execution. Dedicated to intuitive products.",
+                "variant": "elevated",
+                "elevation": "raised",
+                "emphasis": "medium",
+                "items": [
+                  { "label": "Role", "value": "VP of Product" },
+                  { "label": "LinkedIn", "value": "linkedin.com/in/emilywhite" },
+                  { "label": "Dribbble", "value": "dribbble.com/emilywhite" }
+                ]
+              }
+            },
+            {
+              "name": "summary-card",
+              "templateProps": {
+                "title": "Michael Brown",
+                "description": "Lead Designer — Creative vision shaping our brand through beautiful, functional design.",
+                "variant": "gradient",
+                "elevation": "floating",
+                "emphasis": "high",
+                "items": [
+                  { "label": "Role", "value": "Lead Designer" },
+                  { "label": "Portfolio", "value": "michaelbrown.design" },
+                  { "label": "Twitter", "value": "@mbrown" }
+                ]
+              }
+            }
           ]
         }
       }

@@ -77,7 +77,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const variantClasses = {
     default: 'bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800',
     elevated: 'bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 shadow-xl',
-    bordered: 'bg-white dark:bg-gray-900 border-r-2 border-orange-600',
+    bordered: 'bg-white dark:bg-gray-900 border-r-2 border-emerald-600',
   };
 
   const positionClasses = {
@@ -107,7 +107,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         <button
           onClick={() => hasChildren && toggleExpanded(index)}
           className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 ${item.active
-            ? 'bg-orange-600 text-white shadow-sm font-medium'
+            ? 'bg-emerald-600 text-white shadow-sm font-medium'
             : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white'
             } ${depth > 0 ? 'pl-8' : ''}`}
         >

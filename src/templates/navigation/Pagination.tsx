@@ -70,17 +70,17 @@ const Pagination: React.FC<PaginationProps> = ({
   const variantClasses = {
     default: {
       button: 'px-3 py-2 border border-gray-300 dark:border-gray-700',
-      active: 'bg-orange-600 text-white border-orange-600',
+      active: 'bg-emerald-600 text-white border-emerald-600',
       inactive: 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700',
     },
     outlined: {
       button: 'px-3 py-2 border-2',
-      active: 'border-orange-600 text-white bg-orange-600',
-      inactive: 'border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-orange-300',
+      active: 'border-emerald-600 text-white bg-emerald-600',
+      inactive: 'border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-emerald-300',
     },
     rounded: {
       button: 'px-3 py-2 rounded-full border border-gray-300 dark:border-gray-700',
-      active: 'bg-orange-600 text-white border-orange-600',
+      active: 'bg-emerald-600 text-white border-emerald-600',
       inactive: 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700',
     },
   };

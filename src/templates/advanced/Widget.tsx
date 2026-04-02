@@ -62,7 +62,7 @@ const Widget: React.FC<WidgetProps> = ({
   const variantClasses = {
     default: 'card border border-gray-200 dark:border-gray-700',
     compact: 'bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700',
-    highlighted: 'bg-gradient-to-br from-orange-100 dark:from-orange-900/20 to-teal-100 dark:to-teal-900/20 border border-orange-300 dark:border-orange-700',
+    highlighted: 'bg-gradient-to-br from-emerald-100 dark:from-emerald-900/20 to-teal-100 dark:to-teal-900/20 border border-emerald-300 dark:border-emerald-700',
   };
 
   const variantPadding = {

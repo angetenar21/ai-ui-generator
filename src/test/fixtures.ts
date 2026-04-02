@@ -124,7 +124,7 @@ export const testFixtures = {
         series: [{
           data: [245, 189, 156, 298, 345, 445, 320, 278],
           label: 'Bytes (millions)',
-          color: '#F97316',
+          color: '#10B981',
           curve: 'natural',
           showMark: true,
           area: false
@@ -145,7 +145,7 @@ export const testFixtures = {
           {
             data: [45, 52, 48, 65, 58, 47],
             label: 'API Gateway',
-            color: '#F97316',
+            color: '#10B981',
             curve: 'natural'
           },
           {
@@ -188,7 +188,7 @@ export const testFixtures = {
         series: [{
           data: [1250, 890, 456, 234],
           label: 'Requests',
-          color: '#F97316'
+          color: '#10B981'
         }],
         layout: 'vertical',
         width: 600,
@@ -205,7 +205,7 @@ export const testFixtures = {
         description: 'Top 5 IP addresses by request volume',
         series: [{
           data: [
-            { id: 1, value: 35, label: '10.0.0.1', color: '#F97316' },
+            { id: 1, value: 35, label: '10.0.0.1', color: '#10B981' },
             { id: 2, value: 28, label: '10.0.0.2', color: '#10B981' },
             { id: 3, value: 22, label: '10.0.0.3', color: '#3B82F6' },
             { id: 4, value: 10, label: '10.0.0.4', color: '#8B5CF6' },
@@ -229,7 +229,7 @@ export const testFixtures = {
             name: 'Request Volume',
             type: 'bar',
             data: [450, 320, 510, 680, 590, 420],
-            color: '#F97316'
+            color: '#10B981'
           },
           {
             name: 'Avg Latency (ms)',
@@ -339,7 +339,7 @@ export const testFixtures = {
               series: [{
                 data: [45, 52, 48, 65, 58],
                 label: 'Latency (ms)',
-                color: '#F97316'
+                color: '#10B981'
               }]
             }
           }

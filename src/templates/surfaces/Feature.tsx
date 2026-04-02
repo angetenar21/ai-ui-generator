@@ -56,7 +56,7 @@ const Feature: React.FC<FeatureProps> = ({
   };
 
   const iconColorClasses = {
-    primary: 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400',
+    primary: 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400',
     cyan: 'bg-teal-100 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400',
     purple: 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400',
     pink: 'bg-pink-100 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400',
@@ -98,7 +98,7 @@ const Feature: React.FC<FeatureProps> = ({
           {link && (
             <a
               href={link}
-              className="text-orange-500 hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300 text-sm font-medium inline-flex items-center gap-1 transition-colors"
+              className="text-emerald-500 hover:text-emerald-600 dark:text-emerald-400 dark:hover:text-emerald-300 text-sm font-medium inline-flex items-center gap-1 transition-colors"
             >
               {linkText}
               <span className="group-hover:translate-x-1 transition-transform">→</span>

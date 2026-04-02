@@ -103,7 +103,7 @@ export const createTestData = {
       series: [{
         data: [10, 20, 15, 30, 25],
         label: 'Test Series',
-        color: '#F97316'
+        color: '#10B981'
       }],
       width: 600,
       height: 300

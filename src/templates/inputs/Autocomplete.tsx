@@ -177,7 +177,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
             ${fullWidth ? 'w-full' : 'w-full'}
             pr-10
             rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500
-            focus:outline-none focus:ring-2 focus:ring-orange-500/50
+            focus:outline-none focus:ring-2 focus:ring-emerald-500/50
             disabled:opacity-50 disabled:cursor-not-allowed
             transition-all duration-200
           `.trim().replace(/\s+/g, ' ')}
@@ -195,7 +195,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
                 onClick={() => handleOptionClick(option)}
                 className={`
                   px-4 py-2 cursor-pointer transition-colors
-                  ${highlightedIndex === index ? 'bg-orange-500 text-white' : 'text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}
+                  ${highlightedIndex === index ? 'bg-emerald-500 text-white' : 'text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}
                 `.trim().replace(/\s+/g, ' ')}
               >
                 {option.label}

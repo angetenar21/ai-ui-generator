@@ -46,7 +46,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
   const displayValue = value !== undefined ? value : internalValue;
 
   const defaultPresets = [
-    '#ef4444', '#f97316', '#f59e0b', '#eab308', '#84cc16',
+    '#ef4444', '#10B981', '#f59e0b', '#eab308', '#84cc16',
     '#22c55e', '#10b981', '#14b8a6', '#06b6d4', '#0ea5e9',
     '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', '#d946ef',
     '#ec4899', '#f43f5e', '#64748b', '#000000', '#ffffff',
@@ -127,7 +127,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
                 ${variantClasses[variant]}
                 ${fullWidth ? 'w-full' : 'w-full'}
                 rounded-lg text-white placeholder-gray-400 font-mono uppercase
-                focus:outline-none focus:ring-2 focus:ring-orange-500/50
+                focus:outline-none focus:ring-2 focus:ring-emerald-500/50
                 disabled:opacity-50 disabled:cursor-not-allowed
                 transition-all duration-200
               `.trim().replace(/\s+/g, ' ')}
@@ -148,7 +148,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
                 ${displayValue.toLowerCase() === color.toLowerCase() ? 'border-white' : 'border-gray-600'}
                 hover:scale-110 transition-transform duration-150
                 disabled:opacity-50 disabled:cursor-not-allowed
-                focus:outline-none focus:ring-2 focus:ring-orange-500/50
+                focus:outline-none focus:ring-2 focus:ring-emerald-500/50
               `.trim().replace(/\s+/g, ' ')}
               style={{ backgroundColor: color }}
               title={color}

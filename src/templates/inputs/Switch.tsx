@@ -76,7 +76,7 @@ const Switch: React.FC<SwitchProps> = ({
             ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
             relative inline-flex items-center rounded-full
             transition-colors duration-200 ease-in-out
-            focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:ring-offset-2 focus:ring-offset-gray-900
+            focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 focus:ring-offset-gray-900
           `.trim().replace(/\s+/g, ' ')}
         >
           <span

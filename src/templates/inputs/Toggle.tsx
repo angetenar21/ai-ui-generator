@@ -78,7 +78,7 @@ const Toggle: React.FC<ToggleProps> = ({
   // Variant colors
   const variantClasses = {
     default: 'bg-gray-200 dark:bg-gray-700',
-    primary: 'bg-orange-600 dark:bg-orange-500',
+    primary: 'bg-emerald-600 dark:bg-emerald-500',
     success: 'bg-green-600 dark:bg-green-500',
     danger: 'bg-red-600 dark:bg-red-500',
   };
@@ -99,7 +99,7 @@ const Toggle: React.FC<ToggleProps> = ({
           ${activeClass}
           relative inline-flex shrink-0 cursor-pointer rounded-full border-2 border-transparent
           transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 
-          focus:ring-orange-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900
+          focus:ring-emerald-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900
           ${disabled ? 'cursor-not-allowed' : ''}
         `}
       >

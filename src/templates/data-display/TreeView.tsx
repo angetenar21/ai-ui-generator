@@ -184,7 +184,7 @@ const TreeView: React.FC<TreeViewProps> = ({
                 type="checkbox"
                 checked={isSelected}
                 onChange={() => handleNodeClick(node)}
-                className="w-4 h-4 rounded border-gray-600 text-blue-600 focus:ring-orange-500"
+                className="w-4 h-4 rounded border-gray-600 text-blue-600 focus:ring-emerald-500"
               />
             )}
 

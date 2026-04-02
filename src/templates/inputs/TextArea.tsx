@@ -101,7 +101,7 @@ const TextArea: React.FC<TextAreaProps> = ({
           ${variantClasses[variant]}
           ${fullWidth ? 'w-full' : 'w-full'}
           rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500
-          focus:outline-none focus:ring-2 focus:ring-orange-500/50
+          focus:outline-none focus:ring-2 focus:ring-emerald-500/50
           disabled:opacity-50 disabled:cursor-not-allowed
           transition-all duration-200
           ${autoResize ? 'resize-none' : 'resize-vertical'}

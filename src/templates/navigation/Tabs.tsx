@@ -51,19 +51,19 @@ const Tabs: React.FC<TabsProps> = ({
     default: {
       container: 'border-b border-gray-200 dark:border-gray-700',
       tab: 'px-4 py-2 border-b-2 transition-colors',
-      active: 'border-orange-600 text-orange-600 dark:text-orange-400',
+      active: 'border-emerald-600 text-emerald-600 dark:text-emerald-400',
       inactive: 'border-transparent text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300',
     },
     pills: {
       container: 'bg-gray-100 dark:bg-gray-800/50 rounded-lg p-1',
       tab: 'px-4 py-2 rounded-md transition-colors',
-      active: 'bg-orange-600 text-white',
+      active: 'bg-emerald-600 text-white',
       inactive: 'text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700/50',
     },
     underline: {
       container: 'gap-4',
       tab: 'px-2 py-2 border-b-2 transition-colors',
-      active: 'border-orange-600 text-orange-600 dark:text-orange-400',
+      active: 'border-emerald-600 text-emerald-600 dark:text-emerald-400',
       inactive: 'border-transparent text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300',
     },
   };

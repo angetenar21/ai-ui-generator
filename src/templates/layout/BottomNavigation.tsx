@@ -47,12 +47,12 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
   );
 
   const variantClasses = {
-    default: 'bg-gray-50 dark:bg-gray-700 border-t border-orange-600',
+    default: 'bg-gray-50 dark:bg-gray-700 border-t border-emerald-600',
     elevated: 'bg-gray-50 dark:bg-gray-700 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]',
   };
 
   const activeColorClasses = {
-    primary: 'text-orange-600',
+    primary: 'text-emerald-600',
     accent: 'text-accent-from',
     secondary: 'text-gray-900 dark:text-white',
   };
