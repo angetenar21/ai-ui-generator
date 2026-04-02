@@ -25,24 +25,20 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
-          cache-dependency-path: ai-ui-generator/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
-        working-directory: ai-ui-generator
         run: npm ci
 
       - name: Run ESLint
-        working-directory: ai-ui-generator
         run: npm run lint
 
       - name: Run tests
-        working-directory: ai-ui-generator
         run: npm run test:run
 
       - name: Build frontend (verify it compiles)
-        working-directory: ai-ui-generator
         run: npm run build
         env:
           VITE_API_BASE_URL: http://localhost:4000
