@@ -28,16 +28,20 @@ export function resolveProps(props: Record<string, any>, data: Record<string, an
  * Recursively scavenges explicit .data blocks and unrecognized Object/Array props 
  * (AI hallucinations) from the entire component tree to hoist them into global memory.
  */
-export function extractAllDataScopes(node: any): Record<string, any> {
+export function extractAllDataScopes(node: any, visited = new WeakSet()): Record<string, any> {
   const mergedData: Record<string, any> = {};
 
   if (!node || typeof node !== 'object' || node === null) return mergedData;
   if ('$$typeof' in node) return mergedData; // Skip React elements
 
+  // Cycle guard — prevents stack overflows on circular structures
+  if (visited.has(node)) return mergedData;
+  visited.add(node);
+
   // 1. Array handling: merge results from all items
   if (Array.isArray(node)) {
     for (const item of node) {
-      Object.assign(mergedData, extractAllDataScopes(item));
+      Object.assign(mergedData, extractAllDataScopes(item, visited));
     }
     return mergedData;
   }
@@ -78,7 +82,7 @@ export function extractAllDataScopes(node: any): Record<string, any> {
     if (value && typeof value === 'object' && !('$$typeof' in value)) {
       // Small optimization: don't recurse into things we've already hoisted as flat values, 
       // unless they are structural containers like children/templateProps.
-      Object.assign(mergedData, extractAllDataScopes(value));
+      Object.assign(mergedData, extractAllDataScopes(value, visited));
     }
   }
 

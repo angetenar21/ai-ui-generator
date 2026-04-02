@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { RenderNode } from '../core/renderer';
 
 interface Tab {
   label: string;
@@ -97,7 +98,11 @@ const Tabs: React.FC<TabsProps> = ({
           <div className={`${isVertical ? 'flex-1' : ''} mt-4 text-gray-700 dark:text-gray-300`}>
             {typeof activeContent === 'string'
               ? activeContent
-              : (renderChild ? renderChild(activeContent) : null)}
+              : renderChild
+                ? renderChild(activeContent)
+                : (activeContent && typeof activeContent === 'object' && !('$$typeof' in activeContent)
+                  ? <RenderNode spec={activeContent} />
+                  : activeContent)}
           </div>
         )}
       </div>

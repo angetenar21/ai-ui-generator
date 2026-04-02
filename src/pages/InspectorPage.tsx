@@ -8,6 +8,47 @@ import type { ComponentSpec } from '../templates/core/types';
 type ViewMode = 'split' | 'code' | 'preview';
 type CodeTab = 'jsx' | 'json';
 
+// ─── Code Pane Error Boundary ──────────────────────────────────────────────
+
+class CodePaneErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean; message: string }
+> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false, message: '' };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, message: error?.message ?? 'Unknown error' };
+  }
+
+  componentDidUpdate(prevProps: { children: React.ReactNode }) {
+    // Reset when content changes so switching tabs / components clears the error
+    if (prevProps.children !== this.props.children && this.state.hasError) {
+      this.setState({ hasError: false, message: '' });
+    }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex flex-col items-center justify-center h-full p-8 text-center gap-3">
+          <p className="text-sm font-semibold text-red-600">Failed to render code view</p>
+          <p className="text-xs text-text-muted font-mono">{this.state.message}</p>
+          <button
+            onClick={() => this.setState({ hasError: false, message: '' })}
+            className="px-3 py-1.5 text-xs rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 // ─── Helpers ───────────────────────────────────────────────────────────────
 
 const toPascalCase = (s: string) =>
@@ -15,34 +56,49 @@ const toPascalCase = (s: string) =>
 
 /** Convert a ComponentSpec tree into readable JSX code string */
 const specToJSX = (spec: ComponentSpec, indent = 0): string => {
-  const pad = '  '.repeat(indent);
-  const inner = '  '.repeat(indent + 1);
-  const compName = toPascalCase(spec.name || spec.type || 'Component');
-  const props = (spec as any).templateProps || (spec as any).props || {};
-  const { children: propsChildren, ...restProps } = props;
-  const rawChildren: ComponentSpec[] = propsChildren || (spec as any).children || [];
+  // Guard against null/non-object specs (e.g. string children from AI)
+  if (!spec || typeof spec !== 'object') return `${'  '.repeat(indent)}{/* ${String(spec)} */}`;
 
-  const propLines = Object.entries(restProps)
-    .filter(([, v]) => v !== undefined && v !== null)
-    .map(([k, v]) => {
-      if (typeof v === 'string') return `${inner}${k}="${v}"`;
-      if (typeof v === 'boolean') return v ? `${inner}${k}` : `${inner}${k}={false}`;
-      return `${inner}${k}={${JSON.stringify(v)}}`;
-    });
+  try {
+    const pad = '  '.repeat(indent);
+    const inner = '  '.repeat(indent + 1);
+    const compName = toPascalCase((spec as any).name || (spec as any).type || 'Component');
+    const props = (spec as any).templateProps || (spec as any).props || {};
+    const { children: propsChildren, ...restProps } = typeof props === 'object' ? props : {};
+    const rawChildren: any[] = Array.isArray(propsChildren)
+      ? propsChildren
+      : Array.isArray((spec as any).children)
+        ? (spec as any).children
+        : [];
 
-  const openTag = propLines.length
-    ? `${pad}<${compName}\n${propLines.join('\n')}\n${pad}`
-    : `${pad}<${compName}`;
+    const propLines = Object.entries(restProps)
+      .filter(([, v]) => v !== undefined && v !== null)
+      .map(([k, v]) => {
+        try {
+          if (typeof v === 'string') return `${inner}${k}="${v}"`;
+          if (typeof v === 'boolean') return v ? `${inner}${k}` : `${inner}${k}={false}`;
+          return `${inner}${k}={${JSON.stringify(v)}}`;
+        } catch {
+          return `${inner}${k}={/* unserializable */}`;
+        }
+      });
 
-  if (!rawChildren.length) {
-    return `${openTag} />`;
+    const openTag = propLines.length
+      ? `${pad}<${compName}\n${propLines.join('\n')}\n${pad}`
+      : `${pad}<${compName}`;
+
+    if (!rawChildren.length) {
+      return `${openTag} />`;
+    }
+
+    const childrenJSX = rawChildren
+      .map((child: any) => specToJSX(child, indent + 1))
+      .join('\n');
+
+    return `${openTag}>\n${childrenJSX}\n${pad}</${compName}>`;
+  } catch {
+    return `${'  '.repeat(indent)}{/* render error */}`;
   }
-
-  const childrenJSX = rawChildren
-    .map((child: ComponentSpec) => specToJSX(child, indent + 1))
-    .join('\n');
-
-  return `${openTag}>\n${childrenJSX}\n${pad}</${compName}>`;
 };
 
 /** Syntax-highlight JSX (basic tokeniser) */
@@ -82,7 +138,7 @@ const JsonHighlight: React.FC<{ json: string }> = ({ json }) => {
     /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?|[{}[\],:])/g,
     (match) => {
       let cls = 'text-orange-600'; // number
-      if (/^"/. test(match)) {
+      if (/^"/.test(match)) {
         cls = /:$/.test(match) ? 'text-violet-600 font-medium' : 'text-emerald-700';
       } else if (/true|false/.test(match)) {
         cls = 'text-blue-600';
@@ -412,59 +468,61 @@ const InspectorPage: React.FC = () => {
                       setTimeout(() => setCopied(false), 2000);
                     };
                     return (
-                      <div
-                        className={[
-                          'rounded-card overflow-auto border border-border-subtle bg-bg-sub flex flex-col',
-                          viewMode === 'split' ? 'basis-1/2' : 'flex-1',
-                        ].join(' ')}
-                      >
-                        {/* Toolbar */}
-                        <div className="sticky top-0 z-10 flex items-center justify-between px-4 py-2 bg-bg-card border-b border-border-subtle">
-                          {/* Tab toggle: JSX / JSON */}
-                          <div className="flex items-center gap-1 bg-bg-sub rounded-lg px-0.5 py-0.5">
-                            <button
-                              onClick={() => setCodeTab('jsx')}
-                              className={[
-                                'inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all',
-                                codeTab === 'jsx'
-                                  ? 'bg-white text-cyan-600 shadow-sm border border-border-subtle'
-                                  : 'text-text-muted hover:text-text-secondary',
-                              ].join(' ')}
-                            >
-                              <Code2 className="w-3 h-3" />
-                              JSX
-                            </button>
-                            <button
-                              onClick={() => setCodeTab('json')}
-                              className={[
-                                'inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all',
-                                codeTab === 'json'
-                                  ? 'bg-white text-cyan-600 shadow-sm border border-border-subtle'
-                                  : 'text-text-muted hover:text-text-secondary',
-                              ].join(' ')}
-                            >
-                              <Braces className="w-3 h-3" />
-                              JSON
-                            </button>
+                      <CodePaneErrorBoundary>
+                        <div
+                          className={[
+                            'rounded-card overflow-auto border border-border-subtle bg-bg-sub flex flex-col',
+                            viewMode === 'split' ? 'basis-1/2' : 'flex-1',
+                          ].join(' ')}
+                        >
+                          {/* Toolbar */}
+                          <div className="sticky top-0 z-10 flex items-center justify-between px-4 py-2 bg-bg-card border-b border-border-subtle">
+                            {/* Tab toggle: JSX / JSON */}
+                            <div className="flex items-center gap-1 bg-bg-sub rounded-lg px-0.5 py-0.5">
+                              <button
+                                onClick={() => setCodeTab('jsx')}
+                                className={[
+                                  'inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all',
+                                  codeTab === 'jsx'
+                                    ? 'bg-white text-cyan-600 shadow-sm border border-border-subtle'
+                                    : 'text-text-muted hover:text-text-secondary',
+                                ].join(' ')}
+                              >
+                                <Code2 className="w-3 h-3" />
+                                JSX
+                              </button>
+                              <button
+                                onClick={() => setCodeTab('json')}
+                                className={[
+                                  'inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all',
+                                  codeTab === 'json'
+                                    ? 'bg-white text-cyan-600 shadow-sm border border-border-subtle'
+                                    : 'text-text-muted hover:text-text-secondary',
+                                ].join(' ')}
+                              >
+                                <Braces className="w-3 h-3" />
+                                JSON
+                              </button>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <span className="text-[11px] text-text-muted font-mono">{lineCount} lines</span>
+                              <button
+                                onClick={copyContent}
+                                className="text-[11px] text-text-secondary hover:text-text-primary transition-colors flex items-center gap-1"
+                              >
+                                {copied ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}
+                                {copied ? 'Copied' : 'Copy'}
+                              </button>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-3">
-                            <span className="text-[11px] text-text-muted font-mono">{lineCount} lines</span>
-                            <button
-                              onClick={copyContent}
-                              className="text-[11px] text-text-secondary hover:text-text-primary transition-colors flex items-center gap-1"
-                            >
-                              {copied ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}
-                              {copied ? 'Copied' : 'Copy'}
-                            </button>
-                          </div>
+                          {/* Code body */}
+                          <pre className="p-4 overflow-x-auto flex-1">
+                            {codeTab === 'jsx'
+                              ? <JsxHighlight code={jsxCode} />
+                              : <JsonHighlight json={jsonString} />}
+                          </pre>
                         </div>
-                        {/* Code body */}
-                        <pre className="p-4 overflow-x-auto flex-1">
-                          {codeTab === 'jsx'
-                            ? <JsxHighlight code={jsxCode} />
-                            : <JsonHighlight json={jsonString} />}
-                        </pre>
-                      </div>
+                      </CodePaneErrorBoundary>
                     );
                   })()}
 

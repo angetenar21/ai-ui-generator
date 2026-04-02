@@ -154,6 +154,13 @@ export class ComponentRenderer extends React.Component<
     return { hasError: true, error };
   }
 
+  componentDidUpdate(prevProps: { spec: ComponentSpec }) {
+    // Reset error boundary whenever the component spec changes
+    if (prevProps.spec !== this.props.spec && this.state.hasError) {
+      this.setState({ hasError: false, error: undefined });
+    }
+  }
+
   render() {
     if (this.state.hasError) {
       return (

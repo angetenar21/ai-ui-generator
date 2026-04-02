@@ -62,6 +62,9 @@ const extractComponentSpecs = (value: unknown, depth = 0): ComponentSpec[] => {
 const TesterPage: React.FC = () => {
   const [rawInput, setRawInput] = useState('');
   const [components, setComponents] = useState<ComponentSpec[]>([]);
+  // Stable render keys assigned at parse-time so React always mounts a fresh
+  // ComponentRenderer (and its error boundary) whenever specs are re-parsed.
+  const [renderKeys, setRenderKeys] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [lastParseAt, setLastParseAt] = useState<number | null>(null);
 
@@ -75,6 +78,7 @@ const TesterPage: React.FC = () => {
         const specs = extractComponentSpecs(storedValue);
         if (specs.length > 0) {
           setComponents(specs);
+          setRenderKeys(specs.map((_, i) => `stored-${Date.now()}-${i}`));
         }
       } catch {
         // ignore stored parse failures
@@ -103,6 +107,8 @@ const TesterPage: React.FC = () => {
       }
 
       setComponents(specs);
+      // Generate fresh unique keys so React discards any stale error boundaries
+      setRenderKeys(specs.map((_, i) => `parse-${Date.now()}-${i}`));
       setLastParseAt(Date.now());
 
       if (typeof window !== 'undefined') {
@@ -117,6 +123,7 @@ const TesterPage: React.FC = () => {
   const handleClear = () => {
     setRawInput('');
     setComponents([]);
+    setRenderKeys([]);
     setError(null);
     setLastParseAt(null);
     if (typeof window !== 'undefined') {
@@ -265,7 +272,7 @@ const TesterPage: React.FC = () => {
             <div className="flex-1 overflow-y-auto pr-1">
               <div className="space-y-8">
                 {components.map((spec, index) => (
-                  <div key={spec.metadata?.componentId ?? `${spec.name ?? spec.type}-${index}`} className="rounded-2xl bg-white/70 p-4 border border-gray-100 shadow-sm">
+                  <div key={renderKeys[index] ?? `${spec.name ?? spec.type}-${index}`} className="rounded-2xl bg-white/70 p-4 border border-gray-100 shadow-sm">
                     <ResponsiveComponentWrapper><ComponentRenderer spec={spec} /></ResponsiveComponentWrapper>
                   </div>
                 ))}
