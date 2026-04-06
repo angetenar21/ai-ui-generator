@@ -1,5 +1,7 @@
 import React from 'react';
 import { ResponsiveContainer, AreaChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Area } from 'recharts';
+import { getSurfaceClasses } from '@/theme/designTokens';
+import type { SurfaceVariant, ElevationLevel } from '../core/types';
 
 interface StackedAreaChartProps {
   title?: string;
@@ -12,6 +14,9 @@ interface StackedAreaChartProps {
   renderChild?: (child: any) => React.ReactNode;
 }>;
   series?: Array<{ dataKey: string; name?: string; color?: string; stackId?: string }>;
+
+  variant?: SurfaceVariant;
+  elevation?: ElevationLevel;
 }
 
 // Color palette for stacked areas
@@ -34,7 +39,9 @@ const StackedAreaChart: React.FC<StackedAreaChartProps> = ({
   data,
   height = 400,
   xAxis,
-  series
+  series,
+  variant = 'default',
+  elevation = 'raised',
 }) => {
   const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
   const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
@@ -68,7 +75,7 @@ const StackedAreaChart: React.FC<StackedAreaChartProps> = ({
   // Validate data
   if (!data || data.length === 0 || !detectedSeries || detectedSeries.length === 0) {
     return (
-      <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6">
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>}
         {description && <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{description}</p>}
         <div className="flex items-center justify-center h-64 text-gray-400 dark:text-gray-500">
@@ -79,7 +86,7 @@ const StackedAreaChart: React.FC<StackedAreaChartProps> = ({
   }
 
   return (
-    <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6">
+    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
       {(title || description) && (
         <div className="mb-4">
           {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{title}</h3>}
@@ -87,7 +94,7 @@ const StackedAreaChart: React.FC<StackedAreaChartProps> = ({
         </div>
       )}
       <ResponsiveContainer width="100%" height={height}>
-        <AreaChart data={data} margin={{ top: 20, right: 30, bottom: 20, left: 20 }}>
+        <AreaChart data={data} margin={{ top: 20, right: 30, bottom: 20, left: 60 }}>
           <defs>
             {detectedSeries.map((s, index) => {
               const color = s.color || COLOR_PALETTE[index % COLOR_PALETTE.length];

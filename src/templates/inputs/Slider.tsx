@@ -80,17 +80,17 @@ const Slider: React.FC<SliderProps> = ({
   //   large: 'h-3',
   // };
 
-  const thumbSizeClasses = {
-    small: 'w-3 h-3',
-    medium: 'w-4 h-4',
-    large: 'w-5 h-5',
+  const thumbSizeCss = {
+    small: '12px',
+    medium: '16px',
+    large: '24px',
   };
 
   return (
     <div className="my-4 max-w-md">
       {label && (
         <div className="flex justify-between items-center mb-2">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100">
             {label}
             {required && <span className="text-red-600 dark:text-red-400 ml-1">*</span>}
           </label>
@@ -122,29 +122,32 @@ const Slider: React.FC<SliderProps> = ({
           <style>{`
             input[type="range"]::-webkit-slider-thumb {
               appearance: none;
-              width: ${thumbSizeClasses[size].split(' ')[0].replace('w-', '')}rem;
-              height: ${thumbSizeClasses[size].split(' ')[1].replace('h-', '')}rem;
+              width: ${thumbSizeCss[size]};
+              height: ${thumbSizeCss[size]};
               background: white;
               border-radius: 50%;
               cursor: pointer;
-              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-              transition: all 0.2s;
+              border: 2px solid ${getColorValue(color)};
+              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+              transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             }
             input[type="range"]::-webkit-slider-thumb:hover {
-              box-shadow: 0 0 0 8px rgba(59, 130, 246, 0.1);
+              box-shadow: 0 0 0 4px ${getColorValue(color)}33;
+              transform: scale(1.1);
             }
             input[type="range"]::-moz-range-thumb {
-              width: ${thumbSizeClasses[size].split(' ')[0].replace('w-', '')}rem;
-              height: ${thumbSizeClasses[size].split(' ')[1].replace('h-', '')}rem;
+              width: ${thumbSizeCss[size]};
+              height: ${thumbSizeCss[size]};
               background: white;
               border-radius: 50%;
               cursor: pointer;
-              border: none;
-              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-              transition: all 0.2s;
+              border: 2px solid ${getColorValue(color)};
+              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+              transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             }
             input[type="range"]::-moz-range-thumb:hover {
-              box-shadow: 0 0 0 8px rgba(59, 130, 246, 0.1);
+              box-shadow: 0 0 0 4px ${getColorValue(color)}33;
+              transform: scale(1.1);
             }
           `}</style>
         </div>

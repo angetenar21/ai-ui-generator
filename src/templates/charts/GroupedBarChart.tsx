@@ -1,5 +1,7 @@
 import React from 'react';
 import { ResponsiveContainer, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar } from 'recharts';
+import { getSurfaceClasses } from '@/theme/designTokens';
+import type { SurfaceVariant, ElevationLevel } from '../core/types';
 
 interface GroupedBarChartProps {
   title?: string;
@@ -10,9 +12,15 @@ interface GroupedBarChartProps {
 
   children?: React.ReactNode;
   renderChild?: (child: any) => React.ReactNode;
+
+  variant?: SurfaceVariant;
+  elevation?: ElevationLevel;
 }
 
-const GroupedBarChart: React.FC<GroupedBarChartProps> = ({ title, description, data, height = 400 }) => {
+const GroupedBarChart: React.FC<GroupedBarChartProps> = ({ title, description, data, height = 400,
+  variant = 'default',
+  elevation = 'raised',
+}) => {
   const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
   const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
   const textColor = isDarkMode ? '#E5E7EB' : '#374151';
@@ -21,7 +29,7 @@ const GroupedBarChart: React.FC<GroupedBarChartProps> = ({ title, description, d
   const tooltipText = isDarkMode ? '#E5E7EB' : '#111827';
 
   return (
-    <div className="card border hover:shadow-hover transition-all duration-300 rounded-card p-6">
+    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
       {(title || description) && (
         <div className="mb-6">
           {title && (
@@ -37,7 +45,7 @@ const GroupedBarChart: React.FC<GroupedBarChartProps> = ({ title, description, d
         </div>
       )}
       <ResponsiveContainer width="100%" height={height}>
-        <BarChart data={data} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+        <BarChart data={data} margin={{ top: 20, right: 20, bottom: 20, left: 60 }}>
           <CartesianGrid strokeDasharray="4 4" stroke={gridColor} opacity={0.8} />
           <XAxis tick={{ fill: textColor, fontSize: 13, fontWeight: 500 }} />
           <YAxis tick={{ fill: textColor, fontSize: 13, fontWeight: 500 }} />
@@ -59,7 +67,7 @@ const GroupedBarChart: React.FC<GroupedBarChartProps> = ({ title, description, d
               </span>
             )}
           />
-          <Bar dataKey="value" fill="#10B981" />
+          <Bar dataKey="value" fill="#10B981" radius={[6, 6, 0, 0]} maxBarSize={60} />
         </BarChart>
       </ResponsiveContainer>
     </div>

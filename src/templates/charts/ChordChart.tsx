@@ -1,4 +1,6 @@
 import React from 'react';
+import { getSurfaceClasses } from '@/theme/designTokens';
+import type { SurfaceVariant, ElevationLevel } from '../core/types';
 
 interface ChordChartProps {
   /** Chart title */
@@ -23,6 +25,9 @@ interface ChordChartProps {
 
   /** Chart height */
   height?: number;
+
+  variant?: SurfaceVariant;
+  elevation?: ElevationLevel;
 }
 
 const ChordChart: React.FC<ChordChartProps> = ({
@@ -32,11 +37,13 @@ const ChordChart: React.FC<ChordChartProps> = ({
   matrix,
   width: _width,
   height: _height,
+  variant = 'default',
+  elevation = 'raised',
 }) => {
   // Validate
   if (!nodes || !Array.isArray(nodes) || nodes.length === 0) {
     return (
-      <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6">
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>}
         <div className="text-center text-gray-400">
           <p className="text-sm">No nodes data for chord chart</p>
@@ -47,7 +54,7 @@ const ChordChart: React.FC<ChordChartProps> = ({
 
   if (!matrix || !Array.isArray(matrix) || matrix.length === 0) {
     return (
-      <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6">
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>}
         <div className="text-center text-gray-400">
           <p className="text-sm">No matrix data for chord chart</p>
@@ -67,7 +74,7 @@ const ChordChart: React.FC<ChordChartProps> = ({
   const maxValue = Math.max(...matrix.flat());
 
   return (
-    <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6">
+    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
       {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 text-center">{title}</h3>}
       {description && (
         <p className="text-sm text-gray-400 mb-4 text-center">{description}</p>

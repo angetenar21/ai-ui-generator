@@ -1,5 +1,7 @@
 import React from 'react';
 import { ResponsiveContainer, ComposedChart, XAxis, YAxis, CartesianGrid, Tooltip, Bar, Line, Legend } from 'recharts';
+import { getSurfaceClasses } from '@/theme/designTokens';
+import type { SurfaceVariant, ElevationLevel } from '../core/types';
 
 interface BoxPlotChartProps {
   /** Chart title */
@@ -26,6 +28,9 @@ interface BoxPlotChartProps {
 
   /** Chart height */
   height?: number;
+
+  variant?: SurfaceVariant;
+  elevation?: ElevationLevel;
 }
 
 const BoxPlotChart: React.FC<BoxPlotChartProps> = ({
@@ -35,11 +40,13 @@ const BoxPlotChart: React.FC<BoxPlotChartProps> = ({
   series,
   width: _width,
   height = 400,
+  variant = 'default',
+  elevation = 'raised',
 }) => {
   // Validate
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
-      <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6">
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>}
         <div className="text-center text-gray-400">
           <p className="text-sm">No series data for box plot</p>
@@ -79,7 +86,7 @@ const BoxPlotChart: React.FC<BoxPlotChartProps> = ({
   });
 
   return (
-    <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6">
+    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
       {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 text-center">{title}</h3>}
       {description && (
         <p className="text-sm text-gray-400 mb-4 text-center">{description}</p>
@@ -95,7 +102,7 @@ const BoxPlotChart: React.FC<BoxPlotChartProps> = ({
 
         return (
           <ResponsiveContainer width="100%" height={height}>
-            <ComposedChart data={chartData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+            <ComposedChart data={chartData} margin={{ top: 20, right: 20, bottom: 20, left: 60 }}>
               <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
               <XAxis dataKey="name" tick={{ fill: textColor }} />
               <YAxis tick={{ fill: textColor }} />

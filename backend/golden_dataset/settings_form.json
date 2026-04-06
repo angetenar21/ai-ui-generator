@@ -1,0 +1,147 @@
+{
+  "name": "grid",
+  "templateProps": {
+    "columns": { "xs": 1, "lg": 4 },
+    "gap": "large",
+    "children": [
+      {
+        "name": "panel",
+        "templateProps": {
+          "variant": "elevated",
+          "elevation": "flat",
+          "headerVariant": "minimal",
+          "className": "col-span-1 border-r border-transparent lg:border-gray-200 dark:lg:border-gray-800",
+          "children": [
+            {
+              "name": "stack",
+              "templateProps": {
+                "direction": "vertical",
+                "spacing": "small",
+                "children": [
+                  { "name": "button", "templateProps": { "label": "Profile Details", "variant": "secondary", "icon": "home", "fullWidth": true, "iconPosition": "left" } },
+                  { "name": "button", "templateProps": { "label": "Account Security", "variant": "ghost", "icon": "settings", "fullWidth": true, "iconPosition": "left" } },
+                  { "name": "button", "templateProps": { "label": "Billing Plans", "variant": "ghost", "icon": "check", "fullWidth": true, "iconPosition": "left" } },
+                  { "name": "button", "templateProps": { "label": "Notifications", "variant": "ghost", "icon": "menu", "fullWidth": true, "iconPosition": "left" } }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "stack",
+        "templateProps": {
+          "direction": "vertical",
+          "spacing": "large",
+          "className": "lg:col-span-3",
+          "children": [
+            {
+              "name": "panel",
+              "templateProps": {
+                "title": "Public Profile",
+                "variant": "default",
+                "elevation": "raised",
+                "emphasis": "high",
+                "children": [
+                  {
+                    "name": "stack",
+                    "templateProps": {
+                      "direction": "vertical",
+                      "spacing": "large",
+                      "children": [
+                        {
+                          "name": "flexbox",
+                          "templateProps": {
+                            "align": "center",
+                            "gap": "large",
+                            "children": [
+                              {
+                                "name": "avatar",
+                                "templateProps": {
+                                  "src": "https://i.pravatar.cc/150?u=5",
+                                  "size": "xl"
+                                }
+                              },
+                              {
+                                "name": "stack",
+                                "templateProps": {
+                                  "direction": "vertical",
+                                  "spacing": "small",
+                                  "children": [
+                                    { "name": "button", "templateProps": { "label": "Upload new picture", "variant": "outline", "size": "small" } },
+                                    { "name": "text", "templateProps": { "content": "Supported formats: JPG, PNG. Max size: 5MB.", "variant": "caption" } }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "name": "grid",
+                          "templateProps": {
+                            "columns": { "xs": 1, "sm": 2 },
+                            "gap": "medium",
+                            "children": [
+                              { "name": "text-field", "templateProps": { "label": "First Name", "name": "firstName", "defaultValue": "Manish" } },
+                              { "name": "text-field", "templateProps": { "label": "Last Name", "name": "lastName", "defaultValue": "Yadav" } }
+                            ]
+                          }
+                        },
+                        {
+                          "name": "text-field",
+                          "templateProps": { "label": "Email Address", "name": "email", "type": "email", "defaultValue": "manish@example.com" }
+                        },
+                        {
+                          "name": "textarea",
+                          "templateProps": { "label": "Bio", "name": "bio", "rows": 4, "placeholder": "Tell the community a little bit about yourself..." }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "panel",
+              "templateProps": {
+                "title": "Preferences",
+                "variant": "default",
+                "elevation": "raised",
+                "children": [
+                  {
+                    "name": "stack",
+                    "templateProps": {
+                      "direction": "vertical",
+                      "spacing": "medium",
+                      "children": [
+                        {
+                          "name": "switch",
+                          "templateProps": { "label": "Public Profile", "name": "isPublic", "defaultChecked": true }
+                        },
+                        {
+                          "name": "switch",
+                          "templateProps": { "label": "Receive marketing emails", "name": "marketingEmails", "defaultChecked": false }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "flexbox",
+              "templateProps": {
+                "justify": "end",
+                "gap": "medium",
+                "children": [
+                  { "name": "button", "templateProps": { "label": "Cancel", "variant": "ghost" } },
+                  { "name": "button", "templateProps": { "label": "Save Changes", "variant": "primary", "icon": "check" } }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

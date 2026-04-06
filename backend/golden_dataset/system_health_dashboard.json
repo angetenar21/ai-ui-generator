@@ -1,0 +1,88 @@
+{
+  "name": "stack",
+  "templateProps": {
+    "spacing": "large",
+    "children": [
+      {
+        "name": "grid",
+        "templateProps": {
+          "columns": { "xs": 1, "sm": 2, "lg": 4 },
+          "gap": "medium",
+          "children": [
+            {
+              "name": "summary-card",
+              "templateProps": { "title": "Total Requests", "variant": "gradient", "icon": "activity", "items": [{ "label": "Last 24h", "value": "1.2M", "trend": "up", "trendValue": "12%" }] }
+            },
+            {
+              "name": "summary-card",
+              "templateProps": { "title": "Avg Latency", "variant": "outline", "icon": "clock", "items": [{ "label": "p95", "value": "45ms", "trend": "down", "trendValue": "5ms" }] }
+            },
+            {
+              "name": "summary-card",
+              "templateProps": { "title": "Error Rate", "variant": "outline", "icon": "alert-triangle", "items": [{ "label": "Overall", "value": "0.02%", "trend": "up", "trendValue": "0.01%" }] }
+            },
+            {
+              "name": "summary-card",
+              "templateProps": { "title": "Uptime", "variant": "outline", "icon": "check-circle", "items": [{ "label": "30 Days", "value": "99.98%" }] }
+            }
+          ]
+        }
+      },
+      {
+        "name": "grid",
+        "templateProps": {
+          "columns": { "xs": 1, "lg": 2 },
+          "gap": "large",
+          "children": [
+            {
+              "name": "line-chart",
+              "templateProps": {
+                "title": "Traffic Over Time",
+                "data": [
+                  {"name": "00:00", "Requests": 400},
+                  {"name": "04:00", "Requests": 300},
+                  {"name": "08:00", "Requests": 800},
+                  {"name": "12:00", "Requests": 1200},
+                  {"name": "16:00", "Requests": 1500},
+                  {"name": "20:00", "Requests": 900}
+                ],
+                "series": [{"key": "Requests", "color": "#3b82f6"}],
+                "xAxisKey": "name",
+                "showGrid": true
+              }
+            },
+            {
+              "name": "donut-chart",
+              "templateProps": {
+                "title": "Error Types",
+                "data": [
+                  {"name": "404 Not Found", "value": 450},
+                  {"name": "500 Internal", "value": 300},
+                  {"name": "502 Gateway", "value": 150},
+                  {"name": "401 Auth", "value": 100}
+                ],
+                 "dataKey": "value",
+                 "nameKey": "name"
+              }
+            }
+          ]
+        }
+      },
+      {
+         "name": "data-grid",
+         "templateProps": {
+            "columns": [
+              { "field": "service", "headerName": "Service", "sortable": true },
+              { "field": "status", "headerName": "Status", "sortable": true },
+              { "field": "latency", "headerName": "Latency (ms)", "sortable": true }
+            ],
+            "rows": [
+              { "id": 1, "service": "API Gateway", "status": "Healthy", "latency": 45 },
+              { "id": 2, "service": "Auth Server", "status": "Healthy", "latency": 120 },
+              { "id": 3, "service": "Database", "status": "Warning", "latency": 350 }
+            ]
+         }
+      }
+    ]
+  }
+}

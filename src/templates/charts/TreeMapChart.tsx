@@ -1,5 +1,7 @@
 import React from 'react';
 import { Treemap, ResponsiveContainer, Tooltip } from 'recharts';
+import { getSurfaceClasses } from '@/theme/designTokens';
+import type { SurfaceVariant, ElevationLevel } from '../core/types';
 
 interface TreeMapChartProps {
   /** Chart title */
@@ -38,6 +40,9 @@ interface TreeMapChartProps {
 
   /** Show labels */
   showLabels?: boolean;
+
+  variant?: SurfaceVariant;
+  elevation?: ElevationLevel;
 }
 
 const COLORS = [
@@ -57,6 +62,8 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
   height = 400,
   colors = COLORS,
   showLabels = true,
+  variant = 'default',
+  elevation = 'raised',
 }) => {
 
   // Detect dark mode
@@ -91,7 +98,7 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
   // Don't render if no data
   if (!chartData || chartData.length === 0) {
     return (
-      <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6">
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && (
           <h3 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-4">
             {title}
@@ -156,7 +163,7 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
   };
 
   return (
-    <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6">
+    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
       {title && (
         <h3 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-4">
           {title}

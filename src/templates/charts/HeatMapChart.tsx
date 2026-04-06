@@ -40,6 +40,7 @@ interface HeatMapChartProps {
 
   /** Chart height */
   height?: number;
+
 }
 
 const HeatMapChart: React.FC<HeatMapChartProps> = ({
@@ -160,7 +161,7 @@ const HeatMapChart: React.FC<HeatMapChartProps> = ({
   const showValueText = cellWidth >= 36;
 
   return (
-    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden">
+    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl min-w-0 overflow-x-auto">
       {(title || description) && (
         <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-800">
           {title && <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{title}</h3>}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import DynamicIcon from '../core/Icon';
 
 interface AlertProps {
@@ -25,7 +25,9 @@ const Alert: React.FC<AlertProps> = ({
   closable = false,
   onClose,
 }) => {
+  const [dismissed, setDismissed] = useState(false);
   const content = message || description || 'Alert message';
+  if (dismissed) return null;
 
   const severityConfig = {
     info: {
@@ -68,7 +70,7 @@ const Alert: React.FC<AlertProps> = ({
   };
 
   return (
-    <div className={`rounded-xl p-4 my-4 flex items-start gap-4 ${variantClasses[variant]} animate-fade-in transition-all duration-200`}>
+    <div className={`rounded-xl p-4 my-2 flex items-start gap-4 ${variantClasses[variant]} transition-all duration-200`}>
       {displayIcon && (
         <div className={`flex-shrink-0 w-6 h-6 flex items-center justify-center mt-0.5 ${variant === 'filled' ? 'text-white' : config.text}`}>
           <DynamicIcon name={displayIcon} size={20} />
@@ -84,7 +86,7 @@ const Alert: React.FC<AlertProps> = ({
 
       {closable && (
         <button
-          onClick={onClose}
+          onClick={() => { setDismissed(true); if (onClose) onClose(); }}
           className={`flex-shrink-0 p-1 -mt-1 -mr-1 rounded-lg flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/10 transition-colors ${variant === 'filled' ? 'text-white/80 hover:text-white' : 'opacity-70 hover:opacity-100'}`}
           aria-label="Close alert"
         >

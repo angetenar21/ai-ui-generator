@@ -10,10 +10,12 @@ interface NotificationProps {
   type?: 'info' | 'success' | 'warning' | 'error';
   severity?: 'info' | 'success' | 'warning' | 'error';
   icon?: string;
-  position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+  position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'inline';
   duration?: number;
   autoHide?: boolean;
   closable?: boolean;
+  priority?: 'low' | 'normal' | 'high';
+  audience?: string;
   onClose?: () => void;
   action?: {
     label: string; onClick?: () => void
@@ -31,7 +33,6 @@ const Notification: React.FC<NotificationProps> = ({
   type,
   severity,
   icon,
-  position = 'top-right',
   duration = 0,
   autoHide = false,
   closable = true,
@@ -61,59 +62,71 @@ const Notification: React.FC<NotificationProps> = ({
   const typeConfig = {
     info: {
       icon: icon || 'info',
-      container: 'border border-blue-200/50 dark:border-blue-500/20 bg-white/95 dark:bg-gray-900/95',
-      chip: 'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400',
+      container: 'border border-blue-200/60 dark:border-blue-500/30 bg-blue-50/80 dark:bg-blue-900/20',
+      chip: 'bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400',
+      badge: 'bg-blue-600 text-white',
       text: 'text-gray-900 dark:text-white',
+      label: 'INFO',
     },
     success: {
       icon: icon || 'check-circle',
-      container: 'border border-green-200/50 dark:border-green-500/20 bg-white/95 dark:bg-gray-900/95',
-      chip: 'bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400',
+      container: 'border border-green-200/60 dark:border-green-500/30 bg-green-50/80 dark:bg-green-900/20',
+      chip: 'bg-green-100 dark:bg-green-500/20 text-green-600 dark:text-green-400',
+      badge: 'bg-green-600 text-white',
       text: 'text-gray-900 dark:text-white',
+      label: 'SUCCESS',
     },
     warning: {
       icon: icon || 'alert-triangle',
-      container: 'border border-teal-200/50 dark:border-teal-500/20 bg-white/95 dark:bg-gray-900/95',
-      chip: 'bg-teal-50 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400',
+      container: 'border border-amber-200/60 dark:border-amber-500/30 bg-amber-50/80 dark:bg-amber-900/20',
+      chip: 'bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400',
+      badge: 'bg-amber-500 text-white',
       text: 'text-gray-900 dark:text-white',
+      label: 'WARNING',
     },
     error: {
       icon: icon || 'x-circle',
-      container: 'border border-red-200/50 dark:border-red-500/20 bg-white/95 dark:bg-gray-900/95',
-      chip: 'bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400',
+      container: 'border border-red-200/60 dark:border-red-500/30 bg-red-50/80 dark:bg-red-900/20',
+      chip: 'bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400',
+      badge: 'bg-red-600 text-white',
       text: 'text-gray-900 dark:text-white',
+      label: 'ERROR',
     },
-  };
-
-  const positionClasses = {
-    'top-left': 'top-4 left-4',
-    'top-right': 'top-4 right-4',
-    'bottom-left': 'bottom-4 left-4',
-    'bottom-right': 'bottom-4 right-4',
   };
 
   const config = typeConfig[notificationType];
 
+  // Always render inline for preview-safe display
+  // (fixed positioning escapes the preview iframe/container, causing off-screen renders)
   return (
-    <div className={`fixed ${positionClasses[position]} z-[10000] pointer-events-none w-full sm:w-auto p-4`}>
-      <div className={`backdrop-blur-xl ${config.container} rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.4)] overflow-hidden w-full sm:w-[380px] pointer-events-auto animate-slide-in-right`}>
+    <div className="w-full my-2">
+      <div
+        className={`backdrop-blur-sm ${config.container} rounded-2xl shadow-md overflow-hidden w-full transition-all duration-300 ease-out`}
+        style={{ animation: 'slideDown 0.3s ease-out' }}
+      >
+        {/* Top accent bar */}
+        <div className={`h-1 w-full ${config.badge}`} />
+
         <div className="p-4 sm:p-5">
           <div className="flex items-start gap-4">
             <div className={`flex-shrink-0 w-10 h-10 rounded-full ${config.chip} flex items-center justify-center mt-0.5`}>
               <DynamicIcon name={config.icon} size={20} />
             </div>
             <div className="flex-1 min-w-0 pt-0.5">
-              {title && (
-                <h4 className={`text-sm font-semibold tracking-tight ${config.text} mb-1`}>{title}</h4>
-              )}
-              <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{displayMessage}</p>
+              <div className="flex items-center gap-2 mb-1">
+                {title && (
+                  <h4 className={`text-sm font-semibold tracking-tight ${config.text}`}>{title}</h4>
+                )}
+                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${config.badge} uppercase tracking-wider`}>{config.label}</span>
+              </div>
+              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{displayMessage}</p>
               {action && (
                 <button
                   onClick={() => {
                     if (action.onClick) action.onClick();
                     handleClose();
                   }}
-                  className="mt-3 text-sm font-medium text-gray-900 dark:text-white hover:opacity-80 transition-opacity"
+                  className="mt-3 text-sm font-medium text-gray-900 dark:text-white hover:opacity-80 transition-opacity underline underline-offset-2"
                 >
                   {action.label}
                 </button>

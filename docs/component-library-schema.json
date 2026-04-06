@@ -3,7 +3,7 @@
   "title": "AI UI Generator Component Library",
   "description": "Complete schema for all available components in the AI UI Generator",
   "version": "1.0.0",
-  "lastUpdated": "2026-01-25",
+  "lastUpdated": "2026-04-06",
   "categories": {
     "charts": {
       "name": "charts",
@@ -214,7 +214,7 @@
           "type": "string",
           "description": "X-axis data points",
           "required": false,
-          "tsType": "Array<{ data: (number | string | Date)[]; label?: string; scaleType?: 'band' | 'linear' | 'log' | 'time'; }>"
+          "tsType": "Array<{ data: (number | string | Date)[]; label?: string; scaleType?: 'band' | 'linear' | 'log' | 'time'; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>"
         },
         "series": {
           "type": "string",
@@ -263,6 +263,18 @@
           "description": "Margin around chart",
           "required": false,
           "tsType": "{ top?: number; right?: number; bottom?: number; left?: number; }"
+        },
+        "variant": {
+          "type": "SurfaceVariant",
+          "description": "",
+          "required": false,
+          "tsType": "SurfaceVariant"
+        },
+        "elevation": {
+          "type": "ElevationLevel",
+          "description": "",
+          "required": false,
+          "tsType": "ElevationLevel"
         }
       },
       "interfaces": {
@@ -278,7 +290,7 @@
             "optional": true
           },
           "xAxis": {
-            "type": "Array<{ data: (number | string | Date)[]; label?: string; scaleType?: 'band' | 'linear' | 'log' | 'time'; }>",
+            "type": "Array<{ data: (number | string | Date)[]; label?: string; scaleType?: 'band' | 'linear' | 'log' | 'time'; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>",
             "description": "X-axis data points",
             "optional": true
           },
@@ -321,6 +333,14 @@
             "type": "{ top?: number; right?: number; bottom?: number; left?: number; }",
             "description": "Margin around chart",
             "optional": true
+          },
+          "variant": {
+            "type": "SurfaceVariant",
+            "optional": true
+          },
+          "elevation": {
+            "type": "ElevationLevel",
+            "optional": true
           }
         }
       }
@@ -355,7 +375,7 @@
           "type": "string",
           "description": "X-axis data (categories)",
           "required": false,
-          "tsType": "Array<{ data: (number | string)[]; label?: string; scaleType?: 'band' | 'linear'; }>"
+          "tsType": "Array<{ data: (number | string)[]; label?: string; scaleType?: 'band' | 'linear'; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>"
         },
         "series": {
           "type": "string",
@@ -440,6 +460,18 @@
           "description": "Use gradient fills",
           "required": false,
           "tsType": "boolean"
+        },
+        "scaleType": {
+          "type": "'linear' | 'log' | 'sqrt'",
+          "description": "Scale type for the value axis (linear, log, sqrt)",
+          "required": false,
+          "tsType": "'linear' | 'log' | 'sqrt'"
+        },
+        "className": {
+          "type": "string",
+          "description": "Optional CSS class names",
+          "required": false,
+          "tsType": "string"
         }
       },
       "interfaces": {
@@ -455,7 +487,7 @@
             "optional": true
           },
           "xAxis": {
-            "type": "Array<{ data: (number | string)[]; label?: string; scaleType?: 'band' | 'linear'; }>",
+            "type": "Array<{ data: (number | string)[]; label?: string; scaleType?: 'band' | 'linear'; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>",
             "description": "X-axis data (categories)",
             "optional": true
           },
@@ -528,6 +560,16 @@
             "type": "boolean",
             "description": "Use gradient fills",
             "optional": true
+          },
+          "scaleType": {
+            "type": "'linear' | 'log' | 'sqrt'",
+            "description": "Scale type for the value axis (linear, log, sqrt)",
+            "optional": true
+          },
+          "className": {
+            "type": "string",
+            "description": "Optional CSS class names",
+            "optional": true
           }
         }
       }
@@ -566,7 +608,7 @@
           "type": "string",
           "description": "Series data with box plot statistics",
           "required": true,
-          "tsType": "Array<{ name: string; data: Array<[ number, number, number, number, number ]>; // [min, q1, median, q3, max] type?: string; }>"
+          "tsType": "Array<{ name: string; data: Array<[ number, number, number, number, number ]>; // [min, q1, median, q3, max] type?: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>"
         },
         "width": {
           "type": "number",
@@ -579,6 +621,18 @@
           "description": "Chart height",
           "required": false,
           "tsType": "number"
+        },
+        "variant": {
+          "type": "SurfaceVariant",
+          "description": "",
+          "required": false,
+          "tsType": "SurfaceVariant"
+        },
+        "elevation": {
+          "type": "ElevationLevel",
+          "description": "",
+          "required": false,
+          "tsType": "ElevationLevel"
         }
       },
       "interfaces": {
@@ -599,7 +653,7 @@
             "optional": true
           },
           "series": {
-            "type": "Array<{ name: string; data: Array<[ number, number, number, number, number ]>; // [min, q1, median, q3, max] type?: string; }>",
+            "type": "Array<{ name: string; data: Array<[ number, number, number, number, number ]>; // [min, q1, median, q3, max] type?: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>",
             "description": "Series data with box plot statistics",
             "optional": false
           },
@@ -611,6 +665,14 @@
           "height": {
             "type": "number",
             "description": "Chart height",
+            "optional": true
+          },
+          "variant": {
+            "type": "SurfaceVariant",
+            "optional": true
+          },
+          "elevation": {
+            "type": "ElevationLevel",
             "optional": true
           }
         }
@@ -646,7 +708,7 @@
           "type": "string",
           "description": "Series data with bubble points",
           "required": true,
-          "tsType": "Array<{ label?: string; name?: string; data: Array<[ number, number, number ] | { value: [ number, number, number ]; name?: string; color?: string; }>; color?: string; }>"
+          "tsType": "Array<{ label?: string; name?: string; data: Array<[ number, number, number ] | { value: [ number, number, number ]; name?: string; color?: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>; color?: string; }>"
         },
         "width": {
           "type": "number",
@@ -659,6 +721,18 @@
           "description": "Chart height",
           "required": false,
           "tsType": "number"
+        },
+        "variant": {
+          "type": "SurfaceVariant",
+          "description": "",
+          "required": false,
+          "tsType": "SurfaceVariant"
+        },
+        "elevation": {
+          "type": "ElevationLevel",
+          "description": "",
+          "required": false,
+          "tsType": "ElevationLevel"
         }
       },
       "interfaces": {
@@ -674,7 +748,7 @@
             "optional": true
           },
           "series": {
-            "type": "Array<{ label?: string; name?: string; data: Array<[ number, number, number ] | { value: [ number, number, number ]; name?: string; color?: string; }>; color?: string; }>",
+            "type": "Array<{ label?: string; name?: string; data: Array<[ number, number, number ] | { value: [ number, number, number ]; name?: string; color?: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>; color?: string; }>",
             "description": "Series data with bubble points",
             "optional": false
           },
@@ -686,6 +760,14 @@
           "height": {
             "type": "number",
             "description": "Chart height",
+            "optional": true
+          },
+          "variant": {
+            "type": "SurfaceVariant",
+            "optional": true
+          },
+          "elevation": {
+            "type": "ElevationLevel",
             "optional": true
           }
         }
@@ -745,7 +827,7 @@
           "type": "string",
           "description": "Qualitative ranges for context (e.g., poor, satisfactory, good)",
           "required": false,
-          "tsType": "Array<{ value: number; color?: string; label?: string; }>"
+          "tsType": "Array<{ value: number; color?: string; label?: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>"
         },
         "comparative": {
           "type": "number",
@@ -835,7 +917,7 @@
             "optional": true
           },
           "ranges": {
-            "type": "Array<{ value: number; color?: string; label?: string; }>",
+            "type": "Array<{ value: number; color?: string; label?: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>",
             "description": "Qualitative ranges for context (e.g., poor, satisfactory, good)",
             "optional": true
           },
@@ -916,7 +998,7 @@
           "type": "string",
           "description": "Node definitions",
           "required": true,
-          "tsType": "Array<{ name: string; }>"
+          "tsType": "Array<{ name: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>"
         },
         "matrix": {
           "type": "number",
@@ -935,6 +1017,18 @@
           "description": "Chart height",
           "required": false,
           "tsType": "number"
+        },
+        "variant": {
+          "type": "SurfaceVariant",
+          "description": "",
+          "required": false,
+          "tsType": "SurfaceVariant"
+        },
+        "elevation": {
+          "type": "ElevationLevel",
+          "description": "",
+          "required": false,
+          "tsType": "ElevationLevel"
         }
       },
       "interfaces": {
@@ -950,7 +1044,7 @@
             "optional": true
           },
           "nodes": {
-            "type": "Array<{ name: string; }>",
+            "type": "Array<{ name: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>",
             "description": "Node definitions",
             "optional": false
           },
@@ -967,6 +1061,14 @@
           "height": {
             "type": "number",
             "description": "Chart height",
+            "optional": true
+          },
+          "variant": {
+            "type": "SurfaceVariant",
+            "optional": true
+          },
+          "elevation": {
+            "type": "ElevationLevel",
             "optional": true
           }
         }
@@ -1002,7 +1104,7 @@
           "type": "string",
           "description": "",
           "required": false,
-          "tsType": "Array<{ data: (number | string | Date)[]; label?: string; scaleType?: 'band' | 'linear' | 'log' | 'time'; }>"
+          "tsType": "Array<{ data: (number | string | Date)[]; label?: string; scaleType?: 'band' | 'linear' | 'log' | 'time'; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>"
         },
         "yAxis": {
           "type": "string",
@@ -1033,6 +1135,18 @@
           "description": "",
           "required": false,
           "tsType": "boolean"
+        },
+        "variant": {
+          "type": "SurfaceVariant",
+          "description": "",
+          "required": false,
+          "tsType": "SurfaceVariant"
+        },
+        "elevation": {
+          "type": "ElevationLevel",
+          "description": "",
+          "required": false,
+          "tsType": "ElevationLevel"
         }
       },
       "interfaces": {
@@ -1068,7 +1182,7 @@
             "optional": true
           },
           "xAxis": {
-            "type": "Array<{ data: (number | string | Date)[]; label?: string; scaleType?: 'band' | 'linear' | 'log' | 'time'; }>",
+            "type": "Array<{ data: (number | string | Date)[]; label?: string; scaleType?: 'band' | 'linear' | 'log' | 'time'; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>",
             "optional": true
           },
           "yAxis": {
@@ -1089,6 +1203,14 @@
           },
           "legend": {
             "type": "boolean",
+            "optional": true
+          },
+          "variant": {
+            "type": "SurfaceVariant",
+            "optional": true
+          },
+          "elevation": {
+            "type": "ElevationLevel",
             "optional": true
           }
         }
@@ -1124,7 +1246,7 @@
           "type": "string",
           "description": "Series data for donut slices",
           "required": true,
-          "tsType": "Array<{ id: string | number; value: number; label?: string; color?: string; }>"
+          "tsType": "Array<{ id: string | number; value: number; label?: string; color?: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>"
         },
         "innerRadius": {
           "type": "number",
@@ -1194,7 +1316,7 @@
             "optional": true
           },
           "data": {
-            "type": "Array<{ id: string | number; value: number; label?: string; color?: string; }>",
+            "type": "Array<{ id: string | number; value: number; label?: string; color?: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>",
             "description": "Series data for donut slices",
             "optional": false
           },
@@ -1275,7 +1397,7 @@
           "type": "string",
           "description": "",
           "required": true,
-          "tsType": "Array<{ name: string; value: number; color?: string; }>"
+          "tsType": "Array<{ name: string; value: number; color?: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>"
         },
         "width": {
           "type": "number",
@@ -1313,7 +1435,7 @@
             "optional": true
           },
           "data": {
-            "type": "Array<{ name: string; value: number; color?: string; }>",
+            "type": "Array<{ name: string; value: number; color?: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>",
             "optional": false
           },
           "width": {
@@ -1438,6 +1560,30 @@
           "description": "Color of the gauge arc",
           "required": false,
           "tsType": "string"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
+        },
+        "variant": {
+          "type": "SurfaceVariant",
+          "description": "",
+          "required": false,
+          "tsType": "SurfaceVariant"
+        },
+        "elevation": {
+          "type": "ElevationLevel",
+          "description": "",
+          "required": false,
+          "tsType": "ElevationLevel"
         }
       },
       "interfaces": {
@@ -1536,6 +1682,22 @@
             "type": "string",
             "description": "Color of the gauge arc",
             "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
+            "optional": true
+          },
+          "variant": {
+            "type": "SurfaceVariant",
+            "optional": true
+          },
+          "elevation": {
+            "type": "ElevationLevel",
+            "optional": true
           }
         }
       }
@@ -1578,6 +1740,30 @@
           "description": "",
           "required": false,
           "tsType": "number"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
+        },
+        "variant": {
+          "type": "SurfaceVariant",
+          "description": "",
+          "required": false,
+          "tsType": "SurfaceVariant"
+        },
+        "elevation": {
+          "type": "ElevationLevel",
+          "description": "",
+          "required": false,
+          "tsType": "ElevationLevel"
         }
       },
       "interfaces": {
@@ -1601,6 +1787,22 @@
           "height": {
             "type": "number",
             "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
+            "optional": true
+          },
+          "variant": {
+            "type": "SurfaceVariant",
+            "optional": true
+          },
+          "elevation": {
+            "type": "ElevationLevel",
+            "optional": true
           }
         }
       }
@@ -1609,12 +1811,13 @@
       "name": "heatmap-chart",
       "category": "charts",
       "fileName": "HeatMapChart",
-      "description": "Heat map visualization for 2D data density. Shows values with color intensity.",
+      "description": "Responsive heat map visualization for 2D data density. Shows values with smooth color gradient intensity.",
       "tags": [
         "chart",
         "heatmap",
         "density",
-        "2d"
+        "2d",
+        "matrix"
       ],
       "props": {
         "title": {
@@ -1633,7 +1836,7 @@
           "type": "string",
           "description": "X-axis labels",
           "required": false,
-          "tsType": "{ data: string[]; }"
+          "tsType": "{ data: string[]; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }"
         },
         "yAxis": {
           "type": "string",
@@ -1645,7 +1848,7 @@
           "type": "string",
           "description": "Series data with heatmap values",
           "required": true,
-          "tsType": "Array<{ name?: string; data: Array<[ number, number, number ]>; // [x, y, value] }>"
+          "tsType": "Array<{ name?: string; data: Array<[ number | string, number | string, number ]>; // [x, y, value] }>"
         },
         "visualMap": {
           "type": "string",
@@ -1655,7 +1858,7 @@
         },
         "width": {
           "type": "number",
-          "description": "Chart width",
+          "description": "Chart width (ignored - always responsive)",
           "required": false,
           "tsType": "number"
         },
@@ -1679,7 +1882,7 @@
             "optional": true
           },
           "xAxis": {
-            "type": "{ data: string[]; }",
+            "type": "{ data: string[]; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }",
             "description": "X-axis labels",
             "optional": true
           },
@@ -1689,7 +1892,7 @@
             "optional": true
           },
           "series": {
-            "type": "Array<{ name?: string; data: Array<[ number, number, number ]>; // [x, y, value] }>",
+            "type": "Array<{ name?: string; data: Array<[ number | string, number | string, number ]>; // [x, y, value] }>",
             "description": "Series data with heatmap values",
             "optional": false
           },
@@ -1700,7 +1903,7 @@
           },
           "width": {
             "type": "number",
-            "description": "Chart width",
+            "description": "Chart width (ignored - always responsive)",
             "optional": true
           },
           "height": {
@@ -1744,6 +1947,14 @@
             "type": "number",
             "description": "Chart height",
             "optional": true
+          },
+          "variant": {
+            "type": "SurfaceVariant",
+            "optional": true
+          },
+          "elevation": {
+            "type": "ElevationLevel",
+            "optional": true
           }
         },
         "HistogramChartPropsNew": {
@@ -1770,6 +1981,14 @@
           "height": {
             "type": "number",
             "description": "Chart height",
+            "optional": true
+          },
+          "variant": {
+            "type": "SurfaceVariant",
+            "optional": true
+          },
+          "elevation": {
+            "type": "ElevationLevel",
             "optional": true
           }
         }
@@ -1804,7 +2023,7 @@
           "type": "string",
           "description": "X-axis data points",
           "required": false,
-          "tsType": "Array<{ data: (number | string | Date)[]; label?: string; scaleType?: 'band' | 'linear' | 'log' | 'time'; }>"
+          "tsType": "Array<{ data: (number | string | Date)[]; label?: string; scaleType?: 'band' | 'linear' | 'log' | 'time'; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>"
         },
         "series": {
           "type": "string",
@@ -1883,6 +2102,12 @@
           "description": "Use gradient fills for area charts",
           "required": false,
           "tsType": "boolean"
+        },
+        "className": {
+          "type": "string",
+          "description": "Optional CSS class names",
+          "required": false,
+          "tsType": "string"
         }
       },
       "interfaces": {
@@ -1898,7 +2123,7 @@
             "optional": true
           },
           "xAxis": {
-            "type": "Array<{ data: (number | string | Date)[]; label?: string; scaleType?: 'band' | 'linear' | 'log' | 'time'; }>",
+            "type": "Array<{ data: (number | string | Date)[]; label?: string; scaleType?: 'band' | 'linear' | 'log' | 'time'; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>",
             "description": "X-axis data points",
             "optional": true
           },
@@ -1966,6 +2191,11 @@
             "type": "boolean",
             "description": "Use gradient fills for area charts",
             "optional": true
+          },
+          "className": {
+            "type": "string",
+            "description": "Optional CSS class names",
+            "optional": true
           }
         }
       }
@@ -2002,6 +2232,30 @@
           "description": "",
           "required": false,
           "tsType": "number"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
+        },
+        "variant": {
+          "type": "SurfaceVariant",
+          "description": "",
+          "required": false,
+          "tsType": "SurfaceVariant"
+        },
+        "elevation": {
+          "type": "ElevationLevel",
+          "description": "",
+          "required": false,
+          "tsType": "ElevationLevel"
         }
       },
       "interfaces": {
@@ -2020,6 +2274,22 @@
           },
           "height": {
             "type": "number",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
+            "optional": true
+          },
+          "variant": {
+            "type": "SurfaceVariant",
+            "optional": true
+          },
+          "elevation": {
+            "type": "ElevationLevel",
             "optional": true
           }
         }
@@ -2057,6 +2327,30 @@
           "description": "",
           "required": false,
           "tsType": "number"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
+        },
+        "variant": {
+          "type": "SurfaceVariant",
+          "description": "",
+          "required": false,
+          "tsType": "SurfaceVariant"
+        },
+        "elevation": {
+          "type": "ElevationLevel",
+          "description": "",
+          "required": false,
+          "tsType": "ElevationLevel"
         }
       },
       "interfaces": {
@@ -2075,6 +2369,22 @@
           },
           "height": {
             "type": "number",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
+            "optional": true
+          },
+          "variant": {
+            "type": "SurfaceVariant",
+            "optional": true
+          },
+          "elevation": {
+            "type": "ElevationLevel",
             "optional": true
           }
         }
@@ -2110,7 +2420,7 @@
           "type": "string",
           "description": "Series data for pie slices",
           "required": true,
-          "tsType": "Array<{ data: Array<{ id: string | number; value: number; label?: string; color?: string; }>; innerRadius?: number; outerRadius?: number; paddingAngle?: number; cornerRadius?: number; startAngle?: number; endAngle?: number; cx?: number; cy?: number; }>"
+          "tsType": "Array<{ data: Array<{ id: string | number; value: number; label?: string; color?: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>; innerRadius?: number; outerRadius?: number; paddingAngle?: number; cornerRadius?: number; startAngle?: number; endAngle?: number; cx?: number; cy?: number; }>"
         },
         "width": {
           "type": "number",
@@ -2135,6 +2445,24 @@
           "description": "Margin around chart",
           "required": false,
           "tsType": "{ top?: number; right?: number; bottom?: number; left?: number; }"
+        },
+        "className": {
+          "type": "string",
+          "description": "Optional CSS class names",
+          "required": false,
+          "tsType": "string"
+        },
+        "variant": {
+          "type": "SurfaceVariant",
+          "description": "",
+          "required": false,
+          "tsType": "SurfaceVariant"
+        },
+        "elevation": {
+          "type": "ElevationLevel",
+          "description": "",
+          "required": false,
+          "tsType": "ElevationLevel"
         }
       },
       "interfaces": {
@@ -2150,7 +2478,7 @@
             "optional": true
           },
           "series": {
-            "type": "Array<{ data: Array<{ id: string | number; value: number; label?: string; color?: string; }>; innerRadius?: number; outerRadius?: number; paddingAngle?: number; cornerRadius?: number; startAngle?: number; endAngle?: number; cx?: number; cy?: number; }>",
+            "type": "Array<{ data: Array<{ id: string | number; value: number; label?: string; color?: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>; innerRadius?: number; outerRadius?: number; paddingAngle?: number; cornerRadius?: number; startAngle?: number; endAngle?: number; cx?: number; cy?: number; }>",
             "description": "Series data for pie slices",
             "optional": false
           },
@@ -2172,6 +2500,19 @@
           "margin": {
             "type": "{ top?: number; right?: number; bottom?: number; left?: number; }",
             "description": "Margin around chart",
+            "optional": true
+          },
+          "className": {
+            "type": "string",
+            "description": "Optional CSS class names",
+            "optional": true
+          },
+          "variant": {
+            "type": "SurfaceVariant",
+            "optional": true
+          },
+          "elevation": {
+            "type": "ElevationLevel",
             "optional": true
           }
         }
@@ -2205,7 +2546,7 @@
           "type": "string",
           "description": "Angle axis configuration",
           "required": false,
-          "tsType": "{ data: string[]; } | string[]"
+          "tsType": "{ data: string[]; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; } | string[]"
         },
         "radiusAxis": {
           "type": "any",
@@ -2230,6 +2571,18 @@
           "description": "Chart height",
           "required": false,
           "tsType": "number"
+        },
+        "variant": {
+          "type": "SurfaceVariant",
+          "description": "",
+          "required": false,
+          "tsType": "SurfaceVariant"
+        },
+        "elevation": {
+          "type": "ElevationLevel",
+          "description": "",
+          "required": false,
+          "tsType": "ElevationLevel"
         }
       },
       "interfaces": {
@@ -2245,7 +2598,7 @@
             "optional": true
           },
           "angleAxis": {
-            "type": "{ data: string[]; } | string[]",
+            "type": "{ data: string[]; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; } | string[]",
             "description": "Angle axis configuration",
             "optional": true
           },
@@ -2267,6 +2620,14 @@
           "height": {
             "type": "number",
             "description": "Chart height",
+            "optional": true
+          },
+          "variant": {
+            "type": "SurfaceVariant",
+            "optional": true
+          },
+          "elevation": {
+            "type": "ElevationLevel",
             "optional": true
           }
         }
@@ -2322,6 +2683,14 @@
             "type": "boolean",
             "description": "Show grid",
             "optional": true
+          },
+          "variant": {
+            "type": "SurfaceVariant",
+            "optional": true
+          },
+          "elevation": {
+            "type": "ElevationLevel",
+            "optional": true
           }
         },
         "RadarChartPropsNew": {
@@ -2363,6 +2732,14 @@
           "showGrid": {
             "type": "boolean",
             "description": "Show grid",
+            "optional": true
+          },
+          "variant": {
+            "type": "SurfaceVariant",
+            "optional": true
+          },
+          "elevation": {
+            "type": "ElevationLevel",
             "optional": true
           }
         },
@@ -2406,6 +2783,14 @@
             "type": "boolean",
             "description": "Show grid",
             "optional": true
+          },
+          "variant": {
+            "type": "SurfaceVariant",
+            "optional": true
+          },
+          "elevation": {
+            "type": "ElevationLevel",
+            "optional": true
           }
         }
       }
@@ -2439,7 +2824,7 @@
           "type": "string",
           "description": "Series data for radial bars",
           "required": true,
-          "tsType": "Array<{ name: string; value: number; color?: string; }>"
+          "tsType": "Array<{ name: string; value: number; color?: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>"
         },
         "width": {
           "type": "number",
@@ -2452,6 +2837,18 @@
           "description": "Chart height",
           "required": false,
           "tsType": "number"
+        },
+        "variant": {
+          "type": "SurfaceVariant",
+          "description": "",
+          "required": false,
+          "tsType": "SurfaceVariant"
+        },
+        "elevation": {
+          "type": "ElevationLevel",
+          "description": "",
+          "required": false,
+          "tsType": "ElevationLevel"
         }
       },
       "interfaces": {
@@ -2467,7 +2864,7 @@
             "optional": true
           },
           "series": {
-            "type": "Array<{ name: string; value: number; color?: string; }>",
+            "type": "Array<{ name: string; value: number; color?: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>",
             "description": "Series data for radial bars",
             "optional": false
           },
@@ -2479,6 +2876,14 @@
           "height": {
             "type": "number",
             "description": "Chart height",
+            "optional": true
+          },
+          "variant": {
+            "type": "SurfaceVariant",
+            "optional": true
+          },
+          "elevation": {
+            "type": "ElevationLevel",
             "optional": true
           }
         }
@@ -2513,7 +2918,7 @@
           "type": "string",
           "description": "Node definitions",
           "required": true,
-          "tsType": "Array<{ name: string; }>"
+          "tsType": "Array<{ name: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>"
         },
         "links": {
           "type": "string",
@@ -2526,6 +2931,18 @@
           "description": "Chart height",
           "required": false,
           "tsType": "number"
+        },
+        "variant": {
+          "type": "SurfaceVariant",
+          "description": "",
+          "required": false,
+          "tsType": "SurfaceVariant"
+        },
+        "elevation": {
+          "type": "ElevationLevel",
+          "description": "",
+          "required": false,
+          "tsType": "ElevationLevel"
         }
       },
       "interfaces": {
@@ -2541,7 +2958,7 @@
             "optional": true
           },
           "nodes": {
-            "type": "Array<{ name: string; }>",
+            "type": "Array<{ name: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>",
             "description": "Node definitions",
             "optional": false
           },
@@ -2553,6 +2970,14 @@
           "height": {
             "type": "number",
             "description": "Chart height",
+            "optional": true
+          },
+          "variant": {
+            "type": "SurfaceVariant",
+            "optional": true
+          },
+          "elevation": {
+            "type": "ElevationLevel",
             "optional": true
           }
         }
@@ -2587,7 +3012,7 @@
           "type": "string",
           "description": "X-axis configuration",
           "required": false,
-          "tsType": "Array<{ min?: number; max?: number; label?: string; }>"
+          "tsType": "Array<{ min?: number; max?: number; label?: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>"
         },
         "yAxis": {
           "type": "string",
@@ -2630,6 +3055,18 @@
           "description": "Margin around chart",
           "required": false,
           "tsType": "{ top?: number; right?: number; bottom?: number; left?: number; }"
+        },
+        "variant": {
+          "type": "SurfaceVariant",
+          "description": "",
+          "required": false,
+          "tsType": "SurfaceVariant"
+        },
+        "elevation": {
+          "type": "ElevationLevel",
+          "description": "",
+          "required": false,
+          "tsType": "ElevationLevel"
         }
       },
       "interfaces": {
@@ -2645,7 +3082,7 @@
             "optional": true
           },
           "xAxis": {
-            "type": "Array<{ min?: number; max?: number; label?: string; }>",
+            "type": "Array<{ min?: number; max?: number; label?: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>",
             "description": "X-axis configuration",
             "optional": true
           },
@@ -2682,6 +3119,14 @@
           "margin": {
             "type": "{ top?: number; right?: number; bottom?: number; left?: number; }",
             "description": "Margin around chart",
+            "optional": true
+          },
+          "variant": {
+            "type": "SurfaceVariant",
+            "optional": true
+          },
+          "elevation": {
+            "type": "ElevationLevel",
             "optional": true
           }
         }
@@ -2779,6 +3224,30 @@
           "description": "Trend is positive (green) or negative (red)",
           "required": false,
           "tsType": "boolean"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
+        },
+        "variant": {
+          "type": "SurfaceVariant",
+          "description": "",
+          "required": false,
+          "tsType": "SurfaceVariant"
+        },
+        "elevation": {
+          "type": "ElevationLevel",
+          "description": "",
+          "required": false,
+          "tsType": "ElevationLevel"
         }
       },
       "interfaces": {
@@ -2847,6 +3316,22 @@
             "type": "boolean",
             "description": "Trend is positive (green) or negative (red)",
             "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
+            "optional": true
+          },
+          "variant": {
+            "type": "SurfaceVariant",
+            "optional": true
+          },
+          "elevation": {
+            "type": "ElevationLevel",
+            "optional": true
           }
         }
       }
@@ -2894,13 +3379,25 @@
           "type": "string",
           "description": "",
           "required": false,
-          "tsType": "Array<{ dataKey?: string; label?: string; }>"
+          "tsType": "Array<{ dataKey?: string; label?: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>"
         },
         "series": {
           "type": "string",
           "description": "",
           "required": false,
           "tsType": "Array<{ dataKey: string; name?: string; color?: string; stackId?: string; }>"
+        },
+        "variant": {
+          "type": "SurfaceVariant",
+          "description": "",
+          "required": false,
+          "tsType": "SurfaceVariant"
+        },
+        "elevation": {
+          "type": "ElevationLevel",
+          "description": "",
+          "required": false,
+          "tsType": "ElevationLevel"
         }
       },
       "interfaces": {
@@ -2926,11 +3423,19 @@
             "optional": true
           },
           "xAxis": {
-            "type": "Array<{ dataKey?: string; label?: string; }>",
+            "type": "Array<{ dataKey?: string; label?: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>",
             "optional": true
           },
           "series": {
             "type": "Array<{ dataKey: string; name?: string; color?: string; stackId?: string; }>",
+            "optional": true
+          },
+          "variant": {
+            "type": "SurfaceVariant",
+            "optional": true
+          },
+          "elevation": {
+            "type": "ElevationLevel",
             "optional": true
           }
         }
@@ -2979,7 +3484,7 @@
           "type": "string",
           "description": "",
           "required": false,
-          "tsType": "Array<{ dataKey?: string; label?: string; }>"
+          "tsType": "Array<{ dataKey?: string; label?: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>"
         },
         "series": {
           "type": "string",
@@ -2992,6 +3497,18 @@
           "description": "",
           "required": false,
           "tsType": "'horizontal' | 'vertical'"
+        },
+        "variant": {
+          "type": "SurfaceVariant",
+          "description": "",
+          "required": false,
+          "tsType": "SurfaceVariant"
+        },
+        "elevation": {
+          "type": "ElevationLevel",
+          "description": "",
+          "required": false,
+          "tsType": "ElevationLevel"
         }
       },
       "interfaces": {
@@ -3017,7 +3534,7 @@
             "optional": true
           },
           "xAxis": {
-            "type": "Array<{ dataKey?: string; label?: string; }>",
+            "type": "Array<{ dataKey?: string; label?: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>",
             "optional": true
           },
           "series": {
@@ -3026,6 +3543,14 @@
           },
           "layout": {
             "type": "'horizontal' | 'vertical'",
+            "optional": true
+          },
+          "variant": {
+            "type": "SurfaceVariant",
+            "optional": true
+          },
+          "elevation": {
+            "type": "ElevationLevel",
             "optional": true
           }
         }
@@ -3062,7 +3587,7 @@
           "type": "string",
           "description": "Series data with time-based data points - supports multiple formats",
           "required": true,
-          "tsType": "Array<{ name?: string; label?: string; color?: string; data: Array<[ number | string, number ]> | Array<{ x: number | string; y: number; }> | Array<{ date: string; value: number; }> | Array<{ month: string; value: number; }> | number[]; }>"
+          "tsType": "Array<{ name?: string; label?: string; color?: string; data: Array<[ number | string, number ]> | Array<{ x: number | string; y: number; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }> | Array<{ date: string; value: number; }> | Array<{ month: string; value: number; }> | number[]; }>"
         },
         "xAxis": {
           "type": "string",
@@ -3105,6 +3630,18 @@
           "description": "Show area fill under the line",
           "required": false,
           "tsType": "boolean"
+        },
+        "variant": {
+          "type": "SurfaceVariant",
+          "description": "",
+          "required": false,
+          "tsType": "SurfaceVariant"
+        },
+        "elevation": {
+          "type": "ElevationLevel",
+          "description": "",
+          "required": false,
+          "tsType": "ElevationLevel"
         }
       },
       "interfaces": {
@@ -3120,7 +3657,7 @@
             "optional": true
           },
           "series": {
-            "type": "Array<{ name?: string; label?: string; color?: string; data: Array<[ number | string, number ]> | Array<{ x: number | string; y: number; }> | Array<{ date: string; value: number; }> | Array<{ month: string; value: number; }> | number[]; }>",
+            "type": "Array<{ name?: string; label?: string; color?: string; data: Array<[ number | string, number ]> | Array<{ x: number | string; y: number; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }> | Array<{ date: string; value: number; }> | Array<{ month: string; value: number; }> | number[]; }>",
             "description": "Series data with time-based data points - supports multiple formats",
             "optional": false
           },
@@ -3157,6 +3694,14 @@
           "area": {
             "type": "boolean",
             "description": "Show area fill under the line",
+            "optional": true
+          },
+          "variant": {
+            "type": "SurfaceVariant",
+            "optional": true
+          },
+          "elevation": {
+            "type": "ElevationLevel",
             "optional": true
           }
         }
@@ -3217,6 +3762,18 @@
           "description": "Show labels",
           "required": false,
           "tsType": "boolean"
+        },
+        "variant": {
+          "type": "SurfaceVariant",
+          "description": "",
+          "required": false,
+          "tsType": "SurfaceVariant"
+        },
+        "elevation": {
+          "type": "ElevationLevel",
+          "description": "",
+          "required": false,
+          "tsType": "ElevationLevel"
         }
       },
       "interfaces": {
@@ -3255,6 +3812,14 @@
             "type": "boolean",
             "description": "Show labels",
             "optional": true
+          },
+          "variant": {
+            "type": "SurfaceVariant",
+            "optional": true
+          },
+          "elevation": {
+            "type": "ElevationLevel",
+            "optional": true
           }
         }
       }
@@ -3288,7 +3853,7 @@
           "type": "string",
           "description": "X-axis categories",
           "required": false,
-          "tsType": "{ data: string[]; }"
+          "tsType": "{ data: string[]; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }"
         },
         "series": {
           "type": "string",
@@ -3307,6 +3872,18 @@
           "description": "Chart height",
           "required": false,
           "tsType": "number"
+        },
+        "variant": {
+          "type": "SurfaceVariant",
+          "description": "",
+          "required": false,
+          "tsType": "SurfaceVariant"
+        },
+        "elevation": {
+          "type": "ElevationLevel",
+          "description": "",
+          "required": false,
+          "tsType": "ElevationLevel"
         }
       },
       "interfaces": {
@@ -3322,7 +3899,7 @@
             "optional": true
           },
           "xAxis": {
-            "type": "{ data: string[]; }",
+            "type": "{ data: string[]; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }",
             "description": "X-axis categories",
             "optional": true
           },
@@ -3339,6 +3916,14 @@
           "height": {
             "type": "number",
             "description": "Chart height",
+            "optional": true
+          },
+          "variant": {
+            "type": "SurfaceVariant",
+            "optional": true
+          },
+          "elevation": {
+            "type": "ElevationLevel",
             "optional": true
           }
         }
@@ -3411,6 +3996,18 @@
           "description": "",
           "required": false,
           "tsType": "() => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -3449,6 +4046,14 @@
           },
           "onClick": {
             "type": "() => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -3502,6 +4107,18 @@
           "description": "",
           "required": false,
           "tsType": "number"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -3528,6 +4145,14 @@
           },
           "max": {
             "type": "number",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -3593,6 +4218,18 @@
           "description": "",
           "required": false,
           "tsType": "Date"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -3645,6 +4282,14 @@
           },
           "maxDate": {
             "type": "Date",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -3704,6 +4349,18 @@
           "description": "",
           "required": false,
           "tsType": "(id: string) => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -3748,6 +4405,14 @@
           },
           "onClick": {
             "type": "(id: string) => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -3833,6 +4498,18 @@
           "description": "",
           "required": false,
           "tsType": "(selectedRows: Row[]) => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -3912,6 +4589,14 @@
           "onRowSelect": {
             "type": "(selectedRows: Row[]) => void",
             "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
+            "optional": true
           }
         }
       }
@@ -3920,7 +4605,7 @@
       "name": "data-table",
       "category": "data-display",
       "fileName": "DataTable",
-      "description": "Advanced data table with sorting, filtering, and search functionality",
+      "description": "Advanced data table with sorting, filtering, and search functionality. Supports both simple string columns and complex column objects.",
       "tags": [
         "table",
         "data",
@@ -3939,14 +4624,14 @@
         "columns": {
           "type": "string",
           "description": "",
-          "required": true,
-          "tsType": "string[]"
+          "required": false,
+          "tsType": "string[] | DataTableColumn[]"
         },
         "rows": {
           "type": "string",
           "description": "",
-          "required": true,
-          "tsType": "(string | number)[][]"
+          "required": false,
+          "tsType": "(string | number)[][] | DataTableRow[]"
         },
         "sortable": {
           "type": "boolean",
@@ -3959,21 +4644,75 @@
           "description": "",
           "required": false,
           "tsType": "boolean"
+        },
+        "filterByContext": {
+          "type": "string",
+          "description": "Context key written by a Select/MultiSelect to filter rows. Matches against filterKey column.",
+          "required": false,
+          "tsType": "string"
+        },
+        "filterKey": {
+          "type": "string",
+          "description": "Column name or index to match filterByContext value against (default: first column)",
+          "required": false,
+          "tsType": "string | number"
+        },
+        "maxRows": {
+          "type": "number",
+          "description": "Show at most this many rows (useful for large datasets)",
+          "required": false,
+          "tsType": "number"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
+        "DataTableColumn": {
+          "id": {
+            "type": "string",
+            "optional": true
+          },
+          "label": {
+            "type": "string",
+            "optional": true
+          },
+          "field": {
+            "type": "string",
+            "optional": true
+          },
+          "type": {
+            "type": "string",
+            "optional": true
+          }
+        },
+        "DataTableRow": {
+          "id": {
+            "type": "string",
+            "optional": true
+          }
+        },
         "DataTableProps": {
           "title": {
             "type": "string",
             "optional": true
           },
           "columns": {
-            "type": "string[]",
-            "optional": false
+            "type": "string[] | DataTableColumn[]",
+            "optional": true
           },
           "rows": {
-            "type": "(string | number)[][]",
-            "optional": false
+            "type": "(string | number)[][] | DataTableRow[]",
+            "optional": true
           },
           "sortable": {
             "type": "boolean",
@@ -3981,6 +4720,29 @@
           },
           "searchable": {
             "type": "boolean",
+            "optional": true
+          },
+          "filterByContext": {
+            "type": "string",
+            "description": "Context key written by a Select/MultiSelect to filter rows. Matches against filterKey column.",
+            "optional": true
+          },
+          "filterKey": {
+            "type": "string | number",
+            "description": "Column name or index to match filterByContext value against (default: first column)",
+            "optional": true
+          },
+          "maxRows": {
+            "type": "number",
+            "description": "Show at most this many rows (useful for large datasets)",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -4023,6 +4785,18 @@
           "description": "",
           "required": false,
           "tsType": "'day' | 'week' | 'month'"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -4076,6 +4850,14 @@
           "viewMode": {
             "type": "'day' | 'week' | 'month'",
             "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
+            "optional": true
           }
         }
       }
@@ -4117,6 +4899,18 @@
           "description": "",
           "required": false,
           "tsType": "(cardId: string, fromColumn: string, toColumn: string) => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -4192,6 +4986,14 @@
           "onCardMove": {
             "type": "(cardId: string, fromColumn: string, toColumn: string) => void",
             "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
+            "optional": true
           }
         }
       }
@@ -4262,6 +5064,18 @@
           "description": "",
           "required": false,
           "tsType": "(id: string) => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -4330,6 +5144,14 @@
           },
           "onItemClick": {
             "type": "(id: string) => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -4431,6 +5253,18 @@
           "description": "",
           "required": false,
           "tsType": "React.ReactNode"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -4490,6 +5324,14 @@
           "rightContent": {
             "type": "React.ReactNode",
             "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
+            "optional": true
           }
         }
       }
@@ -4530,6 +5372,18 @@
           "description": "",
           "required": false,
           "tsType": "'radial' | 'tree'"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -4575,6 +5429,14 @@
           "layout": {
             "type": "'radial' | 'tree'",
             "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
+            "optional": true
           }
         }
       }
@@ -4616,6 +5478,18 @@
           "description": "",
           "required": false,
           "tsType": "boolean"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -4669,6 +5543,14 @@
           "showDetails": {
             "type": "boolean",
             "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
+            "optional": true
           }
         }
       }
@@ -4715,6 +5597,18 @@
           "description": "",
           "required": false,
           "tsType": "boolean"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -4767,6 +5661,14 @@
           },
           "showConnector": {
             "type": "boolean",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -4832,6 +5734,18 @@
           "description": "",
           "required": false,
           "tsType": "(selectedNodes: TreeNode[]) => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -4888,6 +5802,14 @@
           },
           "onNodeSelect": {
             "type": "(selectedNodes: TreeNode[]) => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -4948,6 +5870,18 @@
           "description": "",
           "required": false,
           "tsType": "boolean"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -5006,6 +5940,14 @@
           },
           "stickyHeader": {
             "type": "boolean",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -5150,6 +6092,18 @@
           "description": "",
           "required": false,
           "tsType": "() => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -5247,6 +6201,14 @@
           "onFocus": {
             "type": "() => void",
             "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
+            "optional": true
           }
         }
       }
@@ -5330,11 +6292,29 @@
           "required": false,
           "tsType": "'small' | 'medium' | 'large'"
         },
+        "name": {
+          "type": "string",
+          "description": "",
+          "required": false,
+          "tsType": "string"
+        },
         "onChange": {
           "type": "boolean",
           "description": "",
           "required": false,
           "tsType": "(checked: boolean) => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -5383,8 +6363,20 @@
             "type": "'small' | 'medium' | 'large'",
             "optional": true
           },
+          "name": {
+            "type": "string",
+            "optional": true
+          },
           "onChange": {
             "type": "(checked: boolean) => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -5505,6 +6497,18 @@
           "description": "",
           "required": false,
           "tsType": "() => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -5575,6 +6579,14 @@
           },
           "onFocus": {
             "type": "() => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -5694,6 +6706,18 @@
           "description": "",
           "required": false,
           "tsType": "() => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -5764,6 +6788,14 @@
           },
           "onFocus": {
             "type": "() => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -5884,6 +6916,18 @@
           "description": "",
           "required": false,
           "tsType": "() => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -5954,6 +6998,14 @@
           },
           "onFocus": {
             "type": "() => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -6062,6 +7114,18 @@
           "description": "",
           "required": false,
           "tsType": "(error: string) => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -6124,6 +7188,14 @@
           },
           "onError": {
             "type": "(error: string) => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -6239,11 +7311,29 @@
           "required": false,
           "tsType": "boolean"
         },
+        "name": {
+          "type": "string",
+          "description": "",
+          "required": false,
+          "tsType": "string"
+        },
         "onChange": {
           "type": "string",
           "description": "",
           "required": false,
           "tsType": "(value: Array<string | number>) => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -6326,8 +7416,20 @@
             "type": "boolean",
             "optional": true
           },
+          "name": {
+            "type": "string",
+            "optional": true
+          },
           "onChange": {
             "type": "(value: Array<string | number>) => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -6436,6 +7538,18 @@
           "description": "",
           "required": false,
           "tsType": "(value: string) => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -6498,6 +7612,14 @@
           },
           "onComplete": {
             "type": "(value: string) => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -6611,6 +7733,18 @@
           "description": "",
           "required": false,
           "tsType": "(value: string | number) => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -6691,6 +7825,14 @@
           },
           "onChange": {
             "type": "(value: string | number) => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -6811,6 +7953,18 @@
           "description": "",
           "required": false,
           "tsType": "(value: [ number, number ]) => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -6881,6 +8035,14 @@
           },
           "onChangeCommitted": {
             "type": "(value: [ number, number ]) => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -6995,6 +8157,18 @@
           "description": "",
           "required": false,
           "tsType": "(value: number) => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -7061,6 +8235,14 @@
           },
           "onChange": {
             "type": "(value: number) => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -7157,6 +8339,18 @@
           "description": "",
           "required": false,
           "tsType": "(value: string) => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -7211,6 +8405,14 @@
           },
           "onChange": {
             "type": "(value: string) => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -7336,6 +8538,18 @@
           "description": "",
           "required": false,
           "tsType": "() => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -7411,6 +8625,14 @@
           "onFocus": {
             "type": "() => void",
             "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
+            "optional": true
           }
         }
       }
@@ -7419,7 +8641,7 @@
       "name": "select",
       "category": "inputs",
       "fileName": "Select",
-      "description": "Select dropdown component with options, validation, and styling variants. Supports labels and helper text.",
+      "description": "Custom select dropdown with smooth animation, search, and theme support.",
       "tags": [
         "ui",
         "input",
@@ -7429,6 +8651,12 @@
       ],
       "props": {
         "label": {
+          "type": "string",
+          "description": "",
+          "required": false,
+          "tsType": "string"
+        },
+        "name": {
           "type": "string",
           "description": "",
           "required": false,
@@ -7511,6 +8739,18 @@
           "description": "",
           "required": false,
           "tsType": "(value: string | number) => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -7530,6 +8770,10 @@
         },
         "SelectProps": {
           "label": {
+            "type": "string",
+            "optional": true
+          },
+          "name": {
             "type": "string",
             "optional": true
           },
@@ -7583,6 +8827,14 @@
           },
           "onChange": {
             "type": "(value: string | number) => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -7665,7 +8917,7 @@
           "type": "string",
           "description": "",
           "required": false,
-          "tsType": "Array<{ value: number; label: string; }>"
+          "tsType": "Array<{ value: number; label: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>"
         },
         "color": {
           "type": "'primary' | 'secondary' | 'success' | 'warning' | 'error'",
@@ -7753,7 +9005,7 @@
             "optional": true
           },
           "marks": {
-            "type": "Array<{ value: number; label: string; }>",
+            "type": "Array<{ value: number; label: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>",
             "optional": true
           },
           "color": {
@@ -7854,11 +9106,29 @@
           "required": false,
           "tsType": "'left' | 'right'"
         },
+        "name": {
+          "type": "string",
+          "description": "",
+          "required": false,
+          "tsType": "string"
+        },
         "onChange": {
           "type": "boolean",
           "description": "",
           "required": false,
           "tsType": "(checked: boolean) => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -7899,8 +9169,20 @@
             "type": "'left' | 'right'",
             "optional": true
           },
+          "name": {
+            "type": "string",
+            "optional": true
+          },
           "onChange": {
             "type": "(checked: boolean) => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -8039,6 +9321,18 @@
           "description": "",
           "required": false,
           "tsType": "(tag: string) => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -8121,6 +9415,14 @@
           },
           "onRemove": {
             "type": "(tag: string) => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -8270,6 +9572,18 @@
           "description": "",
           "required": false,
           "tsType": "() => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -8360,6 +9674,14 @@
           },
           "onFocus": {
             "type": "() => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -8480,6 +9802,12 @@
           "required": false,
           "tsType": "string"
         },
+        "name": {
+          "type": "string",
+          "description": "",
+          "required": false,
+          "tsType": "string"
+        },
         "onChange": {
           "type": "string",
           "description": "",
@@ -8497,6 +9825,18 @@
           "description": "",
           "required": false,
           "tsType": "() => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -8569,6 +9909,10 @@
             "type": "string",
             "optional": true
           },
+          "name": {
+            "type": "string",
+            "optional": true
+          },
           "onChange": {
             "type": "(value: string) => void",
             "optional": true
@@ -8579,6 +9923,14 @@
           },
           "onFocus": {
             "type": "() => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -8704,6 +10056,18 @@
           "description": "",
           "required": false,
           "tsType": "() => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -8779,6 +10143,14 @@
           "onFocus": {
             "type": "() => void",
             "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
+            "optional": true
           }
         }
       }
@@ -8844,6 +10216,24 @@
           "description": "Color variant",
           "required": false,
           "tsType": "'default' | 'primary' | 'success' | 'danger'"
+        },
+        "name": {
+          "type": "string",
+          "description": "DataContext binding key",
+          "required": false,
+          "tsType": "string"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -8886,6 +10276,19 @@
           "variant": {
             "type": "'default' | 'primary' | 'success' | 'danger'",
             "description": "Color variant",
+            "optional": true
+          },
+          "name": {
+            "type": "string",
+            "description": "DataContext binding key",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -9168,6 +10571,18 @@
           "description": "Color when active",
           "required": false,
           "tsType": "'primary' | 'accent' | 'secondary'"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -9218,6 +10633,14 @@
             "type": "'primary' | 'accent' | 'secondary'",
             "description": "Color when active",
             "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
+            "optional": true
           }
         }
       }
@@ -9263,6 +10686,18 @@
           "description": "Show home icon",
           "required": false,
           "tsType": "boolean"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -9307,6 +10742,14 @@
           "showHome": {
             "type": "boolean",
             "description": "Show home icon",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -9360,6 +10803,12 @@
           "required": false,
           "tsType": "boolean"
         },
+        "spacing": {
+          "type": "'none' | 'small' | 'medium' | 'large'",
+          "description": "Vertical spacing between children",
+          "required": false,
+          "tsType": "'none' | 'small' | 'medium' | 'large'"
+        },
         "children": {
           "type": "array",
           "description": "Child components",
@@ -9403,6 +10852,11 @@
           "shadow": {
             "type": "boolean",
             "description": "Add shadow",
+            "optional": true
+          },
+          "spacing": {
+            "type": "'none' | 'small' | 'medium' | 'large'",
+            "description": "Vertical spacing between children",
             "optional": true
           },
           "children": {
@@ -9471,6 +10925,18 @@
           "description": "Color variant",
           "required": false,
           "tsType": "'default' | 'primary' | 'secondary'"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -9508,6 +10974,14 @@
           "color": {
             "type": "'default' | 'primary' | 'secondary'",
             "description": "Color variant",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -9562,6 +11036,12 @@
           "required": false,
           "tsType": "boolean"
         },
+        "triggerText": {
+          "type": "string",
+          "description": "Text for a button that opens the drawer",
+          "required": false,
+          "tsType": "string"
+        },
         "children": {
           "type": "array",
           "description": "Child components",
@@ -9605,6 +11085,11 @@
           "backdrop": {
             "type": "boolean",
             "description": "Show backdrop",
+            "optional": true
+          },
+          "triggerText": {
+            "type": "string",
+            "description": "Text for a button that opens the drawer",
             "optional": true
           },
           "children": {
@@ -9750,10 +11235,10 @@
       ],
       "props": {
         "columns": {
-          "type": "1 | 2 | 3 | 4 | 5 | 6 | 12",
-          "description": "Number of columns in the grid",
+          "type": "string",
+          "description": "Number of columns in the grid (number or object for responsive)",
           "required": false,
-          "tsType": "1 | 2 | 3 | 4 | 5 | 6 | 12"
+          "tsType": "1 | 2 | 3 | 4 | 5 | 6 | 12 | Record<string, number>"
         },
         "gap": {
           "type": "'none' | 'small' | 'medium' | 'large' | 'xlarge'",
@@ -9807,8 +11292,8 @@
       "interfaces": {
         "GridProps": {
           "columns": {
-            "type": "1 | 2 | 3 | 4 | 5 | 6 | 12",
-            "description": "Number of columns in the grid",
+            "type": "1 | 2 | 3 | 4 | 5 | 6 | 12 | Record<string, number>",
+            "description": "Number of columns in the grid (number or object for responsive)",
             "optional": true
           },
           "gap": {
@@ -9999,6 +11484,12 @@
           "required": false,
           "tsType": "boolean"
         },
+        "spacing": {
+          "type": "'none' | 'small' | 'medium' | 'large'",
+          "description": "Vertical spacing between children",
+          "required": false,
+          "tsType": "'none' | 'small' | 'medium' | 'large'"
+        },
         "children": {
           "type": "array",
           "description": "Child components",
@@ -10052,6 +11543,11 @@
           "fullWidth": {
             "type": "boolean",
             "description": "Full width section",
+            "optional": true
+          },
+          "spacing": {
+            "type": "'none' | 'small' | 'medium' | 'large'",
+            "description": "Vertical spacing between children",
             "optional": true
           },
           "children": {
@@ -10270,6 +11766,18 @@
           "description": "Show visual indicator (for debugging/demo)",
           "required": false,
           "tsType": "boolean"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -10297,6 +11805,14 @@
           "showIndicator": {
             "type": "boolean",
             "description": "Show visual indicator (for debugging/demo)",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -10467,6 +11983,18 @@
           "description": "Size",
           "required": false,
           "tsType": "'small' | 'medium' | 'large'"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -10521,6 +12049,14 @@
           "size": {
             "type": "'small' | 'medium' | 'large'",
             "description": "Size",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -10590,6 +12126,18 @@
           "description": "",
           "required": false,
           "tsType": "() => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -10628,6 +12176,14 @@
           },
           "onClick": {
             "type": "() => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -10694,6 +12250,18 @@
           "description": "",
           "required": false,
           "tsType": "'default' | 'compact' | 'bordered'"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -10758,6 +12326,14 @@
           },
           "variant": {
             "type": "'default' | 'compact' | 'bordered'",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -10827,6 +12403,18 @@
           "description": "",
           "required": false,
           "tsType": "(page: number) => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -10865,6 +12453,14 @@
           },
           "onChange": {
             "type": "(page: number) => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -10910,6 +12506,18 @@
           "description": "",
           "required": false,
           "tsType": "'horizontal' | 'vertical'"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -10923,7 +12531,7 @@
             "optional": true
           },
           "content": {
-            "type": "string",
+            "type": "string | any",
             "optional": true
           },
           "disabled": {
@@ -10950,6 +12558,14 @@
           },
           "orientation": {
             "type": "'horizontal' | 'vertical'",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -11013,6 +12629,18 @@
           "description": "",
           "required": false,
           "tsType": "() => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -11047,6 +12675,14 @@
           },
           "onClose": {
             "type": "() => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -11255,6 +12891,18 @@
           "description": "",
           "required": false,
           "tsType": "boolean"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -11297,6 +12945,14 @@
           },
           "indeterminate": {
             "type": "boolean",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -11387,6 +13043,18 @@
           "description": "",
           "required": false,
           "tsType": "boolean"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -11437,6 +13105,14 @@
           },
           "animated": {
             "type": "boolean",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -11515,6 +13191,12 @@
           "required": false,
           "tsType": "boolean"
         },
+        "triggerText": {
+          "type": "string",
+          "description": "",
+          "required": false,
+          "tsType": "string"
+        },
         "onClose": {
           "type": "function",
           "description": "",
@@ -11538,6 +13220,12 @@
           "description": "",
           "required": false,
           "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -11582,6 +13270,10 @@
             "type": "boolean",
             "optional": true
           },
+          "triggerText": {
+            "type": "string",
+            "optional": true
+          },
           "onClose": {
             "type": "() => void",
             "optional": true
@@ -11596,6 +13288,10 @@
           },
           "children": {
             "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -11664,10 +13360,10 @@
           "tsType": "string"
         },
         "position": {
-          "type": "'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'",
+          "type": "'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'inline'",
           "description": "",
           "required": false,
-          "tsType": "'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'"
+          "tsType": "'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'inline'"
         },
         "duration": {
           "type": "number",
@@ -11687,6 +13383,18 @@
           "required": false,
           "tsType": "boolean"
         },
+        "priority": {
+          "type": "'low' | 'normal' | 'high'",
+          "description": "",
+          "required": false,
+          "tsType": "'low' | 'normal' | 'high'"
+        },
+        "audience": {
+          "type": "string",
+          "description": "",
+          "required": false,
+          "tsType": "string"
+        },
         "onClose": {
           "type": "function",
           "description": "",
@@ -11697,7 +13405,7 @@
           "type": "string",
           "description": "",
           "required": false,
-          "tsType": "{ label: string; onClick?: () => void; }"
+          "tsType": "{ label: string; onClick?: () => void; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }"
         }
       },
       "interfaces": {
@@ -11735,7 +13443,7 @@
             "optional": true
           },
           "position": {
-            "type": "'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'",
+            "type": "'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'inline'",
             "optional": true
           },
           "duration": {
@@ -11750,12 +13458,20 @@
             "type": "boolean",
             "optional": true
           },
+          "priority": {
+            "type": "'low' | 'normal' | 'high'",
+            "optional": true
+          },
+          "audience": {
+            "type": "string",
+            "optional": true
+          },
           "onClose": {
             "type": "() => void",
             "optional": true
           },
           "action": {
-            "type": "{ label: string; onClick?: () => void; }",
+            "type": "{ label: string; onClick?: () => void; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }",
             "optional": true
           }
         }
@@ -11835,6 +13551,18 @@
           "description": "",
           "required": false,
           "tsType": "boolean"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -11877,6 +13605,14 @@
           },
           "closeOnClick": {
             "type": "boolean",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -11943,6 +13679,18 @@
           "description": "",
           "required": false,
           "tsType": "string"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -11977,6 +13725,14 @@
           },
           "className": {
             "type": "string",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -12159,6 +13915,18 @@
           "description": "Optional label/title",
           "required": false,
           "tsType": "string"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -12214,6 +13982,14 @@
             "type": "string",
             "description": "Optional label/title",
             "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
+            "optional": true
           }
         }
       }
@@ -12261,6 +14037,18 @@
           "description": "Make dismissible",
           "required": false,
           "tsType": "boolean"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -12288,6 +14076,14 @@
           "dismissible": {
             "type": "boolean",
             "description": "Make dismissible",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -12348,6 +14144,18 @@
           "description": "Optional link text",
           "required": false,
           "tsType": "string"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -12385,6 +14193,14 @@
           "linkText": {
             "type": "string",
             "description": "Optional link text",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -12441,10 +14257,16 @@
           "tsType": "'transparent' | 'dark' | 'light' | 'gradient'"
         },
         "children": {
-          "type": "React.ReactNode",
+          "type": "array",
           "description": "Optional children (for nested components)",
           "required": false,
-          "tsType": "React.ReactNode"
+          "tsType": "ComponentSpec[]"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "Function to render child component specs",
+          "required": false,
+          "tsType": "(child: ComponentSpec) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -12480,8 +14302,13 @@
             "optional": true
           },
           "children": {
-            "type": "React.ReactNode",
+            "type": "ComponentSpec[]",
             "description": "Optional children (for nested components)",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: ComponentSpec) => React.ReactNode",
+            "description": "Function to render child component specs",
             "optional": true
           }
         }
@@ -12548,6 +14375,18 @@
           "description": "Size variant",
           "required": false,
           "tsType": "'normal' | 'large'"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -12609,6 +14448,14 @@
             "type": "'normal' | 'large'",
             "description": "Size variant",
             "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
+            "optional": true
           }
         }
       }
@@ -12648,7 +14495,7 @@
           "type": "string",
           "description": "Optional metric to display",
           "required": false,
-          "tsType": "{ value: string | number; label: string; trend?: 'up' | 'down' | 'neutral'; trendValue?: string; }"
+          "tsType": "{ value: string | number; label: string; trend?: 'up' | 'down' | 'neutral'; trendValue?: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }"
         },
         "showIcon": {
           "type": "boolean",
@@ -12675,7 +14522,7 @@
             "optional": true
           },
           "metric": {
-            "type": "{ value: string | number; label: string; trend?: 'up' | 'down' | 'neutral'; trendValue?: string; }",
+            "type": "{ value: string | number; label: string; trend?: 'up' | 'down' | 'neutral'; trendValue?: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }",
             "description": "Optional metric to display",
             "optional": true
           },
@@ -12710,6 +14557,12 @@
         "content": {
           "type": "string",
           "description": "Panel content",
+          "required": false,
+          "tsType": "string"
+        },
+        "description": {
+          "type": "string",
+          "description": "Secondary content text (alias for content)",
           "required": false,
           "tsType": "string"
         },
@@ -12755,11 +14608,29 @@
           "required": false,
           "tsType": "ToneVariant"
         },
+        "headerVariant": {
+          "type": "'default' | 'minimal'",
+          "description": "Header variant: 'default' = with border-bottom, 'minimal' = no border (clean dashboard look)",
+          "required": false,
+          "tsType": "'default' | 'minimal'"
+        },
         "children": {
-          "type": "React.ReactNode",
+          "type": "array",
           "description": "Optional children (for nested components)",
           "required": false,
-          "tsType": "React.ReactNode"
+          "tsType": "ComponentSpec[]"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "Function to render child component specs",
+          "required": false,
+          "tsType": "(child: ComponentSpec) => React.ReactNode"
+        },
+        "className": {
+          "type": "string",
+          "description": "Optional CSS class names",
+          "required": false,
+          "tsType": "string"
         }
       },
       "interfaces": {
@@ -12772,6 +14643,11 @@
           "content": {
             "type": "string",
             "description": "Panel content",
+            "optional": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Secondary content text (alias for content)",
             "optional": true
           },
           "footer": {
@@ -12809,9 +14685,24 @@
             "description": "Semantic tone",
             "optional": true
           },
+          "headerVariant": {
+            "type": "'default' | 'minimal'",
+            "description": "Header variant: 'default' = with border-bottom, 'minimal' = no border (clean dashboard look)",
+            "optional": true
+          },
           "children": {
-            "type": "React.ReactNode",
+            "type": "ComponentSpec[]",
             "description": "Optional children (for nested components)",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: ComponentSpec) => React.ReactNode",
+            "description": "Function to render child component specs",
+            "optional": true
+          },
+          "className": {
+            "type": "string",
+            "description": "Optional CSS class names",
             "optional": true
           }
         }
@@ -12862,10 +14753,16 @@
           "tsType": "'default' | 'outlined' | 'filled'"
         },
         "children": {
-          "type": "React.ReactNode",
+          "type": "array",
           "description": "Optional children (for nested components)",
           "required": false,
-          "tsType": "React.ReactNode"
+          "tsType": "ComponentSpec[]"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "Function to render child component specs",
+          "required": false,
+          "tsType": "(child: ComponentSpec) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -12896,8 +14793,13 @@
             "optional": true
           },
           "children": {
-            "type": "React.ReactNode",
+            "type": "ComponentSpec[]",
             "description": "Optional children (for nested components)",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: ComponentSpec) => React.ReactNode",
+            "description": "Function to render child component specs",
             "optional": true
           }
         }
@@ -12932,7 +14834,7 @@
           "type": "string",
           "description": "Summary items",
           "required": true,
-          "tsType": "Array<{ label: string; value: string | number; change?: string; changeType?: 'positive' | 'negative' | 'neutral'; subtext?: string; }>"
+          "tsType": "Array<{ label: string; value: string | number; change?: string; changeType?: 'positive' | 'negative' | 'neutral'; subtext?: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>"
         },
         "layout": {
           "type": "'vertical' | 'horizontal' | 'grid'",
@@ -12984,7 +14886,7 @@
             "optional": true
           },
           "items": {
-            "type": "Array<{ label: string; value: string | number; change?: string; changeType?: 'positive' | 'negative' | 'neutral'; subtext?: string; }>",
+            "type": "Array<{ label: string; value: string | number; change?: string; changeType?: 'positive' | 'negative' | 'neutral'; subtext?: string; children?: React.ReactNode; renderChild?: (child: any) => React.ReactNode; }>",
             "description": "Summary items",
             "optional": false
           },
@@ -13062,6 +14964,18 @@
           "description": "Enable markdown-style formatting",
           "required": false,
           "tsType": "boolean"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -13089,6 +15003,14 @@
           "markdown": {
             "type": "boolean",
             "description": "Enable markdown-style formatting",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -13133,10 +15055,16 @@
           "tsType": "'default' | 'info' | 'warning' | 'success'"
         },
         "children": {
-          "type": "React.ReactNode",
+          "type": "array",
           "description": "Optional children (for nested components)",
           "required": false,
-          "tsType": "React.ReactNode"
+          "tsType": "ComponentSpec[]"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "Function to render child component specs",
+          "required": false,
+          "tsType": "(child: ComponentSpec) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -13162,8 +15090,13 @@
             "optional": true
           },
           "children": {
-            "type": "React.ReactNode",
+            "type": "ComponentSpec[]",
             "description": "Optional children (for nested components)",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: ComponentSpec) => React.ReactNode",
+            "description": "Function to render child component specs",
             "optional": true
           }
         }
@@ -13266,6 +15199,18 @@
           "description": "",
           "required": false,
           "tsType": "(currentTime: number) => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -13324,6 +15269,14 @@
           },
           "onTimeUpdate": {
             "type": "(currentTime: number) => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -13414,6 +15367,18 @@
           "description": "",
           "required": false,
           "tsType": "(index: number) => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -13482,6 +15447,14 @@
           },
           "onSlideChange": {
             "type": "(index: number) => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -13572,6 +15545,18 @@
           "description": "",
           "required": false,
           "tsType": "(image: GalleryImage, index: number) => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -13648,6 +15633,14 @@
           },
           "onImageClick": {
             "type": "(image: GalleryImage, index: number) => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -13785,6 +15778,18 @@
           "description": "",
           "required": false,
           "tsType": "() => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -13867,6 +15872,14 @@
           },
           "onClick": {
             "type": "() => void",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -13986,6 +15999,18 @@
           "description": "",
           "required": false,
           "tsType": "(currentTime: number) => void"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -14057,6 +16082,14 @@
           "onTimeUpdate": {
             "type": "(currentTime: number) => void",
             "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
+            "optional": true
           }
         }
       }
@@ -14103,6 +16136,18 @@
           "description": "Max height for scrollable area",
           "required": false,
           "tsType": "number"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -14157,6 +16202,14 @@
           "maxHeight": {
             "type": "number",
             "description": "Max height for scrollable area",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -14217,6 +16270,18 @@
           "description": "Theme variant",
           "required": false,
           "tsType": "'dark' | 'light'"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -14254,6 +16319,14 @@
           "theme": {
             "type": "'dark' | 'light'",
             "description": "Theme variant",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -14296,6 +16369,18 @@
           "description": "Compact mode (smaller spacing)",
           "required": false,
           "tsType": "boolean"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -14361,6 +16446,14 @@
             "type": "boolean",
             "description": "Compact mode (smaller spacing)",
             "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
+            "optional": true
           }
         }
       }
@@ -14414,6 +16507,18 @@
           "description": "Full screen overlay",
           "required": false,
           "tsType": "boolean"
+        },
+        "children": {
+          "type": "React.ReactNode",
+          "description": "",
+          "required": false,
+          "tsType": "React.ReactNode"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "",
+          "required": false,
+          "tsType": "(child: any) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -14446,6 +16551,14 @@
           "fullScreen": {
             "type": "boolean",
             "description": "Full screen overlay",
+            "optional": true
+          },
+          "children": {
+            "type": "React.ReactNode",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: any) => React.ReactNode",
             "optional": true
           }
         }
@@ -14552,10 +16665,16 @@
           "tsType": "boolean"
         },
         "children": {
-          "type": "React.ReactNode",
+          "type": "array",
           "description": "Optional children (for nested components)",
           "required": false,
-          "tsType": "React.ReactNode"
+          "tsType": "ComponentSpec[]"
+        },
+        "renderChild": {
+          "type": "function",
+          "description": "Function to render child component specs",
+          "required": false,
+          "tsType": "(child: ComponentSpec) => React.ReactNode"
         }
       },
       "interfaces": {
@@ -14601,8 +16720,13 @@
             "optional": true
           },
           "children": {
-            "type": "React.ReactNode",
+            "type": "ComponentSpec[]",
             "description": "Optional children (for nested components)",
+            "optional": true
+          },
+          "renderChild": {
+            "type": "(child: ComponentSpec) => React.ReactNode",
+            "description": "Function to render child component specs",
             "optional": true
           }
         }

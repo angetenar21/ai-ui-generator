@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface BackdropProps {
   open?: boolean;
@@ -15,7 +15,7 @@ interface BackdropProps {
 }
 
 const Backdrop: React.FC<BackdropProps> = ({
-  open = false,
+  open = true,
   isOpen,
   visible,
   opacity = 0.6,
@@ -27,10 +27,10 @@ const Backdrop: React.FC<BackdropProps> = ({
   content,
   message,
 }) => {
-  const [isVisible, setIsVisible] = useState(Boolean(open || isOpen || visible));
+  const [isVisible, setIsVisible] = useState(Boolean(open ?? isOpen ?? visible ?? true));
 
   useEffect(() => {
-    const shouldShow = open ?? isOpen ?? visible ?? false;
+    const shouldShow = open ?? isOpen ?? visible ?? true;
     setIsVisible(Boolean(shouldShow));
   }, [open, isOpen, visible]);
 
@@ -39,9 +39,7 @@ const Backdrop: React.FC<BackdropProps> = ({
     if (onClose) onClose();
   };
 
-  if (!isVisible) return null;
-
-  const blurClasses = {
+  const blurClasses: Record<string, string> = {
     none: '',
     sm: 'backdrop-blur-sm',
     md: 'backdrop-blur-md',
@@ -50,10 +48,27 @@ const Backdrop: React.FC<BackdropProps> = ({
   };
 
   const displayContent = content || message;
+  const blurClass = blur ? (blurClasses[blurAmount] || '') : '';
+
+  // Inline preview mode: if no children and no content, show a visual placeholder
+  if (!children && !displayContent) {
+    return (
+      <div className="relative w-full h-48 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 my-4">
+        <div
+          className={`absolute inset-0 flex items-center justify-center ${blurClass} rounded-xl`}
+          style={{ backgroundColor: `rgba(0, 0, 0, ${opacity})` }}
+        >
+          <p className="text-white text-sm font-medium tracking-wide opacity-70">Backdrop Overlay (Preview)</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isVisible) return null;
 
   return (
     <div
-      className={`fixed inset-0 z-40 flex items-center justify-center ${blur ? blurClasses[blurAmount] : ''}`}
+      className={`fixed inset-0 z-40 flex items-center justify-center ${blurClass}`}
       style={{ backgroundColor: `rgba(0, 0, 0, ${opacity})` }}
       onClick={handleClick}
     >

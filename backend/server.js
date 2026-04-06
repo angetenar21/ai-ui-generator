@@ -627,20 +627,23 @@ function scoreOutputSpec(rawText) {
   // Check 1: Does the output have at least one gradient or accent variant?
   const hasRichVariant = rawStr.includes('"gradient"') || rawStr.includes('"accent"');
   if (!hasRichVariant) {
-    issues.push('No gradient or accent variant found. The main container must use variant: "gradient" or variant: "accent" — not plain "default".');
+    // Disabled rigid check as valid UIs (like pure data grids) might not need gradients
+    // issues.push('No gradient or accent variant found. The main container must use variant: "gradient" or variant: "accent" — not plain "default".');
   }
 
   // Check 2: Does the output have at least one elevated surface?
   const hasElevation = rawStr.includes('"floating"') || rawStr.includes('"raised"');
   if (!hasElevation) {
-    issues.push('No elevation found. At least one panel or card must use elevation: "floating" or elevation: "raised".');
+    // Disabled rigid check as some flat designs are valid
+    // issues.push('No elevation found. At least one panel or card must use elevation: "floating" or elevation: "raised".');
   }
 
   // Check 3: Is every panel using variant "default" (all-same = boring)?
   const variantDefaultCount = (rawStr.match(/"default"/g) || []).length;
   const variantTotalCount = (rawStr.match(/"variant"/g) || []).length;
   if (variantTotalCount > 2 && variantDefaultCount === variantTotalCount) {
-    issues.push('All containers are using variant: "default". Vary the styling — use gradient, accent, or elevated variants for visual hierarchy.');
+    // Reduced severity: we rely on strong LLM prompting instead of strict rejection algorithms
+    // issues.push('All containers are using variant: "default". Vary the styling — use gradient, accent, or elevated variants for visual hierarchy.');
   }
 
   return issues;
@@ -682,7 +685,7 @@ async function callGemini(userMessage, context = '', retryWithApiKey = false, si
   // ── IMPROVEMENT 1: Dynamic Few-Shot Injection ────────────────────────────
   // Inject a golden example before the user message so Gemini has a concrete
   // pattern to follow, not just abstract rules.
-  const fewShotPrompt = getFewShotForMessage(userMessage);
+  const fewShotPrompt = await getFewShotForMessage(userMessage, config);
   if (fewShotPrompt) {
     contents.push({
       role: 'user',

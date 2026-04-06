@@ -84,25 +84,15 @@ const Flexbox: React.FC<FlexboxProps> = ({
 
   return (
     <div
-      className={`flex ${directionClasses[direction]} ${justifyClasses[justify]} ${alignClasses[align]} ${gapClasses[gap]} ${wrapClasses[wrap]} ${widthClass} ${heightClass}`}
+      className={`flex ${directionClasses[direction]} ${justifyClasses[justify]} ${alignClasses[align]} ${gapClasses[gap]} ${wrapClasses[wrap]} ${widthClass} ${heightClass} min-w-0`}
     >
       {Array.isArray(children) && children.length > 0 && renderChild ? (
-        children.map((child, index) => {
-          // For horizontal layouts with 2 children (sidebar pattern), make second child flexible
-          const isFlexContent = direction === 'row' && children.length === 2 && index === 1;
-          return (
-            <div key={index} className={isFlexContent ? 'flex-1 min-w-0' : ''}>
-              {renderChild(child)}
-            </div>
-          );
-        })
-      ) : (
-        <div className="card rounded-card p-8 text-center flex-1">
-          <p className="text-gray-600 dark:text-gray-400">
-            Flexbox ({direction}) - Add child components
-          </p>
-        </div>
-      )}
+        children.map((child, index) => (
+          <div key={index} className="min-w-0 flex-shrink-0">
+            {renderChild(child)}
+          </div>
+        ))
+      ) : null}
     </div>
   );
 };

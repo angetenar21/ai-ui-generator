@@ -2,7 +2,7 @@
 
 This document provides the complete JSON schema reference for all components in the AI UI Generator.
 
-**Last Updated**: 2026-01-25
+**Last Updated**: 2026-04-06
 
 ## Table of Contents
 
@@ -43,6 +43,8 @@ Area chart for visualizing cumulative data and trends over time with filled regi
 | grid | `boolean` | No | Show grid lines |
 | legend | `boolean` | No | Show legend |
 | margin | `number` | No | Margin around chart |
+| variant | `SurfaceVariant` | No |  |
+| elevation | `ElevationLevel` | No |  |
 
 #### JSON Schema
 
@@ -60,7 +62,9 @@ Area chart for visualizing cumulative data and trends over time with filled regi
     "height": 0,
     "grid": false,
     "legend": false,
-    "margin": 0
+    "margin": 0,
+    "variant": null,
+    "elevation": null
   }
 }
 ```
@@ -96,6 +100,8 @@ Bar chart for comparing categorical data with support for horizontal/vertical la
 | emphasis | `EmphasisLevel` | No | Visual emphasis level |
 | palette | `ChartPaletteType` | No | Chart color palette |
 | useGradient | `boolean` | No | Use gradient fills |
+| scaleType | `'linear' | 'log' | 'sqrt'` | No | Scale type for the value axis (linear, log, sqrt) |
+| className | `string` | No | Optional CSS class names |
 
 #### JSON Schema
 
@@ -119,7 +125,9 @@ Bar chart for comparing categorical data with support for horizontal/vertical la
     "elevation": null,
     "emphasis": null,
     "palette": null,
-    "useGradient": false
+    "useGradient": false,
+    "scaleType": null,
+    "className": "example"
   }
 }
 ```
@@ -144,6 +152,8 @@ Box plot chart for statistical distribution. Shows min, Q1, median, Q3, and max 
 | series | `string` | Yes | Series data with box plot statistics |
 | width | `number` | No | Chart width |
 | height | `number` | No | Chart height |
+| variant | `SurfaceVariant` | No |  |
+| elevation | `ElevationLevel` | No |  |
 
 #### JSON Schema
 
@@ -156,7 +166,9 @@ Box plot chart for statistical distribution. Shows min, Q1, median, Q3, and max 
     "xAxis": "example",
     "series": "example",
     "width": 0,
-    "height": 0
+    "height": 0,
+    "variant": null,
+    "elevation": null
   }
 }
 ```
@@ -180,6 +192,8 @@ Bubble chart for visualizing three-dimensional data with x, y, and size dimensio
 | series | `string` | Yes | Series data with bubble points |
 | width | `number` | No | Chart width |
 | height | `number` | No | Chart height |
+| variant | `SurfaceVariant` | No |  |
+| elevation | `ElevationLevel` | No |  |
 
 #### JSON Schema
 
@@ -191,7 +205,9 @@ Bubble chart for visualizing three-dimensional data with x, y, and size dimensio
     "description": "example",
     "series": "example",
     "width": 0,
-    "height": 0
+    "height": 0,
+    "variant": null,
+    "elevation": null
   }
 }
 ```
@@ -273,6 +289,8 @@ Chord diagram for showing relationships between nodes. Displayed as matrix table
 | matrix | `number` | Yes | Relationship matrix |
 | width | `number` | No | Chart width |
 | height | `number` | No | Chart height |
+| variant | `SurfaceVariant` | No |  |
+| elevation | `ElevationLevel` | No |  |
 
 #### JSON Schema
 
@@ -285,7 +303,9 @@ Chord diagram for showing relationships between nodes. Displayed as matrix table
     "nodes": "example",
     "matrix": 0,
     "width": 0,
-    "height": 0
+    "height": 0,
+    "variant": null,
+    "elevation": null
   }
 }
 ```
@@ -312,6 +332,8 @@ Chart combining bar and line series with dual y-axes support
 | width | `number` | No |  |
 | height | `number` | No |  |
 | legend | `boolean` | No |  |
+| variant | `SurfaceVariant` | No |  |
+| elevation | `ElevationLevel` | No |  |
 
 #### JSON Schema
 
@@ -326,7 +348,9 @@ Chart combining bar and line series with dual y-axes support
     "series": [],
     "width": 0,
     "height": 0,
-    "legend": false
+    "legend": false,
+    "variant": null,
+    "elevation": null
   }
 }
 ```
@@ -448,6 +472,10 @@ Gauge chart for displaying a single value within a range, useful for KPIs and me
 | height | `number` | No | Chart height |
 | text | `string` | No | Value label text |
 | color | `string` | No | Color of the gauge arc |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
+| variant | `SurfaceVariant` | No |  |
+| elevation | `ElevationLevel` | No |  |
 
 #### JSON Schema
 
@@ -469,7 +497,11 @@ Gauge chart for displaying a single value within a range, useful for KPIs and me
     "width": 0,
     "height": 0,
     "text": "example",
-    "color": "example"
+    "color": "example",
+    "children": null,
+    "renderChild": null,
+    "variant": null,
+    "elevation": null
   }
 }
 ```
@@ -493,6 +525,10 @@ Grouped bar chart
 | data | `array` | Yes |  |
 | width | `number` | No |  |
 | height | `number` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
+| variant | `SurfaceVariant` | No |  |
+| elevation | `ElevationLevel` | No |  |
 
 #### JSON Schema
 
@@ -504,7 +540,11 @@ Grouped bar chart
     "description": "example",
     "data": [],
     "width": 0,
-    "height": 0
+    "height": 0,
+    "children": null,
+    "renderChild": null,
+    "variant": null,
+    "elevation": null
   }
 }
 ```
@@ -513,9 +553,9 @@ Grouped bar chart
 
 ### heatmap-chart
 
-Heat map visualization for 2D data density. Shows values with color intensity.
+Responsive heat map visualization for 2D data density. Shows values with smooth color gradient intensity.
 
-**Tags**: chart, heatmap, density, 2d
+**Tags**: chart, heatmap, density, 2d, matrix
 
 **Component Name**: `heatmap-chart`
 
@@ -529,7 +569,7 @@ Heat map visualization for 2D data density. Shows values with color intensity.
 | yAxis | `string` | No | Y-axis labels |
 | series | `string` | Yes | Series data with heatmap values |
 | visualMap | `string` | No | Visual mapping configuration |
-| width | `number` | No | Chart width |
+| width | `number` | No | Chart width (ignored - always responsive) |
 | height | `number` | No | Chart height |
 
 #### JSON Schema
@@ -604,6 +644,7 @@ Line chart for visualizing trends over time with support for multiple series, cu
 | emphasis | `EmphasisLevel` | No | Visual emphasis level |
 | palette | `ChartPaletteType` | No | Chart color palette |
 | useGradient | `boolean` | No | Use gradient fills for area charts |
+| className | `string` | No | Optional CSS class names |
 
 #### JSON Schema
 
@@ -626,7 +667,8 @@ Line chart for visualizing trends over time with support for multiple series, cu
     "elevation": null,
     "emphasis": null,
     "palette": null,
-    "useGradient": false
+    "useGradient": false,
+    "className": "example"
   }
 }
 ```
@@ -649,6 +691,10 @@ Chart with multiple axes
 | data | `array` | Yes |  |
 | width | `number` | No |  |
 | height | `number` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
+| variant | `SurfaceVariant` | No |  |
+| elevation | `ElevationLevel` | No |  |
 
 #### JSON Schema
 
@@ -659,7 +705,11 @@ Chart with multiple axes
     "title": "example",
     "data": [],
     "width": 0,
-    "height": 0
+    "height": 0,
+    "children": null,
+    "renderChild": null,
+    "variant": null,
+    "elevation": null
   }
 }
 ```
@@ -682,6 +732,10 @@ Multiple line series
 | data | `array` | Yes |  |
 | width | `number` | No |  |
 | height | `number` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
+| variant | `SurfaceVariant` | No |  |
+| elevation | `ElevationLevel` | No |  |
 
 #### JSON Schema
 
@@ -692,7 +746,11 @@ Multiple line series
     "title": "example",
     "data": [],
     "width": 0,
-    "height": 0
+    "height": 0,
+    "children": null,
+    "renderChild": null,
+    "variant": null,
+    "elevation": null
   }
 }
 ```
@@ -718,6 +776,9 @@ Pie chart for showing proportional data distribution with support for donut styl
 | height | `number` | No | Chart height |
 | legend | `boolean` | No | Show legend |
 | margin | `number` | No | Margin around chart |
+| className | `string` | No | Optional CSS class names |
+| variant | `SurfaceVariant` | No |  |
+| elevation | `ElevationLevel` | No |  |
 
 #### JSON Schema
 
@@ -731,7 +792,10 @@ Pie chart for showing proportional data distribution with support for donut styl
     "width": 0,
     "height": 0,
     "legend": false,
-    "margin": 0
+    "margin": 0,
+    "className": "example",
+    "variant": null,
+    "elevation": null
   }
 }
 ```
@@ -757,6 +821,8 @@ Polar coordinate chart. Displays data in radial bar format.
 | series | `string` | Yes | Series data for polar chart |
 | width | `number` | No | Chart width |
 | height | `number` | No | Chart height |
+| variant | `SurfaceVariant` | No |  |
+| elevation | `ElevationLevel` | No |  |
 
 #### JSON Schema
 
@@ -770,7 +836,9 @@ Polar coordinate chart. Displays data in radial bar format.
     "radiusAxis": null,
     "series": "example",
     "width": 0,
-    "height": 0
+    "height": 0,
+    "variant": null,
+    "elevation": null
   }
 }
 ```
@@ -818,6 +886,8 @@ Radial bar chart for visualizing data in a circular layout with concentric bars
 | series | `string` | Yes | Series data for radial bars |
 | width | `number` | No | Chart width |
 | height | `number` | No | Chart height |
+| variant | `SurfaceVariant` | No |  |
+| elevation | `ElevationLevel` | No |  |
 
 #### JSON Schema
 
@@ -829,7 +899,9 @@ Radial bar chart for visualizing data in a circular layout with concentric bars
     "description": "example",
     "series": "example",
     "width": 0,
-    "height": 0
+    "height": 0,
+    "variant": null,
+    "elevation": null
   }
 }
 ```
@@ -853,6 +925,8 @@ Sankey diagram for visualizing flow between nodes (rendered as table with bars)
 | nodes | `string` | Yes | Node definitions |
 | links | `string` | Yes | Link/flow definitions |
 | height | `number` | No | Chart height |
+| variant | `SurfaceVariant` | No |  |
+| elevation | `ElevationLevel` | No |  |
 
 #### JSON Schema
 
@@ -864,7 +938,9 @@ Sankey diagram for visualizing flow between nodes (rendered as table with bars)
     "description": "example",
     "nodes": "example",
     "links": "example",
-    "height": 0
+    "height": 0,
+    "variant": null,
+    "elevation": null
   }
 }
 ```
@@ -893,6 +969,8 @@ Scatter chart for visualizing correlation between two variables with customizabl
 | grid | `boolean` | No | Show grid lines |
 | legend | `boolean` | No | Show legend |
 | margin | `number` | No | Margin around chart |
+| variant | `SurfaceVariant` | No |  |
+| elevation | `ElevationLevel` | No |  |
 
 #### JSON Schema
 
@@ -909,7 +987,9 @@ Scatter chart for visualizing correlation between two variables with customizabl
     "height": 0,
     "grid": false,
     "legend": false,
-    "margin": 0
+    "margin": 0,
+    "variant": null,
+    "elevation": null
   }
 }
 ```
@@ -941,6 +1021,10 @@ Compact sparkline chart for displaying trends in small spaces with value, trend 
 | value | `string` | No | Current value display |
 | trend | `string` | No | Trend indicator (e.g., "+12%" or "-5%") |
 | trendPositive | `boolean` | No | Trend is positive (green) or negative (red) |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
+| variant | `SurfaceVariant` | No |  |
+| elevation | `ElevationLevel` | No |  |
 
 #### JSON Schema
 
@@ -960,7 +1044,11 @@ Compact sparkline chart for displaying trends in small spaces with value, trend 
     "metric": "example",
     "value": "example",
     "trend": "example",
-    "trendPositive": false
+    "trendPositive": false,
+    "children": null,
+    "renderChild": null,
+    "variant": null,
+    "elevation": null
   }
 }
 ```
@@ -986,6 +1074,8 @@ Stacked area chart
 | height | `number` | No |  |
 | xAxis | `string` | No |  |
 | series | `string` | No |  |
+| variant | `SurfaceVariant` | No |  |
+| elevation | `ElevationLevel` | No |  |
 
 #### JSON Schema
 
@@ -999,7 +1089,9 @@ Stacked area chart
     "width": 0,
     "height": 0,
     "xAxis": "example",
-    "series": "example"
+    "series": "example",
+    "variant": null,
+    "elevation": null
   }
 }
 ```
@@ -1026,6 +1118,8 @@ Stacked bar variant
 | xAxis | `string` | No |  |
 | series | `string` | No |  |
 | layout | `'horizontal' | 'vertical'` | No |  |
+| variant | `SurfaceVariant` | No |  |
+| elevation | `ElevationLevel` | No |  |
 
 #### JSON Schema
 
@@ -1040,7 +1134,9 @@ Stacked bar variant
     "height": 0,
     "xAxis": "example",
     "series": "example",
-    "layout": null
+    "layout": null,
+    "variant": null,
+    "elevation": null
   }
 }
 ```
@@ -1069,6 +1165,8 @@ Time series line chart for visualizing data over time. Supports multiple data fo
 | legend | `boolean` | No | Show legend |
 | margin | `number` | No | Margin around chart |
 | area | `boolean` | No | Show area fill under the line |
+| variant | `SurfaceVariant` | No |  |
+| elevation | `ElevationLevel` | No |  |
 
 #### JSON Schema
 
@@ -1085,7 +1183,9 @@ Time series line chart for visualizing data over time. Supports multiple data fo
     "grid": false,
     "legend": false,
     "margin": 0,
-    "area": false
+    "area": false,
+    "variant": null,
+    "elevation": null
   }
 }
 ```
@@ -1111,6 +1211,8 @@ Tree map chart for displaying hierarchical data with nested rectangles proportio
 | height | `number` | No | Chart height |
 | colors | `string` | No | Color scheme |
 | showLabels | `boolean` | No | Show labels |
+| variant | `SurfaceVariant` | No |  |
+| elevation | `ElevationLevel` | No |  |
 
 #### JSON Schema
 
@@ -1124,7 +1226,9 @@ Tree map chart for displaying hierarchical data with nested rectangles proportio
     "width": 0,
     "height": 0,
     "colors": "example",
-    "showLabels": false
+    "showLabels": false,
+    "variant": null,
+    "elevation": null
   }
 }
 ```
@@ -1149,6 +1253,8 @@ Waterfall chart for cumulative impact visualization. Shows increases, decreases,
 | series | `string` | Yes | Series data with waterfall values |
 | width | `number` | No | Chart width |
 | height | `number` | No | Chart height |
+| variant | `SurfaceVariant` | No |  |
+| elevation | `ElevationLevel` | No |  |
 
 #### JSON Schema
 
@@ -1161,7 +1267,9 @@ Waterfall chart for cumulative impact visualization. Shows increases, decreases,
     "xAxis": "example",
     "series": "example",
     "width": 0,
-    "height": 0
+    "height": 0,
+    "variant": null,
+    "elevation": null
   }
 }
 ```
@@ -1191,6 +1299,8 @@ User avatar with status indicators, badges, and multiple sizes
 | badge | `string` | No |  |
 | fallbackIcon | `string` | No |  |
 | onClick | `function` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -1206,7 +1316,9 @@ User avatar with status indicators, badges, and multiple sizes
     "status": null,
     "badge": "example",
     "fallbackIcon": "example",
-    "onClick": null
+    "onClick": null,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -1231,6 +1343,8 @@ Status badge with count/text support and multiple variants
 | count | `number` | No |  |
 | showDot | `boolean` | No |  |
 | max | `number` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -1243,7 +1357,9 @@ Status badge with count/text support and multiple variants
     "size": null,
     "count": 0,
     "showDot": false,
-    "max": 0
+    "max": 0,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -1270,6 +1386,8 @@ Interactive calendar with event support and date selection
 | onEventClick | `function` | No |  |
 | minDate | `Date` | No |  |
 | maxDate | `Date` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -1284,7 +1402,9 @@ Interactive calendar with event support and date selection
     "onDateSelect": null,
     "onEventClick": null,
     "minDate": null,
-    "maxDate": null
+    "maxDate": null,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -1310,6 +1430,8 @@ Removable chips/tags with icons and multiple variants
 | deletable | `boolean` | No |  |
 | onDelete | `string` | No |  |
 | onClick | `string` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -1323,7 +1445,9 @@ Removable chips/tags with icons and multiple variants
     "size": null,
     "deletable": false,
     "onDelete": "example",
-    "onClick": "example"
+    "onClick": "example",
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -1353,6 +1477,8 @@ Advanced data grid with sorting, filtering, pagination, and selection
 | onRowClick | `function` | No |  |
 | onRowEdit | `function` | No |  |
 | onRowSelect | `array` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -1370,7 +1496,9 @@ Advanced data grid with sorting, filtering, pagination, and selection
     "pageSize": 0,
     "onRowClick": null,
     "onRowEdit": null,
-    "onRowSelect": []
+    "onRowSelect": [],
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -1379,7 +1507,7 @@ Advanced data grid with sorting, filtering, pagination, and selection
 
 ### data-table
 
-Advanced data table with sorting, filtering, and search functionality
+Advanced data table with sorting, filtering, and search functionality. Supports both simple string columns and complex column objects.
 
 **Tags**: table, data, grid, sort, search, filter
 
@@ -1390,10 +1518,15 @@ Advanced data table with sorting, filtering, and search functionality
 | Property | Type | Required | Description |
 |----------|------|----------|-------------|
 | title | `string` | No |  |
-| columns | `string` | Yes |  |
-| rows | `string` | Yes |  |
+| columns | `string` | No |  |
+| rows | `string` | No |  |
 | sortable | `boolean` | No |  |
 | searchable | `boolean` | No |  |
+| filterByContext | `string` | No | Context key written by a Select/MultiSelect to filter rows. Matches against filterKey column. |
+| filterKey | `string` | No | Column name or index to match filterByContext value against (default: first column) |
+| maxRows | `number` | No | Show at most this many rows (useful for large datasets) |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -1405,7 +1538,12 @@ Advanced data table with sorting, filtering, and search functionality
     "columns": "example",
     "rows": "example",
     "sortable": false,
-    "searchable": false
+    "searchable": false,
+    "filterByContext": "example",
+    "filterKey": "example",
+    "maxRows": 0,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -1428,6 +1566,8 @@ Project timeline visualization with task dependencies and progress
 | tasks | `array` | Yes |  |
 | onTaskClick | `function` | No |  |
 | viewMode | `'day' | 'week' | 'month'` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -1438,7 +1578,9 @@ Project timeline visualization with task dependencies and progress
     "title": "example",
     "tasks": [],
     "onTaskClick": null,
-    "viewMode": null
+    "viewMode": null,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -1461,6 +1603,8 @@ Drag-and-drop kanban board with columns and cards
 | columns | `array` | Yes |  |
 | onCardClick | `function` | No |  |
 | onCardMove | `string` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -1471,7 +1615,9 @@ Drag-and-drop kanban board with columns and cards
     "title": "example",
     "columns": [],
     "onCardClick": null,
-    "onCardMove": "example"
+    "onCardMove": "example",
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -1499,6 +1645,8 @@ Flexible list component with selection, icons, and various layouts
 | selectedIds | `string` | No |  |
 | onSelect | `string` | No |  |
 | onItemClick | `string` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -1514,7 +1662,9 @@ Flexible list component with selection, icons, and various layouts
     "multiSelect": false,
     "selectedIds": "example",
     "onSelect": "example",
-    "onItemClick": "example"
+    "onItemClick": "example",
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -1547,6 +1697,8 @@ Individual list item with rich content support
 | action | `React.ReactNode` | No |  |
 | leftContent | `React.ReactNode` | No |  |
 | rightContent | `React.ReactNode` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -1567,7 +1719,9 @@ Individual list item with rich content support
     "onClick": null,
     "action": null,
     "leftContent": null,
-    "rightContent": null
+    "rightContent": null,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -1590,6 +1744,8 @@ Interactive mind map visualization with expandable nodes
 | data | `MindMapNode` | Yes |  |
 | onNodeClick | `function` | No |  |
 | layout | `'radial' | 'tree'` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -1600,7 +1756,9 @@ Interactive mind map visualization with expandable nodes
     "title": "example",
     "data": null,
     "onNodeClick": null,
-    "layout": null
+    "layout": null,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -1623,6 +1781,8 @@ Organizational hierarchy chart with employee details
 | data | `OrgNode` | Yes |  |
 | onNodeClick | `function` | No |  |
 | showDetails | `boolean` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -1633,7 +1793,9 @@ Organizational hierarchy chart with employee details
     "title": "example",
     "data": null,
     "onNodeClick": null,
-    "showDetails": false
+    "showDetails": false,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -1657,6 +1819,8 @@ Vertical and horizontal timeline with status indicators
 | orientation | `TimelineOrientation` | No |  |
 | align | `TimelineAlign` | No |  |
 | showConnector | `boolean` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -1668,7 +1832,9 @@ Vertical and horizontal timeline with status indicators
     "items": [],
     "orientation": null,
     "align": null,
-    "showConnector": false
+    "showConnector": false,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -1695,6 +1861,8 @@ Hierarchical tree view with expand/collapse and selection
 | showLines | `boolean` | No |  |
 | onNodeClick | `function` | No |  |
 | onNodeSelect | `array` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -1709,7 +1877,9 @@ Hierarchical tree view with expand/collapse and selection
     "multiSelect": false,
     "showLines": false,
     "onNodeClick": null,
-    "onNodeSelect": []
+    "onNodeSelect": [],
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -1735,6 +1905,8 @@ High-performance table with virtual scrolling for large datasets
 | overscan | `number` | No |  |
 | onRowClick | `function` | No |  |
 | stickyHeader | `boolean` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -1748,7 +1920,9 @@ High-performance table with virtual scrolling for large datasets
     "rowHeight": 0,
     "overscan": 0,
     "onRowClick": null,
-    "stickyHeader": false
+    "stickyHeader": false,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -1790,6 +1964,8 @@ Autocomplete input with dropdown suggestions, keyboard navigation, and filtering
 | onInputChange | `string` | No |  |
 | onBlur | `function` | No |  |
 | onFocus | `function` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -1817,7 +1993,9 @@ Autocomplete input with dropdown suggestions, keyboard navigation, and filtering
     "onChange": "example",
     "onInputChange": "example",
     "onBlur": null,
-    "onFocus": null
+    "onFocus": null,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -1847,7 +2025,10 @@ Checkbox input component with customizable colors, sizes, and validation. Suppor
 | helperText | `string` | No |  |
 | color | `'primary' | 'secondary' | 'success' | 'warning' | 'error'` | No |  |
 | size | `'small' | 'medium' | 'large'` | No |  |
+| name | `string` | No |  |
 | onChange | `boolean` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -1866,7 +2047,10 @@ Checkbox input component with customizable colors, sizes, and validation. Suppor
     "helperText": "example",
     "color": null,
     "size": null,
-    "onChange": false
+    "name": "example",
+    "onChange": false,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -1902,6 +2086,8 @@ Color picker with preview, text input, and preset color palette. Supports hex co
 | onChange | `string` | No |  |
 | onBlur | `function` | No |  |
 | onFocus | `function` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -1925,7 +2111,9 @@ Color picker with preview, text input, and preset color palette. Supports hex co
     "presetColors": "example",
     "onChange": "example",
     "onBlur": null,
-    "onFocus": null
+    "onFocus": null,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -1961,6 +2149,8 @@ Date picker component with calendar icon, min/max date validation, and various s
 | onChange | `string` | No |  |
 | onBlur | `function` | No |  |
 | onFocus | `function` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -1984,7 +2174,9 @@ Date picker component with calendar icon, min/max date validation, and various s
     "showCalendarIcon": false,
     "onChange": "example",
     "onBlur": null,
-    "onFocus": null
+    "onFocus": null,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -2020,6 +2212,8 @@ DateTime picker component for selecting both date and time with validation and s
 | onChange | `string` | No |  |
 | onBlur | `function` | No |  |
 | onFocus | `function` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -2043,7 +2237,9 @@ DateTime picker component for selecting both date and time with validation and s
     "showIcon": false,
     "onChange": "example",
     "onBlur": null,
-    "onFocus": null
+    "onFocus": null,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -2077,6 +2273,8 @@ File upload component with drag-and-drop support, file validation, size limits, 
 | variant | `'button' | 'dropzone'` | No |  |
 | onChange | `function` | No |  |
 | onError | `string` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -2098,7 +2296,9 @@ File upload component with drag-and-drop support, file validation, size limits, 
     "dragAndDrop": false,
     "variant": null,
     "onChange": null,
-    "onError": "example"
+    "onError": "example",
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -2133,7 +2333,10 @@ Multi-select dropdown with checkboxes, tags display, and max selection limit. Su
 | errorMessage | `string` | No |  |
 | maxSelections | `number` | No |  |
 | showCheckboxes | `boolean` | No |  |
+| name | `string` | No |  |
 | onChange | `string` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -2157,7 +2360,10 @@ Multi-select dropdown with checkboxes, tags display, and max selection limit. Su
     "errorMessage": "example",
     "maxSelections": 0,
     "showCheckboxes": false,
-    "onChange": "example"
+    "name": "example",
+    "onChange": "example",
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -2191,6 +2397,8 @@ OTP (One-Time Password) input with auto-focus, paste support, and keyboard navig
 | autoFocus | `boolean` | No |  |
 | onChange | `string` | No |  |
 | onComplete | `string` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -2212,7 +2420,9 @@ OTP (One-Time Password) input with auto-focus, paste support, and keyboard navig
     "size": null,
     "autoFocus": false,
     "onChange": "example",
-    "onComplete": "example"
+    "onComplete": "example",
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -2247,6 +2457,8 @@ Radio button group component with customizable colors, sizes, and orientations. 
 | color | `'primary' | 'secondary' | 'success' | 'warning' | 'error'` | No |  |
 | size | `'small' | 'medium' | 'large'` | No |  |
 | onChange | `string` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -2269,7 +2481,9 @@ Radio button group component with customizable colors, sizes, and orientations. 
     "errorMessage": "example",
     "color": null,
     "size": null,
-    "onChange": "example"
+    "onChange": "example",
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -2305,6 +2519,8 @@ Dual-handle range slider for selecting a range between min and max values. Suppo
 | errorMessage | `string` | No |  |
 | onChange | `number` | No |  |
 | onChangeCommitted | `number` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -2328,7 +2544,9 @@ Dual-handle range slider for selecting a range between min and max values. Suppo
     "error": false,
     "errorMessage": "example",
     "onChange": 0,
-    "onChangeCommitted": 0
+    "onChangeCommitted": 0,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -2363,6 +2581,8 @@ Rating component with customizable icons (star, heart, circle), precision, and m
 | icon | `'star' | 'heart' | 'circle'` | No |  |
 | showValue | `boolean` | No |  |
 | onChange | `number` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -2385,7 +2605,9 @@ Rating component with customizable icons (star, heart, circle), precision, and m
     "color": null,
     "icon": null,
     "showValue": false,
-    "onChange": 0
+    "onChange": 0,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -2417,6 +2639,8 @@ Rich text editor with formatting toolbar, text alignment, lists, and basic styli
 | maxHeight | `string` | No |  |
 | showToolbar | `boolean` | No |  |
 | onChange | `string` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -2436,7 +2660,9 @@ Rich text editor with formatting toolbar, text alignment, lists, and basic styli
     "minHeight": "example",
     "maxHeight": "example",
     "showToolbar": false,
-    "onChange": "example"
+    "onChange": "example",
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -2473,6 +2699,8 @@ Search input component with clear button, loading state, and search icon. Suppor
 | onClear | `function` | No |  |
 | onBlur | `function` | No |  |
 | onFocus | `function` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -2497,7 +2725,9 @@ Search input component with clear button, loading state, and search icon. Suppor
     "onSearch": "example",
     "onClear": null,
     "onBlur": null,
-    "onFocus": null
+    "onFocus": null,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -2506,7 +2736,7 @@ Search input component with clear button, loading state, and search icon. Suppor
 
 ### select
 
-Select dropdown component with options, validation, and styling variants. Supports labels and helper text.
+Custom select dropdown with smooth animation, search, and theme support.
 
 **Tags**: ui, input, form, select, dropdown
 
@@ -2517,6 +2747,7 @@ Select dropdown component with options, validation, and styling variants. Suppor
 | Property | Type | Required | Description |
 |----------|------|----------|-------------|
 | label | `string` | No |  |
+| name | `string` | No |  |
 | placeholder | `string` | No |  |
 | value | `string` | No |  |
 | defaultValue | `string` | No |  |
@@ -2530,6 +2761,8 @@ Select dropdown component with options, validation, and styling variants. Suppor
 | error | `boolean` | No |  |
 | helperText | `string` | No |  |
 | onChange | `string` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -2538,6 +2771,7 @@ Select dropdown component with options, validation, and styling variants. Suppor
   "name": "select",
   "templateProps": {
     "label": "example",
+    "name": "example",
     "placeholder": "example",
     "value": "example",
     "defaultValue": "example",
@@ -2550,7 +2784,9 @@ Select dropdown component with options, validation, and styling variants. Suppor
     "required": false,
     "error": false,
     "helperText": "example",
-    "onChange": "example"
+    "onChange": "example",
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -2639,7 +2875,10 @@ Toggle switch component with customizable colors, sizes, and label positioning. 
 | color | `'primary' | 'secondary' | 'success' | 'warning' | 'error'` | No |  |
 | size | `'small' | 'medium' | 'large'` | No |  |
 | labelPosition | `'left' | 'right'` | No |  |
+| name | `string` | No |  |
 | onChange | `boolean` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -2656,7 +2895,10 @@ Toggle switch component with customizable colors, sizes, and label positioning. 
     "color": null,
     "size": null,
     "labelPosition": null,
-    "onChange": false
+    "name": "example",
+    "onChange": false,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -2695,6 +2937,8 @@ Tag input component for adding and removing tags with keyboard support, validati
 | onChange | `string` | No |  |
 | onAdd | `string` | No |  |
 | onRemove | `string` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -2721,7 +2965,9 @@ Tag input component for adding and removing tags with keyboard support, validati
     "validateTag": "example",
     "onChange": "example",
     "onAdd": "example",
-    "onRemove": "example"
+    "onRemove": "example",
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -2762,6 +3008,8 @@ Multi-line text input component with auto-resize, character count, and validatio
 | onChange | `string` | No |  |
 | onBlur | `function` | No |  |
 | onFocus | `function` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -2790,7 +3038,9 @@ Multi-line text input component with auto-resize, character count, and validatio
     "autoResize": false,
     "onChange": "example",
     "onBlur": null,
-    "onFocus": null
+    "onFocus": null,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -2826,9 +3076,12 @@ Text input field with support for labels, validation, prefixes, suffixes, and va
 | prefix | `string` | No |  |
 | suffix | `string` | No |  |
 | icon | `string` | No |  |
+| name | `string` | No |  |
 | onChange | `string` | No |  |
 | onBlur | `function` | No |  |
 | onFocus | `function` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -2853,9 +3106,12 @@ Text input field with support for labels, validation, prefixes, suffixes, and va
     "prefix": "example",
     "suffix": "example",
     "icon": "example",
+    "name": "example",
     "onChange": "example",
     "onBlur": null,
-    "onFocus": null
+    "onFocus": null,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -2892,6 +3148,8 @@ Time picker component with clock icon, min/max time validation, and step support
 | onChange | `string` | No |  |
 | onBlur | `function` | No |  |
 | onFocus | `function` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -2916,7 +3174,9 @@ Time picker component with clock icon, min/max time validation, and step support
     "showClockIcon": false,
     "onChange": "example",
     "onBlur": null,
-    "onFocus": null
+    "onFocus": null,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -2943,6 +3203,9 @@ Toggle switch for boolean settings and preferences
 | disabled | `boolean` | No | Disabled state |
 | size | `'small' | 'medium' | 'large'` | No | Size variant |
 | variant | `'default' | 'primary' | 'success' | 'danger'` | No | Color variant |
+| name | `string` | No | DataContext binding key |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -2957,7 +3220,10 @@ Toggle switch for boolean settings and preferences
     "onChange": false,
     "disabled": false,
     "size": null,
-    "variant": null
+    "variant": null,
+    "name": "example",
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -3061,6 +3327,8 @@ Bottom navigation bar for mobile-friendly navigation with icons and optional lab
 | showLabels | `boolean` | No | Show labels |
 | variant | `'default' | 'elevated'` | No | Variant style |
 | activeColor | `'primary' | 'accent' | 'secondary'` | No | Color when active |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -3072,7 +3340,9 @@ Bottom navigation bar for mobile-friendly navigation with icons and optional lab
     "defaultValue": "example",
     "showLabels": false,
     "variant": null,
-    "activeColor": null
+    "activeColor": null,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -3096,6 +3366,8 @@ Navigation breadcrumb trail showing the current location within a hierarchy, wit
 | size | `'small' | 'medium' | 'large'` | No | Size variant |
 | maxItems | `number` | No | Maximum items to show before collapsing |
 | showHome | `boolean` | No | Show home icon |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -3107,7 +3379,9 @@ Navigation breadcrumb trail showing the current location within a hierarchy, wit
     "separator": null,
     "size": null,
     "maxItems": 0,
-    "showHome": false
+    "showHome": false,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -3132,6 +3406,7 @@ Centered container with configurable max-width, padding, and optional background
 | background | `boolean` | No | Add background |
 | border | `boolean` | No | Add border |
 | shadow | `boolean` | No | Add shadow |
+| spacing | `'none' | 'small' | 'medium' | 'large'` | No | Vertical spacing between children |
 | children | `array` | No | Child components |
 | renderChild | `function` | No | Function to render child components |
 
@@ -3147,6 +3422,7 @@ Centered container with configurable max-width, padding, and optional background
     "background": false,
     "border": false,
     "shadow": false,
+    "spacing": null,
     "children": [],
     "renderChild": null
   }
@@ -3174,6 +3450,8 @@ Visual separator with optional label, supporting horizontal and vertical orienta
 | thickness | `'thin' | 'medium' | 'thick'` | No | Thickness |
 | spacing | `'none' | 'small' | 'medium' | 'large'` | No | Spacing around the divider |
 | color | `'default' | 'primary' | 'secondary'` | No | Color variant |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -3187,7 +3465,9 @@ Visual separator with optional label, supporting horizontal and vertical orienta
     "variant": null,
     "thickness": null,
     "spacing": null,
-    "color": null
+    "color": null,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -3212,6 +3492,7 @@ Side drawer/panel that slides in from any edge, with customizable size and optio
 | size | `'small' | 'medium' | 'large' | 'full'` | No | Width (for left/right) or height (for top/bottom) |
 | variant | `'default' | 'elevated' | 'overlay'` | No | Variant style |
 | backdrop | `boolean` | No | Show backdrop |
+| triggerText | `string` | No | Text for a button that opens the drawer |
 | children | `array` | No | Child components |
 | renderChild | `function` | No | Function to render child components |
 
@@ -3227,6 +3508,7 @@ Side drawer/panel that slides in from any edge, with customizable size and optio
     "size": null,
     "variant": null,
     "backdrop": false,
+    "triggerText": "example",
     "children": [],
     "renderChild": null
   }
@@ -3290,7 +3572,7 @@ Responsive grid system with configurable columns, gap, and alignment. Supports a
 
 | Property | Type | Required | Description |
 |----------|------|----------|-------------|
-| columns | `1 | 2 | 3 | 4 | 5 | 6 | 12` | No | Number of columns in the grid |
+| columns | `string` | No | Number of columns in the grid (number or object for responsive) |
 | gap | `'none' | 'small' | 'medium' | 'large' | 'xlarge'` | No | Gap between grid items |
 | responsive | `boolean` | No | Responsive behavior |
 | alignItems | `'start' | 'center' | 'end' | 'stretch'` | No | Alignment of items |
@@ -3306,7 +3588,7 @@ Responsive grid system with configurable columns, gap, and alignment. Supports a
 {
   "name": "grid",
   "templateProps": {
-    "columns": null,
+    "columns": "example",
     "gap": null,
     "responsive": false,
     "alignItems": null,
@@ -3378,6 +3660,7 @@ Content section with optional header, title, subtitle, and customizable styling 
 | background | `'default' | 'surface' | 'elevated' | 'accent'` | No | Background color |
 | divider | `boolean` | No | Show divider after header |
 | fullWidth | `boolean` | No | Full width section |
+| spacing | `'none' | 'small' | 'medium' | 'large'` | No | Vertical spacing between children |
 | children | `array` | No | Child components |
 | renderChild | `function` | No | Function to render child components |
 
@@ -3395,6 +3678,7 @@ Content section with optional header, title, subtitle, and customizable styling 
     "background": null,
     "divider": false,
     "fullWidth": false,
+    "spacing": null,
     "children": [],
     "renderChild": null
   }
@@ -3465,6 +3749,8 @@ Flexible spacing component for adding vertical or horizontal space between eleme
 | orientation | `'horizontal' | 'vertical'` | No | Orientation |
 | flexible | `boolean` | No | Flexible spacer (grows to fill available space) |
 | showIndicator | `boolean` | No | Show visual indicator (for debugging/demo) |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -3476,7 +3762,9 @@ Flexible spacing component for adding vertical or horizontal space between eleme
     "customSize": 0,
     "orientation": null,
     "flexible": false,
-    "showIndicator": false
+    "showIndicator": false,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -3544,6 +3832,8 @@ Step-by-step progress indicator showing workflow stages, supporting both horizon
 | showNumbers | `boolean` | No | Show step numbers |
 | variant | `'default' | 'outlined' | 'simple'` | No | Variant style |
 | size | `'small' | 'medium' | 'large'` | No | Size |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -3556,7 +3846,9 @@ Step-by-step progress indicator showing workflow stages, supporting both horizon
     "orientation": null,
     "showNumbers": false,
     "variant": null,
-    "size": null
+    "size": null,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -3586,6 +3878,8 @@ Interactive button component with multiple variants and sizes
 | iconPosition | `'left' | 'right'` | No |  |
 | fullWidth | `boolean` | No |  |
 | onClick | `function` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -3601,7 +3895,9 @@ Interactive button component with multiple variants and sizes
     "icon": "example",
     "iconPosition": null,
     "fullWidth": false,
-    "onClick": null
+    "onClick": null,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -3628,6 +3924,8 @@ Menu component with dropdown support. Use trigger prop for dropdown menus. Suppo
 | position | `'bottom-left' | 'bottom-right' | 'top-left' | 'top-right'` | No |  |
 | closeOnSelect | `boolean` | No |  |
 | variant | `'default' | 'compact' | 'bordered'` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -3642,7 +3940,9 @@ Menu component with dropdown support. Use trigger prop for dropdown menus. Suppo
     "triggerVariant": null,
     "position": null,
     "closeOnSelect": false,
-    "variant": null
+    "variant": null,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -3670,6 +3970,8 @@ Page pagination component with customizable controls and variants
 | siblingCount | `number` | No |  |
 | variant | `'default' | 'outlined' | 'rounded'` | No |  |
 | onChange | `number` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -3685,7 +3987,9 @@ Page pagination component with customizable controls and variants
     "showPrevNext": false,
     "siblingCount": 0,
     "variant": null,
-    "onChange": 0
+    "onChange": 0,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -3709,6 +4013,8 @@ Tabbed navigation component with multiple variants and orientation support
 | defaultTab | `string` | No |  |
 | variant | `'default' | 'pills' | 'underline'` | No |  |
 | orientation | `'horizontal' | 'vertical'` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -3720,7 +4026,9 @@ Tabbed navigation component with multiple variants and orientation support
     "items": [],
     "defaultTab": "example",
     "variant": null,
-    "orientation": null
+    "orientation": null,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -3749,6 +4057,8 @@ Alert message component with multiple severity levels and variants
 | icon | `string` | No |  |
 | closable | `boolean` | No |  |
 | onClose | `function` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -3763,7 +4073,9 @@ Alert message component with multiple severity levels and variants
     "variant": null,
     "icon": "example",
     "closable": false,
-    "onClose": null
+    "onClose": null,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -3839,6 +4151,8 @@ Circular progress indicator with customizable size, color, and value display. Su
 | showValue | `boolean` | No |  |
 | label | `string` | No |  |
 | indeterminate | `boolean` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -3855,7 +4169,9 @@ Circular progress indicator with customizable size, color, and value display. Su
     "thickness": 0,
     "showValue": false,
     "label": "example",
-    "indeterminate": false
+    "indeterminate": false,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -3886,6 +4202,8 @@ Linear progress bar with customizable colors, sizes, and animations. Supports de
 | indeterminate | `boolean` | No |  |
 | striped | `boolean` | No |  |
 | animated | `boolean` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -3904,7 +4222,9 @@ Linear progress bar with customizable colors, sizes, and animations. Supports de
     "label": "example",
     "indeterminate": false,
     "striped": false,
-    "animated": false
+    "animated": false,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -3933,10 +4253,12 @@ Modal dialog component with customizable size, header, content, and actions. Inc
 | size | `'small' | 'medium' | 'large' | 'fullscreen'` | No |  |
 | showCloseButton | `boolean` | No |  |
 | closable | `boolean` | No |  |
+| triggerText | `string` | No |  |
 | onClose | `function` | No |  |
 | footer | `string` | No |  |
 | actions | `string` | No |  |
 | children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -3954,10 +4276,12 @@ Modal dialog component with customizable size, header, content, and actions. Inc
     "size": null,
     "showCloseButton": false,
     "closable": false,
+    "triggerText": "example",
     "onClose": null,
     "footer": "example",
     "actions": "example",
-    "children": null
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -3984,10 +4308,12 @@ Notification alert component for displaying rich notifications with title, messa
 | type | `'info' | 'success' | 'warning' | 'error'` | No |  |
 | severity | `'info' | 'success' | 'warning' | 'error'` | No |  |
 | icon | `string` | No |  |
-| position | `'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'` | No |  |
+| position | `'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'inline'` | No |  |
 | duration | `number` | No |  |
 | autoHide | `boolean` | No |  |
 | closable | `boolean` | No |  |
+| priority | `'low' | 'normal' | 'high'` | No |  |
+| audience | `string` | No |  |
 | onClose | `function` | No |  |
 | action | `string` | No |  |
 
@@ -4009,6 +4335,8 @@ Notification alert component for displaying rich notifications with title, messa
     "duration": 0,
     "autoHide": false,
     "closable": false,
+    "priority": null,
+    "audience": "example",
     "onClose": null,
     "action": "example"
   }
@@ -4039,6 +4367,8 @@ Popover component for displaying rich contextual content on click. Attach to any
 | placement | `'top' | 'bottom' | 'left' | 'right'` | No |  |
 | arrow | `boolean` | No |  |
 | closeOnClick | `boolean` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -4055,7 +4385,9 @@ Popover component for displaying rich contextual content on click. Attach to any
     "position": null,
     "placement": null,
     "arrow": false,
-    "closeOnClick": false
+    "closeOnClick": false,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -4082,6 +4414,8 @@ Loading skeleton component for content placeholders. Supports text, circular, re
 | lines | `number` | No |  |
 | animation | `'pulse' | 'wave' | 'none'` | No |  |
 | className | `string` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -4096,7 +4430,9 @@ Loading skeleton component for content placeholders. Supports text, circular, re
     "count": 0,
     "lines": 0,
     "animation": null,
-    "className": "example"
+    "className": "example",
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -4170,6 +4506,8 @@ Display a group of user avatars with overflow handling and customizable appearan
 | max | `number` | No | Maximum number of avatars to display before showing "+N" |
 | size | `'small' | 'medium' | 'large'` | No | Size variant |
 | label | `string` | No | Optional label/title |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -4180,7 +4518,9 @@ Display a group of user avatars with overflow handling and customizable appearan
     "avatars": [],
     "max": 0,
     "size": null,
-    "label": "example"
+    "label": "example",
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -4204,6 +4544,8 @@ Attention-grabbing callout box for important information, warnings, tips, and no
 | variant | `'info' | 'warning' | 'success' | 'error' | 'tip' | 'note'` | No | Visual variant |
 | showIcon | `boolean` | No | Show icon |
 | dismissible | `boolean` | No | Make dismissible |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -4215,7 +4557,9 @@ Attention-grabbing callout box for important information, warnings, tips, and no
     "content": "example",
     "variant": null,
     "showIcon": false,
-    "dismissible": false
+    "dismissible": false,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -4241,6 +4585,8 @@ Feature highlight card with icon, title, description, and optional link
 | orientation | `'vertical' | 'horizontal'` | No | Layout orientation |
 | link | `string` | No | Optional link URL |
 | linkText | `string` | No | Optional link text |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -4254,7 +4600,9 @@ Feature highlight card with icon, title, description, and optional link
     "iconColor": null,
     "orientation": null,
     "link": "example",
-    "linkText": "example"
+    "linkText": "example",
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -4279,7 +4627,8 @@ Customizable frame container with various border styles, padding, and background
 | borderWidth | `'thin' | 'normal' | 'thick'` | No | Border width |
 | padding | `'small' | 'medium' | 'large'` | No | Padding size |
 | background | `'transparent' | 'dark' | 'light' | 'gradient'` | No | Background variant |
-| children | `React.ReactNode` | No | Optional children (for nested components) |
+| children | `array` | No | Optional children (for nested components) |
+| renderChild | `function` | No | Function to render child component specs |
 
 #### JSON Schema
 
@@ -4293,7 +4642,8 @@ Customizable frame container with various border styles, padding, and background
     "borderWidth": null,
     "padding": null,
     "background": null,
-    "children": null
+    "children": [],
+    "renderChild": null
   }
 }
 ```
@@ -4320,6 +4670,8 @@ Hero section for landing pages with title, subtitle, description, and CTA button
 | buttons | `array` | No | Call-to-action buttons |
 | align | `'left' | 'center'` | No | Text alignment |
 | size | `'normal' | 'large'` | No | Size variant |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -4334,7 +4686,9 @@ Hero section for landing pages with title, subtitle, description, and CTA button
     "backgroundImage": "example",
     "buttons": [],
     "align": null,
-    "size": null
+    "size": null,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -4390,6 +4744,7 @@ Panel container with header, content, optional footer, and collapsible functiona
 |----------|------|----------|-------------|
 | title | `string` | Yes | Panel header/title |
 | content | `string` | No | Panel content |
+| description | `string` | No | Secondary content text (alias for content) |
 | footer | `string` | No | Footer content |
 | collapsible | `boolean` | No | Make panel collapsible |
 | defaultCollapsed | `boolean` | No | Default collapsed state (only applies if collapsible) |
@@ -4397,7 +4752,10 @@ Panel container with header, content, optional footer, and collapsible functiona
 | elevation | `ElevationLevel` | No | Elevation level for depth |
 | emphasis | `EmphasisLevel` | No | Visual emphasis level |
 | tone | `ToneVariant` | No | Semantic tone |
-| children | `React.ReactNode` | No | Optional children (for nested components) |
+| headerVariant | `'default' | 'minimal'` | No | Header variant: 'default' = with border-bottom, 'minimal' = no border (clean dashboard look) |
+| children | `array` | No | Optional children (for nested components) |
+| renderChild | `function` | No | Function to render child component specs |
+| className | `string` | No | Optional CSS class names |
 
 #### JSON Schema
 
@@ -4407,6 +4765,7 @@ Panel container with header, content, optional footer, and collapsible functiona
   "templateProps": {
     "title": "example",
     "content": "example",
+    "description": "example",
     "footer": "example",
     "collapsible": false,
     "defaultCollapsed": false,
@@ -4414,7 +4773,10 @@ Panel container with header, content, optional footer, and collapsible functiona
     "elevation": null,
     "emphasis": null,
     "tone": null,
-    "children": null
+    "headerVariant": null,
+    "children": [],
+    "renderChild": null,
+    "className": "example"
   }
 }
 ```
@@ -4438,7 +4800,8 @@ Material Design-inspired elevated surface with customizable shadow, padding, and
 | padding | `'none' | 'small' | 'medium' | 'large'` | No | Padding size |
 | rounded | `'none' | 'small' | 'medium' | 'large' | 'full'` | No | Border radius |
 | variant | `'default' | 'outlined' | 'filled'` | No | Background variant |
-| children | `React.ReactNode` | No | Optional children (for nested components) |
+| children | `array` | No | Optional children (for nested components) |
+| renderChild | `function` | No | Function to render child component specs |
 
 #### JSON Schema
 
@@ -4451,7 +4814,8 @@ Material Design-inspired elevated surface with customizable shadow, padding, and
     "padding": null,
     "rounded": null,
     "variant": null,
-    "children": null
+    "children": [],
+    "renderChild": null
   }
 }
 ```
@@ -4518,6 +4882,8 @@ Text component for displaying explanations, descriptions, and narrative content
 | color | `'primary' | 'secondary' | 'muted' | 'accent'` | No | Color variant |
 | align | `'left' | 'center' | 'right'` | No | Text alignment |
 | markdown | `boolean` | No | Enable markdown-style formatting |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -4529,7 +4895,9 @@ Text component for displaying explanations, descriptions, and narrative content
     "variant": null,
     "color": null,
     "align": null,
-    "markdown": false
+    "markdown": false,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -4552,7 +4920,8 @@ Inset container with shadow-inner effect for displaying recessed content
 | size | `'small' | 'medium' | 'large'` | No | Well size |
 | title | `string` | No | Optional title |
 | variant | `'default' | 'info' | 'warning' | 'success'` | No | Visual variant |
-| children | `React.ReactNode` | No | Optional children (for nested components) |
+| children | `array` | No | Optional children (for nested components) |
+| renderChild | `function` | No | Function to render child component specs |
 
 #### JSON Schema
 
@@ -4564,7 +4933,8 @@ Inset container with shadow-inner effect for displaying recessed content
     "size": null,
     "title": "example",
     "variant": null,
-    "children": null
+    "children": [],
+    "renderChild": null
   }
 }
 ```
@@ -4599,6 +4969,8 @@ Audio player component with playback controls, seek functionality, volume contro
 | onPause | `function` | No |  |
 | onEnded | `function` | No |  |
 | onTimeUpdate | `number` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -4619,7 +4991,9 @@ Audio player component with playback controls, seek functionality, volume contro
     "onPlay": null,
     "onPause": null,
     "onEnded": null,
-    "onTimeUpdate": 0
+    "onTimeUpdate": 0,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -4650,6 +5024,8 @@ Image carousel/slider component with navigation arrows, indicators, thumbnails, 
 | rounded | `boolean` | No |  |
 | className | `string` | No |  |
 | onSlideChange | `number` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -4668,7 +5044,9 @@ Image carousel/slider component with navigation arrows, indicators, thumbnails, 
     "transition": null,
     "rounded": false,
     "className": "example",
-    "onSlideChange": 0
+    "onSlideChange": 0,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -4699,6 +5077,8 @@ Photo gallery component with grid/masonry/justified layouts, integrated lightbox
 | hoverEffect | `'zoom' | 'fade' | 'lift' | 'none'` | No |  |
 | className | `string` | No |  |
 | onImageClick | `number` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -4717,7 +5097,9 @@ Photo gallery component with grid/masonry/justified layouts, integrated lightbox
     "rounded": false,
     "hoverEffect": null,
     "className": "example",
-    "onImageClick": 0
+    "onImageClick": 0,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -4756,6 +5138,8 @@ Image display component with lazy loading, fallback support, zoom functionality,
 | onLoad | `function` | No |  |
 | onError | `function` | No |  |
 | onClick | `function` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -4782,7 +5166,9 @@ Image display component with lazy loading, fallback support, zoom functionality,
     "className": "example",
     "onLoad": null,
     "onError": null,
-    "onClick": null
+    "onClick": null,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -4818,6 +5204,8 @@ Video player component with custom controls, play/pause, seek, volume control, f
 | onPause | `function` | No |  |
 | onEnded | `function` | No |  |
 | onTimeUpdate | `number` | No |  |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -4841,7 +5229,9 @@ Video player component with custom controls, play/pause, seek, volume control, f
     "onPlay": null,
     "onPause": null,
     "onEnded": null,
-    "onTimeUpdate": 0
+    "onTimeUpdate": 0,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -4867,6 +5257,8 @@ Chat interface with messages, avatars, timestamps, and input field
 | showInput | `boolean` | No | Show input field |
 | inputPlaceholder | `string` | No | Input placeholder |
 | maxHeight | `number` | No | Max height for scrollable area |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -4878,7 +5270,9 @@ Chat interface with messages, avatars, timestamps, and input field
     "title": "example",
     "showInput": false,
     "inputPlaceholder": "example",
-    "maxHeight": 0
+    "maxHeight": 0,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -4904,6 +5298,8 @@ Code block display with syntax highlighting, line numbers, and copy functionalit
 | title | `string` | No | Optional title/filename |
 | maxHeight | `number` | No | Maximum height (scrollable) |
 | theme | `'dark' | 'light'` | No | Theme variant |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -4917,7 +5313,9 @@ Code block display with syntax highlighting, line numbers, and copy functionalit
     "showCopyButton": false,
     "title": "example",
     "maxHeight": 0,
-    "theme": null
+    "theme": null,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -4940,6 +5338,8 @@ Dashboard layout with customizable widget grid and responsive design
 | widgets | `array` | Yes | Array of widget configurations |
 | columns | `2 | 3 | 4` | No | Grid layout columns |
 | compact | `boolean` | No | Compact mode (smaller spacing) |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -4950,7 +5350,9 @@ Dashboard layout with customizable widget grid and responsive design
     "title": "example",
     "widgets": [],
     "columns": null,
-    "compact": false
+    "compact": false,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -4975,6 +5377,8 @@ Customizable loading spinner with multiple styles, sizes, and colors
 | label | `string` | No | Optional loading text |
 | centered | `boolean` | No | Center in container |
 | fullScreen | `boolean` | No | Full screen overlay |
+| children | `React.ReactNode` | No |  |
+| renderChild | `function` | No |  |
 
 #### JSON Schema
 
@@ -4987,7 +5391,9 @@ Customizable loading spinner with multiple styles, sizes, and colors
     "variant": null,
     "label": "example",
     "centered": false,
-    "fullScreen": false
+    "fullScreen": false,
+    "children": null,
+    "renderChild": null
   }
 }
 ```
@@ -5043,7 +5449,8 @@ Versatile widget container with header, content, footer, and interactive control
 | collapsible | `boolean` | No | Allow collapse/expand |
 | defaultCollapsed | `boolean` | No | Default collapsed state |
 | closeable | `boolean` | No | Show close button |
-| children | `React.ReactNode` | No | Optional children (for nested components) |
+| children | `array` | No | Optional children (for nested components) |
+| renderChild | `function` | No | Function to render child component specs |
 
 #### JSON Schema
 
@@ -5059,7 +5466,8 @@ Versatile widget container with header, content, footer, and interactive control
     "collapsible": false,
     "defaultCollapsed": false,
     "closeable": false,
-    "children": null
+    "children": [],
+    "renderChild": null
   }
 }
 ```

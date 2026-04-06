@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { LineChart as MuiLineChart } from '@mui/x-charts/LineChart';
+import { getSurfaceClasses } from '@/theme/designTokens';
+import type { SurfaceVariant, ElevationLevel } from '../core/types';
 
 interface TimeSeriesChartProps {
   /** Chart title */
@@ -52,6 +54,9 @@ interface TimeSeriesChartProps {
 
   /** Show area fill under the line */
   area?: boolean;
+
+  variant?: SurfaceVariant;
+  elevation?: ElevationLevel;
 }
 
 const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
@@ -63,8 +68,10 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   height = 400,
   grid = { horizontal: true, vertical: false },
   legend = true,
-  margin = { top: 50, right: 30, bottom: 50, left: 30 },
+  margin = { top: 50, right: 30, bottom: 50, left: 60 },
   area = false,
+  variant = 'default',
+  elevation = 'raised',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [chartWidth, setChartWidth] = useState(width);
@@ -101,7 +108,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   // Validate
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
-      <div className="card rounded-card p-6 hover:shadow-hover transition-all duration-300">
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && (
           <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
             {title}
@@ -244,7 +251,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   if (!hasValidData) {
     console.warn('[TimeSeriesChart] No valid data after normalization:', { series });
     return (
-      <div className="card rounded-card p-6 hover:shadow-hover transition-all duration-300">
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && (
           <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
             {title}
@@ -296,7 +303,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   };
 
   return (
-    <div className="card rounded-card p-6 hover:shadow-hover transition-all duration-300">
+    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
       {/* Header */}
       {(title || description) && (
         <div className="mb-6">

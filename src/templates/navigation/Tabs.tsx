@@ -30,9 +30,18 @@ const Tabs: React.FC<TabsProps> = ({
 }) => {
   const tabItems = tabs || items || [];
 
-  const initialIndex = typeof defaultTab === 'number'
-    ? defaultTab
-    : tabItems.findIndex(t => t.value === defaultTab || t.label === defaultTab);
+  const initialIndex = (() => {
+    if (typeof defaultTab === 'number') return defaultTab;
+    if (typeof defaultTab === 'string') {
+      // Try numeric string first (e.g. defaultTab='0')
+      const numericIndex = parseInt(defaultTab, 10);
+      if (!isNaN(numericIndex) && numericIndex < tabItems.length) return numericIndex;
+      // Try matching by value or label
+      const found = tabItems.findIndex(t => t.value === defaultTab || t.label === defaultTab);
+      if (found >= 0) return found;
+    }
+    return 0;
+  })();
 
   // Hook must be declared unconditionally — before any early return
   const [activeTab, setActiveTab] = useState(Math.max(0, initialIndex));

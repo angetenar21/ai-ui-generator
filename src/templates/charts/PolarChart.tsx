@@ -1,4 +1,6 @@
 import React from 'react';
+import { getSurfaceClasses } from '@/theme/designTokens';
+import type { SurfaceVariant, ElevationLevel } from '../core/types';
 import {
   ResponsiveContainer,
   RadarChart,
@@ -42,6 +44,9 @@ interface PolarChartProps {
 
   /** Chart height */
   height?: number;
+
+  variant?: SurfaceVariant;
+  elevation?: ElevationLevel;
 }
 
 // Color palette - semantic colors that work well in both light and dark modes
@@ -79,12 +84,14 @@ const PolarChart: React.FC<PolarChartProps> = ({
   series,
   width: _width,
   height = 400,
+  variant = 'default',
+  elevation = 'raised',
 }) => {
 
   // Validate series
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
-      <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6">
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>}
         <div className="text-center text-gray-400">
           <p className="text-sm">No series data for polar chart</p>
@@ -112,7 +119,7 @@ const PolarChart: React.FC<PolarChartProps> = ({
 
   if (validSeries.length === 0) {
     return (
-      <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6">
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>}
         <div className="text-center text-gray-400">
           <p className="text-sm">Invalid series data format</p>
@@ -175,7 +182,7 @@ const PolarChart: React.FC<PolarChartProps> = ({
   const domainMax = Math.ceil(maxValue * 1.1); // Add 10% padding
 
   return (
-    <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6">
+    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
       {title && (
         <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 text-center">
           {title}
@@ -204,7 +211,7 @@ const PolarChart: React.FC<PolarChartProps> = ({
               cy="50%"
               outerRadius="75%"
               data={chartData}
-              margin={{ top: 20, right: 30, bottom: 20, left: 30 }}
+              margin={{ top: 20, right: 30, bottom: 20, left: 60 }}
             >
               <PolarGrid stroke={gridStroke} strokeWidth={1} />
               <PolarAngleAxis

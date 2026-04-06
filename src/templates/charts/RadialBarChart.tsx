@@ -1,4 +1,6 @@
 import React from 'react';
+import { getSurfaceClasses } from '@/theme/designTokens';
+import type { SurfaceVariant, ElevationLevel } from '../core/types';
 import {
   RadialBarChart as RechartsRadialBarChart,
   RadialBar,
@@ -29,6 +31,9 @@ interface RadialBarChartProps {
 
   /** Chart height */
   height?: number;
+
+  variant?: SurfaceVariant;
+  elevation?: ElevationLevel;
 }
 
 const RadialBarChart: React.FC<RadialBarChartProps> = ({
@@ -37,11 +42,13 @@ const RadialBarChart: React.FC<RadialBarChartProps> = ({
   series,
   width: _width,
   height = 400,
+  variant = 'default',
+  elevation = 'raised',
 }) => {
   // Validate
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
-      <div className="card rounded-card p-6 hover:shadow-hover transition-all duration-300">
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && (
           <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
             {title}
@@ -94,7 +101,7 @@ const RadialBarChart: React.FC<RadialBarChartProps> = ({
   };
 
   return (
-    <div className="card rounded-card p-6 hover:shadow-hover transition-all duration-300">
+    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
       {/* Header */}
       {(title || description) && (
         <div className="mb-6">

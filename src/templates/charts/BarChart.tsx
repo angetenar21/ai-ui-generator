@@ -82,6 +82,7 @@ interface BarChartProps {
 
   /** Optional CSS class names */
   className?: string;
+
 }
 
 const BarChart: React.FC<BarChartProps> = ({
@@ -96,7 +97,7 @@ const BarChart: React.FC<BarChartProps> = ({
   layout = 'vertical',
   grid = { horizontal: true, vertical: false },
   legend = true,
-  margin = { top: 40, right: 20, bottom: 40, left: 20 },
+  margin = { top: 40, right: 20, bottom: 40, left: 60 },
   variant = 'default',
   elevation = 'raised',
   emphasis: _emphasis = 'medium',
@@ -116,7 +117,7 @@ const BarChart: React.FC<BarChartProps> = ({
 
       let nextWidth = fallbackWidth;
       if (typeof maxWidth === 'number') {
-        nextWidth = propWidth ? Math.min(propWidth, maxWidth) : maxWidth;
+        nextWidth = Math.max(200, maxWidth); // Enforce full responsive width, ignore AI-generated fixed widths
       }
 
       const minWidth = typeof maxWidth === 'number' ? Math.min(200, maxWidth) : 200;
@@ -242,7 +243,7 @@ const BarChart: React.FC<BarChartProps> = ({
 
   return (
     <div
-      className={`${surfaceClasses} rounded-xl p-4 transition-all duration-300 ${className || 'w-full'} max-w-full overflow-hidden h-full flex flex-col`}
+      className={`${surfaceClasses} rounded-xl p-4 transition-all duration-300 ${className || 'w-full'} max-w-full min-w-0 overflow-x-auto h-full flex flex-col`}
       style={cardBgColor ? { backgroundColor: cardBgColor } : undefined}
     >
       {/* Header */}
@@ -270,6 +271,8 @@ const BarChart: React.FC<BarChartProps> = ({
               tickInterval: tickInterval > 1
                 ? (_value: any, index: number) => index % tickInterval === 0
                 : undefined,
+              categoryGapRatio: 0.4,
+              barGapRatio: 0.1,
             }))}
             yAxis={layout === 'horizontal' ? processedYAxis : [{ scaleType }]}
             series={processedSeries}
@@ -279,6 +282,7 @@ const BarChart: React.FC<BarChartProps> = ({
             grid={grid}
             margin={effectiveMargin}
             slotProps={{
+              bar: { rx: 6, ry: 6 },
               legend: legend
                 ? {
                   direction: 'horizontal' as const,

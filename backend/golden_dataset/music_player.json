@@ -1,0 +1,123 @@
+{
+  "name": "panel",
+  "templateProps": {
+    "title": "Now Playing",
+    "variant": "glass",
+    "elevation": "floating",
+    "className": "max-w-md mx-auto",
+    "children": [
+      {
+        "name": "stack",
+        "templateProps": {
+          "direction": "vertical",
+          "spacing": "large",
+          "children": [
+            {
+              "name": "flexbox",
+              "templateProps": {
+                "gap": "large",
+                "align": "center",
+                "children": [
+                  {
+                    "name": "image",
+                    "templateProps": {
+                      "src": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
+                      "alt": "Midnight City Album Art",
+                      "aspectRatio": "square",
+                      "rounded": "xl",
+                      "shadow": "xl",
+                      "className": "w-24 h-24 object-cover"
+                    }
+                  },
+                  {
+                    "name": "stack",
+                    "templateProps": {
+                      "direction": "vertical",
+                      "spacing": "small",
+                      "children": [
+                        {
+                          "name": "text",
+                          "templateProps": {
+                            "content": "Midnight City",
+                            "variant": "heading-2",
+                            "className": "text-gray-900 dark:text-white mb-1"
+                          }
+                        },
+                        {
+                          "name": "text",
+                          "templateProps": {
+                            "content": "M83",
+                            "variant": "body",
+                            "className": "text-gray-500 dark:text-gray-400 font-medium"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "stack",
+              "templateProps": {
+                "direction": "vertical",
+                "spacing": "small",
+                "className": "mt-4",
+                "children": [
+                  {
+                    "name": "slider",
+                    "templateProps": {
+                      "name": "progress",
+                      "min": 0,
+                      "max": 100,
+                      "defaultValue": 35
+                    }
+                  },
+                  {
+                    "name": "flexbox",
+                    "templateProps": {
+                      "justify": "between",
+                      "children": [
+                        { "name": "text", "templateProps": { "content": "1:24", "variant": "caption", "className": "text-gray-500" } },
+                        { "name": "text", "templateProps": { "content": "4:03", "variant": "caption", "className": "text-gray-500" } }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "flexbox",
+              "templateProps": {
+                "justify": "between",
+                "align": "center",
+                "className": "px-2 my-2",
+                "children": [
+                  { "name": "button", "templateProps": { "icon": "shuffle", "variant": "ghost", "className": "text-gray-500" } },
+                  { "name": "button", "templateProps": { "icon": "skipback", "variant": "ghost", "className": "text-gray-700 dark:text-gray-300 transform scale-125" } },
+                  { "name": "button", "templateProps": { "icon": "play", "variant": "success", "size": "large", "className": "rounded-full shadow-lg transform scale-110" } },
+                  { "name": "button", "templateProps": { "icon": "skipforward", "variant": "ghost", "className": "text-gray-700 dark:text-gray-300 transform scale-125" } },
+                  { "name": "button", "templateProps": { "icon": "repeat", "variant": "ghost", "className": "text-emerald-500" } }
+                ]
+              }
+            },
+            {
+              "name": "flexbox",
+              "templateProps": {
+                "justify": "center",
+                "align": "center",
+                "gap": "medium",
+                "className": "px-6 mt-2",
+                "children": [
+                  { "name": "button", "templateProps": { "icon": "volume", "variant": "ghost", "size": "small", "className": "text-gray-400 p-0" } },
+                  { "name": "slider", "templateProps": { "name": "volume_level", "min": 0, "max": 100, "defaultValue": 75, "className": "flex-1" } },
+                  { "name": "button", "templateProps": { "icon": "volume2", "variant": "ghost", "size": "small", "className": "text-gray-400 p-0" } }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

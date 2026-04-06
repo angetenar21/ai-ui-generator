@@ -1,5 +1,5 @@
 import React from 'react';
-import { Play, Pause, ChevronRight, ChevronLeft, Plus, Minus, X, Check, Download, Upload, Search, Settings, Menu, Home } from 'lucide-react';
+import { Play, Pause, ChevronRight, ChevronLeft, Plus, Minus, X, Check, Download, Upload, Search, Settings, Menu, Home, SkipBack, SkipForward, Volume2, VolumeX, Shuffle, Repeat } from 'lucide-react';
 
 interface ButtonProps {
   label?: string;
@@ -26,8 +26,9 @@ const Button: React.FC<ButtonProps> = ({
   iconPosition = 'left',
   fullWidth = false,
   onClick,
+  children,
 }) => {
-  const content = label || text || 'Button';
+  const content = label || text || children || '';
 
   // Icon mapping
   const iconMap: Record<string, React.ReactNode> = {
@@ -48,6 +49,15 @@ const Button: React.FC<ButtonProps> = ({
     'settings': <Settings className="w-4 h-4" />,
     'menu': <Menu className="w-4 h-4" />,
     'home': <Home className="w-4 h-4" />,
+    'skipback': <SkipBack className="w-4 h-4" />,
+    'skipforward': <SkipForward className="w-4 h-4" />,
+    'previous': <SkipBack className="w-4 h-4" />,
+    'next': <SkipForward className="w-4 h-4" />,
+    'volume': <Volume2 className="w-4 h-4" />,
+    'volume2': <Volume2 className="w-4 h-4" />,
+    'mute': <VolumeX className="w-4 h-4" />,
+    'shuffle': <Shuffle className="w-4 h-4" />,
+    'repeat': <Repeat className="w-4 h-4" />,
   };
 
   const getIcon = (iconName?: string) => {
@@ -57,12 +67,12 @@ const Button: React.FC<ButtonProps> = ({
   };
 
   const variantClasses = {
-    primary: 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-md hover:shadow-lg',
-    secondary: 'bg-gray-600 hover:bg-gray-700 text-white shadow-md hover:shadow-lg',
-    outline: 'border-2 border-emerald-600 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-600/10',
-    ghost: 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700/50',
-    danger: 'bg-red-600 hover:bg-red-700 text-white shadow-md hover:shadow-lg',
-    success: 'bg-green-600 hover:bg-green-700 text-white shadow-md hover:shadow-lg',
+    primary: 'bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white shadow-[0_0_0_1px_rgba(255,255,255,0.1)_inset,0_2px_4px_rgba(16,185,129,0.3)] hover:shadow-[0_0_0_1px_rgba(255,255,255,0.2)_inset,0_4px_12px_rgba(16,185,129,0.4)]',
+    secondary: 'bg-gray-800 hover:bg-gray-700 active:bg-gray-900 text-white shadow-[0_0_0_1px_rgba(255,255,255,0.05)_inset,0_1px_2px_rgba(0,0,0,0.2)]',
+    outline: 'border border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 shadow-sm',
+    ghost: 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 active:bg-gray-200 dark:active:bg-white/20',
+    danger: 'bg-red-500 hover:bg-red-600 active:bg-red-700 text-white shadow-[0_0_0_1px_rgba(255,255,255,0.1)_inset,0_2px_4px_rgba(239,68,68,0.3)]',
+    success: 'bg-teal-500 hover:bg-teal-600 active:bg-teal-700 text-white shadow-[0_0_0_1px_rgba(255,255,255,0.1)_inset,0_2px_4px_rgba(20,184,166,0.3)]',
   };
 
   const sizeClasses = {
@@ -75,9 +85,9 @@ const Button: React.FC<ButtonProps> = ({
     ${variantClasses[variant]}
     ${sizeClasses[size]}
     ${fullWidth ? 'w-full' : ''}
-    ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-    rounded-lg font-medium transition-all duration-200
-    flex items-center justify-center gap-2
+    ${disabled ? 'opacity-50 cursor-not-allowed select-none' : 'cursor-pointer'}
+    rounded-lg sm:rounded-xl font-medium tracking-tight transition-all duration-200
+    flex items-center justify-center gap-2 select-none
   `.trim().replace(/\s+/g, ' ');
 
   const iconElement = getIcon(icon);
@@ -89,8 +99,9 @@ const Button: React.FC<ButtonProps> = ({
       onClick={onClick}
     >
       {iconElement && iconPosition === 'left' && iconElement}
-      {content}
+      {content && <span>{content}</span>}
       {iconElement && iconPosition === 'right' && iconElement}
+      {!content && !iconElement && <span>Button</span>}
     </button>
   );
 };
@@ -103,4 +114,14 @@ export const metadata = {
   component: Button,
   description: 'Interactive button component with multiple variants and sizes',
   tags: ['ui', 'interactive', 'navigation'],
+  propTypes: {
+    label: 'string - Text to display on the button',
+    text: 'string - Alternative to label',
+    variant: "'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'success'",
+    size: "'small' | 'medium' | 'large'",
+    disabled: 'boolean',
+    icon: 'string - lucide icon name (e.g. "play", "settings", "search", "plus", "check")',
+    iconPosition: "'left' | 'right'",
+    fullWidth: 'boolean',
+  },
 };

@@ -1,0 +1,49 @@
+{
+  "name": "section",
+  "templateProps": {
+    "title": "Advanced Features Showcase",
+    "children": [
+      {
+        "name": "container",
+        "templateProps": {
+          "maxWidth": "lg",
+          "children": [
+            {
+              "name": "masonry",
+              "templateProps": {
+                "columns": { "xs": 1, "sm": 2, "lg": 3 },
+                "gap": "large",
+                "children": [
+                  {
+                    "name": "feature",
+                    "templateProps": {
+                      "title": "Lightning Fast",
+                      "icon": "zap",
+                      "content": "Our processing speeds are unmatched in the industry."
+                    }
+                  },
+                  {
+                    "name": "feature",
+                    "templateProps": {
+                      "title": "Highly Secure",
+                      "icon": "shield",
+                      "content": "Your data is protected by enterprise-grade encryption."
+                    }
+                  },
+                  {
+                    "name": "feature",
+                    "templateProps": {
+                      "title": "Global Scale",
+                      "icon": "globe",
+                      "content": "Deployed across 12 availability zones world wide."
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

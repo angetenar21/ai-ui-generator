@@ -79,6 +79,7 @@ interface LineChartProps {
 
   /** Optional CSS class names */
   className?: string;
+
 }
 
 const LineChart: React.FC<LineChartProps> = ({
@@ -92,7 +93,7 @@ const LineChart: React.FC<LineChartProps> = ({
   cardBackgroundColor,
   grid = { horizontal: true, vertical: false },
   legend = true,
-  margin = { top: 40, right: 20, bottom: 40, left: 20 },
+  margin = { top: 40, right: 20, bottom: 40, left: 60 },
   variant = 'default',
   elevation = 'raised',
   emphasis: _emphasis = 'medium',
@@ -114,7 +115,7 @@ const LineChart: React.FC<LineChartProps> = ({
 
       let nextWidth = fallbackWidth;
       if (typeof maxWidth === 'number') {
-        nextWidth = propWidth ? Math.min(propWidth, maxWidth) : maxWidth;
+        nextWidth = Math.max(200, maxWidth); // Enforce full responsive width, ignore AI-generated fixed widths
       }
 
       const minWidth = typeof maxWidth === 'number' ? Math.min(200, maxWidth) : 200;
@@ -221,7 +222,7 @@ const LineChart: React.FC<LineChartProps> = ({
 
   return (
     <div
-      className={`${surfaceClasses} rounded-xl p-4 transition-all duration-300 ${className || 'w-full'} max-w-full overflow-hidden h-full flex flex-col`}
+      className={`${surfaceClasses} rounded-xl p-4 transition-all duration-300 ${className || 'w-full'} max-w-full min-w-0 overflow-x-auto h-full flex flex-col`}
       style={cardBgColor ? { backgroundColor: cardBgColor } : undefined}
     >
       {/* Header */}

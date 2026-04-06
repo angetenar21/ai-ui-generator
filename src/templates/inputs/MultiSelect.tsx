@@ -129,9 +129,9 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   };
 
   return (
-    <div className={`my-4 ${fullWidth ? 'w-full' : 'max-w-md'}`} ref={wrapperRef}>
+    <div className={`my-4 relative ${isOpen ? 'z-50' : 'z-10'} ${fullWidth ? 'w-full' : 'max-w-md'}`} ref={wrapperRef}>
       {label && (
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+        <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
           {label}
           {required && <span className="text-red-500 dark:text-red-400 ml-1">*</span>}
         </label>
@@ -181,7 +181,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
           </svg>
         </div>
         {isOpen && (
-          <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-xl max-h-60 overflow-auto">
+          <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-xl max-h-60 overflow-auto">
             {selectOptions.map((option, index) => {
               const isSelected = selectedValues.includes(option.value);
               const isDisabled = disabled || option.disabled || (maxSelections !== undefined && selectedValues.length >= maxSelections && !isSelected);

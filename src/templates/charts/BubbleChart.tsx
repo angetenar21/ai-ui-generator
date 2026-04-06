@@ -1,5 +1,7 @@
 import React from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
+import { getSurfaceClasses } from '@/theme/designTokens';
+import type { SurfaceVariant, ElevationLevel } from '../core/types';
 
 interface BubbleChartProps {
   /** Chart title */
@@ -24,6 +26,9 @@ interface BubbleChartProps {
 
   /** Chart height */
   height?: number;
+
+  variant?: SurfaceVariant;
+  elevation?: ElevationLevel;
 }
 
 const BubbleChart: React.FC<BubbleChartProps> = ({
@@ -32,11 +37,13 @@ const BubbleChart: React.FC<BubbleChartProps> = ({
   series,
   width: _width,
   height = 400,
+  variant = 'default',
+  elevation = 'raised',
 }) => {
   // Validate
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
-      <div className="card rounded-card p-6 hover:shadow-hover transition-all duration-300">
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && (
           <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
             {title}
@@ -84,7 +91,7 @@ const BubbleChart: React.FC<BubbleChartProps> = ({
 
   if (transformedData.length === 0) {
     return (
-      <div className="card rounded-card p-6 hover:shadow-hover transition-all duration-300">
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && (
           <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
             {title}
@@ -128,7 +135,7 @@ const BubbleChart: React.FC<BubbleChartProps> = ({
   };
 
   return (
-    <div className="card rounded-card p-6 hover:shadow-hover transition-all duration-300">
+    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
       {/* Header */}
       {(title || description) && (
         <div className="mb-6">
@@ -148,7 +155,7 @@ const BubbleChart: React.FC<BubbleChartProps> = ({
       {/* Chart */}
       <div className="flex justify-center items-center min-h-[300px]">
         <ResponsiveContainer width="100%" height={height}>
-          <ScatterChart margin={{ top: 20, right: 30, bottom: 20, left: 20 }}>
+          <ScatterChart margin={{ top: 20, right: 30, bottom: 20, left: 60 }}>
             <CartesianGrid strokeDasharray="3 3" stroke={gridColor} opacity={0.8} />
             <XAxis
               dataKey="x"

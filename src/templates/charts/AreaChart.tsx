@@ -1,5 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
+import { getSurfaceClasses } from '@/theme/designTokens';
+import type { SurfaceVariant, ElevationLevel } from '../core/types';
 
 interface AreaChartProps {
   /** Chart title */
@@ -56,6 +58,9 @@ interface AreaChartProps {
     bottom?: number;
     left?: number;
   };
+
+  variant?: SurfaceVariant;
+  elevation?: ElevationLevel;
 }
 
 const AreaChart: React.FC<AreaChartProps> = ({
@@ -70,6 +75,8 @@ const AreaChart: React.FC<AreaChartProps> = ({
   margin,
   stack = true,
   gradientOpacity = [0.8, 0.2],
+  variant = 'default',
+  elevation = 'raised',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [chartSize, setChartSize] = useState({ width: propWidth || 500, height: propHeight ?? 320 });
@@ -82,7 +89,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
 
       let nextWidth = fallbackWidth;
       if (typeof maxWidth === 'number') {
-        nextWidth = propWidth ? Math.min(propWidth, maxWidth) : maxWidth;
+        nextWidth = Math.max(200, maxWidth); // Enforce full responsive width, ignore AI-generated fixed widths
       }
 
       const minWidth = typeof maxWidth === 'number' ? Math.min(260, maxWidth) : 260;
@@ -114,7 +121,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
   if (!hasValidData) {
     console.warn('[AreaChart] No valid series data provided:', { series });
     return (
-      <div className="card rounded-card p-6 hover:shadow-hover transition-all duration-300">
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {(title || description) && (
           <div className="mb-6">
             {title && (
@@ -206,7 +213,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
   };
 
   return (
-    <div className="w-full h-full max-w-full bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col">
+    <div className="w-full h-full max-w-full min-w-0 bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-700 overflow-x-auto flex flex-col">
       {/* Header */}
       {(title || description) && (
         <div className="mb-3 px-1">

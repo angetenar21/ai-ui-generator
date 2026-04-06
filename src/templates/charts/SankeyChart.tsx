@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Sankey, Tooltip, ResponsiveContainer } from 'recharts';
+import type { SurfaceVariant, ElevationLevel } from '../core/types';
 
 interface SankeyChartProps {
   /** Chart title */
@@ -25,6 +26,9 @@ interface SankeyChartProps {
 
   /** Chart height */
   height?: number;
+
+  variant?: SurfaceVariant;
+  elevation?: ElevationLevel;
 }
 
 const SankeyChart: React.FC<SankeyChartProps> = ({
@@ -189,7 +193,7 @@ const SankeyChart: React.FC<SankeyChartProps> = ({
                 <Sankey
                   data={sankyData}
                   nodePadding={10}
-                  margin={{ top: 10, right: 150, bottom: 10, left: 10 }}
+                  margin={{ top: 10, right: 150, bottom: 10, left: 60 }}
                   link={renderLink}
                 >
                   <Tooltip

@@ -248,7 +248,7 @@ export const DEFAULT_CHART_COLORS = [
   '#8B5CF6', // Purple
   '#EC4899', // Pink
   '#06B6D4', // Cyan
-  '#F59E0B', // Teal
+  '#14B8A6', // Teal
   '#22C55E', // Jade
 ];
 

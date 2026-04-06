@@ -8,6 +8,8 @@ import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
+import { getSurfaceClasses } from '@/theme/designTokens';
+import type { SurfaceVariant, ElevationLevel } from '../core/types';
 
 interface ComposedChartSeries {
   name: string;
@@ -37,6 +39,9 @@ interface ComposedChartProps {
   width?: number;
   height?: number;
   legend?: boolean;
+
+  variant?: SurfaceVariant;
+  elevation?: ElevationLevel;
 }
 
 const ComposedChart: React.FC<ComposedChartProps> = ({
@@ -48,6 +53,8 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
   width = 800,
   height = 400,
   legend = true,
+  variant = 'default',
+  elevation = 'raised',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [chartWidth, setChartWidth] = useState(width);
@@ -87,7 +94,7 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
 
   if (safeSeries.length === 0) {
     return (
-      <div className="card rounded-card p-6 hover:shadow-hover transition-all duration-300">
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         <div className="flex justify-center items-center min-h-[300px] text-gray-600 dark:text-gray-300">
           <div className="text-center">
             <div className="text-4xl mb-2">📊</div>
@@ -151,7 +158,7 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
   }
 
   return (
-    <div className="card rounded-card p-6 hover:shadow-hover transition-all duration-300">
+    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
       {(title || description) && (
         <div className="mb-6">
           {title && (
@@ -175,7 +182,7 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
           width={chartWidth}
           height={height}
           colors={colorPalette}
-          margin={{ top: 50, right: 30, bottom: 50, left: 30 }}
+          margin={{ top: 50, right: 30, bottom: 50, left: 60 }}
           sx={{
             '& .MuiChartsAxis-line': {
               stroke: isDarkMode ? '#6B7280' : '#6B7280',

@@ -1,0 +1,106 @@
+{
+  "name": "stack",
+  "templateProps": {
+    "spacing": "large",
+    "children": [
+      {
+        "name": "panel",
+        "templateProps": {
+          "title": "Software Development Roadmap",
+          "variant": "gradient",
+          "elevation": "floating",
+          "children": [
+            {
+              "name": "flexbox",
+              "templateProps": {
+                "justify": "between",
+                "children": [
+                  {
+                    "name": "text",
+                    "templateProps": {
+                      "content": "Manage and track epic progress across all active engineering teams.",
+                      "variant": "body",
+                      "className": "text-emerald-100"
+                    }
+                  },
+                  {
+                    "name": "flexbox",
+                    "templateProps": {
+                      "gap": "small",
+                      "children": [
+                        { "name": "button", "templateProps": { "label": "Filter", "icon": "settings", "variant": "outline" } },
+                        { "name": "button", "templateProps": { "label": "New Issue", "icon": "plus", "variant": "primary" } }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "kanban",
+        "templateProps": {
+          "columns": [
+            {
+              "id": "todo",
+              "title": "To Do",
+              "color": "gray"
+            },
+            {
+              "id": "in-progress",
+              "title": "In Progress",
+              "color": "blue"
+            },
+            {
+              "id": "review",
+              "title": "In Review",
+              "color": "yellow"
+            },
+            {
+              "id": "done",
+              "title": "Done",
+              "color": "green"
+            }
+          ],
+          "cards": [
+            {
+              "id": "TKS-148",
+              "columnId": "todo",
+              "title": "Implement OAuth2 Authentication",
+              "description": "Design and integrate Google and GitHub OAuth providers for seamless login.",
+              "tags": [{ "label": "Backend", "color": "purple" }, { "label": "Security", "color": "red" }],
+              "assignee": { "name": "Alex", "avatar": "https://i.pravatar.cc/150?u=1" }
+            },
+            {
+              "id": "TKS-149",
+              "columnId": "in-progress",
+              "title": "Refactor DataGrid Component",
+              "description": "Rewrite the rendering engine for the DataGrid to fix virtual scrolling bugs.",
+              "tags": [{ "label": "Frontend", "color": "blue" }],
+              "assignee": { "name": "Sarah", "avatar": "https://i.pravatar.cc/150?u=2" },
+              "highPriority": true
+            },
+            {
+              "id": "TKS-150",
+              "columnId": "review",
+              "title": "Optimize Vector Search Algorithm",
+              "description": "Improve cosine similarity processing times by implementing HNSW index.",
+              "tags": [{ "label": "AI/ML", "color": "emerald" }, { "label": "Performance", "color": "orange" }],
+              "assignee": { "name": "David", "avatar": "https://i.pravatar.cc/150?u=3" }
+            },
+            {
+              "id": "TKS-132",
+              "columnId": "done",
+              "title": "Setup CI/CD Pipeline",
+              "description": "Configure GitHub Actions to deploy to GCP on merge to main.",
+              "tags": [{ "label": "DevOps", "color": "gray" }],
+              "assignee": { "name": "Maya", "avatar": "https://i.pravatar.cc/150?u=4" }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

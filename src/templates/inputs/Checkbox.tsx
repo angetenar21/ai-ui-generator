@@ -54,7 +54,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
   };
 
   const colorClasses = {
-    primary: 'text-blue-600 focus:ring-emerald-500',
+    primary: 'text-emerald-600 focus:ring-emerald-500',
     secondary: 'text-gray-600 focus:ring-gray-500',
     success: 'text-green-600 focus:ring-green-500',
     warning: 'text-yellow-600 focus:ring-yellow-500',
@@ -74,18 +74,18 @@ const Checkbox: React.FC<CheckboxProps> = ({
           className={`
             ${sizeClasses[size]}
             ${colorClasses[color]}
-            ${error ? 'border-red-500' : 'border-gray-600'}
-            rounded border-2 bg-gray-800
-            focus:ring-2 focus:ring-offset-0
+            ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'}
+            rounded border-2 bg-white dark:bg-gray-800
+            focus:ring-2 focus:ring-offset-1
             disabled:opacity-50 disabled:cursor-not-allowed
             transition-all duration-200
             cursor-pointer
           `.trim().replace(/\s+/g, ' ')}
         />
         {displayLabel && (
-          <label className="ml-2 text-sm text-gray-300 cursor-pointer select-none">
+          <label className="ml-2 text-sm font-semibold text-gray-900 dark:text-gray-100 cursor-pointer select-none">
             {displayLabel}
-            {required && <span className="text-red-400 ml-1">*</span>}
+            {required && <span className="text-red-500 dark:text-red-400 ml-1">*</span>}
           </label>
         )}
       </div>

@@ -1,5 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { PieChart as MuiPieChart } from '@mui/x-charts/PieChart';
+import { getSurfaceClasses } from '@/theme/designTokens';
+import type { SurfaceVariant, ElevationLevel } from '../core/types';
 
 interface PieChartProps {
   /** Chart title */
@@ -48,6 +50,9 @@ interface PieChartProps {
 
   /** Optional CSS class names */
   className?: string;
+
+  variant?: SurfaceVariant;
+  elevation?: ElevationLevel;
 }
 
 const PieChart: React.FC<PieChartProps> = ({
@@ -57,8 +62,10 @@ const PieChart: React.FC<PieChartProps> = ({
   width: propWidth,
   height: propHeight = 300,
   legend = true,
-  margin = { top: 10, right: 10, bottom: legend ? 80 : 10, left: 10 },
+  margin = { top: 10, right: 10, bottom: legend ? 80 : 10, left: 60 },
   className = '',
+  variant = 'default',
+  elevation = 'raised',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [chartSize, setChartSize] = useState({ width: propWidth || 400, height: propHeight });
@@ -103,7 +110,7 @@ const PieChart: React.FC<PieChartProps> = ({
 
   if (!hasValidData) {
     return (
-      <div className={`${className || 'w-full h-full'} card rounded-card p-6`}>
+      <div className={`${className || 'w-full h-full'} ${getSurfaceClasses(variant, elevation)} rounded-2xl p-6`}>
         {(title || description) && (
           <div className="mb-6 text-center">
             {title && (

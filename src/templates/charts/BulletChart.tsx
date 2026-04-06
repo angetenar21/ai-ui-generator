@@ -58,6 +58,7 @@ interface BulletChartProps {
 
   /** Show value labels */
   showLabels?: boolean;
+
 }
 
 const BulletChart: React.FC<BulletChartProps> = ({

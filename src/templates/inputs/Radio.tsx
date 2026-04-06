@@ -65,7 +65,7 @@ const Radio: React.FC<RadioProps> = ({
   };
 
   const colorClasses = {
-    primary: 'text-blue-600 focus:ring-emerald-500',
+    primary: 'text-emerald-600 focus:ring-emerald-500',
     secondary: 'text-gray-600 focus:ring-gray-500',
     success: 'text-green-600 focus:ring-green-500',
     warning: 'text-yellow-600 focus:ring-yellow-500',
@@ -75,7 +75,7 @@ const Radio: React.FC<RadioProps> = ({
   return (
     <div className="my-4">
       {label && (
-        <label className="block text-sm font-medium text-gray-300 mb-3">
+        <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
           {label}
           {required && <span className="text-red-400 ml-1">*</span>}
         </label>
@@ -99,9 +99,9 @@ const Radio: React.FC<RadioProps> = ({
                 className={`
                   ${sizeClasses[size]}
                   ${colorClasses[color]}
-                  ${error ? 'border-red-500' : 'border-gray-600'}
-                  border-2 bg-gray-800
-                  focus:ring-2 focus:ring-offset-0
+                  ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'}
+                  border-2 bg-white dark:bg-gray-800
+                  focus:ring-2 focus:ring-offset-1
                   disabled:opacity-50 disabled:cursor-not-allowed
                   transition-all duration-200
                   cursor-pointer
@@ -109,7 +109,7 @@ const Radio: React.FC<RadioProps> = ({
               />
               <label
                 htmlFor={`${name}-${index}`}
-                className={`ml-2 text-sm text-gray-300 cursor-pointer select-none ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`ml-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer select-none ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 {option.label}
               </label>

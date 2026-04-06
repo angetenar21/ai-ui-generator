@@ -103,13 +103,7 @@ const Stack: React.FC<StackProps> = ({
             )}
           </React.Fragment>
         ))
-      ) : (
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 text-center w-full">
-          <p className="text-gray-500 dark:text-gray-400 text-sm">
-            Stack layout ({direction}) - Add child components
-          </p>
-        </div>
-      )}
+      ) : null}
     </div>
   );
 };

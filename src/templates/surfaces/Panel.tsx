@@ -84,7 +84,7 @@ const Panel: React.FC<PanelProps> = ({
   const secondaryTextClass = 'text-gray-600 dark:text-gray-300';
 
   return (
-    <div className={`${surfaceClasses} rounded-2xl transition-all duration-300 ${className || 'w-full'} max-w-full ${textColorClass} flex flex-col`}>
+    <div className={`${surfaceClasses} rounded-2xl transition-all duration-300 ${className || 'w-full'} max-w-full ${textColorClass} flex flex-col animate-slide-up`}>
       {/* Header */}
       <div
         className={`
@@ -97,7 +97,7 @@ const Panel: React.FC<PanelProps> = ({
         onClick={() => collapsible && setIsCollapsed(!isCollapsed)}
       >
         <div className="flex items-center justify-between">
-          <h3 className={`${textColorClass} font-bold text-base leading-snug tracking-tight`}>
+          <h3 className={`${textColorClass} font-display font-bold text-xl md:text-2xl leading-snug tracking-tight mb-0.5`}>
             {title}
           </h3>
 

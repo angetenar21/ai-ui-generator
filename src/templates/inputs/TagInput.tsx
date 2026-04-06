@@ -115,9 +115,9 @@ const TagInput: React.FC<TagInputProps> = ({
   };
 
   const variantClasses = {
-    outlined: `border-2 ${error ? 'border-red-500' : 'border-gray-600'} focus-within:border-blue-500 bg-transparent`,
-    filled: `border-b-2 ${error ? 'border-red-500' : 'border-gray-600'} focus-within:border-blue-500 bg-gray-800/50`,
-    standard: `border-b-2 ${error ? 'border-red-500' : 'border-gray-600'} focus-within:border-blue-500 bg-transparent`,
+    outlined: `border-2 ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} focus-within:border-emerald-500 bg-white dark:bg-gray-800`,
+    filled: `border-b-2 ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} focus-within:border-emerald-500 bg-gray-100 dark:bg-gray-800/50`,
+    standard: `border-b-2 ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} focus-within:border-emerald-500 bg-transparent`,
   };
 
   const tagSizeClasses = {
@@ -129,7 +129,7 @@ const TagInput: React.FC<TagInputProps> = ({
   return (
     <div className={`my-4 ${fullWidth ? 'w-full' : 'max-w-md'}`}>
       {label && (
-        <label className="block text-sm font-medium text-gray-300 mb-2">
+        <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
           {label}
           {required && <span className="text-red-400 ml-1">*</span>}
         </label>
@@ -140,8 +140,8 @@ const TagInput: React.FC<TagInputProps> = ({
           ${sizeClasses[size]}
           ${variantClasses[variant]}
           ${fullWidth ? 'w-full' : 'w-full'}
-          rounded-lg text-white
-          focus-within:ring-2 focus-within:ring-blue-500/50
+          rounded-lg text-gray-900 dark:text-white
+          focus-within:ring-2 focus-within:ring-emerald-500/50
           ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-text'}
           transition-all duration-200
           flex flex-wrap gap-2 items-center min-h-[2.5rem]
@@ -152,7 +152,7 @@ const TagInput: React.FC<TagInputProps> = ({
             key={index}
             className={`
               ${tagSizeClasses[size]}
-              inline-flex items-center gap-1 bg-blue-600 text-white rounded
+              inline-flex items-center gap-1 bg-emerald-500 dark:bg-emerald-600 text-white rounded
               transition-all duration-150
             `.trim().replace(/\s+/g, ' ')}
           >

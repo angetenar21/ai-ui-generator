@@ -132,15 +132,15 @@ const Calendar: React.FC<CalendarProps> = ({
               key={index}
               onClick={() => handleDateClick(date)}
               className={`
-                aspect-square p-1 rounded-lg
-                transition-all duration-200
-                ${isDisabled ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-800/50'}
-                ${isSelected ? 'bg-blue-600 text-white' : 'text-gray-200'}
-                ${isCurrentDay && !isSelected ? 'border-2 border-blue-500' : ''}
+                aspect-square p-1 rounded-xl
+                transition-all duration-300 transform hover:scale-[1.02]
+                ${isDisabled ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800/80'}
+                ${isSelected ? 'bg-emerald-500 shadow-lg shadow-emerald-500/25 ring-2 ring-emerald-500 ring-offset-2 ring-offset-white dark:ring-offset-gray-900' : ''}
+                ${isCurrentDay && !isSelected ? 'ring-1 ring-inset ring-gray-200 dark:ring-gray-700 bg-gray-50 dark:bg-gray-800/30' : ''}
               `}
             >
               <div className="flex flex-col h-full">
-                <div className={`text-sm text-center ${isSelected ? 'font-bold' : ''}`}>
+                <div className={`text-sm text-center py-1 mt-1 font-medium ${isSelected ? 'text-white' : 'text-gray-700 dark:text-gray-300'}`}>
                   {date.getDate()}
                 </div>
                 {dayEvents.length > 0 && (
@@ -170,8 +170,8 @@ const Calendar: React.FC<CalendarProps> = ({
 
   return (
     <div className="card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 my-4">
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-display font-semibold text-white">
+      <div className="flex items-center justify-between mb-8">
+        <h3 className="text-xl font-display font-semibold text-gray-900 dark:text-white">
           {title}
         </h3>
         <div className="flex items-center gap-4">

@@ -50,6 +50,7 @@ interface DonutChartProps {
     bottom?: number;
     left?: number;
   };
+
 }
 
 const DonutChart: React.FC<DonutChartProps> = ({
@@ -64,7 +65,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
   height: propHeight = 300,
   legend = true,
   centerLabel,
-  margin = { top: 10, right: 10, bottom: legend ? 80 : 10, left: 10 },
+  margin = { top: 10, right: 10, bottom: legend ? 80 : 10, left: 60 },
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [chartSize, setChartSize] = useState({ width: propWidth || 400, height: propHeight });

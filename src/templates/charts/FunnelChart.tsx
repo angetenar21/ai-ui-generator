@@ -12,6 +12,7 @@ interface FunnelChartProps {
   height?: number;
   colors?: string[];
   legend?: boolean;
+
 }
 
 // Default color palette for funnel segments
@@ -129,7 +130,7 @@ const FunnelChart: React.FC<FunnelChartProps> = ({
       )}
 
       <ResponsiveContainer width="100%" height={height} minHeight={360}>
-        <RechartsFunnelChart data={labeledData} margin={{ top: 16, right: 64, bottom: 24, left: 16 }}>
+        <RechartsFunnelChart data={labeledData} margin={{ top: 16, right: 64, bottom: 24, left: 60 }}>
           <Tooltip
             contentStyle={{
               backgroundColor: isDarkMode ? '#1f2937' : '#ffffff',

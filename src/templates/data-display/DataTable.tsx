@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useData } from '../core/DataContext';
+import { RenderNode } from '../core/renderer';
 
 interface DataTableColumn {
   id?: string;
@@ -103,6 +104,11 @@ const DataTable: React.FC<DataTableProps> = ({
     }
 
     if (typeof value === 'object') {
+      // If it looks like a component spec (e.g. { name: 'badge', templateProps: {...} })
+      if (value.name || value.type) {
+        return <RenderNode spec={value} />;
+      }
+      
       // Render avatar/image objects
       if (value.src) {
         return (
@@ -217,7 +223,7 @@ const DataTable: React.FC<DataTableProps> = ({
   }
 
   return (
-    <div className="w-full max-w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden my-2">
+    <div className="w-full max-w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-x-auto my-2">
       {title && (
         <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-800">
           <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">

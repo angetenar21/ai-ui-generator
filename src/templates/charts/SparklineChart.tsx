@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
+import type { SurfaceVariant, ElevationLevel } from '../core/types';
 
 interface SparklineChartProps {
   /** Chart title */
@@ -43,6 +44,9 @@ interface SparklineChartProps {
 
   children?: React.ReactNode;
   renderChild?: (child: any) => React.ReactNode;
+
+  variant?: SurfaceVariant;
+  elevation?: ElevationLevel;
 }
 
 const SparklineChart: React.FC<SparklineChartProps> = ({
@@ -182,7 +186,7 @@ const SparklineChart: React.FC<SparklineChartProps> = ({
                 }]}
                 width={chartWidth}
                 height={height}
-                margin={{ top: 20, right: 20, bottom: 30, left: 50 }}
+                margin={{ top: 20, right: 20, bottom: 30, left: 60 }}
                 yAxis={[{
                   min: yAxisMin,
                   max: yAxisMax,

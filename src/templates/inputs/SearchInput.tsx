@@ -84,7 +84,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
   return (
     <div className={`my-4 ${fullWidth ? 'w-full' : 'max-w-md'}`}>
       {label && (
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+        <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
           {label}
         </label>
       )}
@@ -125,7 +125,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
             <button
               type="button"
               onClick={handleClear}
-              className="text-gray-400 hover:text-gray-300 transition-colors"
+              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
               aria-label="Clear search"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -138,7 +138,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
               type="button"
               onClick={handleSearchClick}
               disabled={disabled || loading}
-              className="text-gray-400 hover:text-blue-500 transition-colors disabled:opacity-50"
+              className="text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors disabled:opacity-50"
               aria-label="Search"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

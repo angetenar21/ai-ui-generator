@@ -1,5 +1,7 @@
 import React from 'react';
 import { ResponsiveContainer, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar } from 'recharts';
+import { getSurfaceClasses } from '@/theme/designTokens';
+import type { SurfaceVariant, ElevationLevel } from '../core/types';
 
 interface StackedBarChartProps {
   title?: string;
@@ -13,6 +15,9 @@ interface StackedBarChartProps {
 }>;
   series?: Array<{ dataKey: string; name?: string; color?: string; stackId?: string }>;
   layout?: 'horizontal' | 'vertical';
+
+  variant?: SurfaceVariant;
+  elevation?: ElevationLevel;
 }
 
 // Color palette for stacked bars
@@ -23,8 +28,8 @@ const COLOR_PALETTE = [
   '#8B5CF6', // Violet
   '#EC4899', // Pink
   '#06B6D4', // Cyan
-  '#F59E0B', // Teal
   '#14B8A6', // Teal
+  '#22C55E', // Jade
   '#6366F1', // Indigo
   '#D946EF', // Fuchsia
 ];
@@ -36,7 +41,9 @@ const StackedBarChart: React.FC<StackedBarChartProps> = ({
   height = 400,
   xAxis,
   series,
-  layout = 'vertical'
+  layout = 'vertical',
+  variant = 'default',
+  elevation = 'raised',
 }) => {
   // Detect dark mode
   const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
@@ -71,7 +78,7 @@ const StackedBarChart: React.FC<StackedBarChartProps> = ({
   // Validate data
   if (!data || data.length === 0 || !detectedSeries || detectedSeries.length === 0) {
     return (
-      <div className="card border hover:shadow-hover transition-all duration-300 rounded-card p-6">
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && (
           <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
             {title}
@@ -90,7 +97,7 @@ const StackedBarChart: React.FC<StackedBarChartProps> = ({
   }
 
   return (
-    <div className="card border hover:shadow-hover transition-all duration-300 rounded-card p-6">
+    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
       {(title || description) && (
         <div className="mb-6">
           {title && (
@@ -108,7 +115,7 @@ const StackedBarChart: React.FC<StackedBarChartProps> = ({
       <ResponsiveContainer width="100%" height={height}>
         <BarChart
           data={data}
-          margin={{ top: 20, right: 30, bottom: 20, left: 20 }}
+          margin={{ top: 20, right: 30, bottom: 20, left: 60 }}
           layout={layout}
         >
           <CartesianGrid strokeDasharray="3 3" stroke={gridColor} opacity={0.5} />
@@ -160,6 +167,7 @@ const StackedBarChart: React.FC<StackedBarChartProps> = ({
                 stackId={s.stackId || '1'}
                 fill={color}
                 radius={[4, 4, 0, 0]}
+                maxBarSize={60}
               />
             );
           })}

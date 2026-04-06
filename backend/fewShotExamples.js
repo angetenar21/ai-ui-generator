@@ -2,13 +2,14 @@
  * fewShotExamples.js
  * 
  * Dynamic Few-Shot Injection for UI Generation Quality.
- * 
- * Provides golden prompt→output examples for each UI category, and
- * an intent classifier that selects the best example to inject into
- * the Gemini call before the user's message.
+ * Now supercharged with Vector Embeddings (Rich Man's RAG)!
  */
 
-// ─── INTENT KEYWORD MAP ────────────────────────────────────────────────────────
+import fs from 'fs';
+import path from 'path';
+import Logger from './logger.js';
+
+// ─── INTENT KEYWORD MAP (For Schema Scoping) ──────────────────────────────────
 const INTENT_KEYWORDS = {
   form: ['form', 'input', 'contact', 'signup', 'sign up', 'register', 'registration', 'login', 'log in', 'feedback', 'survey', 'questionnaire', 'submit'],
   dashboard: ['dashboard', 'overview', 'analytics', 'metrics', 'kpi', 'stats', 'statistics', 'admin', 'monitor', 'report'],
@@ -17,10 +18,11 @@ const INTENT_KEYWORDS = {
   modal: ['modal', 'dialog', 'popup', 'confirmation', 'alert dialog', 'drawer', 'overlay'],
   team: ['team', 'member', 'people', 'our team', 'about us', 'staff', 'employee', 'profile card', 'bio', 'person card'],
   landing: ['landing', 'hero', 'homepage', 'marketing', 'product page', 'feature', 'pricing', 'cta', 'call to action'],
+  music: ['music', 'player', 'audio', 'song', 'spotify', 'track', 'playlist', 'album', 'now playing'],
+  kanban: ['kanban', 'board', 'jira', 'trello', 'drag', 'column'],
+  chat: ['chat', 'message', 'conversation', 'social', 'feed', 'wizard']
 };
 
-// ─── COMPONENT SCOPE MAP ──────────────────────────────────────────────────────
-// Used by component-scoped retrieval to pre-load relevant schemas
 export const INTENT_COMPONENTS = {
   form: ['text-field', 'textarea', 'button', 'panel', 'select', 'checkbox', 'switch', 'stack', 'grid', 'callout'],
   dashboard: ['panel', 'summary-card', 'bar-chart', 'line-chart', 'data-table', 'grid', 'stack', 'badge'],
@@ -29,507 +31,152 @@ export const INTENT_COMPONENTS = {
   modal: ['modal', 'button', 'text', 'stack', 'callout', 'badge'],
   team: ['summary-card', 'grid', 'stack', 'avatar', 'text', 'badge', 'panel'],
   landing: ['panel', 'grid', 'stack', 'text', 'button', 'image', 'summary-card', 'badge'],
+  music: ['panel', 'image', 'text', 'slider', 'button', 'flexbox', 'stack'],
+  kanban: ['kanban', 'panel', 'stack', 'badge', 'button', 'flexbox', 'avatar'],
+  chat: ['panel', 'avatar', 'text', 'text-field', 'button', 'stack', 'flexbox']
 };
 
-// ─── GOLDEN EXAMPLES ──────────────────────────────────────────────────────────
-
-const FEW_SHOT_EXAMPLES = {
-
-  // ── FORM ─────────────────────────────────────────────────────────────────────
-  form: {
-    userPrompt: 'Create a contact form with name, email, subject, and message fields.',
-    idealOutput: `{
-  "name": "stack",
-  "templateProps": {
-    "direction": "vertical",
-    "spacing": "large",
-    "children": [
-      {
-        "name": "panel",
-        "templateProps": {
-          "title": "Contact Us",
-          "variant": "gradient",
-          "elevation": "floating",
-          "emphasis": "high",
-          "children": [
-            {
-              "name": "stack",
-              "templateProps": {
-                "direction": "vertical",
-                "spacing": "medium",
-                "children": [
-                  {
-                    "name": "text",
-                    "templateProps": {
-                      "variant": "body",
-                      "content": "We'd love to hear from you. Fill in the form and we'll get back within 24 hours.",
-                      "align": "center"
-                    }
-                  },
-                  {
-                    "name": "grid",
-                    "templateProps": {
-                      "columns": { "xs": 1, "sm": 2 },
-                      "gap": "medium",
-                      "children": [
-                        {
-                          "name": "text-field",
-                          "templateProps": {
-                            "label": "Full Name",
-                            "placeholder": "Enter your full name",
-                            "required": true
-                          }
-                        },
-                        {
-                          "name": "text-field",
-                          "templateProps": {
-                            "label": "Email Address",
-                            "placeholder": "you@example.com",
-                            "type": "email",
-                            "required": true
-                          }
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "name": "text-field",
-                    "templateProps": {
-                      "label": "Subject",
-                      "placeholder": "What is this about?",
-                      "required": true
-                    }
-                  },
-                  {
-                    "name": "textarea",
-                    "templateProps": {
-                      "label": "Message",
-                      "placeholder": "Enter your message here...",
-                      "rows": 5,
-                      "required": true
-                    }
-                  },
-                  {
-                    "name": "button",
-                    "templateProps": {
-                      "label": "Send Message",
-                      "variant": "primary",
-                      "size": "large",
-                      "fullWidth": true
-                    }
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      }
-    ]
-  }
-}`,
-  },
-
-  // ── DASHBOARD ────────────────────────────────────────────────────────────────
-  dashboard: {
-    userPrompt: 'Create a sales analytics dashboard with KPI cards, a revenue chart, and a data table.',
-    idealOutput: `{
-  "name": "stack",
-  "templateProps": {
-    "spacing": "large",
-    "children": [
-      {
-        "name": "panel",
-        "templateProps": {
-          "title": "Sales Analytics",
-          "variant": "gradient",
-          "elevation": "floating",
-          "emphasis": "high",
-          "children": [
-            {
-              "name": "text",
-              "templateProps": {
-                "variant": "body",
-                "content": "Real-time overview of your sales performance.",
-                "align": "center"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "name": "grid",
-        "templateProps": {
-          "columns": { "xs": 1, "sm": 2, "md": 4 },
-          "gap": "medium",
-          "children": [
-            { "name": "summary-card", "templateProps": { "title": "Total Revenue", "items": [{ "label": "Amount", "value": "$128,450", "change": "+12%", "changeType": "positive" }], "variant": "accent", "elevation": "floating" } },
-            { "name": "summary-card", "templateProps": { "title": "Active Orders", "items": [{ "label": "Orders", "value": "1,284", "change": "+5%", "changeType": "positive" }], "variant": "elevated", "elevation": "raised" } },
-            { "name": "summary-card", "templateProps": { "title": "Avg. Order", "items": [{ "label": "Value", "value": "$99.80", "change": "-2%", "changeType": "negative" }], "variant": "elevated", "elevation": "raised" } },
-            { "name": "summary-card", "templateProps": { "title": "Conversion", "items": [{ "label": "Rate", "value": "3.4%", "change": "+0.6%", "changeType": "positive" }], "variant": "elevated", "elevation": "raised" } }
-          ]
-        }
-      },
-      {
-        "name": "panel",
-        "templateProps": {
-          "title": "Revenue Trend",
-          "variant": "elevated",
-          "elevation": "raised",
-          "emphasis": "medium",
-          "headerVariant": "minimal",
-          "children": [
-            {
-              "name": "bar-chart",
-              "templateProps": {
-                "palette": "vibrant",
-                "height": 320,
-                "xAxis": { "data": ["Jan","Feb","Mar","Apr","May","Jun"] },
-                "series": [{ "name": "Revenue", "data": [42000, 55000, 48000, 71000, 92000, 128450] }]
-              }
-            }
-          ]
-        }
-      },
-      {
-        "name": "data-table",
-        "templateProps": {
-          "title": "Recent Orders",
-          "searchable": true,
-          "sortable": true,
-          "columns": ["Order ID", "Customer", "Amount", "Status"],
-          "rows": [
-            ["#1042", "Alice Johnson", "$340", { "type": "badge", "label": "Completed", "color": "green" }],
-            ["#1041", "Bob Smith", "$125", { "type": "badge", "label": "Pending", "color": "yellow" }],
-            ["#1040", "Carol White", "$890", { "type": "badge", "label": "Completed", "color": "green" }]
-          ]
-        }
-      }
-    ]
-  }
-}`,
-  },
-
-  // ── CHART ────────────────────────────────────────────────────────────────────
-  chart: {
-    userPrompt: 'Create a line chart showing monthly website traffic over the year.',
-    idealOutput: `{
-  "name": "panel",
-  "templateProps": {
-    "title": "Monthly Website Traffic",
-    "variant": "elevated",
-    "elevation": "raised",
-    "emphasis": "medium",
-    "headerVariant": "minimal",
-    "children": [
-      {
-        "name": "line-chart",
-        "templateProps": {
-          "palette": "gradient",
-          "height": 380,
-          "xAxis": { "data": ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"] },
-          "series": [
-            { "name": "Visitors", "data": [12400, 15800, 14200, 19600, 22300, 28100, 31500, 29800, 25400, 27900, 33200, 38700] }
-          ]
-        }
-      }
-    ]
-  }
-}`,
-  },
-
-  // ── TABLE ────────────────────────────────────────────────────────────────────
-  table: {
-    userPrompt: 'Create a user management table with columns for name, email, role, and status.',
-    idealOutput: `{
-  "name": "stack",
-  "templateProps": {
-    "spacing": "large",
-    "children": [
-      {
-        "name": "grid",
-        "templateProps": {
-          "columns": { "xs": 1, "sm": 3 },
-          "gap": "medium",
-          "children": [
-            { "name": "summary-card", "templateProps": { "title": "Total Users", "items": [{ "label": "Count", "value": "2,481" }], "variant": "accent", "elevation": "floating" } },
-            { "name": "summary-card", "templateProps": { "title": "Active", "items": [{ "label": "Users", "value": "2,104" }], "variant": "elevated", "elevation": "raised" } },
-            { "name": "summary-card", "templateProps": { "title": "Admins", "items": [{ "label": "Users", "value": "12" }], "variant": "elevated", "elevation": "raised" } }
-          ]
-        }
-      },
-      {
-        "name": "data-table",
-        "templateProps": {
-          "title": "User Management",
-          "searchable": true,
-          "sortable": true,
-          "columns": ["Name", "Email", "Role", "Status"],
-          "rows": [
-            ["Alice Johnson", "alice@example.com", "Admin", { "type": "badge", "label": "Active", "color": "green" }],
-            ["Bob Smith", "bob@example.com", "Editor", { "type": "badge", "label": "Active", "color": "green" }],
-            ["Carol White", "carol@example.com", "Viewer", { "type": "badge", "label": "Inactive", "color": "gray" }]
-          ]
-        }
-      }
-    ]
-  }
-}`,
-  },
-
-  // ── TEAM MEMBERS ─────────────────────────────────────────────────────────────
-  team: {
-    userPrompt: 'Create team member cards showing name, role, bio, and social links for 4 team members.',
-    idealOutput: `{
-  "name": "stack",
-  "templateProps": {
-    "spacing": "large",
-    "children": [
-      {
-        "name": "panel",
-        "templateProps": {
-          "title": "Meet Our Team",
-          "variant": "gradient",
-          "elevation": "floating",
-          "emphasis": "high",
-          "children": [
-            {
-              "name": "text",
-              "templateProps": {
-                "variant": "body",
-                "content": "The talented people behind our product.",
-                "align": "center"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "name": "grid",
-        "templateProps": {
-          "columns": { "xs": 1, "sm": 2, "md": 2, "lg": 4 },
-          "gap": "medium",
-          "children": [
-            {
-              "name": "summary-card",
-              "templateProps": {
-                "title": "Jane Doe",
-                "description": "CEO — 20 years in tech. Drives strategic direction and innovation across the company.",
-                "variant": "elevated",
-                "elevation": "raised",
-                "emphasis": "medium",
-                "items": [
-                  { "label": "Role", "value": "Chief Executive Officer" },
-                  { "label": "LinkedIn", "value": "linkedin.com/in/janedoe" },
-                  { "label": "Twitter", "value": "@janedoe" }
-                ]
-              }
-            },
-            {
-              "name": "summary-card",
-              "templateProps": {
-                "title": "John Smith",
-                "description": "CTO — Architect of our scalable platform. Leads engineering with a passion for robust systems.",
-                "variant": "accent",
-                "elevation": "raised",
-                "emphasis": "medium",
-                "items": [
-                  { "label": "Role", "value": "Chief Technology Officer" },
-                  { "label": "GitHub", "value": "github.com/johnsmith" },
-                  { "label": "Twitter", "value": "@johnsmith" }
-                ]
-              }
-            },
-            {
-              "name": "summary-card",
-              "templateProps": {
-                "title": "Emily White",
-                "description": "VP of Product — Bridges user needs and technical execution. Dedicated to intuitive products.",
-                "variant": "elevated",
-                "elevation": "raised",
-                "emphasis": "medium",
-                "items": [
-                  { "label": "Role", "value": "VP of Product" },
-                  { "label": "LinkedIn", "value": "linkedin.com/in/emilywhite" },
-                  { "label": "Dribbble", "value": "dribbble.com/emilywhite" }
-                ]
-              }
-            },
-            {
-              "name": "summary-card",
-              "templateProps": {
-                "title": "Michael Brown",
-                "description": "Lead Designer — Creative vision shaping our brand through beautiful, functional design.",
-                "variant": "gradient",
-                "elevation": "floating",
-                "emphasis": "high",
-                "items": [
-                  { "label": "Role", "value": "Lead Designer" },
-                  { "label": "Portfolio", "value": "michaelbrown.design" },
-                  { "label": "Twitter", "value": "@mbrown" }
-                ]
-              }
-            }
-          ]
-        }
-      }
-    ]
-  }
-}`,
-  },
-
-  // ── MODAL ────────────────────────────────────────────────────────────────────
-  modal: {
-    userPrompt: 'Create a confirmation dialog for deleting an item.',
-    idealOutput: `{
-  "name": "modal",
-  "templateProps": {
-    "title": "Delete Item",
-    "variant": "elevated",
-    "open": true,
-    "children": [
-      {
-        "name": "stack",
-        "templateProps": {
-          "spacing": "medium",
-          "children": [
-            {
-              "name": "callout",
-              "templateProps": {
-                "title": "This action is irreversible",
-                "content": "Are you sure you want to delete this item? This cannot be undone.",
-                "tone": "error",
-                "variant": "elevated",
-                "emphasis": "medium"
-              }
-            },
-            {
-              "name": "grid",
-              "templateProps": {
-                "columns": { "xs": 2 },
-                "gap": "medium",
-                "children": [
-                  { "name": "button", "templateProps": { "label": "Cancel", "variant": "secondary", "size": "medium" } },
-                  { "name": "button", "templateProps": { "label": "Delete", "variant": "danger", "size": "medium" } }
-                ]
-              }
-            }
-          ]
-        }
-      }
-    ]
-  }
-}`,
-  },
-
-  // ── LANDING PAGE ─────────────────────────────────────────────────────────────
-  landing: {
-    userPrompt: 'Create a hero section for a SaaS product landing page.',
-    idealOutput: `{
-  "name": "stack",
-  "templateProps": {
-    "spacing": "large",
-    "children": [
-      {
-        "name": "panel",
-        "templateProps": {
-          "variant": "gradient",
-          "elevation": "floating",
-          "emphasis": "high",
-          "children": [
-            {
-              "name": "stack",
-              "templateProps": {
-                "spacing": "medium",
-                "direction": "vertical",
-                "children": [
-                  { "name": "text", "templateProps": { "variant": "heading-1", "content": "Build Better Products, Faster", "align": "center" } },
-                  { "name": "text", "templateProps": { "variant": "body", "content": "The AI-powered platform that turns your ideas into production-ready UI in seconds.", "align": "center" } },
-                  {
-                    "name": "grid",
-                    "templateProps": {
-                      "columns": { "xs": 1, "sm": 2 },
-                      "gap": "medium",
-                      "children": [
-                        { "name": "button", "templateProps": { "label": "Get Started Free", "variant": "primary", "size": "large" } },
-                        { "name": "button", "templateProps": { "label": "View Demo", "variant": "secondary", "size": "large" } }
-                      ]
-                    }
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      },
-      {
-        "name": "grid",
-        "templateProps": {
-          "columns": { "xs": 1, "sm": 2, "md": 4 },
-          "gap": "medium",
-          "children": [
-            { "name": "summary-card", "templateProps": { "title": "10x Faster", "description": "Generate complete UIs from natural language descriptions", "variant": "elevated", "elevation": "raised" } },
-            { "name": "summary-card", "templateProps": { "title": "Production Ready", "description": "All outputs follow design system rules and accessibility standards", "variant": "accent", "elevation": "raised" } },
-            { "name": "summary-card", "templateProps": { "title": "No Code", "description": "No coding required — just describe what you want in plain English", "variant": "elevated", "elevation": "raised" } },
-            { "name": "summary-card", "templateProps": { "title": "Team-Friendly", "description": "Collaborate with your team using version control and sharing", "variant": "gradient", "elevation": "floating" } }
-          ]
-        }
-      }
-    ]
-  }
-}`,
-  },
-};
-
-// ─── PUBLIC API ────────────────────────────────────────────────────────────────
-
-/**
- * Detects what category of UI the user is asking for.
- * Returns the first matching intent key, or null.
- */
 export function detectIntent(userMessage) {
   if (!userMessage || typeof userMessage !== 'string') return null;
   const lower = userMessage.toLowerCase();
   for (const [intent, keywords] of Object.entries(INTENT_KEYWORDS)) {
-    if (keywords.some(kw => lower.includes(kw))) {
-      return intent;
-    }
+    if (keywords.some(kw => lower.includes(kw))) return intent;
   }
   return null;
 }
 
-/**
- * Builds the few-shot injection string for a given user message.
- * Returns null if no matching intent is found.
- */
-export function getFewShotForMessage(userMessage) {
+export function getRelevantComponents(userMessage) {
   const intent = detectIntent(userMessage);
-  if (!intent) return null;
+  return intent ? INTENT_COMPONENTS[intent] : null;
+}
 
-  const example = FEW_SHOT_EXAMPLES[intent];
-  if (!example) return null;
 
-  return `## GOLDEN EXAMPLE — ${intent.toUpperCase()} UI
+// ─── THE RAG ENGINE (Vector Similarity Search) ───────────────────────────────
 
-Here is a real example of an IDEAL output for a request like this. 
-STUDY this output carefully — it shows you the correct design pattern, variant choices, elevation, spacing and hierarchy.
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+const GOLDEN_DIR = path.join(__dirname, 'golden_dataset');
 
-REQUEST: "${example.userPrompt}"
+// In-Memory Vector Database
+let vectorDb = null;
 
-IDEAL OUTPUT:
-\`\`\`json
-${example.idealOutput}
-\`\`\`
+// Cosine Similarity Math
+function cosineSimilarity(vecA, vecB) {
+  let dotProduct = 0, normA = 0, normB = 0;
+  for (let i = 0; i < vecA.length; i++) {
+    dotProduct += vecA[i] * vecB[i];
+    normA += vecA[i] * vecA[i];
+    normB += vecB[i] * vecB[i];
+  }
+  return (normA === 0 || normB === 0) ? 0 : dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
+}
 
-Apply the SAME design quality and structure (gradient hero, varied variants, elevation hierarchy) to the user's actual request.
-Do NOT copy this example literally — use it as a quality template.`;
+// Fetch embeddings directly from Gemini REST API
+async function fetchEmbedding(text, config) {
+  if (!config) return null;
+  const { useVertex, currentKey, hasAccessToken, hasApiKey, headers } = config;
+  
+  let url = '';
+  if (useVertex) {
+     const PROJECT_ID = process.env.GEMINI_PROJECT_ID;
+     const LOCATION = process.env.GEMINI_LOCATION || 'us-central1';
+     url = `https://${LOCATION}-aiplatform.googleapis.com/v1/projects/${PROJECT_ID}/locations/${LOCATION}/publishers/google/models/text-embedding-004:predict`;
+  } else {
+     url = `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent`;
+     if (!hasAccessToken && hasApiKey) url += `?key=${currentKey}`;
+  }
+
+  const payload = useVertex ? { instances: [{ content: text }] } : { model: 'models/text-embedding-004', content: { parts: [{ text }] } };
+
+  try {
+    const response = await fetch(url, { method: 'POST', headers, body: JSON.stringify(payload) });
+    if (!response.ok) return null;
+    const data = await response.json();
+    return useVertex ? data.predictions[0].embeddings.values : data.embedding.values;
+  } catch (err) {
+    Logger.error('[RAG] External Embedding API Call failed', err);
+    return null;
+  }
+}
+
+// Ensure the Vector DB is loaded and embeddings are computed for the JSONs
+async function initVectorDb(config) {
+  if (vectorDb !== null) return vectorDb; // Singleton Pattern
+  vectorDb = [];
+  
+  if (!fs.existsSync(GOLDEN_DIR)) return vectorDb;
+  
+  const files = fs.readdirSync(GOLDEN_DIR).filter(f => f.endsWith('.json'));
+  Logger.info(`[RAG Engine] Found ${files.length} JSON blueprints. Generating vector embeddings...`);
+  
+  for (const file of files) {
+    const rawContent = fs.readFileSync(path.join(GOLDEN_DIR, file), 'utf-8');
+    const cleanName = file.replace('.json', '').replace('_', ' ');
+    // Pack the prompt so the embedding model understands context
+    const description = `This is a perfect UI layout for a ${cleanName}. It contains ${rawContent.substring(0, 300)}`;
+    
+    // Attempt real vector embedding
+    const embedding = await fetchEmbedding(description, config);
+    vectorDb.push({ filename: file, content: rawContent, embedding, cleanName });
+  }
+  
+  const successCount = vectorDb.filter(v => v.embedding).length;
+  Logger.info(`[RAG Engine] Successfully armed ${successCount} blueprints into the Vector Space!`);
+  return vectorDb;
 }
 
 /**
- * Returns the list of component names most likely needed for this request.
- * Used for component-scoped retrieval.
+ * Retrieves the single best Golden Example from the dataset by matching
+ * the user's prompt mathematically against the available blueprints.
  */
-export function getRelevantComponents(userMessage) {
-  const intent = detectIntent(userMessage);
-  if (!intent) return null;
-  return INTENT_COMPONENTS[intent] || null;
+export async function getFewShotForMessage(userMessage, config) {
+  const db = await initVectorDb(config);
+  if (db.length === 0) return null;
+
+  // Track the absolute best match
+  let bestMatch = null;
+  let highestScore = -1;
+
+  // 1. Get the embedding "Vector" of the User's Prompt
+  const userEmbedding = await fetchEmbedding(userMessage, config);
+
+  if (userEmbedding) {
+    // 2. TRUE RAG (Cosine Similarity Search)
+    for (const doc of db) {
+      if (!doc.embedding) continue;
+      const score = cosineSimilarity(userEmbedding, doc.embedding);
+      if (score > highestScore) {
+        highestScore = score;
+        bestMatch = doc;
+      }
+    }
+    Logger.info(`[RAG Engine] Identified nearest vector: ${bestMatch?.filename} (Match Quality: ${Math.round(highestScore * 100)}%)`);
+  } else {
+    // FALLBACK: If embedding fails, do basic keyword/filename matching
+    const lowerMessage = userMessage.toLowerCase();
+    for (const doc of db) {
+      let score = 0;
+      const terms = doc.cleanName.split(' ');
+      terms.forEach(t => { if (lowerMessage.includes(t)) score += 10; });
+      if (score > highestScore) {
+        highestScore = score;
+        bestMatch = doc;
+      }
+    }
+    Logger.info(`[RAG Engine] Fallback keyword search hit: ${bestMatch?.filename || 'None'}`);
+  }
+
+  // Absolute fallback: if no file matches conceptually, inject the dashboard because it's a deep structure
+  if (!bestMatch) bestMatch = db.find(d => d.filename.includes('analytics')) || db[0];
+
+  return `## GOLDEN REPOSITORY BLUEPRINT — ${bestMatch.filename.toUpperCase()}
+
+I searched the production Vector Database and retrieved this exact high-quality JSON as a structural layout blueprint that is mathematically similar to reality.
+STUDY this output carefully — it demonstrates perfect component composition, variant selections, spacing, and styling hierarchy.
+
+IDEAL STRUCTURE FOR REFERENCE:
+\`\`\`json
+${bestMatch.content}
+\`\`\`
+
+Apply the SAME architectural layout mechanics, elevation, padding, and data density to your final JSON. Do NOT copy this example contextually. Just mathematically map its UI tree structure.`;
 }

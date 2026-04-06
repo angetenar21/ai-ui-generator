@@ -1,5 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Gauge } from '@mui/x-charts/Gauge';
+import { getSurfaceClasses } from '@/theme/designTokens';
+import type { SurfaceVariant, ElevationLevel } from '../core/types';
 
 interface ColorLevel {
   value: number;
@@ -63,6 +65,9 @@ interface GaugeChartProps {
 
   children?: React.ReactNode;
   renderChild?: (child: any) => React.ReactNode;
+
+  variant?: SurfaceVariant;
+  elevation?: ElevationLevel;
 }
 
 const GaugeChart: React.FC<GaugeChartProps> = ({
@@ -81,6 +86,8 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
   height: propHeight = 200,
   text,
   color: propColor,
+  variant = 'default',
+  elevation = 'raised',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(propWidth || 300);
@@ -168,7 +175,7 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
   return (
     <div
       ref={containerRef}
-      className="w-full bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-700"
+      className={`w-full ${getSurfaceClasses(variant, elevation)} rounded-xl p-4 transition-all duration-300`}
     >
       {(title || description) && (
         <div className="mb-3 text-center">

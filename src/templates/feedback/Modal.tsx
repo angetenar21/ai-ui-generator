@@ -79,14 +79,14 @@ const Modal: React.FC<ModalProps> = ({
         <>
           {/* Backdrop - Fixed positioning for proper overlay */}
           <div
-            className="fixed inset-0 bg-gray-900/60 dark:bg-black/70 backdrop-blur-md z-[9998] animate-fade-in"
+            className="fixed inset-0 bg-gray-900/60 dark:bg-black/70 backdrop-blur-sm z-[9998] transition-opacity duration-200"
             onClick={closable ? handleClose : undefined}
           />
 
           {/* Modal Container */}
           <div className={`fixed inset-0 flex items-center justify-center ${size === 'fullscreen' ? 'p-2' : 'p-4'} z-[9999] pointer-events-none`}>
             {/* Modal */}
-            <div className={`relative ${sizeClasses[size]} w-full pointer-events-auto bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border border-gray-200/50 dark:border-gray-700/50 ${size === 'fullscreen' ? 'rounded-xl' : 'rounded-2xl'} shadow-[0_32px_64px_-12px_rgba(0,0,0,0.14)] dark:shadow-[0_32px_64px_-12px_rgba(0,0,0,0.4)] flex flex-col overflow-hidden animate-scale-in`}>
+            <div className={`relative ${sizeClasses[size]} w-full pointer-events-auto bg-white dark:bg-gray-900 border border-gray-200/60 dark:border-gray-700/50 ${size === 'fullscreen' ? 'rounded-xl' : 'rounded-2xl'} shadow-2xl dark:shadow-[0_32px_64px_-12px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden transition-all duration-200`}>
               {/* Header */}
               {(title || description || showCloseButton) && (
                 <div className="flex-shrink-0 px-6 py-5 border-b border-gray-100 dark:border-gray-800/60 bg-transparent">

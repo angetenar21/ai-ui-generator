@@ -1,5 +1,7 @@
 import React from 'react';
 import { ResponsiveContainer, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar } from 'recharts';
+import { getSurfaceClasses } from '@/theme/designTokens';
+import type { SurfaceVariant, ElevationLevel } from '../core/types';
 
 interface MultiAxisChartProps {
   title?: string;
@@ -9,9 +11,15 @@ interface MultiAxisChartProps {
 
   children?: React.ReactNode;
   renderChild?: (child: any) => React.ReactNode;
+
+  variant?: SurfaceVariant;
+  elevation?: ElevationLevel;
 }
 
-const MultiAxisChart: React.FC<MultiAxisChartProps> = ({ title, data, height = 400 }) => {
+const MultiAxisChart: React.FC<MultiAxisChartProps> = ({ title, data, height = 400,
+  variant = 'default',
+  elevation = 'raised',
+}) => {
   const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
   const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
   const textColor = isDarkMode ? '#E5E7EB' : '#374151';
@@ -20,10 +28,10 @@ const MultiAxisChart: React.FC<MultiAxisChartProps> = ({ title, data, height = 4
   const legendColor = isDarkMode ? '#E5E7EB' : '#374151';
 
   return (
-    <div className="card border hover:shadow-hover transition-all duration-300 rounded-2xl p-6">
+    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
       {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>}
       <ResponsiveContainer width="100%" height={height}>
-        <BarChart data={data} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+        <BarChart data={data} margin={{ top: 20, right: 20, bottom: 20, left: 60 }}>
           <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
           <XAxis tick={{ fill: textColor }} />
           <YAxis tick={{ fill: textColor }} />

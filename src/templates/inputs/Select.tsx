@@ -113,7 +113,7 @@ const Select: React.FC<SelectProps> = ({
   return (
     <div className={`my-4 relative ${isOpen ? 'z-50' : 'z-10'} ${fullWidth ? 'w-full' : 'max-w-md'}`} ref={wrapperRef}>
       {label && (
-        <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+        <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
           {label}
           {required && <span className="text-red-500 dark:text-red-400 ml-1">*</span>}
         </label>
@@ -136,7 +136,7 @@ const Select: React.FC<SelectProps> = ({
             transition-all duration-200
             disabled:opacity-50 disabled:cursor-not-allowed
             cursor-pointer
-            focus:outline-none
+            focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-1
           `.trim().replace(/\s+/g, ' ')}
         >
           <span className={`truncate ${!selectedLabel ? 'text-gray-400 dark:text-gray-500' : ''}`}>
@@ -157,10 +157,10 @@ const Select: React.FC<SelectProps> = ({
           <div
             className="absolute z-50 mt-1.5 w-full min-w-[160px] bg-white dark:bg-gray-800
                        border border-gray-200 dark:border-gray-700
-                       rounded-xl shadow-xl shadow-black/10 dark:shadow-black/30
-                       overflow-hidden animate-fade-in"
+                       rounded-xl shadow-xl shadow-black/10 dark:shadow-black/30"
           >
-            <div className="max-h-60 overflow-y-auto py-1 scrollbar-thin">
+            {/* overflow-hidden is ONLY on the scroll div, NOT the outer panel — prevents focus ring clipping */}
+            <div className="max-h-60 overflow-y-auto py-1 scrollbar-thin rounded-xl">
               {selectOptions.map((option, index) => {
                 const isSelected = String(option.value) === String(displayValue);
                 return (

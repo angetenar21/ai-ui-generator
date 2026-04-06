@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ScatterChart as MuiScatterChart } from '@mui/x-charts/ScatterChart';
+import { getSurfaceClasses } from '@/theme/designTokens';
+import type { SurfaceVariant, ElevationLevel } from '../core/types';
 
 interface ScatterChartProps {
   /** Chart title */
@@ -59,6 +61,9 @@ interface ScatterChartProps {
     bottom?: number;
     left?: number;
   };
+
+  variant?: SurfaceVariant;
+  elevation?: ElevationLevel;
 }
 
 const ScatterChart: React.FC<ScatterChartProps> = ({
@@ -71,7 +76,9 @@ const ScatterChart: React.FC<ScatterChartProps> = ({
   height = 400,
   grid = { horizontal: true, vertical: true },
   legend = true,
-  margin = { top: 50, right: 30, bottom: 50, left: 30 },
+  margin = { top: 50, right: 30, bottom: 50, left: 60 },
+  variant = 'default',
+  elevation = 'raised',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [chartWidth, setChartWidth] = useState(width);
@@ -114,7 +121,7 @@ const ScatterChart: React.FC<ScatterChartProps> = ({
   if (!hasValidData) {
     console.warn('[ScatterChart] No valid series data provided:', { series });
     return (
-      <div className="card rounded-card p-6 hover:shadow-hover transition-all duration-300">
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {(title || description) && (
           <div className="mb-6">
             {title && (
@@ -197,7 +204,7 @@ const ScatterChart: React.FC<ScatterChartProps> = ({
   });
 
   return (
-    <div className="card rounded-card p-6 hover:shadow-hover transition-all duration-300">
+    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
       {/* Header */}
       {(title || description) && (
         <div className="mb-6">

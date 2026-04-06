@@ -86,7 +86,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
     <div className="my-4 max-w-md">
       {label && (
         <div className="flex justify-between items-center mb-2">
-          <label className="block text-sm font-medium text-gray-300">
+          <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100">
             {label}
             {required && <span className="text-red-400 ml-1">*</span>}
           </label>

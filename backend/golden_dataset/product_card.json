@@ -1,0 +1,140 @@
+{
+  "name": "grid",
+  "templateProps": {
+    "columns": { "xs": 1, "lg": 2 },
+    "gap": "large",
+    "alignItems": "center",
+    "children": [
+      {
+        "name": "image",
+        "templateProps": {
+          "src": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+          "alt": "Premium Wireless Headphones",
+          "aspectRatio": "4:3",
+          "rounded": "xl",
+          "shadow": "xl",
+          "className": "hover:scale-[1.02] transition-transform duration-500 object-cover"
+        }
+      },
+      {
+        "name": "stack",
+        "templateProps": {
+          "direction": "vertical",
+          "spacing": "large",
+          "children": [
+            {
+              "name": "stack",
+              "templateProps": {
+                "direction": "vertical",
+                "spacing": "small",
+                "children": [
+                  {
+                    "name": "flexbox",
+                    "templateProps": {
+                      "gap": "small",
+                      "children": [
+                        { "name": "badge", "templateProps": { "label": "Best Seller", "color": "orange" } },
+                        { "name": "badge", "templateProps": { "label": "Free Shipping", "color": "blue" } }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "text",
+                    "templateProps": {
+                      "content": "Sony WH-1000XM5 Wireless Noise-Canceling Headphones",
+                      "variant": "heading-1",
+                      "className": "font-bold text-gray-900 dark:text-white"
+                    }
+                  },
+                  {
+                    "name": "text",
+                    "templateProps": {
+                      "content": "$398.00",
+                      "variant": "heading-2",
+                      "className": "text-emerald-500"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "text",
+              "templateProps": {
+                "content": "Industry-leading noise cancellation with optimal, high-Resolution Audio. Two processors control 8 microphones for unprecedented noise cancellation.",
+                "variant": "body",
+                "className": "text-gray-600 dark:text-gray-300 leading-relaxed"
+              }
+            },
+            {
+              "name": "grid",
+              "templateProps": {
+                "columns": { "xs": 1, "sm": 3 },
+                "gap": "medium",
+                "children": [
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Battery",
+                      "variant": "default",
+                      "elevation": "flat",
+                      "items": [{ "label": "Life", "value": "30 Hrs" }]
+                    }
+                  },
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Bluetooth",
+                      "variant": "default",
+                      "elevation": "flat",
+                      "items": [{ "label": "Version", "value": "5.2" }]
+                    }
+                  },
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Weight",
+                      "variant": "default",
+                      "elevation": "flat",
+                      "items": [{ "label": "Ounces", "value": "8.8" }]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "flexbox",
+              "templateProps": {
+                "gap": "medium",
+                "align": "center",
+                "children": [
+                  {
+                    "name": "select",
+                    "templateProps": {
+                      "name": "quantity",
+                      "options": [
+                        { "label": "1", "value": "1" },
+                        { "label": "2", "value": "2" },
+                        { "label": "3", "value": "3" }
+                      ],
+                      "defaultValue": "1"
+                    }
+                  },
+                  {
+                    "name": "button",
+                    "templateProps": {
+                      "label": "Add to Cart",
+                      "variant": "primary",
+                      "size": "large",
+                      "icon": "shopping-cart",
+                      "fullWidth": true
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
