@@ -70,7 +70,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   legend = true,
   margin = { top: 50, right: 30, bottom: 50, left: 60 },
   area = false,
-  variant = 'default',
+  variant = 'transparent',
   elevation = 'raised',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -85,9 +85,11 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
       const maxWidth = measuredWidth > 0 ? measuredWidth - 16 : undefined;
       const fallbackWidth = width;
 
-      let nextWidth = fallbackWidth;
+      let nextWidth;
       if (typeof maxWidth === 'number') {
-        nextWidth = Math.min(fallbackWidth, maxWidth);
+        nextWidth = Math.max(200, maxWidth); // Enforce full responsive width, ignore AI-generated fixed widths
+      } else {
+        nextWidth = fallbackWidth;
       }
 
       const minWidth = typeof maxWidth === 'number' ? Math.min(240, maxWidth) : 240;
@@ -110,11 +112,11 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     return (
       <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && (
-          <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
+          <h3 className="text-2xl font-display font-semibold text-zinc-900 dark:text-white mb-2">
             {title}
           </h3>
         )}
-        <div className="text-center text-gray-400">
+        <div className="text-center text-zinc-400">
           <p className="text-sm">No series data for time series chart</p>
         </div>
       </div>
@@ -253,11 +255,11 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     return (
       <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && (
-          <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
+          <h3 className="text-2xl font-display font-semibold text-zinc-900 dark:text-white mb-2">
             {title}
           </h3>
         )}
-        <div className="flex justify-center items-center min-h-[300px] text-gray-600 dark:text-gray-300">
+        <div className="flex justify-center items-center min-h-[300px] text-zinc-600 dark:text-zinc-300">
           <div className="text-center">
             <div className="text-4xl mb-2">📊</div>
             <div>No data available</div>
@@ -308,12 +310,12 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
       {(title || description) && (
         <div className="mb-6">
           {title && (
-            <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
+            <h3 className="text-2xl font-display font-semibold text-zinc-900 dark:text-white mb-2">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+            <p className="text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed">
               {description}
             </p>
           )}
@@ -354,6 +356,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
             },
             '& .MuiChartsAxis-tickLabel': {
               fill: chartColors.tickLabel,
+                      fontFamily: 'inherit',
               fontSize: '13px',
               fontWeight: 500,
             },
@@ -371,6 +374,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
             },
             '& .MuiChartsLegend-series text': {
               fill: `${chartColors.legendText} !important`,
+                      fontFamily: 'inherit',
               fontSize: '12px',
               fontWeight: 500,
             },

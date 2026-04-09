@@ -75,9 +75,9 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const variantClasses = {
-    default: 'bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800',
-    elevated: 'bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 shadow-xl',
-    bordered: 'bg-white dark:bg-gray-900 border-r-2 border-emerald-600',
+    default: 'bg-white dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800',
+    elevated: 'bg-white dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 shadow-xl',
+    bordered: 'bg-white dark:bg-zinc-900 border-r-2 border-indigo-600',
   };
 
   const positionClasses = {
@@ -107,8 +107,8 @@ const Sidebar: React.FC<SidebarProps> = ({
         <button
           onClick={() => hasChildren && toggleExpanded(index)}
           className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 ${item.active
-            ? 'bg-emerald-600 text-white shadow-sm font-medium'
-            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white'
+            ? 'bg-indigo-600 text-white shadow-sm font-medium'
+            : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white'
             } ${depth > 0 ? 'pl-8' : ''}`}
         >
           {item.icon && (
@@ -158,18 +158,18 @@ const Sidebar: React.FC<SidebarProps> = ({
     <aside
       className={`${positionClasses[position]} ${widthClasses[width]} ${variantClasses[variant]} transition-all duration-300 overflow-y-auto min-h-screen flex-shrink-0`}
     >
-      <div className="flex items-center justify-between p-5 border-b border-gray-200 dark:border-gray-800">
+      <div className="flex items-center justify-between p-5 border-b border-zinc-200 dark:border-zinc-800">
         {!isCollapsed && (
           <div className="flex items-center gap-3">
             {logo && <span className="text-2xl">{logo}</span>}
-            <h2 className="text-xl font-display font-bold text-gray-900 dark:text-white">{title}</h2>
+            <h2 className="text-xl font-display font-bold text-zinc-900 dark:text-white">{title}</h2>
           </div>
         )}
         {logo && isCollapsed && <span className="text-2xl mx-auto">{logo}</span>}
         {collapsible && (
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:text-white transition-colors p-1"
+            className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:text-white transition-colors p-1"
           >
             <svg
               className={`w-5 h-5 transition-transform ${isCollapsed ? 'rotate-180' : ''
@@ -194,7 +194,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       </nav>
 
       {Array.isArray(children) && children.length > 0 && renderChild && !isCollapsed && (
-        <div className="p-4 border-t border-gray-200 dark:border-gray-800">
+        <div className="p-4 border-t border-zinc-200 dark:border-zinc-800">
           <div className="space-y-3">
             {children.map((child, index) => (
               <div key={index}>{renderChild(child)}</div>

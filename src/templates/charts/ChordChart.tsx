@@ -37,15 +37,15 @@ const ChordChart: React.FC<ChordChartProps> = ({
   matrix,
   width: _width,
   height: _height,
-  variant = 'default',
+  variant = 'transparent',
   elevation = 'raised',
 }) => {
   // Validate
   if (!nodes || !Array.isArray(nodes) || nodes.length === 0) {
     return (
       <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
-        {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>}
-        <div className="text-center text-gray-400">
+        {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
+        <div className="text-center text-zinc-400">
           <p className="text-sm">No nodes data for chord chart</p>
         </div>
       </div>
@@ -55,8 +55,8 @@ const ChordChart: React.FC<ChordChartProps> = ({
   if (!matrix || !Array.isArray(matrix) || matrix.length === 0) {
     return (
       <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
-        {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>}
-        <div className="text-center text-gray-400">
+        {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
+        <div className="text-center text-zinc-400">
           <p className="text-sm">No matrix data for chord chart</p>
         </div>
       </div>
@@ -75,20 +75,20 @@ const ChordChart: React.FC<ChordChartProps> = ({
 
   return (
     <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
-      {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 text-center">{title}</h3>}
+      {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4 text-center">{title}</h3>}
       {description && (
-        <p className="text-sm text-gray-400 mb-4 text-center">{description}</p>
+        <p className="text-sm text-zinc-400 mb-4 text-center">{description}</p>
       )}
 
       <div className="overflow-auto" style={{ maxWidth: '100%' }}>
         <table className="w-full border-collapse text-sm">
           <thead>
             <tr>
-              <th className="border border-gray-600 bg-gray-800 p-2 text-gray-300 font-semibold sticky left-0"></th>
+              <th className="border border-zinc-600 bg-zinc-800 p-2 text-zinc-300 font-semibold sticky left-0"></th>
               {nodes.map((node, i) => (
                 <th
                   key={i}
-                  className="border border-gray-600 bg-gray-800 p-2 text-gray-300 font-semibold"
+                  className="border border-zinc-600 bg-zinc-800 p-2 text-zinc-300 font-semibold"
                   style={{ minWidth: 80 }}
                 >
                   {node.name}
@@ -99,13 +99,13 @@ const ChordChart: React.FC<ChordChartProps> = ({
           <tbody>
             {matrix.map((row, i) => (
               <tr key={i}>
-                <td className="border border-gray-600 bg-gray-800 p-2 text-gray-300 font-semibold sticky left-0">
+                <td className="border border-zinc-600 bg-zinc-800 p-2 text-zinc-300 font-semibold sticky left-0">
                   {nodes[i]?.name || `Node ${i}`}
                 </td>
                 {row.map((value, j) => (
                   <td
                     key={j}
-                    className="border border-gray-600 p-2 text-center text-white font-medium"
+                    className="border border-zinc-600 p-2 text-center text-white font-medium"
                     style={{
                       backgroundColor: getColor(value, maxValue),
                       cursor: 'pointer',
@@ -121,7 +121,7 @@ const ChordChart: React.FC<ChordChartProps> = ({
         </table>
       </div>
 
-      <div className="text-xs text-gray-400 text-center mt-4">
+      <div className="text-xs text-zinc-400 text-center mt-4">
         Relationship matrix - darker colors indicate stronger connections
       </div>
 
@@ -135,7 +135,7 @@ const ChordChart: React.FC<ChordChartProps> = ({
                 backgroundColor: `hsl(${(i * 360) / nodes.length}, 70%, 60%)`,
               }}
             />
-            <span className="text-xs text-gray-400">{node.name}</span>
+            <span className="text-xs text-zinc-400">{node.name}</span>
           </div>
         ))}
       </div>

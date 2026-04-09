@@ -42,7 +42,7 @@ const RadialBarChart: React.FC<RadialBarChartProps> = ({
   series,
   width: _width,
   height = 400,
-  variant = 'default',
+  variant = 'transparent',
   elevation = 'raised',
 }) => {
   // Validate
@@ -50,11 +50,11 @@ const RadialBarChart: React.FC<RadialBarChartProps> = ({
     return (
       <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && (
-          <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
+          <h3 className="text-2xl font-display font-semibold text-zinc-900 dark:text-white mb-2">
             {title}
           </h3>
         )}
-        <div className="text-center text-gray-400">
+        <div className="text-center text-zinc-400">
           <p className="text-sm">No series data for radial bar chart</p>
         </div>
       </div>
@@ -89,10 +89,10 @@ const RadialBarChart: React.FC<RadialBarChartProps> = ({
     if (active && payload && payload.length > 0) {
       const data = payload[0].payload;
       return (
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 shadow-lg">
-          <p className="font-semibold text-gray-900 dark:text-white mb-1">{data.name}</p>
-          <p className="text-sm text-gray-600 dark:text-gray-300">
-            Value: <span className="font-medium text-gray-900 dark:text-white">{data.value.toFixed(2)}</span>
+        <div className="bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-3 shadow-lg">
+          <p className="font-semibold text-zinc-900 dark:text-white mb-1">{data.name}</p>
+          <p className="text-sm text-zinc-600 dark:text-zinc-300">
+            Value: <span className="font-medium text-zinc-900 dark:text-white">{data.value.toFixed(2)}</span>
           </p>
         </div>
       );
@@ -106,12 +106,12 @@ const RadialBarChart: React.FC<RadialBarChartProps> = ({
       {(title || description) && (
         <div className="mb-6">
           {title && (
-            <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
+            <h3 className="text-2xl font-display font-semibold text-zinc-900 dark:text-white mb-2">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+            <p className="text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed">
               {description}
             </p>
           )}

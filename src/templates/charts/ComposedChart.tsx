@@ -53,7 +53,7 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
   width = 800,
   height = 400,
   legend = true,
-  variant = 'default',
+  variant = 'transparent',
   elevation = 'raised',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -95,7 +95,7 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
   if (safeSeries.length === 0) {
     return (
       <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
-        <div className="flex justify-center items-center min-h-[300px] text-gray-600 dark:text-gray-300">
+        <div className="flex justify-center items-center min-h-[300px] text-zinc-600 dark:text-zinc-300">
           <div className="text-center">
             <div className="text-4xl mb-2">📊</div>
             <div>No data available</div>
@@ -162,12 +162,12 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
       {(title || description) && (
         <div className="mb-6">
           {title && (
-            <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
+            <h3 className="text-2xl font-display font-semibold text-zinc-900 dark:text-white mb-2">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+            <p className="text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed">
               {description}
             </p>
           )}
@@ -194,6 +194,7 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
             },
             '& .MuiChartsAxis-tickLabel': {
               fill: isDarkMode ? '#D1D5DB' : '#374151',
+                      fontFamily: 'inherit',
               fontSize: '13px',
               fontWeight: 500,
             },
@@ -211,6 +212,7 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
             },
             '& .MuiChartsLegend-series text': {
               fill: `${isDarkMode ? '#D1D5DB' : '#374151'} !important`,
+                      fontFamily: 'inherit',
               fontSize: '12px',
               fontWeight: 500,
             },

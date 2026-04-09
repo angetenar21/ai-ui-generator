@@ -56,8 +56,8 @@ const Chat: React.FC<ChatProps> = ({
   if (!Array.isArray(messages)) {
     console.error('[Chat] Invalid messages prop - expected array, got:', typeof messages);
     return (
-      <div className="card border border-gray-200 dark:border-gray-700 rounded-lg p-6 my-2">
-        <div className="text-gray-600 dark:text-gray-400 text-sm">
+      <div className="card border border-zinc-200 dark:border-zinc-700 rounded-lg p-6 my-2">
+        <div className="text-zinc-600 dark:text-zinc-400 text-sm">
           <div className="text-yellow-600 dark:text-yellow-500 font-semibold mb-2">⚠️ Configuration Error</div>
           <div>Invalid messages data. Expected an array of message objects.</div>
         </div>
@@ -80,9 +80,9 @@ const Chat: React.FC<ChatProps> = ({
   };
 
   const getMessageBg = (sender: string) => {
-    if (sender === 'user') return 'bg-emerald-600 dark:bg-emerald-600 text-white';
-    if (sender === 'system') return 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-center';
-    return 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white';
+    if (sender === 'user') return 'bg-indigo-600 dark:bg-indigo-600 text-white';
+    if (sender === 'system') return 'bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-center';
+    return 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white';
   };
 
   const formatTimestamp = (timestamp?: string) => {
@@ -96,11 +96,11 @@ const Chat: React.FC<ChatProps> = ({
   };
 
   return (
-    <div className="card border border-gray-200 dark:border-gray-700 rounded-lg my-2 overflow-hidden flex flex-col w-full max-w-2xl">
+    <div className="card border border-zinc-200 dark:border-zinc-700 rounded-lg my-2 overflow-hidden flex flex-col w-full max-w-2xl">
       {/* Header */}
       {title && (
-        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
-          <h3 className="text-gray-900 dark:text-white font-semibold">{title}</h3>
+        <div className="px-6 py-4 border-b border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50">
+          <h3 className="text-zinc-900 dark:text-white font-semibold">{title}</h3>
         </div>
       )}
 
@@ -110,7 +110,7 @@ const Chat: React.FC<ChatProps> = ({
         style={{ maxHeight: `${maxHeight}px` }}
       >
         {validMessages.length === 0 ? (
-          <div className="text-gray-600 dark:text-gray-400 text-sm text-center py-8">
+          <div className="text-zinc-600 dark:text-zinc-400 text-sm text-center py-8">
             <div className="mb-2">💬</div>
             <div>No messages yet</div>
             {messages.length > 0 && validMessages.length === 0 && (
@@ -136,11 +136,11 @@ const Chat: React.FC<ChatProps> = ({
                         className="w-8 h-8 rounded-full"
                       />
                     ) : (
-                      <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
                         {message.sender === 'bot' ? (
-                          <Bot className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                          <Bot className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                         ) : (
-                          <User className="w-4 h-4 text-gray-700 dark:text-gray-300" />
+                          <User className="w-4 h-4 text-zinc-700 dark:text-zinc-300" />
                         )}
                       </div>
                     )}
@@ -150,7 +150,7 @@ const Chat: React.FC<ChatProps> = ({
                 {/* Message Content */}
                 <div className="flex flex-col gap-1">
                   {message.name && message.sender !== 'system' && (
-                    <div className="text-gray-600 dark:text-gray-400 text-xs px-1">
+                    <div className="text-zinc-600 dark:text-zinc-400 text-xs px-1">
                       {message.name}
                     </div>
                   )}
@@ -166,7 +166,7 @@ const Chat: React.FC<ChatProps> = ({
                   </div>
 
                   {message.timestamp && message.sender !== 'system' && (
-                    <div className="text-gray-600 dark:text-gray-400 text-xs px-1">
+                    <div className="text-zinc-600 dark:text-zinc-400 text-xs px-1">
                       {formatTimestamp(message.timestamp)}
                     </div>
                   )}
@@ -180,7 +180,7 @@ const Chat: React.FC<ChatProps> = ({
 
       {/* Input Area */}
       {showInput && (
-        <div className="px-4 py-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+        <div className="px-4 py-3 border-t border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50">
           <div className="flex gap-2">
             <input
               type="text"
@@ -190,9 +190,9 @@ const Chat: React.FC<ChatProps> = ({
               placeholder={inputPlaceholder}
               className="
                 flex-1 px-4 py-2 rounded-lg
-                bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600
-                text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400
-                focus:outline-none focus:ring-2 focus:ring-emerald-500
+                bg-white dark:bg-zinc-700 border border-zinc-300 dark:border-zinc-600
+                text-zinc-900 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400
+                focus:outline-none focus:ring-2 focus:ring-indigo-500
               "
             />
             <button
@@ -200,7 +200,7 @@ const Chat: React.FC<ChatProps> = ({
               disabled={!inputValue.trim()}
               className="
                 px-4 py-2 rounded-lg
-                bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-700
+                bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-700
                 text-white font-medium
                 disabled:opacity-50 disabled:cursor-not-allowed
                 transition-colors

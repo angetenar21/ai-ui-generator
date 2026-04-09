@@ -144,15 +144,15 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   };
 
   const variantClasses = {
-    outlined: `border-2 ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-white dark:bg-gray-800`,
-    filled: `border-b-2 ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-gray-100 dark:bg-gray-800/50`,
-    standard: `border-b-2 ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-transparent`,
+    outlined: `border-2 ${error ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-600'} bg-white dark:bg-zinc-800`,
+    filled: `border-b-2 ${error ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-600'} bg-zinc-100 dark:bg-zinc-800/50`,
+    standard: `border-b-2 ${error ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-600'} bg-transparent`,
   };
 
   return (
     <div className={`my-4 relative ${isOpen ? 'z-50' : 'z-10'} ${fullWidth ? 'w-full' : 'max-w-md'}`} ref={wrapperRef}>
       {label && (
-        <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
+        <label className="block text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
           {label}
           {required && <span className="text-red-500 dark:text-red-400 ml-1">*</span>}
         </label>
@@ -176,26 +176,26 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
             ${variantClasses[variant]}
             ${fullWidth ? 'w-full' : 'w-full'}
             pr-10
-            rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500
-            focus:outline-none focus:ring-2 focus:ring-emerald-500/50
+            rounded-lg text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500
+            focus:outline-none focus:ring-2 focus:ring-indigo-500/50
             disabled:opacity-50 disabled:cursor-not-allowed
             transition-all duration-200
           `.trim().replace(/\s+/g, ' ')}
         />
-        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+        <div className="absolute right-3 top-1/2 -tranzinc-y-1/2 text-zinc-400 pointer-events-none">
           <svg className={`w-5 h-5 transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </div>
         {isOpen && filteredOptions.length > 0 && (
-          <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-xl max-h-60 overflow-auto">
+          <div className="absolute z-50 w-full mt-1 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-600 rounded-xl shadow-xl max-h-60 overflow-auto">
             {filteredOptions.map((option, index) => (
               <div
                 key={index}
                 onClick={() => handleOptionClick(option)}
                 className={`
                   px-4 py-2 cursor-pointer transition-colors
-                  ${highlightedIndex === index ? 'bg-emerald-500 text-white' : 'text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}
+                  ${highlightedIndex === index ? 'bg-indigo-500 text-white' : 'text-zinc-800 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700'}
                 `.trim().replace(/\s+/g, ' ')}
               >
                 {option.label}
@@ -205,7 +205,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
         )}
       </div>
       {(helperText || (error && errorMessage)) && (
-        <p className={`mt-1 text-xs ${error ? 'text-red-400' : 'text-gray-400'}`}>
+        <p className={`mt-1 text-xs ${error ? 'text-red-400' : 'text-zinc-400'}`}>
           {error && errorMessage ? errorMessage : helperText}
         </p>
       )}

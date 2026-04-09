@@ -66,9 +66,9 @@ const Accordion: React.FC<AccordionProps> = ({
   };
 
   const variantClasses = {
-    default: 'bg-gray-50 dark:bg-gray-700',
-    bordered: 'bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600',
-    elevated: 'bg-gray-50 dark:bg-gray-700 shadow-md',
+    default: 'bg-zinc-50 dark:bg-zinc-700',
+    bordered: 'bg-zinc-50 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600',
+    elevated: 'bg-zinc-50 dark:bg-zinc-700 shadow-md',
   };
 
   const sizeClasses = {
@@ -82,7 +82,7 @@ const Accordion: React.FC<AccordionProps> = ({
   if (safeItems.length === 0) {
     return (
       <div className="card rounded-card p-8 text-center">
-        <p className="text-gray-600 dark:text-gray-400">Accordion - Add items to display</p>
+        <p className="text-zinc-600 dark:text-zinc-400">Accordion - Add items to display</p>
       </div>
     );
   }
@@ -99,18 +99,18 @@ const Accordion: React.FC<AccordionProps> = ({
           >
             <button
               onClick={() => toggleItem(index)}
-              className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              className="w-full flex items-center justify-between p-4 text-left hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
             >
               <div className="flex items-center gap-3 flex-1">
                 {item.icon && (
-                  <span className="text-gray-600 dark:text-gray-400 text-xl">{item.icon}</span>
+                  <span className="text-zinc-600 dark:text-zinc-400 text-xl">{item.icon}</span>
                 )}
-                <span className="font-semibold text-gray-900 dark:text-white">
+                <span className="font-semibold text-zinc-900 dark:text-white">
                   {item.title}
                 </span>
               </div>
               <svg
-                className={`w-5 h-5 text-gray-600 dark:text-gray-400 transition-transform ${isExpanded ? 'rotate-180' : ''
+                className={`w-5 h-5 text-zinc-600 dark:text-zinc-400 transition-transform ${isExpanded ? 'rotate-180' : ''
                   }`}
                 fill="none"
                 viewBox="0 0 24 24"
@@ -126,9 +126,9 @@ const Accordion: React.FC<AccordionProps> = ({
             </button>
 
             {isExpanded && (
-              <div className="px-4 pb-4 pt-2 border-t border-gray-200 dark:border-gray-600 overflow-visible">
+              <div className="px-4 pb-4 pt-2 border-t border-zinc-200 dark:border-zinc-600 overflow-visible">
                 {item.content && (
-                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-wrap break-words">
+                  <p className="text-zinc-600 dark:text-zinc-300 leading-relaxed whitespace-pre-wrap break-words">
                     {item.content}
                   </p>
                 )}

@@ -108,22 +108,22 @@ const DonutChart: React.FC<DonutChartProps> = ({
 
   if (!hasValidData) {
     return (
-      <div className="w-full h-full p-6 card rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex flex-col">
+      <div className="w-full h-full p-6 card rounded-xl shadow-sm border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex flex-col">
         {(title || description) && (
           <div className="mb-6 text-center">
             {title && (
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
+              <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-1">
                 {title}
               </h3>
             )}
             {description && (
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-zinc-600 dark:text-zinc-400">
                 {description}
               </p>
             )}
           </div>
         )}
-        <div className="flex justify-center items-center flex-1 min-h-[250px] text-gray-600 dark:text-gray-300">
+        <div className="flex justify-center items-center flex-1 min-h-[250px] text-zinc-600 dark:text-zinc-300">
           <div className="text-center">
             <div className="text-4xl mb-2 opacity-50">📊</div>
             <div className="text-sm font-medium">No valid data to display</div>
@@ -138,12 +138,12 @@ const DonutChart: React.FC<DonutChartProps> = ({
       {(title || description) && (
         <div className="mb-3 px-4 text-center">
           {title && (
-            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+            <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+            <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
               {description}
             </p>
           )}
@@ -189,6 +189,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
             },
             '& .MuiChartsLegend-series text': {
               fill: `${legendTextColor} !important`,
+                      fontFamily: 'inherit',
               fontSize: '12px',
               fontWeight: 500,
             },
@@ -200,8 +201,8 @@ const DonutChart: React.FC<DonutChartProps> = ({
           }}
         />
         {centerLabel && (
-          <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none">
-            <span className="text-sm font-bold text-gray-900 dark:text-gray-100">{centerLabel}</span>
+          <div className="absolute top-1/3 left-1/2 transform -tranzinc-x-1/2 -tranzinc-y-1/2 text-center pointer-events-none">
+            <span className="text-sm font-bold text-zinc-900 dark:text-zinc-100">{centerLabel}</span>
           </div>
         )}
       </div>

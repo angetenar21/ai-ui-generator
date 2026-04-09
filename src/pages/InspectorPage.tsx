@@ -111,17 +111,17 @@ const JsxHighlight: React.FC<{ code: string }> = ({ code }) => {
   const highlighted = escaped
     // tags
     .replace(/(&lt;\/?)([A-Za-z][\w.]*)/g, (_, slash, name) =>
-      `<span class="text-blue-600">${slash}${name}</span>`)
+      `<span class="text-indigo-600">${slash}${name}</span>`)
     // prop names (word before =)
     .replace(/(\s)([a-zA-Z][\w]*)(?==)/g, (_, sp, k) =>
       `${sp}<span class="text-violet-600">${k}</span>`)
     // string values in quotes
-    .replace(/"([^"]*)"/g, `<span class="text-emerald-600">"$1"</span>`)
+    .replace(/"([^"]*)"/g, `<span class="text-indigo-600">"$1"</span>`)
     // self-close />
-    .replace(/(\/&gt;)/g, '<span class="text-blue-400">$1</span>')
+    .replace(/(\/&gt;)/g, '<span class="text-indigo-400">$1</span>')
     // standalone booleans / numbers inside {}
     .replace(/\{(true|false|\d[\d.]*)?\}/g, (m) =>
-      `<span class="text-emerald-500">${m}</span>`);
+      `<span class="text-indigo-500">${m}</span>`);
 
   return (
     <code
@@ -137,17 +137,17 @@ const JsonHighlight: React.FC<{ json: string }> = ({ json }) => {
   const highlighted = json.replace(
     /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?|[{}[\],:])/g,
     (match) => {
-      let cls = 'text-emerald-600'; // number
+      let cls = 'text-indigo-600'; // number
       if (/^"/.test(match)) {
-        cls = /:$/.test(match) ? 'text-violet-600 font-medium' : 'text-emerald-700';
+        cls = /:$/.test(match) ? 'text-violet-600 font-medium' : 'text-indigo-700';
       } else if (/true|false/.test(match)) {
-        cls = 'text-blue-600';
+        cls = 'text-indigo-600';
       } else if (/null/.test(match)) {
         cls = 'text-red-500';
       } else if (/[{}[\]]/.test(match)) {
-        cls = 'text-gray-500';
+        cls = 'text-zinc-500';
       } else if (match === ':' || match === ',') {
-        cls = 'text-gray-400';
+        cls = 'text-zinc-400';
       }
       return `<span class="${cls}">${match}</span>`;
     },
@@ -248,7 +248,7 @@ const InspectorPage: React.FC = () => {
     [
       'inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium btn-press transition-all',
       viewMode === mode
-        ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-card rounded-lg'
+        ? 'bg-gradient-to-r from-orange-500 to-pink-600 text-white shadow-card rounded-lg'
         : 'card-sub text-text-secondary hover:bg-bg-card rounded-pill',
     ].join(' ');
 
@@ -276,7 +276,7 @@ const InspectorPage: React.FC = () => {
       {allComponents.length === 0 ? (
         <div className="flex-1 flex items-center justify-center">
           <div className="card rounded-card p-12 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-orange-500 to-pink-600 flex items-center justify-center shadow-lg">
               <Eye className="w-8 h-8 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
             </div>
             <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
@@ -294,7 +294,7 @@ const InspectorPage: React.FC = () => {
             <aside className="w-72 flex-shrink-0 flex flex-col gap-3 overflow-hidden">
               {/* Search bar */}
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-muted pointer-events-none" />
+                <Search className="absolute left-3 top-1/2 -tranzinc-y-1/2 w-3.5 h-3.5 text-text-muted pointer-events-none" />
                 <input
                   type="text"
                   placeholder="Search components…"
@@ -305,7 +305,7 @@ const InspectorPage: React.FC = () => {
                 {search && (
                   <button
                     onClick={() => setSearch('')}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-secondary"
+                    className="absolute right-2.5 top-1/2 -tranzinc-y-1/2 text-text-muted hover:text-text-secondary"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -337,7 +337,7 @@ const InspectorPage: React.FC = () => {
                           'w-full text-left px-3 py-2.5 rounded-xl text-xs md:text-sm btn-press transition-all',
                           'flex flex-col gap-0.5',
                           isActive
-                            ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md'
+                            ? 'bg-gradient-to-r from-orange-500 to-pink-600 text-white shadow-md'
                             : 'card-sub text-text-secondary hover:bg-bg-card',
                         ].join(' ')}
                       >
@@ -484,7 +484,7 @@ const InspectorPage: React.FC = () => {
                                 className={[
                                   'inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all',
                                   codeTab === 'jsx'
-                                    ? 'bg-white text-cyan-600 shadow-sm border border-border-subtle'
+                                    ? 'bg-white text-orange-600 shadow-sm border border-border-subtle'
                                     : 'text-text-muted hover:text-text-secondary',
                                 ].join(' ')}
                               >
@@ -496,7 +496,7 @@ const InspectorPage: React.FC = () => {
                                 className={[
                                   'inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all',
                                   codeTab === 'json'
-                                    ? 'bg-white text-cyan-600 shadow-sm border border-border-subtle'
+                                    ? 'bg-white text-orange-600 shadow-sm border border-border-subtle'
                                     : 'text-text-muted hover:text-text-secondary',
                                 ].join(' ')}
                               >

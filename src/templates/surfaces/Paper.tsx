@@ -58,8 +58,8 @@ const Paper: React.FC<PaperProps> = ({
 
   const variantClasses = {
     default: 'card border-0',
-    outlined: 'bg-transparent border-2 border-gray-300 dark:border-gray-600',
-    filled: 'bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700',
+    outlined: 'bg-transparent border-2 border-zinc-300 dark:border-zinc-600',
+    filled: 'bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700',
   };
 
   return (
@@ -75,7 +75,7 @@ const Paper: React.FC<PaperProps> = ({
       `}
     >
       {content && (
-        <div className="text-gray-600 dark:text-gray-300 leading-relaxed">
+        <div className="text-zinc-600 dark:text-zinc-300 leading-relaxed">
           {content}
         </div>
       )}
@@ -89,7 +89,7 @@ const Paper: React.FC<PaperProps> = ({
       )}
 
       {!content && (!children || children.length === 0) && (
-        <div className="text-gray-600 dark:text-gray-400 text-sm text-center py-8">
+        <div className="text-zinc-600 dark:text-zinc-400 text-sm text-center py-8">
           Empty paper surface
         </div>
       )}

@@ -39,10 +39,10 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
   };
 
   const colorClasses = {
-    primary: 'text-emerald-600 dark:text-emerald-500',
-    secondary: 'text-gray-500 dark:text-gray-500',
+    primary: 'text-indigo-600 dark:text-indigo-500',
+    secondary: 'text-zinc-500 dark:text-zinc-500',
     success: 'text-green-600 dark:text-green-500',
-    warning: 'text-teal-600 dark:text-teal-500',
+    warning: 'text-indigo-600 dark:text-indigo-500',
     error: 'text-red-600 dark:text-red-500',
   };
 
@@ -71,7 +71,7 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
               stroke="currentColor"
               strokeWidth={thickness}
               fill="none"
-              className="text-gray-700/60 dark:text-gray-700"
+              className="text-zinc-700/60 dark:text-zinc-700"
             />
             {/* Progress circle */}
             {!indeterminate ? (
@@ -105,14 +105,14 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
           {/* Center text */}
           {showValue && !indeterminate && (
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className={`font-semibold text-gray-100 ${sizeConfig.text}`}>
+              <span className={`font-semibold text-zinc-100 ${sizeConfig.text}`}>
                 {Math.round(clampedValue)}%
               </span>
             </div>
           )}
         </div>
         {label && (
-          <div className="text-sm text-gray-300 text-center">{label}</div>
+          <div className="text-sm text-zinc-300 text-center">{label}</div>
         )}
       </div>
     </div>

@@ -62,10 +62,10 @@ const Notification: React.FC<NotificationProps> = ({
   const typeConfig = {
     info: {
       icon: icon || 'info',
-      container: 'border border-blue-200/60 dark:border-blue-500/30 bg-blue-50/80 dark:bg-blue-900/20',
-      chip: 'bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400',
-      badge: 'bg-blue-600 text-white',
-      text: 'text-gray-900 dark:text-white',
+      container: 'border border-indigo-200/60 dark:border-indigo-500/30 bg-indigo-50/80 dark:bg-indigo-900/20',
+      chip: 'bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400',
+      badge: 'bg-indigo-600 text-white',
+      text: 'text-zinc-900 dark:text-white',
       label: 'INFO',
     },
     success: {
@@ -73,7 +73,7 @@ const Notification: React.FC<NotificationProps> = ({
       container: 'border border-green-200/60 dark:border-green-500/30 bg-green-50/80 dark:bg-green-900/20',
       chip: 'bg-green-100 dark:bg-green-500/20 text-green-600 dark:text-green-400',
       badge: 'bg-green-600 text-white',
-      text: 'text-gray-900 dark:text-white',
+      text: 'text-zinc-900 dark:text-white',
       label: 'SUCCESS',
     },
     warning: {
@@ -81,7 +81,7 @@ const Notification: React.FC<NotificationProps> = ({
       container: 'border border-amber-200/60 dark:border-amber-500/30 bg-amber-50/80 dark:bg-amber-900/20',
       chip: 'bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400',
       badge: 'bg-amber-500 text-white',
-      text: 'text-gray-900 dark:text-white',
+      text: 'text-zinc-900 dark:text-white',
       label: 'WARNING',
     },
     error: {
@@ -89,7 +89,7 @@ const Notification: React.FC<NotificationProps> = ({
       container: 'border border-red-200/60 dark:border-red-500/30 bg-red-50/80 dark:bg-red-900/20',
       chip: 'bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400',
       badge: 'bg-red-600 text-white',
-      text: 'text-gray-900 dark:text-white',
+      text: 'text-zinc-900 dark:text-white',
       label: 'ERROR',
     },
   };
@@ -119,14 +119,14 @@ const Notification: React.FC<NotificationProps> = ({
                 )}
                 <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${config.badge} uppercase tracking-wider`}>{config.label}</span>
               </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{displayMessage}</p>
+              <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">{displayMessage}</p>
               {action && (
                 <button
                   onClick={() => {
                     if (action.onClick) action.onClick();
                     handleClose();
                   }}
-                  className="mt-3 text-sm font-medium text-gray-900 dark:text-white hover:opacity-80 transition-opacity underline underline-offset-2"
+                  className="mt-3 text-sm font-medium text-zinc-900 dark:text-white hover:opacity-80 transition-opacity underline underline-offset-2"
                 >
                   {action.label}
                 </button>
@@ -135,7 +135,7 @@ const Notification: React.FC<NotificationProps> = ({
             {closable && (
               <button
                 onClick={handleClose}
-                className="flex-shrink-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors p-1"
+                className="flex-shrink-0 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors p-1"
                 aria-label="Close notification"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

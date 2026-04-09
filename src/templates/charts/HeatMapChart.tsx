@@ -70,9 +70,9 @@ const HeatMapChart: React.FC<HeatMapChartProps> = ({
   // Validate
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6">
-        {title && <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">{title}</h3>}
-        <div className="flex items-center justify-center h-32 text-gray-400 text-sm">
+      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6">
+        {title && <h3 className="text-sm font-semibold text-zinc-900 dark:text-white mb-2">{title}</h3>}
+        <div className="flex items-center justify-center h-32 text-zinc-400 text-sm">
           No heatmap data provided
         </div>
       </div>
@@ -85,9 +85,9 @@ const HeatMapChart: React.FC<HeatMapChartProps> = ({
 
   if (!firstSeries?.data?.length || xLabels.length === 0 || yLabels.length === 0) {
     return (
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6">
-        {title && <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">{title}</h3>}
-        <div className="flex items-center justify-center h-32 text-gray-400 text-sm">
+      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6">
+        {title && <h3 className="text-sm font-semibold text-zinc-900 dark:text-white mb-2">{title}</h3>}
+        <div className="flex items-center justify-center h-32 text-zinc-400 text-sm">
           Requires xAxis.data, yAxis.data, and series data
         </div>
       </div>
@@ -161,11 +161,11 @@ const HeatMapChart: React.FC<HeatMapChartProps> = ({
   const showValueText = cellWidth >= 36;
 
   return (
-    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl min-w-0 overflow-x-auto">
+    <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl min-w-0 overflow-x-auto">
       {(title || description) && (
-        <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-800">
-          {title && <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{title}</h3>}
-          {description && <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{description}</p>}
+        <div className="px-5 py-4 border-b border-zinc-100 dark:border-zinc-800">
+          {title && <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">{title}</h3>}
+          {description && <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">{description}</p>}
         </div>
       )}
 
@@ -262,7 +262,7 @@ const HeatMapChart: React.FC<HeatMapChartProps> = ({
 
         {/* Legend */}
         <div className="flex items-center justify-center mt-4 gap-2">
-          <span className="text-xs text-gray-400">Low</span>
+          <span className="text-xs text-zinc-400">Low</span>
           <div
             style={{
               width: 120,
@@ -272,7 +272,7 @@ const HeatMapChart: React.FC<HeatMapChartProps> = ({
               border: '1px solid rgba(0,0,0,0.06)',
             }}
           />
-          <span className="text-xs text-gray-400">High</span>
+          <span className="text-xs text-zinc-400">High</span>
         </div>
       </div>
     </div>

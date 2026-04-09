@@ -78,7 +78,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   return (
     <div className="my-4 max-w-2xl">
       {label && (
-        <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
+        <label className="block text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
           {label}
           {required && <span className="text-red-400 ml-1">*</span>}
         </label>
@@ -86,18 +86,18 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       <div
         className={`
           border-2 rounded-xl
-          ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'}
+          ${error ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-600'}
           ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
-          focus-within:ring-2 focus-within:ring-emerald-500/40 focus-within:border-emerald-500
+          focus-within:ring-2 focus-within:ring-indigo-500/40 focus-within:border-indigo-500
           transition-all duration-200
-          bg-white dark:bg-gray-800
+          bg-white dark:bg-zinc-800
         `.trim().replace(/\s+/g, ' ')}
       >
         {showToolbar && (
-          <div className="flex flex-wrap gap-1 p-2 bg-gray-100 dark:bg-gray-700 border-b-2 border-gray-200 dark:border-gray-600 rounded-t-xl">
+          <div className="flex flex-wrap gap-1 p-2 bg-zinc-100 dark:bg-zinc-700 border-b-2 border-zinc-200 dark:border-zinc-600 rounded-t-xl">
             {toolbarButtons.map((btn, index) => {
               if (btn.divider) {
-                return <div key={index} className="w-px h-8 bg-gray-600 mx-1" />;
+                return <div key={index} className="w-px h-8 bg-zinc-600 mx-1" />;
               }
               return (
                 <button
@@ -109,10 +109,10 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
                   className={`
                     px-3 py-1.5 rounded text-sm font-medium
                     ${btn.style ? btn.style : ''}
-                    text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white
+                    text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-600 hover:text-zinc-900 dark:hover:text-white
                     disabled:opacity-50 disabled:cursor-not-allowed
                     transition-colors duration-150
-                    focus:outline-none focus:ring-2 focus:ring-emerald-500/50
+                    focus:outline-none focus:ring-2 focus:ring-indigo-500/50
                   `.trim().replace(/\s+/g, ' ')}
                 >
                   {btn.icon}
@@ -128,7 +128,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           onPaste={handlePaste}
           dangerouslySetInnerHTML={{ __html: displayValue }}
           className={`
-            px-4 py-3 text-gray-900 dark:text-white bg-transparent
+            px-4 py-3 text-zinc-900 dark:text-white bg-transparent
             focus:outline-none overflow-y-auto
             ${disabled ? 'cursor-not-allowed' : ''}
           `.trim().replace(/\s+/g, ' ')}
@@ -158,7 +158,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         `}</style>
       </div>
       {(helperText || (error && errorMessage)) && (
-        <p className={`mt-1 text-xs ${error ? 'text-red-400' : 'text-gray-400'}`}>
+        <p className={`mt-1 text-xs ${error ? 'text-red-400' : 'text-zinc-400'}`}>
           {error && errorMessage ? errorMessage : helperText}
         </p>
       )}

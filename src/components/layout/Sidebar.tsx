@@ -45,11 +45,11 @@ const Sidebar: React.FC = () => {
 
       {/* Sidebar */}
       <aside
-        className={`relative bg-white dark:bg-gray-900 
-                   border border-gray-200 dark:border-gray-800
+        className={`relative bg-[#FFFBF5]/90 dark:bg-gray-900/90 backdrop-blur-md
+                   border-r border-stone-200 dark:border-gray-800
                    transform transition-all duration-300 z-30
                    flex flex-col flex-shrink-0 animate-slide-in-left
-                   h-[calc(100%-1rem)] ml-4 mt-2 mb-4 rounded-2xl shadow-xl
+                   h-full shadow-[4px_0_24px_rgba(0,0,0,0.02)]
                    ${sidebarCollapsed ? 'w-20' : 'w-56'}
                    ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
@@ -88,7 +88,7 @@ const Sidebar: React.FC = () => {
           <button
             onClick={handleNewChat}
             className={`font-medium rounded-xl flex items-center justify-center shadow-sm group relative transition-all duration-300 flex-shrink-0
-                        ${isNewChatActive ? 'bg-gradient-to-r from-cyan-500 to-blue-600' : 'bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600'} text-white 
+                        ${isNewChatActive ? 'bg-gradient-to-r from-orange-500 to-pink-600' : 'bg-gradient-to-r from-orange-400 to-pink-500 hover:from-orange-500 hover:to-pink-600'} text-white 
                         ${sidebarCollapsed ? 'w-12 h-12 p-0 mx-auto mb-8' : 'w-full py-3 px-4 mb-8'}`}
             title={sidebarCollapsed ? 'New Chat' : undefined}
           >
@@ -123,8 +123,8 @@ const Sidebar: React.FC = () => {
                    hover:translate-x-1 group relative flex-shrink-0
                    ${sidebarCollapsed ? 'justify-center p-0 w-12 h-12 mx-auto' : 'gap-3 px-4 py-3 w-full'}
                    ${actualIsActive
-                      ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md'
-                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
+                      ? 'bg-gradient-to-r from-orange-500 to-pink-600 text-white shadow-md'
+                      : 'text-stone-600 dark:text-gray-400 hover:text-stone-900 dark:hover:text-white hover:bg-stone-100 dark:hover:bg-gray-800'
                     }`;
                 }}
                 onClick={(e) => {

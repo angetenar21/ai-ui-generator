@@ -86,7 +86,7 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
   height: propHeight = 200,
   text,
   color: propColor,
-  variant = 'default',
+  variant = 'transparent',
   elevation = 'raised',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -180,12 +180,12 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
       {(title || description) && (
         <div className="mb-3 text-center">
           {title && (
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-1">
+            <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-1">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-xs text-gray-600 dark:text-gray-400">
+            <p className="text-xs text-zinc-600 dark:text-zinc-400">
               {description}
             </p>
           )}
@@ -219,7 +219,7 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
           }}
         />
         {displayText && (
-          <p className="text-gray-500 dark:text-gray-400 text-xs text-center mt-2">
+          <p className="text-zinc-500 dark:text-zinc-400 text-xs text-center mt-2">
             {displayText}
           </p>
         )}

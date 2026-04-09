@@ -69,7 +69,7 @@ const Modal: React.FC<ModalProps> = ({
       {triggerText && (
         <button
           onClick={() => setIsVisible(true)}
-          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-colors border border-transparent"
+          className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors border border-transparent"
         >
           {triggerText}
         </button>
@@ -79,30 +79,30 @@ const Modal: React.FC<ModalProps> = ({
         <>
           {/* Backdrop - Fixed positioning for proper overlay */}
           <div
-            className="fixed inset-0 bg-gray-900/60 dark:bg-black/70 backdrop-blur-sm z-[9998] transition-opacity duration-200"
+            className="fixed inset-0 bg-zinc-900/60 dark:bg-black/70 backdrop-blur-sm z-[9998] transition-opacity duration-200"
             onClick={closable ? handleClose : undefined}
           />
 
           {/* Modal Container */}
           <div className={`fixed inset-0 flex items-center justify-center ${size === 'fullscreen' ? 'p-2' : 'p-4'} z-[9999] pointer-events-none`}>
             {/* Modal */}
-            <div className={`relative ${sizeClasses[size]} w-full pointer-events-auto bg-white dark:bg-gray-900 border border-gray-200/60 dark:border-gray-700/50 ${size === 'fullscreen' ? 'rounded-xl' : 'rounded-2xl'} shadow-2xl dark:shadow-[0_32px_64px_-12px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden transition-all duration-200`}>
+            <div className={`relative ${sizeClasses[size]} w-full pointer-events-auto bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-700/50 ${size === 'fullscreen' ? 'rounded-xl' : 'rounded-2xl'} shadow-2xl dark:shadow-[0_32px_64px_-12px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden transition-all duration-200`}>
               {/* Header */}
               {(title || description || showCloseButton) && (
-                <div className="flex-shrink-0 px-6 py-5 border-b border-gray-100 dark:border-gray-800/60 bg-transparent">
+                <div className="flex-shrink-0 px-6 py-5 border-b border-zinc-100 dark:border-zinc-800/60 bg-transparent">
                   <div className="flex items-start justify-between">
                     <div className="flex-1 pr-4">
                       {title && (
-                        <h3 className="text-xl font-display font-semibold tracking-tight text-gray-900 dark:text-white">{title}</h3>
+                        <h3 className="text-xl font-display font-semibold tracking-tight text-zinc-900 dark:text-white">{title}</h3>
                       )}
                       {description && (
-                        <p className="mt-1.5 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{description}</p>
+                        <p className="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">{description}</p>
                       )}
                     </div>
                     {showCloseButton && closable && (
                       <button
                         onClick={handleClose}
-                        className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors p-1 flex-shrink-0"
+                        className="text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white transition-colors p-1 flex-shrink-0"
                         aria-label="Close modal"
                       >
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -115,19 +115,19 @@ const Modal: React.FC<ModalProps> = ({
               )}
 
               {/* Content - Scrollable */}
-              <div className="flex-1 overflow-y-auto px-6 py-5 text-gray-700 dark:text-gray-300 scrollbar-thin scrollbar-thumb-gray-200 dark:scrollbar-thumb-gray-700">
+              <div className="flex-1 overflow-y-auto px-6 py-5 text-zinc-700 dark:text-zinc-300 scrollbar-thin scrollbar-thumb-zinc-200 dark:scrollbar-thumb-zinc-700">
                 {content && typeof content === 'string' && <p className="leading-relaxed">{content}</p>}
                 {children}
               </div>
 
               {/* Footer */}
               {(footer || actions) && (
-                <div className="flex-shrink-0 flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100 dark:border-gray-800/60 bg-gray-50/50 dark:bg-gray-800/20">
-                  {footer && <div className="text-gray-500 dark:text-gray-400 flex-1 text-sm font-medium">{footer}</div>}
+                <div className="flex-shrink-0 flex items-center justify-end gap-3 px-6 py-4 border-t border-zinc-100 dark:border-zinc-800/60 bg-zinc-50/50 dark:bg-zinc-800/20">
+                  {footer && <div className="text-zinc-500 dark:text-zinc-400 flex-1 text-sm font-medium">{footer}</div>}
                   {actions && actions.map((action, index) => {
                     const variantClasses = {
-                      primary: 'bg-gray-900 hover:bg-black dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-900 shadow-sm hover:shadow active:scale-95',
-                      secondary: 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/70 hover:border-gray-300 dark:hover:border-gray-600 text-gray-700 dark:text-gray-200 shadow-sm active:scale-95',
+                      primary: 'bg-zinc-900 hover:bg-black dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-900 shadow-sm hover:shadow active:scale-95',
+                      secondary: 'bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-700/70 hover:border-zinc-300 dark:hover:border-zinc-600 text-zinc-700 dark:text-zinc-200 shadow-sm active:scale-95',
                       danger: 'bg-red-500 hover:bg-red-600 text-white shadow-sm hover:shadow active:scale-95',
                     };
                     return (

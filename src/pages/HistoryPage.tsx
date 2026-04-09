@@ -127,7 +127,7 @@ const HistoryPage: React.FC = () => {
       {threads.length === 0 ? (
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="card rounded-card p-12 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-orange-500 to-pink-600 flex items-center justify-center shadow-lg">
               <MessageSquare className="w-8 h-8 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
             </div>
             <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
@@ -147,11 +147,11 @@ const HistoryPage: React.FC = () => {
               onClick={() => handleThreadClick(thread.id)}
             >
               <div className="flex items-start justify-between mb-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center flex-shrink-0 shadow-sm transition-all group-hover:from-cyan-400 group-hover:to-blue-500">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-pink-600 flex items-center justify-center flex-shrink-0 shadow-sm transition-all group-hover:from-orange-400 group-hover:to-pink-500">
                   <MessageSquare className="w-5 h-5 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
                 </div>
                 {thread.status === 'pending' && (
-                  <div className="ml-2 px-2 py-1 rounded-full text-xs font-semibold bg-cyan-100 text-cyan-700 border border-cyan-200">
+                  <div className="ml-2 px-2 py-1 rounded-full text-xs font-semibold bg-orange-100 text-orange-700 border border-orange-200">
                     Processing
                   </div>
                 )}

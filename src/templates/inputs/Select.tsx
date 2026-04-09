@@ -101,19 +101,19 @@ const Select: React.FC<SelectProps> = ({
   const triggerBorderClass = error
     ? 'border-red-500'
     : isOpen
-      ? 'border-emerald-500 ring-2 ring-emerald-500/20'
-      : 'border-gray-300 dark:border-gray-600';
+      ? 'border-indigo-500 ring-2 ring-indigo-500/20'
+      : 'border-zinc-300 dark:border-zinc-600';
 
   const variantTriggerBg = {
-    outlined: `bg-white dark:bg-gray-800 border-2 ${triggerBorderClass}`,
-    filled: `bg-gray-100 dark:bg-gray-800/50 border-b-2 border-t-0 border-x-0 ${triggerBorderClass} rounded-t-lg`,
+    outlined: `bg-white dark:bg-zinc-800 border-2 ${triggerBorderClass}`,
+    filled: `bg-zinc-100 dark:bg-zinc-800/50 border-b-2 border-t-0 border-x-0 ${triggerBorderClass} rounded-t-lg`,
     standard: `bg-transparent border-b-2 border-t-0 border-x-0 ${triggerBorderClass}`,
   };
 
   return (
     <div className={`my-4 relative ${isOpen ? 'z-50' : 'z-10'} ${fullWidth ? 'w-full' : 'max-w-md'}`} ref={wrapperRef}>
       {label && (
-        <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
+        <label className="block text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
           {label}
           {required && <span className="text-red-500 dark:text-red-400 ml-1">*</span>}
         </label>
@@ -132,18 +132,18 @@ const Select: React.FC<SelectProps> = ({
             ${variant === 'outlined' ? 'rounded-xl' : ''}
             flex items-center justify-between gap-2
             text-left
-            text-gray-900 dark:text-white
+            text-zinc-900 dark:text-white
             transition-all duration-200
             disabled:opacity-50 disabled:cursor-not-allowed
             cursor-pointer
-            focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-1
+            focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:ring-offset-1
           `.trim().replace(/\s+/g, ' ')}
         >
-          <span className={`truncate ${!selectedLabel ? 'text-gray-400 dark:text-gray-500' : ''}`}>
+          <span className={`truncate ${!selectedLabel ? 'text-zinc-400 dark:text-zinc-500' : ''}`}>
             {selectedLabel || placeholder}
           </span>
           <svg
-            className={`w-4 h-4 text-gray-400 flex-shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+            className={`w-4 h-4 text-zinc-400 flex-shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -155,8 +155,8 @@ const Select: React.FC<SelectProps> = ({
         {/* Dropdown Panel */}
         {isOpen && selectOptions.length > 0 && (
           <div
-            className="absolute z-50 mt-1.5 w-full min-w-[160px] bg-white dark:bg-gray-800
-                       border border-gray-200 dark:border-gray-700
+            className="absolute z-50 mt-1.5 w-full min-w-[160px] bg-white dark:bg-zinc-800
+                       border border-zinc-200 dark:border-zinc-700
                        rounded-xl shadow-xl shadow-black/10 dark:shadow-black/30"
           >
             {/* overflow-hidden is ONLY on the scroll div, NOT the outer panel — prevents focus ring clipping */}
@@ -172,15 +172,15 @@ const Select: React.FC<SelectProps> = ({
                     className={`
                       w-full text-left px-4 py-2.5 text-sm transition-colors
                       ${isSelected
-                        ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 font-medium'
-                        : 'text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/50'
+                        ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 font-medium'
+                        : 'text-zinc-800 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-700/50'
                       }
                       ${option.disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}
                     `.trim().replace(/\s+/g, ' ')}
                   >
                     <div className="flex items-center gap-2">
                       {isSelected && (
-                        <svg className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <svg className="w-3.5 h-3.5 text-indigo-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
                       )}
@@ -195,7 +195,7 @@ const Select: React.FC<SelectProps> = ({
       </div>
 
       {helperText && (
-        <p className={`mt-1.5 text-xs ${error ? 'text-red-500 dark:text-red-400' : 'text-gray-400 dark:text-gray-500'}`}>
+        <p className={`mt-1.5 text-xs ${error ? 'text-red-500 dark:text-red-400' : 'text-zinc-400 dark:text-zinc-500'}`}>
           {helperText}
         </p>
       )}

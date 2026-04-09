@@ -34,17 +34,17 @@ const Callout: React.FC<CalloutProps> = ({
 
   if (!content) {
     return (
-      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-        <div className="text-gray-500 dark:text-gray-400 text-sm">No content provided</div>
+      <div className="bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-4">
+        <div className="text-zinc-500 dark:text-zinc-400 text-sm">No content provided</div>
       </div>
     );
   }
 
   const variantConfig = {
     info: {
-      bgClass: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800',
-      textClass: 'text-blue-700 dark:text-blue-300',
-      iconClass: 'text-blue-600 dark:text-blue-400',
+      bgClass: 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800',
+      textClass: 'text-indigo-700 dark:text-indigo-300',
+      iconClass: 'text-indigo-600 dark:text-indigo-400',
       Icon: Info,
     },
     warning: {
@@ -66,9 +66,9 @@ const Callout: React.FC<CalloutProps> = ({
       Icon: XCircle,
     },
     tip: {
-      bgClass: 'bg-teal-50 dark:bg-teal-900/20 border-teal-200 dark:border-teal-800',
-      textClass: 'text-teal-700 dark:text-teal-300',
-      iconClass: 'text-teal-600 dark:text-teal-400',
+      bgClass: 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800',
+      textClass: 'text-indigo-700 dark:text-indigo-300',
+      iconClass: 'text-indigo-600 dark:text-indigo-400',
       Icon: Lightbulb,
     },
     note: {
@@ -104,7 +104,7 @@ const Callout: React.FC<CalloutProps> = ({
             </div>
           )}
 
-          <div className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+          <div className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed">
             {content}
           </div>
         </div>

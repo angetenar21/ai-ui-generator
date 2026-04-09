@@ -70,7 +70,7 @@ const Avatar: React.FC<AvatarProps> = ({
 
   const statusStyles: Record<AvatarStatus, string> = {
     online: 'bg-green-500',
-    offline: 'bg-gray-500',
+    offline: 'bg-zinc-500',
     busy: 'bg-red-500',
     away: 'bg-yellow-500',
     none: 'hidden',
@@ -93,10 +93,10 @@ const Avatar: React.FC<AvatarProps> = ({
         className={`
           ${sizeStyles[size].container}
           ${variantStyles[variant]}
-          bg-gradient-to-br from-blue-600 to-purple-600
+          bg-gradient-to-br from-indigo-600 to-purple-600
           flex items-center justify-center
           overflow-hidden
-          border border-gray-700/50
+          border border-zinc-700/50
           ${onClick ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}
         `}
       >
@@ -123,7 +123,7 @@ const Avatar: React.FC<AvatarProps> = ({
             ${sizeStyles[size].status}
             ${statusStyles[status]}
             ${variantStyles[variant]}
-            border-gray-900
+            border-zinc-900
           `}
         />
       )}
@@ -137,7 +137,7 @@ const Avatar: React.FC<AvatarProps> = ({
             rounded-full
             flex items-center justify-center
             font-semibold
-            border border-gray-900
+            border border-zinc-900
           `}
         >
           {typeof badge === 'number' && badge > 99 ? '99+' : badge}

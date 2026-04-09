@@ -24,12 +24,12 @@ const Badge: React.FC<BadgeProps> = ({
   max = 99,
 }) => {
   const variantStyles: Record<BadgeVariant, string> = {
-    default: 'bg-gray-700 text-gray-200',
-    primary: 'bg-blue-600 text-white',
+    default: 'bg-zinc-700 text-zinc-200',
+    primary: 'bg-indigo-600 text-white',
     success: 'bg-green-600 text-white',
     warning: 'bg-yellow-600 text-white',
     error: 'bg-red-600 text-white',
-    info: 'bg-cyan-600 text-white',
+    info: 'bg-indigo-600 text-white',
   };
 
   const sizeStyles: Record<BadgeSize, { badge: string; text: string; dot: string }> = {

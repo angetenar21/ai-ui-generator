@@ -68,7 +68,7 @@ const Skeleton: React.FC<SkeletonProps> = ({
               ${variantClasses[skeletonType]}
               ${animationClasses[animation]}
               ${index === lineCount - 1 ? 'w-4/5' : 'w-full'}
-              h-4 bg-gray-700
+              h-4 bg-zinc-700
               ${className}
             `}
           />
@@ -91,7 +91,7 @@ const Skeleton: React.FC<SkeletonProps> = ({
           ${animationClasses[animation]}
           ${getWidthClass()}
           ${getHeightClass()}
-          bg-gray-700
+          bg-zinc-700
           ${className}
         `}
         style={getInlineStyles()}

@@ -72,9 +72,9 @@ const Stack: React.FC<StackProps> = ({
   // Get divider classes based on direction
   const getDividerClasses = () => {
     if (direction === 'vertical') {
-      return 'h-[2px] w-full bg-gray-200 dark:bg-gray-700 my-1';
+      return 'h-[2px] w-full bg-zinc-200 dark:bg-zinc-700 my-1';
     }
-    return 'w-[2px] self-stretch bg-gray-200 dark:bg-gray-700 mx-1';
+    return 'w-[2px] self-stretch bg-zinc-200 dark:bg-zinc-700 mx-1';
   };
 
   // Get child wrapper classes

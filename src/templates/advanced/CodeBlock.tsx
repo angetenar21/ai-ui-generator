@@ -40,8 +40,8 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
 
   if (!code || code.trim() === '') {
     return (
-      <div className="card border border-gray-200 dark:border-gray-700 rounded-lg p-6 my-2">
-        <div className="text-gray-600 dark:text-gray-400 text-sm">No code provided</div>
+      <div className="card border border-zinc-200 dark:border-zinc-700 rounded-lg p-6 my-2">
+        <div className="text-zinc-600 dark:text-zinc-400 text-sm">No code provided</div>
       </div>
     );
   }
@@ -60,34 +60,34 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
 
   const languageColors: Record<string, string> = {
     javascript: 'text-yellow-600 dark:text-yellow-400',
-    typescript: 'text-blue-600 dark:text-blue-400',
+    typescript: 'text-indigo-600 dark:text-indigo-400',
     python: 'text-green-600 dark:text-green-400',
-    java: 'text-emerald-600 dark:text-emerald-400',
+    java: 'text-indigo-600 dark:text-indigo-400',
     html: 'text-pink-600 dark:text-pink-400',
     css: 'text-purple-600 dark:text-purple-400',
-    json: 'text-cyan-600 dark:text-cyan-400',
-    bash: 'text-gray-600 dark:text-gray-400',
+    json: 'text-indigo-600 dark:text-indigo-400',
+    bash: 'text-zinc-600 dark:text-zinc-400',
     sql: 'text-red-600 dark:text-red-400',
-    other: 'text-gray-600 dark:text-gray-400',
+    other: 'text-zinc-600 dark:text-zinc-400',
   };
 
   const themeClasses = {
-    dark: 'bg-gray-900 border-gray-700',
-    light: 'bg-gray-50 border-gray-200',
+    dark: 'bg-zinc-900 border-zinc-700',
+    light: 'bg-zinc-50 border-zinc-200',
   };
 
   const themeTextClasses = {
-    dark: 'text-gray-300',
-    light: 'text-gray-900',
+    dark: 'text-zinc-300',
+    light: 'text-zinc-900',
   };
 
   return (
     <div className={`${themeClasses[theme]} border rounded-lg my-2 overflow-hidden`}>
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50">
+      <div className="flex items-center justify-between px-4 py-2 border-b border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800/50">
         <div className="flex items-center gap-3">
           {title && (
-            <span className="text-gray-900 dark:text-white text-sm font-medium">{title}</span>
+            <span className="text-zinc-900 dark:text-white text-sm font-medium">{title}</span>
           )}
           <span className={`text-xs font-mono uppercase ${languageColors[language]}`}>
             {language}
@@ -99,8 +99,8 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
             onClick={handleCopy}
             className="
               flex items-center gap-1 px-2 py-1 rounded
-              text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:text-white
-              hover:bg-white dark:bg-gray-900 transition-colors
+              text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:text-white
+              hover:bg-white dark:bg-zinc-900 transition-colors
               text-sm
             "
             title="Copy code"
@@ -130,7 +130,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
             {lines.map((line, index) => (
               <div key={index} className="flex">
                 {showLineNumbers && (
-                  <span className="text-gray-600 dark:text-gray-400 select-none w-8 flex-shrink-0 text-right mr-4">
+                  <span className="text-zinc-600 dark:text-zinc-400 select-none w-8 flex-shrink-0 text-right mr-4">
                     {index + 1}
                   </span>
                 )}
@@ -142,8 +142,8 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
       </div>
 
       {/* Footer with line count */}
-      <div className="px-4 py-1 border-t border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/30">
-        <div className="text-gray-600 dark:text-gray-400 text-xs">
+      <div className="px-4 py-1 border-t border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800/30">
+        <div className="text-zinc-600 dark:text-zinc-400 text-xs">
           {lines.length} {lines.length === 1 ? 'line' : 'lines'}
         </div>
       </div>

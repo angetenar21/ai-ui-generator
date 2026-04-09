@@ -128,7 +128,7 @@ const Audio: React.FC<AudioProps> = ({
 
   if (variant === 'compact') {
     return (
-      <div className={`card border border-gray-200 dark:border-gray-700 rounded-xl p-4 max-w-md ${className}`}>
+      <div className={`card border border-zinc-200 dark:border-zinc-700 rounded-xl p-4 max-w-md ${className}`}>
         <audio
           ref={audioRef}
           src={src}
@@ -145,7 +145,7 @@ const Audio: React.FC<AudioProps> = ({
           <button
             onClick={togglePlay}
             disabled={isLoading}
-            className="flex-shrink-0 w-12 h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-700 disabled:cursor-not-allowed rounded-full flex items-center justify-center text-white transition-colors"
+            className="flex-shrink-0 w-12 h-12 bg-indigo-600 hover:bg-indigo-700 disabled:bg-zinc-700 disabled:cursor-not-allowed rounded-full flex items-center justify-center text-white transition-colors"
           >
             {isLoading ? (
               <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -165,7 +165,7 @@ const Audio: React.FC<AudioProps> = ({
 
           <div className="flex-1 min-w-0">
             <div className="text-white font-medium text-sm truncate">{title}</div>
-            {artist && <div className="text-gray-400 text-xs truncate">{artist}</div>}
+            {artist && <div className="text-zinc-400 text-xs truncate">{artist}</div>}
             <div className="mt-1">
               <input
                 type="range"
@@ -174,7 +174,7 @@ const Audio: React.FC<AudioProps> = ({
                 value={currentTime}
                 onChange={handleSeek}
                 disabled={isLoading}
-                className="w-full h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer disabled:cursor-not-allowed"
+                className="w-full h-1 bg-zinc-700 rounded-lg appearance-none cursor-pointer disabled:cursor-not-allowed"
                 style={{
                   background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${progress}%, #374151 ${progress}%, #374151 100%)`,
                 }}
@@ -182,7 +182,7 @@ const Audio: React.FC<AudioProps> = ({
             </div>
           </div>
 
-          <div className="flex-shrink-0 text-xs text-gray-400">
+          <div className="flex-shrink-0 text-xs text-zinc-400">
             {formatTime(currentTime)}
           </div>
         </div>
@@ -191,7 +191,7 @@ const Audio: React.FC<AudioProps> = ({
   }
 
   return (
-    <div className={`card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 max-w-2xl ${className}`}>
+    <div className={`card border border-zinc-200 dark:border-zinc-700 rounded-2xl p-6 max-w-2xl ${className}`}>
       <audio
         ref={audioRef}
         src={src}
@@ -207,7 +207,7 @@ const Audio: React.FC<AudioProps> = ({
         <div className="flex gap-6 mb-6">
           {/* Cover Art */}
           <div className="flex-shrink-0">
-            <div className="w-32 h-32 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center overflow-hidden">
+            <div className="w-32 h-32 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center overflow-hidden">
               {coverArt ? (
                 <img src={coverArt} alt={title} className="w-full h-full object-cover" />
               ) : (
@@ -221,20 +221,20 @@ const Audio: React.FC<AudioProps> = ({
           {/* Track Info */}
           <div className="flex-1 min-w-0">
             <h3 className="text-white text-xl font-bold mb-1 truncate">{title}</h3>
-            {artist && <p className="text-gray-400 text-sm mb-1 truncate">{artist}</p>}
-            {album && <p className="text-gray-500 text-xs truncate">{album}</p>}
+            {artist && <p className="text-zinc-400 text-sm mb-1 truncate">{artist}</p>}
+            {album && <p className="text-zinc-500 text-xs truncate">{album}</p>}
           </div>
         </div>
       )}
 
       {/* Waveform Visualization */}
       {showWaveform && (
-        <div className="mb-4 h-16 bg-gray-900/50 rounded-lg overflow-hidden flex items-center justify-center gap-1 px-2">
+        <div className="mb-4 h-16 bg-zinc-900/50 rounded-lg overflow-hidden flex items-center justify-center gap-1 px-2">
           {[...Array(50)].map((_, i) => (
             <div
               key={i}
               className={`flex-1 rounded-full transition-all duration-150 ${
-                i < progress / 2 ? 'bg-blue-500' : 'bg-gray-700'
+                i < progress / 2 ? 'bg-indigo-500' : 'bg-zinc-700'
               }`}
               style={{
                 height: `${20 + Math.random() * 60}%`,
@@ -253,12 +253,12 @@ const Audio: React.FC<AudioProps> = ({
           value={currentTime}
           onChange={handleSeek}
           disabled={isLoading}
-          className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer disabled:cursor-not-allowed"
+          className="w-full h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer disabled:cursor-not-allowed"
           style={{
             background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${progress}%, #374151 ${progress}%, #374151 100%)`,
           }}
         />
-        <div className="flex justify-between text-xs text-gray-400 mt-1">
+        <div className="flex justify-between text-xs text-zinc-400 mt-1">
           <span>{formatTime(currentTime)}</span>
           <span>{formatTime(duration)}</span>
         </div>
@@ -275,7 +275,7 @@ const Audio: React.FC<AudioProps> = ({
           >
             <button
               onClick={toggleMute}
-              className="text-gray-400 hover:text-white transition-colors p-2"
+              className="text-zinc-400 hover:text-white transition-colors p-2"
             >
               {isMuted || volume === 0 ? (
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -292,7 +292,7 @@ const Audio: React.FC<AudioProps> = ({
               )}
             </button>
             {showVolumeSlider && (
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 p-2 bg-gray-800 rounded-lg shadow-xl">
+              <div className="absolute bottom-full left-1/2 -tranzinc-x-1/2 mb-2 p-2 bg-zinc-800 rounded-lg shadow-xl">
                 <input
                   type="range"
                   min="0"
@@ -300,7 +300,7 @@ const Audio: React.FC<AudioProps> = ({
                   step="0.01"
                   value={volume}
                   onChange={handleVolumeChange}
-                  className="h-20 w-2 appearance-none bg-gray-700 rounded-lg cursor-pointer vertical-slider"
+                  className="h-20 w-2 appearance-none bg-zinc-700 rounded-lg cursor-pointer vertical-slider"
                   style={{ writingMode: 'vertical-lr' }}
                 />
               </div>
@@ -313,7 +313,7 @@ const Audio: React.FC<AudioProps> = ({
           <button
             onClick={() => skip(-10)}
             disabled={isLoading}
-            className="text-gray-400 hover:text-white disabled:text-gray-600 disabled:cursor-not-allowed transition-colors"
+            className="text-zinc-400 hover:text-white disabled:text-zinc-600 disabled:cursor-not-allowed transition-colors"
           >
             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
               <path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z" />
@@ -323,7 +323,7 @@ const Audio: React.FC<AudioProps> = ({
           <button
             onClick={togglePlay}
             disabled={isLoading}
-            className="w-14 h-14 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-700 disabled:cursor-not-allowed rounded-full flex items-center justify-center text-white transition-colors shadow-lg"
+            className="w-14 h-14 bg-indigo-600 hover:bg-indigo-700 disabled:bg-zinc-700 disabled:cursor-not-allowed rounded-full flex items-center justify-center text-white transition-colors shadow-lg"
           >
             {isLoading ? (
               <svg className="w-6 h-6 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -344,7 +344,7 @@ const Audio: React.FC<AudioProps> = ({
           <button
             onClick={() => skip(10)}
             disabled={isLoading}
-            className="text-gray-400 hover:text-white disabled:text-gray-600 disabled:cursor-not-allowed transition-colors"
+            className="text-zinc-400 hover:text-white disabled:text-zinc-600 disabled:cursor-not-allowed transition-colors"
           >
             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
               <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
@@ -360,7 +360,7 @@ const Audio: React.FC<AudioProps> = ({
                 audioRef.current.loop = !loop;
               }
             }}
-            className={`text-gray-400 hover:text-white transition-colors p-2 ${loop ? 'text-blue-500' : ''}`}
+            className={`text-zinc-400 hover:text-white transition-colors p-2 ${loop ? 'text-indigo-500' : ''}`}
           >
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
               <path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z" />

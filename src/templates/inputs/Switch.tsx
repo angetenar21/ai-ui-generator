@@ -46,14 +46,14 @@ const Switch: React.FC<SwitchProps> = ({
   };
 
   const sizeClasses = {
-    small: { track: 'w-9 h-5', thumb: 'w-4 h-4', translate: 'translate-x-4' },
-    medium: { track: 'w-11 h-6', thumb: 'w-5 h-5', translate: 'translate-x-5' },
-    large: { track: 'w-14 h-7', thumb: 'w-6 h-6', translate: 'translate-x-7' },
+    small: { track: 'w-9 h-5', thumb: 'w-4 h-4', translate: 'tranzinc-x-4' },
+    medium: { track: 'w-11 h-6', thumb: 'w-5 h-5', translate: 'tranzinc-x-5' },
+    large: { track: 'w-14 h-7', thumb: 'w-6 h-6', translate: 'tranzinc-x-7' },
   };
 
   const colorClasses = {
-    primary: 'bg-blue-600',
-    secondary: 'bg-gray-600',
+    primary: 'bg-indigo-600',
+    secondary: 'bg-zinc-600',
     success: 'bg-green-600',
     warning: 'bg-yellow-600',
     error: 'bg-red-600',
@@ -72,17 +72,17 @@ const Switch: React.FC<SwitchProps> = ({
           disabled={disabled}
           className={`
             ${sizeConfig.track}
-            ${isChecked ? colorClasses[color] : 'bg-gray-700'}
+            ${isChecked ? colorClasses[color] : 'bg-zinc-700'}
             ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
             relative inline-flex items-center rounded-full
             transition-colors duration-200 ease-in-out
-            focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 focus:ring-offset-gray-900
+            focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:ring-offset-2 focus:ring-offset-zinc-900
           `.trim().replace(/\s+/g, ' ')}
         >
           <span
             className={`
               ${sizeConfig.thumb}
-              ${isChecked ? sizeConfig.translate : 'translate-x-0.5'}
+              ${isChecked ? sizeConfig.translate : 'tranzinc-x-0.5'}
               inline-block transform rounded-full bg-white
               transition-transform duration-200 ease-in-out
               shadow-lg
@@ -91,7 +91,7 @@ const Switch: React.FC<SwitchProps> = ({
         </button>
         {displayLabel && (
           <label
-            className={`text-sm text-gray-300 cursor-pointer select-none ${labelPosition === 'left' ? 'mr-3' : 'ml-3'}`}
+            className={`text-sm text-zinc-300 cursor-pointer select-none ${labelPosition === 'left' ? 'mr-3' : 'ml-3'}`}
             onClick={handleChange}
           >
             {displayLabel}

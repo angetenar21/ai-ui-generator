@@ -129,11 +129,11 @@ const Carousel: React.FC<CarouselProps> = ({
 
   if (!images || images.length === 0) {
     return (
-      <div className="card border border-gray-200 dark:border-gray-700 rounded-xl p-8 text-center">
-        <svg className="w-16 h-16 mx-auto text-gray-400 dark:text-gray-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="card border border-zinc-200 dark:border-zinc-700 rounded-xl p-8 text-center">
+        <svg className="w-16 h-16 mx-auto text-zinc-400 dark:text-zinc-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
-        <p className="text-gray-500 dark:text-gray-400">No images to display</p>
+        <p className="text-zinc-500 dark:text-zinc-400">No images to display</p>
       </div>
     );
   }
@@ -165,7 +165,7 @@ const Carousel: React.FC<CarouselProps> = ({
                   absolute inset-0
                   ${transitionClasses[transition]}
                   ${transition === 'slide'
-                    ? `${isActive ? 'translate-x-0' : index < currentIndex ? '-translate-x-full' : 'translate-x-full'}`
+                    ? `${isActive ? 'tranzinc-x-0' : index < currentIndex ? '-tranzinc-x-full' : 'tranzinc-x-full'}`
                     : transition === 'fade'
                       ? `${isActive ? 'opacity-100 z-10' : 'opacity-0 z-0'}`
                       : `${isActive ? 'scale-100 opacity-100 z-10' : 'scale-95 opacity-0 z-0'}`
@@ -204,7 +204,7 @@ const Carousel: React.FC<CarouselProps> = ({
           <>
             <button
               onClick={prevSlide}
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-colors z-20 backdrop-blur-sm"
+              className="absolute left-4 top-1/2 -tranzinc-y-1/2 w-10 h-10 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-colors z-20 backdrop-blur-sm"
               aria-label="Previous slide"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -213,7 +213,7 @@ const Carousel: React.FC<CarouselProps> = ({
             </button>
             <button
               onClick={nextSlide}
-              className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-colors z-20 backdrop-blur-sm"
+              className="absolute right-4 top-1/2 -tranzinc-y-1/2 w-10 h-10 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-colors z-20 backdrop-blur-sm"
               aria-label="Next slide"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -225,7 +225,7 @@ const Carousel: React.FC<CarouselProps> = ({
 
         {/* Indicators */}
         {showIndicators && images.length > 1 && (
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+          <div className="absolute bottom-4 left-1/2 -tranzinc-x-1/2 flex gap-2 z-20">
             {images.map((_, index) => (
               <button
                 key={index}
@@ -274,7 +274,7 @@ const Carousel: React.FC<CarouselProps> = ({
               onClick={() => goToSlide(index)}
               className={`
                 flex-shrink-0 w-20 h-16 rounded-md overflow-hidden transition-all
-                ${currentIndex === index ? 'ring-2 ring-blue-500 opacity-100' : 'opacity-50 hover:opacity-75'}
+                ${currentIndex === index ? 'ring-2 ring-indigo-500 opacity-100' : 'opacity-50 hover:opacity-75'}
               `.trim().replace(/\s+/g, ' ')}
             >
               <img

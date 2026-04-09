@@ -42,7 +42,7 @@ const StackedBarChart: React.FC<StackedBarChartProps> = ({
   xAxis,
   series,
   layout = 'vertical',
-  variant = 'default',
+  variant = 'transparent',
   elevation = 'raised',
 }) => {
   // Detect dark mode
@@ -80,16 +80,16 @@ const StackedBarChart: React.FC<StackedBarChartProps> = ({
     return (
       <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && (
-          <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
+          <h3 className="text-2xl font-display font-semibold text-zinc-900 dark:text-white mb-2">
             {title}
           </h3>
         )}
         {description && (
-          <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+          <p className="text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed">
             {description}
           </p>
         )}
-        <div className="flex items-center justify-center h-64 text-gray-400 dark:text-gray-500">
+        <div className="flex items-center justify-center h-64 text-zinc-400 dark:text-zinc-500">
           No data available for stacked bar chart
         </div>
       </div>
@@ -101,12 +101,12 @@ const StackedBarChart: React.FC<StackedBarChartProps> = ({
       {(title || description) && (
         <div className="mb-6">
           {title && (
-            <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
+            <h3 className="text-2xl font-display font-semibold text-zinc-900 dark:text-white mb-2">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+            <p className="text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed">
               {description}
             </p>
           )}

@@ -64,7 +64,7 @@ const PieChart: React.FC<PieChartProps> = ({
   legend = true,
   margin = { top: 10, right: 10, bottom: legend ? 80 : 10, left: 60 },
   className = '',
-  variant = 'default',
+  variant = 'transparent',
   elevation = 'raised',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -114,18 +114,18 @@ const PieChart: React.FC<PieChartProps> = ({
         {(title || description) && (
           <div className="mb-6 text-center">
             {title && (
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
+              <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-1">
                 {title}
               </h3>
             )}
             {description && (
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-zinc-600 dark:text-zinc-400">
                 {description}
               </p>
             )}
           </div>
         )}
-        <div className="flex justify-center items-center min-h-[300px] text-gray-600 dark:text-gray-300">
+        <div className="flex justify-center items-center min-h-[300px] text-zinc-600 dark:text-zinc-300">
           <div className="text-center">
             <div className="text-4xl mb-2">📊</div>
             <div>No data available</div>
@@ -140,12 +140,12 @@ const PieChart: React.FC<PieChartProps> = ({
       {(title || description) && (
         <div className="mb-3 px-4 text-center">
           {title && (
-            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+            <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+            <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
               {description}
             </p>
           )}
@@ -183,6 +183,7 @@ const PieChart: React.FC<PieChartProps> = ({
             },
             '& .MuiChartsLegend-series text': {
               fill: `${legendTextColor} !important`,
+                      fontFamily: 'inherit',
               fontSize: '12px',
               fontWeight: 500,
             },

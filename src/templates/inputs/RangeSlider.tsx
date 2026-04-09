@@ -86,12 +86,12 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
     <div className="my-4 max-w-md">
       {label && (
         <div className="flex justify-between items-center mb-2">
-          <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100">
+          <label className="block text-sm font-semibold text-zinc-900 dark:text-zinc-100">
             {label}
             {required && <span className="text-red-400 ml-1">*</span>}
           </label>
           {showValues && (
-            <span className="text-sm text-gray-400 font-mono">
+            <span className="text-sm text-zinc-400 font-mono">
               {minValue} - {maxValue}
             </span>
           )}
@@ -100,7 +100,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
       <div className="relative pt-1 pb-6">
         <div className="relative h-2">
           <div
-            className="absolute h-2 bg-gray-700 rounded"
+            className="absolute h-2 bg-zinc-700 rounded"
             style={{
               left: 0,
               right: 0,
@@ -177,14 +177,14 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
           `}</style>
         </div>
         {showLabels && (
-          <div className="flex justify-between mt-2 text-xs text-gray-400">
+          <div className="flex justify-between mt-2 text-xs text-zinc-400">
             <span>{min}</span>
             <span>{max}</span>
           </div>
         )}
       </div>
       {(helperText || (error && errorMessage)) && (
-        <p className={`mt-1 text-xs ${error ? 'text-red-400' : 'text-gray-400'}`}>
+        <p className={`mt-1 text-xs ${error ? 'text-red-400' : 'text-zinc-400'}`}>
           {error && errorMessage ? errorMessage : helperText}
         </p>
       )}

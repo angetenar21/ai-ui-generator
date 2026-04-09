@@ -69,19 +69,19 @@ const Pagination: React.FC<PaginationProps> = ({
 
   const variantClasses = {
     default: {
-      button: 'px-3 py-2 border border-gray-300 dark:border-gray-700',
-      active: 'bg-emerald-600 text-white border-emerald-600',
-      inactive: 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700',
+      button: 'px-3 py-2 border border-zinc-300 dark:border-zinc-700',
+      active: 'bg-indigo-600 text-white border-indigo-600',
+      inactive: 'bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700',
     },
     outlined: {
       button: 'px-3 py-2 border-2',
-      active: 'border-emerald-600 text-white bg-emerald-600',
-      inactive: 'border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-emerald-300',
+      active: 'border-indigo-600 text-white bg-indigo-600',
+      inactive: 'border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:border-indigo-300',
     },
     rounded: {
-      button: 'px-3 py-2 rounded-full border border-gray-300 dark:border-gray-700',
-      active: 'bg-emerald-600 text-white border-emerald-600',
-      inactive: 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700',
+      button: 'px-3 py-2 rounded-full border border-zinc-300 dark:border-zinc-700',
+      active: 'bg-indigo-600 text-white border-indigo-600',
+      inactive: 'bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700',
     },
   };
 
@@ -114,7 +114,7 @@ const Pagination: React.FC<PaginationProps> = ({
         {pages.map((page, index) => {
           if (page === '...') {
             return (
-              <span key={`ellipsis-${index}`} className="px-3 py-2 text-gray-400 dark:text-gray-500">
+              <span key={`ellipsis-${index}`} className="px-3 py-2 text-zinc-400 dark:text-zinc-500">
                 ...
               </span>
             );

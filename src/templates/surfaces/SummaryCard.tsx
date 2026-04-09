@@ -75,7 +75,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
       case 'negative':
         return <ArrowDown className="w-3.5 h-3.5 text-error" />;
       case 'neutral':
-        return <Minus className="w-3.5 h-3.5 text-gray-600 dark:text-gray-400" />;
+        return <Minus className="w-3.5 h-3.5 text-zinc-600 dark:text-zinc-400" />;
       default:
         return null;
     }
@@ -100,12 +100,12 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
   return (
     <div className={`${surfaceClasses} rounded-2xl p-6 transition-all duration-300 h-full flex flex-col`}>
       {/* Header */}
-      <div className={`mb-6 pb-4 border-b ${isDarkSurface ? 'border-white/20' : 'border-gray-100 dark:border-gray-800'}`}>
-        <h3 className={`text-lg font-display font-bold mb-1 leading-snug ${isDarkSurface ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+      <div className={`mb-6 pb-4 border-b ${isDarkSurface ? 'border-white/20' : 'border-zinc-100 dark:border-zinc-800'}`}>
+        <h3 className={`text-lg font-display font-bold mb-1 leading-snug ${isDarkSurface ? 'text-white' : 'text-zinc-900 dark:text-white'}`}>
           {title}
         </h3>
         {description && (
-          <p className={`text-sm leading-relaxed ${isDarkSurface ? 'text-white/70' : 'text-gray-500 dark:text-gray-400'}`}>
+          <p className={`text-sm leading-relaxed ${isDarkSurface ? 'text-white/70' : 'text-zinc-500 dark:text-zinc-400'}`}>
             {description}
           </p>
         )}
@@ -118,23 +118,23 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
             key={index}
             className={`
               ${layout === 'horizontal' ? 'flex-1 min-w-[180px]' : ''}
-              ${layout === 'grid' ? 'p-4 rounded-xl bg-gray-50/60 dark:bg-gray-800/40 border border-gray-100 dark:border-gray-700/50' : 'py-3'}
+              ${layout === 'grid' ? 'p-4 rounded-xl bg-zinc-50/60 dark:bg-zinc-800/40 border border-zinc-100 dark:border-zinc-700/50' : 'py-3'}
               group relative
             `}
           >
             {/* Subtle left accent bar for vertical/horizontal layouts */}
             {layout !== 'grid' && (
-              <div className="absolute left-0 top-3 bottom-3 w-0.5 bg-gradient-to-b from-emerald-400/60 to-teal-300/20 rounded-full" />
+              <div className="absolute left-0 top-3 bottom-3 w-0.5 bg-gradient-to-b from-indigo-400/60 to-indigo-300/20 rounded-full" />
             )}
             <div className={`flex items-start justify-between ${layout !== 'grid' ? 'pl-3' : ''}`}>
               <div className="flex-1 min-w-0">
-                <div className={`text-[10px] uppercase tracking-widest font-semibold mb-1.5 ${isDarkSurface ? 'text-white/50' : 'text-gray-400 dark:text-gray-500'}`}>
+                <div className={`text-[10px] uppercase tracking-widest font-semibold mb-1.5 ${isDarkSurface ? 'text-white/50' : 'text-zinc-400 dark:text-zinc-500'}`}>
                   <span className="truncate block">{safeStr(item.label)}</span>
                 </div>
                 <div className={`font-black tracking-tight leading-none mb-1 transition-colors break-words min-w-0 ${
                   isDarkSurface
                     ? 'text-white'
-                    : 'text-gray-900 dark:text-white group-hover:text-emerald-500'
+                    : 'text-zinc-900 dark:text-white group-hover:text-indigo-500'
                   } ${
                   // Semantic sizing: If the value looks like a KPI metric (mostly numbers/symbols like $1.2M, +12%, 1,400)
                   // make it large (3xl). If it's normal text (Role, URL, Name), make it readable (base/lg).
@@ -145,7 +145,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
                   {safeStr(item.value)}
                 </div>
                 {item.subtext && (
-                  <div className={`text-xs mt-1.5 ${isDarkSurface ? 'text-white/50' : 'text-gray-400 dark:text-gray-500'}`}>
+                  <div className={`text-xs mt-1.5 ${isDarkSurface ? 'text-white/50' : 'text-zinc-400 dark:text-zinc-500'}`}>
                     {safeStr(item.subtext)}
                   </div>
                 )}
@@ -154,9 +154,9 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
               {item.change && (
                 <div className={`
                   flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ml-2 flex-shrink-0
-                  ${item.changeType === 'positive' ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400' : ''}
+                  ${item.changeType === 'positive' ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400' : ''}
                   ${item.changeType === 'negative' ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400' : ''}
-                  ${item.changeType === 'neutral' || !item.changeType ? 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400' : ''}
+                  ${item.changeType === 'neutral' || !item.changeType ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400' : ''}
                 `}>
                   {getChangeIcon(item.changeType)}
                   <span>{safeStr(item.change)}</span>

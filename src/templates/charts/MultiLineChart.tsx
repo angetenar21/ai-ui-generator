@@ -17,7 +17,7 @@ interface MultiLineChartProps {
 }
 
 const MultiLineChart: React.FC<MultiLineChartProps> = ({ title, data, height = 400,
-  variant = 'default',
+  variant = 'transparent',
   elevation = 'raised',
 }) => {
   const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
@@ -28,7 +28,7 @@ const MultiLineChart: React.FC<MultiLineChartProps> = ({ title, data, height = 4
 
   return (
     <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
-      {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>}
+      {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
       <ResponsiveContainer width="100%" height={height}>
         <BarChart data={data} margin={{ top: 20, right: 20, bottom: 20, left: 60 }}>
           <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />

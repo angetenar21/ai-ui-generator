@@ -128,8 +128,8 @@ const Grid: React.FC<GridProps> = ({
           </div>
         ))
       ) : (
-        <div className="col-span-full bg-gray-50 dark:bg-gray-800 rounded-lg p-4 text-center">
-          <p className="text-gray-500 dark:text-gray-400 text-sm">
+        <div className="col-span-full bg-zinc-50 dark:bg-zinc-800 rounded-lg p-4 text-center">
+          <p className="text-zinc-500 dark:text-zinc-400 text-sm">
             Grid layout ({typeof columns === 'object' ? 'responsive' : `${columns} columns`}) - Add child components
           </p>
         </div>

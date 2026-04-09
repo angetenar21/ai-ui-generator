@@ -54,7 +54,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
   if (items.length === 0) {
     return (
       <div className="card rounded-card p-8 text-center">
-        <p className="text-gray-600 dark:text-gray-400">Breadcrumbs - Add items to display</p>
+        <p className="text-zinc-600 dark:text-zinc-400">Breadcrumbs - Add items to display</p>
       </div>
     );
   }
@@ -85,7 +85,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
               {item.href && !isLast && !isCollapsed ? (
                 <a
                   href={item.href}
-                  className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                  className="flex items-center gap-1.5 text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition-colors"
                 >
                   {item.icon && <span>{item.icon}</span>}
                   <span>{item.label}</span>
@@ -93,10 +93,10 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
               ) : (
                 <span
                   className={`flex items-center gap-1.5 ${isLast
-                      ? 'text-gray-900 dark:text-white font-medium'
+                      ? 'text-zinc-900 dark:text-white font-medium'
                       : isCollapsed
-                        ? 'text-gray-600 dark:text-gray-400'
-                        : 'text-gray-600 dark:text-gray-300'
+                        ? 'text-zinc-600 dark:text-zinc-400'
+                        : 'text-zinc-600 dark:text-zinc-300'
                     }`}
                 >
                   {item.icon && <span>{item.icon}</span>}
@@ -105,7 +105,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
               )}
 
               {!isLast && (
-                <span className="text-gray-600 dark:text-gray-400" aria-hidden="true">
+                <span className="text-zinc-600 dark:text-zinc-400" aria-hidden="true">
                   {separators[separator]}
                 </span>
               )}

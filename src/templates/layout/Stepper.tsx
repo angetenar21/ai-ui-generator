@@ -68,7 +68,7 @@ const Stepper: React.FC<StepperProps> = ({
   if (safeSteps.length === 0) {
     return (
       <div className="card rounded-card p-8 text-center">
-        <p className="text-gray-600 dark:text-gray-400">Stepper - Add steps to display</p>
+        <p className="text-zinc-600 dark:text-zinc-400">Stepper - Add steps to display</p>
       </div>
     );
   }
@@ -83,19 +83,19 @@ const Stepper: React.FC<StepperProps> = ({
   const getStepColor = (status: string) => {
     switch (status) {
       case 'completed':
-        return 'bg-emerald-600 text-white border-emerald-600';
+        return 'bg-indigo-600 text-white border-indigo-600';
       case 'active':
         return 'bg-accent-from text-white border-accent-from';
       case 'error':
         return 'bg-red-500 text-white border-red-500';
       default:
-        return 'bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-400 border-emerald-600';
+        return 'bg-zinc-50 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-400 border-indigo-600';
     }
   };
 
   const getConnectorColor = (index: number) => {
     return index < activeStep
-      ? 'bg-emerald-600'
+      ? 'bg-indigo-600'
       : 'bg-border-primary';
   };
 
@@ -122,9 +122,9 @@ const Stepper: React.FC<StepperProps> = ({
                 )}
               </div>
               <div className="flex-1 pb-4">
-                <div className="font-semibold text-gray-900 dark:text-white">{step.label}</div>
+                <div className="font-semibold text-zinc-900 dark:text-white">{step.label}</div>
                 {step.description && (
-                  <div className="text-gray-600 dark:text-gray-300 mt-1">{step.description}</div>
+                  <div className="text-zinc-600 dark:text-zinc-300 mt-1">{step.description}</div>
                 )}
               </div>
             </div>
@@ -151,11 +151,11 @@ const Stepper: React.FC<StepperProps> = ({
                 {status === 'completed' && !step.icon && '✓'}
               </div>
               <div className="text-center max-w-24">
-                <div className="font-semibold text-gray-900 dark:text-white truncate">
+                <div className="font-semibold text-zinc-900 dark:text-white truncate">
                   {step.label}
                 </div>
                 {step.description && variant !== 'simple' && (
-                  <div className="text-gray-600 dark:text-gray-400 text-xs mt-1 truncate">
+                  <div className="text-zinc-600 dark:text-zinc-400 text-xs mt-1 truncate">
                     {step.description}
                   </div>
                 )}

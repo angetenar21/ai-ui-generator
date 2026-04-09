@@ -58,10 +58,10 @@ const Frame: React.FC<FrameProps> = ({
   };
 
   const backgroundClasses = {
-    transparent: 'bg-transparent border-gray-700/50',
-    dark: 'card border border-gray-200 dark:border-gray-700',
-    light: 'bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700',
-    gradient: 'bg-gradient-to-br from-bg-main to-bg-sub border-gray-700/50',
+    transparent: 'bg-transparent border-zinc-700/50',
+    dark: 'card border border-zinc-200 dark:border-zinc-700',
+    light: 'bg-zinc-100 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700',
+    gradient: 'bg-gradient-to-br from-bg-main to-bg-sub border-zinc-700/50',
   };
 
   return (
@@ -76,13 +76,13 @@ const Frame: React.FC<FrameProps> = ({
       `}
     >
       {title && (
-        <div className="text-gray-900 dark:text-white font-semibold text-lg mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+        <div className="text-zinc-900 dark:text-white font-semibold text-lg mb-4 pb-3 border-b border-zinc-200 dark:border-zinc-700">
           {title}
         </div>
       )}
 
       {content && (
-        <div className="text-gray-600 dark:text-gray-300 leading-relaxed">
+        <div className="text-zinc-600 dark:text-zinc-300 leading-relaxed">
           {content}
         </div>
       )}
@@ -96,7 +96,7 @@ const Frame: React.FC<FrameProps> = ({
       )}
 
       {!content && (!children || children.length === 0) && !title && (
-        <div className="text-gray-600 dark:text-gray-400 text-sm text-center py-4">
+        <div className="text-zinc-600 dark:text-zinc-400 text-sm text-center py-4">
           Empty frame container
         </div>
       )}

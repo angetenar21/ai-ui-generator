@@ -64,10 +64,10 @@ const Slider: React.FC<SliderProps> = ({
     if (error) return '#EF4444'; // red-500
 
     const colorMap: Record<string, string> = {
-      primary: '#10B981',   // emerald-600
-      secondary: '#6B7280', // gray-500
+      primary: '#10B981',   // indigo-600
+      secondary: '#6B7280', // zinc-500
       success: '#10B981',   // green-500
-      warning: '#F59E0B',   // teal-500
+      warning: '#F59E0B',   // indigo-500
       error: '#EF4444',     // red-500
     };
 
@@ -90,12 +90,12 @@ const Slider: React.FC<SliderProps> = ({
     <div className="my-4 max-w-md">
       {label && (
         <div className="flex justify-between items-center mb-2">
-          <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100">
+          <label className="block text-sm font-semibold text-zinc-900 dark:text-zinc-100">
             {label}
             {required && <span className="text-red-600 dark:text-red-400 ml-1">*</span>}
           </label>
           {showValue && (
-            <span className="text-sm text-gray-600 dark:text-gray-400 font-mono">
+            <span className="text-sm text-zinc-600 dark:text-zinc-400 font-mono">
               {displayValue}
             </span>
           )}
@@ -158,11 +158,11 @@ const Slider: React.FC<SliderProps> = ({
               return (
                 <div
                   key={index}
-                  className="absolute transform -translate-x-1/2"
+                  className="absolute transform -tranzinc-x-1/2"
                   style={{ left: `${markPercentage}%` }}
                 >
-                  <div className="w-0.5 h-2 bg-gray-500 mx-auto"></div>
-                  <span className="block text-xs text-gray-400 mt-1 whitespace-nowrap">
+                  <div className="w-0.5 h-2 bg-zinc-500 mx-auto"></div>
+                  <span className="block text-xs text-zinc-400 mt-1 whitespace-nowrap">
                     {mark.label}
                   </span>
                 </div>
@@ -172,7 +172,7 @@ const Slider: React.FC<SliderProps> = ({
         )}
       </div>
       {(helperText || (error && errorMessage)) && (
-        <p className={`mt-2 text-xs ${error ? 'text-red-400' : 'text-gray-400'}`}>
+        <p className={`mt-2 text-xs ${error ? 'text-red-400' : 'text-zinc-400'}`}>
           {error && errorMessage ? errorMessage : helperText}
         </p>
       )}

@@ -49,7 +49,7 @@ const Menu: React.FC<MenuProps> = ({
   if (!menuItemsList || menuItemsList.length === 0) {
     return (
       <div className="card rounded-card p-6 my-4">
-        <div className="text-center text-gray-400">
+        <div className="text-center text-zinc-400">
           <p className="text-sm">No menu items provided</p>
         </div>
       </div>
@@ -59,7 +59,7 @@ const Menu: React.FC<MenuProps> = ({
   const variantClasses = {
     default: 'card rounded-card p-2',
     compact: 'card rounded-card p-1',
-    bordered: 'card rounded-card p-2 border-2 border-gray-700',
+    bordered: 'card rounded-card p-2 border-2 border-zinc-700',
   };
 
   const positionClasses = {
@@ -70,9 +70,9 @@ const Menu: React.FC<MenuProps> = ({
   };
 
   const triggerVariantClasses = {
-    primary: 'bg-emerald-600 hover:bg-emerald-700 text-white',
-    secondary: 'bg-gray-700 hover:bg-gray-600 text-white dark:bg-gray-700 dark:hover:bg-gray-600',
-    ghost: 'bg-transparent hover:bg-gray-200 dark:hover:bg-gray-700/50 text-gray-700 dark:text-gray-300',
+    primary: 'bg-indigo-600 hover:bg-indigo-700 text-white',
+    secondary: 'bg-zinc-700 hover:bg-zinc-600 text-white dark:bg-zinc-700 dark:hover:bg-zinc-600',
+    ghost: 'bg-transparent hover:bg-zinc-200 dark:hover:bg-zinc-700/50 text-zinc-700 dark:text-zinc-300',
   };
 
   // Always render as dropdown menu with a button
@@ -102,13 +102,13 @@ const Menu: React.FC<MenuProps> = ({
           <div className={`absolute ${positionClasses[position]} z-[9999] min-w-[200px] shadow-xl`}>
             <div className={variantClasses[variant]}>
               {title && trigger && (
-                <div className="px-3 py-2 text-sm font-semibold text-gray-400 uppercase tracking-wide border-b border-gray-700">
+                <div className="px-3 py-2 text-sm font-semibold text-zinc-400 uppercase tracking-wide border-b border-zinc-700">
                   {title}
                 </div>
               )}
               <div className="space-y-1 py-1">{menuItemsList.map((item, index) => {
                 if (item.divider) {
-                  return <div key={index} className="border-t border-gray-700 my-1" />;
+                  return <div key={index} className="border-t border-zinc-700 my-1" />;
                 }
 
                 return (
@@ -119,10 +119,10 @@ const Menu: React.FC<MenuProps> = ({
                         flex items-center gap-3
                         transition-colors
                         ${item.disabled
-                        ? 'text-gray-600 cursor-not-allowed'
+                        ? 'text-zinc-600 cursor-not-allowed'
                         : item.variant === 'danger'
                           ? 'text-red-400 hover:bg-red-500/10 hover:text-red-300'
-                          : 'text-gray-300 hover:bg-gray-700/50 hover:text-white cursor-pointer'
+                          : 'text-zinc-300 hover:bg-zinc-700/50 hover:text-white cursor-pointer'
                       }
                       `.trim().replace(/\s+/g, ' ')}
                     onClick={() => handleItemClick(item)}

@@ -115,9 +115,9 @@ const TagInput: React.FC<TagInputProps> = ({
   };
 
   const variantClasses = {
-    outlined: `border-2 ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} focus-within:border-emerald-500 bg-white dark:bg-gray-800`,
-    filled: `border-b-2 ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} focus-within:border-emerald-500 bg-gray-100 dark:bg-gray-800/50`,
-    standard: `border-b-2 ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} focus-within:border-emerald-500 bg-transparent`,
+    outlined: `border-2 ${error ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-600'} focus-within:border-indigo-500 bg-white dark:bg-zinc-800`,
+    filled: `border-b-2 ${error ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-600'} focus-within:border-indigo-500 bg-zinc-100 dark:bg-zinc-800/50`,
+    standard: `border-b-2 ${error ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-600'} focus-within:border-indigo-500 bg-transparent`,
   };
 
   const tagSizeClasses = {
@@ -129,7 +129,7 @@ const TagInput: React.FC<TagInputProps> = ({
   return (
     <div className={`my-4 ${fullWidth ? 'w-full' : 'max-w-md'}`}>
       {label && (
-        <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
+        <label className="block text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
           {label}
           {required && <span className="text-red-400 ml-1">*</span>}
         </label>
@@ -140,8 +140,8 @@ const TagInput: React.FC<TagInputProps> = ({
           ${sizeClasses[size]}
           ${variantClasses[variant]}
           ${fullWidth ? 'w-full' : 'w-full'}
-          rounded-lg text-gray-900 dark:text-white
-          focus-within:ring-2 focus-within:ring-emerald-500/50
+          rounded-lg text-zinc-900 dark:text-white
+          focus-within:ring-2 focus-within:ring-indigo-500/50
           ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-text'}
           transition-all duration-200
           flex flex-wrap gap-2 items-center min-h-[2.5rem]
@@ -152,7 +152,7 @@ const TagInput: React.FC<TagInputProps> = ({
             key={index}
             className={`
               ${tagSizeClasses[size]}
-              inline-flex items-center gap-1 bg-emerald-500 dark:bg-emerald-600 text-white rounded
+              inline-flex items-center gap-1 bg-indigo-500 dark:bg-indigo-600 text-white rounded
               transition-all duration-150
             `.trim().replace(/\s+/g, ' ')}
           >
@@ -164,7 +164,7 @@ const TagInput: React.FC<TagInputProps> = ({
                   e.stopPropagation();
                   removeTag(index);
                 }}
-                className="hover:text-gray-200 focus:outline-none"
+                className="hover:text-zinc-200 focus:outline-none"
                 aria-label={`Remove ${tag}`}
               >
                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -182,16 +182,16 @@ const TagInput: React.FC<TagInputProps> = ({
           onKeyDown={handleKeyDown}
           placeholder={currentTags.length === 0 ? placeholder : ''}
           disabled={disabled || (maxTags !== undefined && currentTags.length >= maxTags)}
-          className="flex-1 min-w-[120px] bg-transparent outline-none placeholder-gray-400 disabled:cursor-not-allowed"
+          className="flex-1 min-w-[120px] bg-transparent outline-none placeholder-zinc-400 disabled:cursor-not-allowed"
         />
       </div>
       {(helperText || (error && errorMessage) || maxTags) && (
         <div className="flex justify-between items-center mt-1">
-          <p className={`text-xs ${error ? 'text-red-400' : 'text-gray-400'}`}>
+          <p className={`text-xs ${error ? 'text-red-400' : 'text-zinc-400'}`}>
             {error && errorMessage ? errorMessage : helperText}
           </p>
           {maxTags && (
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-zinc-400">
               {currentTags.length} / {maxTags}
             </p>
           )}

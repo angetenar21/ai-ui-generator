@@ -226,7 +226,7 @@ const TesterPage: React.FC = () => {
               <button
                 type="button"
                 onClick={parseInput}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 transition-all hover:scale-[1.01] active:scale-95 shadow-sm group"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-white bg-gradient-to-r from-orange-500 to-pink-600 hover:from-orange-400 hover:to-pink-500 transition-all hover:scale-[1.01] active:scale-95 shadow-sm group"
               >
                 <Play className="w-4 h-4 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
                 Render

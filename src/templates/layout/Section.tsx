@@ -58,16 +58,16 @@ const Section: React.FC<SectionProps> = ({
 
   const variantClasses = {
     default: '',
-    bordered: 'border border-emerald-600 rounded-card',
+    bordered: 'border border-indigo-600 rounded-card',
     elevated: 'shadow-lg rounded-card',
     filled: 'rounded-card',
   };
 
   const backgroundClasses = {
     default: '',
-    surface: 'bg-white dark:bg-gray-800',
-    elevated: 'bg-gray-50 dark:bg-gray-800',
-    accent: 'bg-emerald-50 dark:bg-emerald-900/10',
+    surface: 'bg-white dark:bg-zinc-800',
+    elevated: 'bg-zinc-50 dark:bg-zinc-800',
+    accent: 'bg-indigo-50 dark:bg-indigo-900/10',
   };
 
   const widthClass = fullWidth ? 'w-full' : '';
@@ -81,16 +81,16 @@ const Section: React.FC<SectionProps> = ({
           <header className={padding !== 'none' ? 'mb-6' : ''}>
             <div className="flex items-center gap-3">
               {icon && (
-                <span className="text-2xl text-emerald-600">{icon}</span>
+                <span className="text-2xl text-indigo-600">{icon}</span>
               )}
               <div className="flex-1">
                 {title && (
-                  <h2 className="text-2xl font-display font-bold text-gray-900 dark:text-white">
+                  <h2 className="text-2xl font-display font-bold text-zinc-900 dark:text-white">
                     {title}
                   </h2>
                 )}
                 {subtitle && (
-                  <p className="text-gray-600 dark:text-gray-300 mt-1">{subtitle}</p>
+                  <p className="text-zinc-600 dark:text-zinc-300 mt-1">{subtitle}</p>
                 )}
               </div>
             </div>
@@ -109,7 +109,7 @@ const Section: React.FC<SectionProps> = ({
         </div>
       ) : (
         <div className="text-center py-8">
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-zinc-600 dark:text-zinc-400">
             Section content - Add child components
           </p>
         </div>

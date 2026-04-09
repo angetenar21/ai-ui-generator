@@ -40,14 +40,14 @@ export function isColorDark(hexColor: string): boolean {
  */
 export function getTextColorForBackground(backgroundColor?: string): string {
   if (!backgroundColor) {
-    return 'text-gray-900 dark:text-white';
+    return 'text-zinc-900 dark:text-white';
   }
 
   if (isColorDark(backgroundColor)) {
     return '!text-white';
   }
 
-  return '!text-gray-900';
+  return '!text-zinc-900';
 }
 
 /**
@@ -55,14 +55,14 @@ export function getTextColorForBackground(backgroundColor?: string): string {
  */
 export function getSecondaryTextColorForBackground(backgroundColor?: string): string {
   if (!backgroundColor) {
-    return 'text-gray-600 dark:text-gray-300';
+    return 'text-zinc-600 dark:text-zinc-300';
   }
 
   if (isColorDark(backgroundColor)) {
-    return '!text-gray-200';
+    return '!text-zinc-200';
   }
 
-  return '!text-gray-600';
+  return '!text-zinc-600';
 }
 
 /**

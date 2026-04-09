@@ -47,10 +47,10 @@ const Text: React.FC<TextProps> = ({
   };
 
   const colorClasses = {
-    primary: 'text-gray-900 dark:text-gray-100',
-    secondary: 'text-gray-600 dark:text-gray-400',
-    muted: 'text-gray-500 dark:text-gray-500',
-    accent: 'text-emerald-500 dark:text-emerald-400',
+    primary: 'text-zinc-900 dark:text-zinc-100',
+    secondary: 'text-zinc-600 dark:text-zinc-400',
+    muted: 'text-zinc-500 dark:text-zinc-500',
+    accent: 'text-indigo-500 dark:text-indigo-400',
   };
 
   const alignClasses = {
@@ -79,19 +79,19 @@ const Text: React.FC<TextProps> = ({
       <div className={`${commonClasses} prose dark:prose-invert max-w-none`}>
         <ReactMarkdown
           components={{
-            h1: ({ children }) => <h1 className="text-3xl font-display font-bold text-gray-900 dark:text-gray-100 mb-4 mt-6">{children}</h1>,
-            h2: ({ children }) => <h2 className="text-2xl font-display font-bold text-gray-900 dark:text-gray-100 mb-3 mt-5">{children}</h2>,
-            h3: ({ children }) => <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2 mt-4">{children}</h3>,
-            h4: ({ children }) => <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 mt-3">{children}</h4>,
+            h1: ({ children }) => <h1 className="text-3xl font-display font-bold text-zinc-900 dark:text-zinc-100 mb-4 mt-6">{children}</h1>,
+            h2: ({ children }) => <h2 className="text-2xl font-display font-bold text-zinc-900 dark:text-zinc-100 mb-3 mt-5">{children}</h2>,
+            h3: ({ children }) => <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 mb-2 mt-4">{children}</h3>,
+            h4: ({ children }) => <h4 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mb-2 mt-3">{children}</h4>,
             p: ({ children }) => <p className="mb-3 leading-relaxed">{children}</p>,
-            strong: ({ children }) => <strong className="font-bold text-gray-900 dark:text-gray-100">{children}</strong>,
+            strong: ({ children }) => <strong className="font-bold text-zinc-900 dark:text-zinc-100">{children}</strong>,
             em: ({ children }) => <em className="italic">{children}</em>,
-            code: ({ children }) => <code className="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded text-teal-600 dark:text-teal-400 font-mono text-sm">{children}</code>,
+            code: ({ children }) => <code className="bg-zinc-100 dark:bg-zinc-700 px-1.5 py-0.5 rounded text-indigo-600 dark:text-indigo-400 font-mono text-sm">{children}</code>,
             ul: ({ children }) => <ul className="list-disc list-inside mb-3 space-y-1">{children}</ul>,
             ol: ({ children }) => <ol className="list-decimal list-inside mb-3 space-y-1">{children}</ol>,
             li: ({ children }) => <li className="leading-relaxed">{children}</li>,
-            blockquote: ({ children }) => <blockquote className="border-l-4 border-emerald-500 pl-4 italic my-3">{children}</blockquote>,
-            a: ({ href, children }) => <a href={href} className="text-emerald-500 hover:text-emerald-600 dark:text-emerald-400 dark:hover:text-emerald-300 underline" target="_blank" rel="noopener noreferrer">{children}</a>,
+            blockquote: ({ children }) => <blockquote className="border-l-4 border-indigo-500 pl-4 italic my-3">{children}</blockquote>,
+            a: ({ href, children }) => <a href={href} className="text-indigo-500 hover:text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-300 underline" target="_blank" rel="noopener noreferrer">{children}</a>,
           }}
         >
           {resolvedContent}

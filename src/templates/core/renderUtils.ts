@@ -13,7 +13,7 @@ export function resolveProps(props: Record<string, any>, data: Record<string, an
       resolved[key] = resolveVariables(val, data);
     } else if (Array.isArray(val)) {
       resolved[key] = val.map(item =>
-        item && typeof item === 'object' ? resolveProps(item, data) : item
+        item && typeof item === 'object' && !Array.isArray(item) ? resolveProps(item, data) : item
       );
     } else if (val && typeof val === 'object' && !React.isValidElement(val)) {
       resolved[key] = resolveProps(val, data);

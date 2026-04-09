@@ -52,8 +52,8 @@ const Dashboard: React.FC<DashboardProps> = ({
 }) => {
   if (!Array.isArray(widgets) || widgets.length === 0) {
     return (
-      <div className="card border border-gray-200 dark:border-gray-700 rounded-lg p-6 my-2">
-        <div className="text-gray-600 dark:text-gray-400 text-sm">No widgets to display</div>
+      <div className="card border border-zinc-200 dark:border-zinc-700 rounded-lg p-6 my-2">
+        <div className="text-zinc-600 dark:text-zinc-400 text-sm">No widgets to display</div>
       </div>
     );
   }
@@ -96,7 +96,7 @@ const Dashboard: React.FC<DashboardProps> = ({
       {/* Dashboard Header */}
       {title && (
         <div className="mb-6">
-          <h2 className="text-gray-900 dark:text-white text-2xl font-bold font-display tracking-tight">{title}</h2>
+          <h2 className="text-zinc-900 dark:text-white text-2xl font-bold font-display tracking-tight">{title}</h2>
         </div>
       )}
 
@@ -109,36 +109,36 @@ const Dashboard: React.FC<DashboardProps> = ({
             <div
               key={widget.id}
               className={`
-                bg-white dark:bg-gray-900
-                border border-gray-200/80 dark:border-gray-800
+                bg-white dark:bg-zinc-900
+                border border-zinc-200/80 dark:border-zinc-800
                 ring-1 ring-black/[0.04] dark:ring-white/[0.04]
                 rounded-2xl
                 ${compact ? 'p-4' : 'p-5'}
                 shadow-[0_2px_8px_rgba(0,0,0,0.05),0_8px_24px_rgba(0,0,0,0.06)]
                 hover:shadow-[0_4px_12px_rgba(0,0,0,0.07),0_12px_32px_rgba(0,0,0,0.1)]
-                hover:border-gray-300 dark:hover:border-gray-600
+                hover:border-zinc-300 dark:hover:border-zinc-600
                 transition-all duration-300
                 ${getSizeClasses(widget.size)}
               `}
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1 min-w-0 pr-3">
-                  <div className="text-[11px] uppercase tracking-widest font-semibold text-gray-400 dark:text-gray-500 mb-1.5 truncate">
+                  <div className="text-[11px] uppercase tracking-widest font-semibold text-zinc-400 dark:text-zinc-500 mb-1.5 truncate">
                     {widget.title}
                   </div>
-                  <div className="text-3xl font-black tracking-tight text-gray-900 dark:text-white leading-none">
+                  <div className="text-3xl font-black tracking-tight text-zinc-900 dark:text-white leading-none">
                     {widget.value}
                   </div>
                 </div>
 
-                <div className="flex-shrink-0 p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 ring-1 ring-emerald-200/60 dark:ring-emerald-800/40">
-                  <IconComponent className="w-5 h-5 text-emerald-500 dark:text-emerald-400" />
+                <div className="flex-shrink-0 p-2.5 rounded-xl bg-indigo-50 dark:bg-indigo-900/20 ring-1 ring-indigo-200/60 dark:ring-indigo-800/40">
+                  <IconComponent className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
                 </div>
               </div>
 
               <div className="flex items-center justify-between gap-2">
                 {widget.subtitle && (
-                  <div className="text-gray-400 dark:text-gray-500 text-xs truncate">
+                  <div className="text-zinc-400 dark:text-zinc-500 text-xs truncate">
                     {widget.subtitle}
                   </div>
                 )}
@@ -146,9 +146,9 @@ const Dashboard: React.FC<DashboardProps> = ({
                 {widget.change && (
                   <div className={`
                     flex items-center gap-0.5 px-2 py-0.5 rounded-full text-xs font-semibold flex-shrink-0
-                    ${widget.changeType === 'positive' ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400' : ''}
+                    ${widget.changeType === 'positive' ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400' : ''}
                     ${widget.changeType === 'negative' ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400' : ''}
-                    ${widget.changeType === 'neutral' || !widget.changeType ? 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400' : ''}
+                    ${widget.changeType === 'neutral' || !widget.changeType ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400' : ''}
                   `}>
                     {widget.changeType === 'positive' && <span>↑</span>}
                     {widget.changeType === 'negative' && <span>↓</span>}

@@ -84,7 +84,7 @@ const PolarChart: React.FC<PolarChartProps> = ({
   series,
   width: _width,
   height = 400,
-  variant = 'default',
+  variant = 'transparent',
   elevation = 'raised',
 }) => {
 
@@ -92,8 +92,8 @@ const PolarChart: React.FC<PolarChartProps> = ({
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
       <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
-        {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>}
-        <div className="text-center text-gray-400">
+        {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
+        <div className="text-center text-zinc-400">
           <p className="text-sm">No series data for polar chart</p>
         </div>
       </div>
@@ -120,8 +120,8 @@ const PolarChart: React.FC<PolarChartProps> = ({
   if (validSeries.length === 0) {
     return (
       <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
-        {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>}
-        <div className="text-center text-gray-400">
+        {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
+        <div className="text-center text-zinc-400">
           <p className="text-sm">Invalid series data format</p>
         </div>
       </div>
@@ -184,12 +184,12 @@ const PolarChart: React.FC<PolarChartProps> = ({
   return (
     <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
       {title && (
-        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 text-center">
+        <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4 text-center">
           {title}
         </h3>
       )}
       {description && (
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 text-center">{description}</p>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-4 text-center">{description}</p>
       )}
       {(() => {
         const isDarkMode =
@@ -273,7 +273,7 @@ const PolarChart: React.FC<PolarChartProps> = ({
           </ResponsiveContainer>
         );
       })()}
-      <div className="text-xs text-gray-400 dark:text-gray-500 text-center mt-2">
+      <div className="text-xs text-zinc-400 dark:text-zinc-500 text-center mt-2">
         Polar area chart with {validSeries.length} series
       </div>
     </div>

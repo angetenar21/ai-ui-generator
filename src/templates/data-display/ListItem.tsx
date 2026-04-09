@@ -65,8 +65,8 @@ const ListItem: React.FC<ListItemProps> = ({
 
   const variantStyles: Record<ListItemVariant, string> = {
     default: 'bg-transparent',
-    highlighted: 'bg-gray-800/30 border-l-4 border-l-blue-500',
-    minimal: 'bg-transparent border-b border-gray-800/30',
+    highlighted: 'bg-zinc-800/30 border-l-4 border-l-indigo-500',
+    minimal: 'bg-transparent border-b border-zinc-800/30',
   };
 
   return (
@@ -78,15 +78,15 @@ const ListItem: React.FC<ListItemProps> = ({
         flex items-center
         transition-all duration-200
         ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
-        ${onClick && !disabled ? 'cursor-pointer hover:bg-gray-800/30' : ''}
-        ${selected ? 'bg-blue-900/20 border-l-4 border-l-blue-500' : ''}
+        ${onClick && !disabled ? 'cursor-pointer hover:bg-zinc-800/30' : ''}
+        ${selected ? 'bg-indigo-900/20 border-l-4 border-l-indigo-500' : ''}
       `}
     >
       {leftContent}
 
       {avatar && (
         <div className="flex-shrink-0">
-          <div className={`${sizeStyles[size].avatar} rounded-full overflow-hidden bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center`}>
+          <div className={`${sizeStyles[size].avatar} rounded-full overflow-hidden bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center`}>
             {avatar.startsWith('http') ? (
               <img
                 src={avatar}
@@ -101,7 +101,7 @@ const ListItem: React.FC<ListItemProps> = ({
       )}
 
       {icon && !avatar && (
-        <div className={`flex-shrink-0 ${sizeStyles[size].icon} text-gray-400`}>
+        <div className={`flex-shrink-0 ${sizeStyles[size].icon} text-zinc-400`}>
           {icon}
         </div>
       )}
@@ -110,18 +110,18 @@ const ListItem: React.FC<ListItemProps> = ({
         <div className={`${sizeStyles[size].primary} text-white font-medium truncate flex items-center gap-2`}>
           {primary}
           {badge !== undefined && (
-            <span className="px-2 py-0.5 bg-blue-600 text-white text-xs rounded-full font-semibold">
+            <span className="px-2 py-0.5 bg-indigo-600 text-white text-xs rounded-full font-semibold">
               {typeof badge === 'number' && badge > 99 ? '99+' : badge}
             </span>
           )}
         </div>
         {secondary && (
-          <div className={`${sizeStyles[size].secondary} text-gray-400 truncate mt-0.5`}>
+          <div className={`${sizeStyles[size].secondary} text-zinc-400 truncate mt-0.5`}>
             {secondary}
           </div>
         )}
         {tertiary && (
-          <div className="text-xs text-gray-500 truncate mt-0.5">
+          <div className="text-xs text-zinc-500 truncate mt-0.5">
             {tertiary}
           </div>
         )}

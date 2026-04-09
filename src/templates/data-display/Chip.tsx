@@ -34,14 +34,14 @@ const Chip: React.FC<ChipProps> = ({
 }) => {
   const colorStyles: Record<ChipColor, { filled: string; outlined: string; soft: string }> = {
     default: {
-      filled: 'bg-gray-700 text-gray-200 border-gray-700',
-      outlined: 'bg-transparent text-gray-300 border-gray-600',
-      soft: 'bg-gray-800/50 text-gray-200 border-gray-700/50',
+      filled: 'bg-zinc-700 text-zinc-200 border-zinc-700',
+      outlined: 'bg-transparent text-zinc-300 border-zinc-600',
+      soft: 'bg-zinc-800/50 text-zinc-200 border-zinc-700/50',
     },
     primary: {
-      filled: 'bg-blue-600 text-white border-blue-600',
-      outlined: 'bg-transparent text-blue-400 border-blue-500',
-      soft: 'bg-blue-900/30 text-blue-300 border-blue-700/50',
+      filled: 'bg-indigo-600 text-white border-indigo-600',
+      outlined: 'bg-transparent text-indigo-400 border-indigo-500',
+      soft: 'bg-indigo-900/30 text-indigo-300 border-indigo-700/50',
     },
     success: {
       filled: 'bg-green-600 text-white border-green-600',
@@ -59,9 +59,9 @@ const Chip: React.FC<ChipProps> = ({
       soft: 'bg-red-900/30 text-red-300 border-red-700/50',
     },
     info: {
-      filled: 'bg-cyan-600 text-white border-cyan-600',
-      outlined: 'bg-transparent text-cyan-400 border-cyan-500',
-      soft: 'bg-cyan-900/30 text-cyan-300 border-cyan-700/50',
+      filled: 'bg-indigo-600 text-white border-indigo-600',
+      outlined: 'bg-transparent text-indigo-400 border-indigo-500',
+      soft: 'bg-indigo-900/30 text-indigo-300 border-indigo-700/50',
     },
   };
 

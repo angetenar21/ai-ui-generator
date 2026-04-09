@@ -40,7 +40,7 @@ const StackedAreaChart: React.FC<StackedAreaChartProps> = ({
   height = 400,
   xAxis,
   series,
-  variant = 'default',
+  variant = 'transparent',
   elevation = 'raised',
 }) => {
   const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
@@ -76,9 +76,9 @@ const StackedAreaChart: React.FC<StackedAreaChartProps> = ({
   if (!data || data.length === 0 || !detectedSeries || detectedSeries.length === 0) {
     return (
       <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
-        {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>}
-        {description && <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{description}</p>}
-        <div className="flex items-center justify-center h-64 text-gray-400 dark:text-gray-500">
+        {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
+        {description && <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">{description}</p>}
+        <div className="flex items-center justify-center h-64 text-zinc-400 dark:text-zinc-500">
           No data available for stacked area chart
         </div>
       </div>
@@ -89,8 +89,8 @@ const StackedAreaChart: React.FC<StackedAreaChartProps> = ({
     <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
       {(title || description) && (
         <div className="mb-4">
-          {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{title}</h3>}
-          {description && <p className="text-sm text-gray-600 dark:text-gray-400">{description}</p>}
+          {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-2">{title}</h3>}
+          {description && <p className="text-sm text-zinc-600 dark:text-zinc-400">{description}</p>}
         </div>
       )}
       <ResponsiveContainer width="100%" height={height}>

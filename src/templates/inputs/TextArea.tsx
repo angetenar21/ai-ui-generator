@@ -70,9 +70,9 @@ const TextArea: React.FC<TextAreaProps> = ({
   };
 
   const variantClasses = {
-    outlined: `border-2 ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-white dark:bg-gray-800`,
-    filled: `border-b-2 ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-gray-100 dark:bg-gray-800/50`,
-    standard: `border-b-2 ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-transparent`,
+    outlined: `border-2 ${error ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-600'} bg-white dark:bg-zinc-800`,
+    filled: `border-b-2 ${error ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-600'} bg-zinc-100 dark:bg-zinc-800/50`,
+    standard: `border-b-2 ${error ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-600'} bg-transparent`,
   };
 
   const textareaRows = autoResize ? minRows : rows;
@@ -80,7 +80,7 @@ const TextArea: React.FC<TextAreaProps> = ({
   return (
     <div className={`my-4 ${fullWidth ? 'w-full' : 'max-w-md'}`}>
       {label && (
-        <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
+        <label className="block text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
           {label}
           {required && <span className="text-red-500 dark:text-red-400 ml-1">*</span>}
         </label>
@@ -100,8 +100,8 @@ const TextArea: React.FC<TextAreaProps> = ({
           ${sizeClasses[size]}
           ${variantClasses[variant]}
           ${fullWidth ? 'w-full' : 'w-full'}
-          rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500
-          focus:outline-none focus:ring-2 focus:ring-emerald-500/50
+          rounded-lg text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500
+          focus:outline-none focus:ring-2 focus:ring-indigo-500/50
           disabled:opacity-50 disabled:cursor-not-allowed
           transition-all duration-200
           ${autoResize ? 'resize-none' : 'resize-vertical'}
@@ -111,13 +111,13 @@ const TextArea: React.FC<TextAreaProps> = ({
       <div className="flex justify-between items-center mt-1">
         <div className="flex-1">
           {(helperText || (error && errorMessage)) && (
-            <p className={`text-xs ${error ? 'text-red-500 dark:text-red-400' : 'text-gray-500 dark:text-gray-400'}`}>
+            <p className={`text-xs ${error ? 'text-red-500 dark:text-red-400' : 'text-zinc-500 dark:text-zinc-400'}`}>
               {error && errorMessage ? errorMessage : helperText}
             </p>
           )}
         </div>
         {(showCharCount || maxLength) && (
-          <p className="text-xs text-gray-400 ml-2">
+          <p className="text-xs text-zinc-400 ml-2">
             {displayValue.length}
             {maxLength && ` / ${maxLength}`}
           </p>

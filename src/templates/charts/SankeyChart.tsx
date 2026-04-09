@@ -64,13 +64,13 @@ const SankeyChart: React.FC<SankeyChartProps> = ({
   // Validate data
   if (!nodes || !Array.isArray(nodes) || nodes.length === 0) {
     return (
-      <div className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+      <div className="w-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-6">
         {title && (
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+          <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-2">
             {title}
           </h3>
         )}
-        <div className="text-center text-gray-500 dark:text-gray-400">
+        <div className="text-center text-zinc-500 dark:text-zinc-400">
           <p className="text-sm">No nodes data for Sankey diagram</p>
         </div>
       </div>
@@ -79,13 +79,13 @@ const SankeyChart: React.FC<SankeyChartProps> = ({
 
   if (!links || !Array.isArray(links) || links.length === 0) {
     return (
-      <div className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+      <div className="w-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-6">
         {title && (
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+          <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-2">
             {title}
           </h3>
         )}
-        <div className="text-center text-gray-500 dark:text-gray-400">
+        <div className="text-center text-zinc-500 dark:text-zinc-400">
           <p className="text-sm">No links data for Sankey diagram</p>
         </div>
       </div>
@@ -166,18 +166,18 @@ const SankeyChart: React.FC<SankeyChartProps> = ({
   return (
     <div
       ref={containerRef}
-      className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 hover:shadow-md dark:hover:shadow-lg transition-shadow duration-200"
+      className="w-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-6 hover:shadow-md dark:hover:shadow-lg transition-shadow duration-200"
     >
       {/* Header */}
       {(title || description) && (
         <div className="mb-6">
           {title && (
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+            <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-2">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+            <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
               {description}
             </p>
           )}
@@ -215,7 +215,7 @@ const SankeyChart: React.FC<SankeyChartProps> = ({
             console.warn('[SankeyChart] Render error:', error);
             return (
               <div className="w-full h-full flex items-center justify-center">
-                <span className="text-sm text-gray-500 dark:text-gray-400">Unable to render Sankey diagram</span>
+                <span className="text-sm text-zinc-500 dark:text-zinc-400">Unable to render Sankey diagram</span>
               </div>
             );
           }
@@ -223,17 +223,17 @@ const SankeyChart: React.FC<SankeyChartProps> = ({
       </div>
 
       {/* Flow Summary */}
-      <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-        <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Flow Summary</h4>
+      <div className="mt-6 pt-6 border-t border-zinc-200 dark:border-zinc-700">
+        <h4 className="text-sm font-semibold text-zinc-900 dark:text-white mb-4">Flow Summary</h4>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
           {normalizedLinks.map((link, index) => (
-            <div key={index} className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">
+            <div key={index} className="p-3 bg-zinc-50 dark:bg-zinc-700 rounded-lg">
+              <div className="text-xs text-zinc-600 dark:text-zinc-400 mb-1">
                 <span className="font-medium">{sankyNodes[link.source].name}</span>
                 <span className="mx-1">→</span>
                 <span className="font-medium">{sankyNodes[link.target].name}</span>
               </div>
-              <div className="text-sm font-semibold text-gray-900 dark:text-white">
+              <div className="text-sm font-semibold text-zinc-900 dark:text-white">
                 {link.value.toFixed(2)}
               </div>
             </div>

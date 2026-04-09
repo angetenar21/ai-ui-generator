@@ -40,11 +40,11 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   };
 
   const colorClasses = {
-    primary: 'text-emerald-600 dark:text-emerald-400',
-    secondary: 'text-gray-600 dark:text-gray-300',
-    accent: 'text-teal-500 dark:text-teal-400',
+    primary: 'text-indigo-600 dark:text-indigo-400',
+    secondary: 'text-zinc-600 dark:text-zinc-300',
+    accent: 'text-indigo-500 dark:text-indigo-400',
     success: 'text-green-600 dark:text-green-400',
-    warning: 'text-teal-600 dark:text-teal-400',
+    warning: 'text-indigo-600 dark:text-indigo-400',
     error: 'text-red-600 dark:text-red-400',
   };
 
@@ -114,7 +114,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     >
       {renderSpinner()}
       {label && (
-        <div className="text-gray-600 dark:text-gray-300 text-sm font-medium">
+        <div className="text-zinc-600 dark:text-zinc-300 text-sm font-medium">
           {label}
         </div>
       )}
@@ -123,7 +123,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 
   if (fullScreen) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white dark:bg-gray-900/80 backdrop-blur-sm">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white dark:bg-zinc-900/80 backdrop-blur-sm">
         {content}
       </div>
     );

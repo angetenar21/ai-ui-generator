@@ -125,7 +125,7 @@ const TreeView: React.FC<TreeViewProps> = ({
           className={`
             flex items-center py-1.5 px-2 rounded-lg
             transition-colors cursor-pointer
-            ${isSelected ? 'bg-blue-900/30 border-l-2 border-l-blue-500' : 'hover:bg-gray-800/30'}
+            ${isSelected ? 'bg-indigo-900/30 border-l-2 border-l-indigo-500' : 'hover:bg-zinc-800/30'}
           `}
           style={{ paddingLeft: `${level * 24 + 8}px` }}
         >
@@ -138,14 +138,14 @@ const TreeView: React.FC<TreeViewProps> = ({
                   style={{ marginLeft: `${idx * 24}px` }}
                 >
                   {showLine && (
-                    <div className="h-full w-px bg-gray-700/50 ml-3" />
+                    <div className="h-full w-px bg-zinc-700/50 ml-3" />
                   )}
                 </div>
               ))}
               <div className="relative" style={{ width: '24px' }}>
-                <div className="absolute h-px w-3 bg-gray-700/50 top-1/2 left-3" />
+                <div className="absolute h-px w-3 bg-zinc-700/50 top-1/2 left-3" />
                 {!isLast && (
-                  <div className="absolute w-px bg-gray-700/50 top-1/2 left-3 h-full" />
+                  <div className="absolute w-px bg-zinc-700/50 top-1/2 left-3 h-full" />
                 )}
               </div>
             </div>
@@ -158,7 +158,7 @@ const TreeView: React.FC<TreeViewProps> = ({
                   e.stopPropagation();
                   toggleExpand(node.id);
                 }}
-                className="w-5 h-5 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+                className="w-5 h-5 flex items-center justify-center text-zinc-400 hover:text-white transition-colors"
               >
                 <svg
                   className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-90' : ''
@@ -184,7 +184,7 @@ const TreeView: React.FC<TreeViewProps> = ({
                 type="checkbox"
                 checked={isSelected}
                 onChange={() => handleNodeClick(node)}
-                className="w-4 h-4 rounded border-gray-600 text-blue-600 focus:ring-emerald-500"
+                className="w-4 h-4 rounded border-zinc-600 text-indigo-600 focus:ring-indigo-500"
               />
             )}
 
@@ -193,11 +193,11 @@ const TreeView: React.FC<TreeViewProps> = ({
               className="flex items-center gap-2 flex-1"
             >
               {node.icon && (
-                <span className="text-gray-400 text-lg">{node.icon}</span>
+                <span className="text-zinc-400 text-lg">{node.icon}</span>
               )}
               <span className="text-white text-sm">{safeStr(node.label)}</span>
               {node.metadata?.count !== undefined && (
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-zinc-500">
                   ({node.metadata.count})
                 </span>
               )}
@@ -223,7 +223,7 @@ const TreeView: React.FC<TreeViewProps> = ({
   };
 
   return (
-    <div className="card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 my-4">
+    <div className="card border border-zinc-200 dark:border-zinc-700 rounded-2xl p-6 my-4">
       {title && (
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-display font-semibold text-white">
@@ -232,13 +232,13 @@ const TreeView: React.FC<TreeViewProps> = ({
           <div className="flex gap-2">
             <button
               onClick={() => setExpanded(new Set(getAllNodeIds(safeData)))}
-              className="px-3 py-1 text-sm text-gray-300 hover:text-white transition-colors"
+              className="px-3 py-1 text-sm text-zinc-300 hover:text-white transition-colors"
             >
               Expand All
             </button>
             <button
               onClick={() => setExpanded(new Set())}
-              className="px-3 py-1 text-sm text-gray-300 hover:text-white transition-colors"
+              className="px-3 py-1 text-sm text-zinc-300 hover:text-white transition-colors"
             >
               Collapse All
             </button>
@@ -259,7 +259,7 @@ const TreeView: React.FC<TreeViewProps> = ({
       </div>
 
       {safeData.length === 0 && (
-        <div className="text-center py-12 text-gray-400">
+        <div className="text-center py-12 text-zinc-400">
           No data to display
         </div>
       )}

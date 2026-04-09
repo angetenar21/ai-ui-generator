@@ -68,8 +68,8 @@ const Panel: React.FC<PanelProps> = ({
 
   if (!title) {
     return (
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-4">
-        <div className="text-gray-500 dark:text-gray-400 text-sm">Panel requires a title</div>
+      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4">
+        <div className="text-zinc-500 dark:text-zinc-400 text-sm">Panel requires a title</div>
       </div>
     );
   }
@@ -80,8 +80,8 @@ const Panel: React.FC<PanelProps> = ({
     : getSurfaceClasses(variant, elevation);
 
   // Force text to be readable - add text color classes as important overrides for inline styles
-  const textColorClass = 'text-gray-900 dark:text-white';
-  const secondaryTextClass = 'text-gray-600 dark:text-gray-300';
+  const textColorClass = 'text-zinc-900 dark:text-white';
+  const secondaryTextClass = 'text-zinc-600 dark:text-zinc-300';
 
   return (
     <div className={`${surfaceClasses} rounded-2xl transition-all duration-300 ${className || 'w-full'} max-w-full ${textColorClass} flex flex-col animate-slide-up`}>
@@ -89,8 +89,8 @@ const Panel: React.FC<PanelProps> = ({
       <div
         className={`
           px-6 py-5
-          ${headerVariant === 'default' && variant !== 'gradient' && variant !== 'accent' ? 'border-b border-gray-100 dark:border-gray-800' : ''}
-          ${collapsible && variant !== 'gradient' && variant !== 'accent' ? 'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors' : ''}
+          ${headerVariant === 'default' && variant !== 'gradient' && variant !== 'accent' ? 'border-b border-zinc-100 dark:border-zinc-800' : ''}
+          ${collapsible && variant !== 'gradient' && variant !== 'accent' ? 'cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors' : ''}
           ${collapsible && (variant === 'gradient' || variant === 'accent') ? 'cursor-pointer transition-colors' : ''}
           rounded-t-2xl ${isCollapsed && !footer ? 'rounded-b-2xl' : ''}
         `}
@@ -104,7 +104,7 @@ const Panel: React.FC<PanelProps> = ({
 
           {collapsible && (
             <button
-              className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors flex-shrink-0 ml-2"
+              className="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors flex-shrink-0 ml-2"
               aria-label={isCollapsed ? 'Expand' : 'Collapse'}
             >
               {isCollapsed ? (
@@ -137,7 +137,7 @@ const Panel: React.FC<PanelProps> = ({
             )}
 
             {!displayContent && (!children || children.length === 0) && (
-              <div className="text-gray-400 dark:text-gray-500 text-xs text-center py-4">
+              <div className="text-zinc-400 dark:text-zinc-500 text-xs text-center py-4">
                 No content
               </div>
             )}
@@ -145,7 +145,7 @@ const Panel: React.FC<PanelProps> = ({
 
           {/* Footer */}
           {footer && (
-            <div className={`px-5 py-3 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/30 rounded-b-2xl`}>
+            <div className={`px-5 py-3 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/30 rounded-b-2xl`}>
               <div className={`${secondaryTextClass} text-xs`}>
                 {footer}
               </div>

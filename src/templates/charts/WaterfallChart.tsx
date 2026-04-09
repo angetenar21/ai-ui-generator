@@ -42,7 +42,7 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
   series,
   width: _width,
   height = 400,
-  variant = 'default',
+  variant = 'transparent',
   elevation = 'raised',
 }) => {
   // Dark mode detection
@@ -57,8 +57,8 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
       <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
-        {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>}
-        <div className="text-center text-gray-600 dark:text-gray-400">
+        {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
+        <div className="text-center text-zinc-600 dark:text-zinc-400">
           <p className="text-sm">No series data for waterfall chart</p>
         </div>
       </div>
@@ -71,8 +71,8 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
   if (!firstSeries || !firstSeries.data || firstSeries.data.length === 0) {
     return (
       <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
-        {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>}
-        <div className="text-center text-gray-600 dark:text-gray-400">
+        {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
+        <div className="text-center text-zinc-600 dark:text-zinc-400">
           <p className="text-sm">No data values in series</p>
         </div>
       </div>
@@ -211,12 +211,12 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
 
   return (
     <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
-      {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 text-center">{title}</h3>}
+      {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4 text-center">{title}</h3>}
       {description && (
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 text-center">{description}</p>
+        <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4 text-center">{description}</p>
       )}
       {chartData.length === 0 ? (
-        <div className="text-center text-gray-600 dark:text-gray-400 py-8">
+        <div className="text-center text-zinc-600 dark:text-zinc-400 py-8">
           <p className="text-sm">No data available</p>
         </div>
       ) : (
@@ -300,34 +300,34 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
           <div className="flex items-center justify-center gap-6 mt-4 text-xs">
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 bg-green-500 rounded" />
-              <span className="text-gray-700 dark:text-gray-300 font-medium">Increase</span>
+              <span className="text-zinc-700 dark:text-zinc-300 font-medium">Increase</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 bg-red-500 rounded" />
-              <span className="text-gray-700 dark:text-gray-300 font-medium">Decrease</span>
+              <span className="text-zinc-700 dark:text-zinc-300 font-medium">Decrease</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-emerald-600 rounded" />
-              <span className="text-gray-700 dark:text-gray-300 font-medium">Total</span>
+              <div className="w-4 h-4 bg-indigo-600 rounded" />
+              <span className="text-zinc-700 dark:text-zinc-300 font-medium">Total</span>
             </div>
           </div>
 
           {/* Summary */}
-          <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="mt-4 pt-4 border-t border-zinc-200 dark:border-zinc-700">
             <div className="flex justify-between items-center text-sm">
-              <span className="text-gray-600 dark:text-gray-400">Starting Value:</span>
-              <span className="font-semibold text-gray-900 dark:text-white">
+              <span className="text-zinc-600 dark:text-zinc-400">Starting Value:</span>
+              <span className="font-semibold text-zinc-900 dark:text-white">
                 {chartData[0]?.start.toFixed(2) || '0.00'}
               </span>
             </div>
             <div className="flex justify-between items-center text-sm mt-1">
-              <span className="text-gray-600 dark:text-gray-400">Final Value:</span>
-              <span className="font-semibold text-gray-900 dark:text-white">
+              <span className="text-zinc-600 dark:text-zinc-400">Final Value:</span>
+              <span className="font-semibold text-zinc-900 dark:text-white">
                 {chartData[chartData.length - 1]?.end.toFixed(2) || '0.00'}
               </span>
             </div>
             <div className="flex justify-between items-center text-sm mt-1">
-              <span className="text-gray-600 dark:text-gray-400">Net Change:</span>
+              <span className="text-zinc-600 dark:text-zinc-400">Net Change:</span>
               <span className={`font-semibold ${(chartData[chartData.length - 1]?.end || 0) >= (chartData[0]?.start || 0)
                 ? 'text-green-600 dark:text-green-400'
                 : 'text-red-600 dark:text-red-400'

@@ -72,8 +72,8 @@ const GalleryPage: React.FC = () => {
                 'px-4 py-1.5 rounded-pill text-sm font-medium btn-press transition-all',
                 'flex items-center gap-1',
                 isActive
-                  ? 'bg-gradient-to-r from-green-400 via-green-500 to-green-600 text-white shadow-card'
-                  : 'bg-white text border border-border-subtle text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-bg-sub',
+                  ? 'bg-gradient-to-r from-orange-500 to-pink-600 text-white shadow-card'
+                  : 'bg-white text border border-border-subtle text-gray-700 dark:text-gray-400 hover:text-stone-900 dark:hover:text-white hover:bg-bg-sub',
               ].join(' ')}
             >
               <span>{category.label}</span>

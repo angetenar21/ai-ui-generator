@@ -95,20 +95,20 @@ const Gantt: React.FC<GanttProps> = ({
   const timeScales = generateTimeScale();
 
   return (
-    <div className="card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 my-4 overflow-x-auto">
+    <div className="card border border-zinc-200 dark:border-zinc-700 rounded-2xl p-6 my-4 overflow-x-auto">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-display font-semibold text-white">
           {title}
         </h3>
-        <div className="text-sm text-gray-400">
+        <div className="text-sm text-zinc-400">
           {startDate.toLocaleDateString()} - {endDate.toLocaleDateString()}
         </div>
       </div>
 
       <div className="min-w-[800px]">
         {/* Time scale header */}
-        <div className="flex border-b border-gray-700/50 mb-4">
-          <div className="w-48 flex-shrink-0 px-4 py-2 font-semibold text-gray-400 text-sm">
+        <div className="flex border-b border-zinc-700/50 mb-4">
+          <div className="w-48 flex-shrink-0 px-4 py-2 font-semibold text-zinc-400 text-sm">
             Task Name
           </div>
           <div className="flex-1 relative">
@@ -116,7 +116,7 @@ const Gantt: React.FC<GanttProps> = ({
               {timeScales.map((scale, index) => (
                 <div
                   key={index}
-                  className="flex-1 px-2 py-2 text-center text-xs text-gray-400 border-l border-gray-700/30"
+                  className="flex-1 px-2 py-2 text-center text-xs text-zinc-400 border-l border-zinc-700/30"
                 >
                   {scale}
                 </div>
@@ -142,7 +142,7 @@ const Gantt: React.FC<GanttProps> = ({
                 <div className="w-48 flex-shrink-0 px-4 py-2">
                   <div className="text-white text-sm truncate">{task.name}</div>
                   {task.assignee && (
-                    <div className="text-xs text-gray-500 truncate">
+                    <div className="text-xs text-zinc-500 truncate">
                       {task.assignee}
                     </div>
                   )}
@@ -155,29 +155,29 @@ const Gantt: React.FC<GanttProps> = ({
                     {timeScales.map((_, index) => (
                       <div
                         key={index}
-                        className="flex-1 border-l border-gray-800/30"
+                        className="flex-1 border-l border-zinc-800/30"
                       />
                     ))}
                   </div>
 
                   {/* Task bar */}
                   <div
-                    className="absolute top-1/2 -translate-y-1/2 h-8"
+                    className="absolute top-1/2 -tranzinc-y-1/2 h-8"
                     style={position}
                   >
                     <div
                       onClick={() => onTaskClick?.(task)}
                       className={`
                         relative h-full rounded-lg overflow-hidden
-                        ${task.color || 'bg-blue-600'}
+                        ${task.color || 'bg-indigo-600'}
                         cursor-pointer
                         transition-all duration-200
-                        ${isHovered ? 'ring-2 ring-blue-400 scale-105' : ''}
+                        ${isHovered ? 'ring-2 ring-indigo-400 scale-105' : ''}
                       `}
                     >
                       {/* Progress bar */}
                       <div
-                        className="absolute inset-0 bg-blue-700 opacity-70"
+                        className="absolute inset-0 bg-indigo-700 opacity-70"
                         style={{ width: `${task.progress}%` }}
                       />
 
@@ -191,11 +191,11 @@ const Gantt: React.FC<GanttProps> = ({
                       {/* Hover tooltip */}
                       {isHovered && (
                         <div className="absolute top-full left-0 mt-2 z-50 w-max max-w-xs">
-                          <div className="bg-gray-900 border border-gray-700 rounded-lg p-3 shadow-xl">
+                          <div className="bg-zinc-900 border border-zinc-700 rounded-lg p-3 shadow-xl">
                             <div className="text-white font-semibold mb-2">
                               {task.name}
                             </div>
-                            <div className="space-y-1 text-xs text-gray-300">
+                            <div className="space-y-1 text-xs text-zinc-300">
                               <div>Start: {task.startDate}</div>
                               <div>End: {task.endDate}</div>
                               <div>Progress: {task.progress}%</div>
@@ -213,7 +213,7 @@ const Gantt: React.FC<GanttProps> = ({
         </div>
 
         {tasks.length === 0 && (
-          <div className="text-center py-12 text-gray-400">
+          <div className="text-center py-12 text-zinc-400">
             No tasks to display
           </div>
         )}

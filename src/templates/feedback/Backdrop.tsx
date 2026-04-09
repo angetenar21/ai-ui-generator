@@ -53,7 +53,7 @@ const Backdrop: React.FC<BackdropProps> = ({
   // Inline preview mode: if no children and no content, show a visual placeholder
   if (!children && !displayContent) {
     return (
-      <div className="relative w-full h-48 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 my-4">
+      <div className="relative w-full h-48 rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-700 my-4">
         <div
           className={`absolute inset-0 flex items-center justify-center ${blurClass} rounded-xl`}
           style={{ backgroundColor: `rgba(0, 0, 0, ${opacity})` }}

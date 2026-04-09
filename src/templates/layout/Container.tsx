@@ -58,8 +58,8 @@ const Container: React.FC<ContainerProps> = ({
   };
 
   const centerClass = center ? 'mx-auto' : '';
-  const backgroundClass = background ? 'bg-gray-50 dark:bg-gray-700' : '';
-  const borderClass = border ? 'border border-emerald-600 rounded-card' : '';
+  const backgroundClass = background ? 'bg-zinc-50 dark:bg-zinc-700' : '';
+  const borderClass = border ? 'border border-indigo-600 rounded-card' : '';
   const shadowClass = shadow ? 'shadow-lg' : '';
 
   return (
@@ -74,7 +74,7 @@ const Container: React.FC<ContainerProps> = ({
         </div>
       ) : (
         <div className="text-center py-8">
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-zinc-600 dark:text-zinc-400">
             Container (max-width: {maxWidth}) - Add child components
           </p>
         </div>

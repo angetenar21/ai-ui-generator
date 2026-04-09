@@ -38,8 +38,8 @@ const Feature: React.FC<FeatureProps> = ({
 }) => {
   if (!title || !description) {
     return (
-      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-        <div className="text-gray-500 dark:text-gray-400 text-sm">Feature card requires title and description</div>
+      <div className="bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-4">
+        <div className="text-zinc-500 dark:text-zinc-400 text-sm">Feature card requires title and description</div>
       </div>
     );
   }
@@ -56,8 +56,8 @@ const Feature: React.FC<FeatureProps> = ({
   };
 
   const iconColorClasses = {
-    primary: 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400',
-    cyan: 'bg-teal-100 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400',
+    primary: 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400',
+    cyan: 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400',
     purple: 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400',
     pink: 'bg-pink-100 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400',
     success: 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400',
@@ -68,7 +68,7 @@ const Feature: React.FC<FeatureProps> = ({
   const isVertical = orientation === 'vertical';
 
   return (
-    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 hover:border-gray-300 dark:hover:border-gray-600 transition-all group">
+    <div className="bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-6 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all group">
       <div className={`flex ${isVertical ? 'flex-col' : 'flex-row'} gap-4`}>
         {/* Icon */}
         <div className={`
@@ -87,21 +87,21 @@ const Feature: React.FC<FeatureProps> = ({
 
         {/* Content */}
         <div className="flex-1 min-w-0">
-          <h3 className="text-gray-900 dark:text-gray-100 font-semibold text-lg mb-2">
+          <h3 className="text-zinc-900 dark:text-zinc-100 font-semibold text-lg mb-2">
             {title}
           </h3>
 
-          <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-3">
+          <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed mb-3">
             {description}
           </p>
 
           {link && (
             <a
               href={link}
-              className="text-emerald-500 hover:text-emerald-600 dark:text-emerald-400 dark:hover:text-emerald-300 text-sm font-medium inline-flex items-center gap-1 transition-colors"
+              className="text-indigo-500 hover:text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium inline-flex items-center gap-1 transition-colors"
             >
               {linkText}
-              <span className="group-hover:translate-x-1 transition-transform">→</span>
+              <span className="group-hover:tranzinc-x-1 transition-transform">→</span>
             </a>
           )}
         </div>

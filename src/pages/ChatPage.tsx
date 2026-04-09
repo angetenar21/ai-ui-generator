@@ -334,11 +334,11 @@ const ChatPage: React.FC = () => {
   };
 
   const quickStarts = [
-    { icon: LayoutDashboard, label: 'Dashboard', prompt: 'Create a modern analytics dashboard with KPIs and charts', gradient: 'from-violet-500 to-purple-600 dark:from-violet-600 dark:to-purple-700' },
-    { icon: FormInput,       label: 'Form',      prompt: 'Create a user registration form',                         gradient: 'from-emerald-500 to-teal-600 dark:from-emerald-600 dark:to-teal-700' },
-    { icon: BarChart3,       label: 'Chart',     prompt: 'Create a sales performance chart',                        gradient: 'from-cyan-500 to-blue-600 dark:from-cyan-600 dark:to-blue-700' },
-    { icon: PanelTop,        label: 'Card',      prompt: 'Create a product showcase card',                          gradient: 'from-emerald-500 to-rose-600 dark:from-emerald-600 dark:to-rose-700' },
-    { icon: Grid,            label: 'Layout',    prompt: 'Create a responsive grid layout',                         gradient: 'from-pink-500 to-fuchsia-600 dark:from-pink-600 dark:to-fuchsia-700' },
+    { icon: LayoutDashboard, label: 'Dashboard', prompt: 'Create a modern analytics dashboard with KPIs and charts' },
+    { icon: FormInput,       label: 'Form',      prompt: 'Create a user registration form' },
+    { icon: BarChart3,       label: 'Chart',     prompt: 'Create a sales performance chart' },
+    { icon: PanelTop,        label: 'Card',      prompt: 'Create a product showcase card' },
+    { icon: Grid,            label: 'Layout',    prompt: 'Create a responsive grid layout' },
   ];
 
   // Scroll to bottom of the container — used only for non-message triggers if needed
@@ -351,17 +351,17 @@ const ChatPage: React.FC = () => {
   void scrollToBottom; // suppress unused-var lint warning — kept for future imperative use
 
   return (
-    <div className="relative h-full flex flex-col bg-[#f9fafb] dark:bg-gray-900 overflow-hidden">
+    <div className="relative h-full flex flex-col bg-transparent overflow-hidden">
       {/* Unified Scroll Container */}
-      <div className="flex-1 overflow-y-auto scrollbar-thin pb-32">
+      <div className="flex-1 overflow-y-auto scrollbar-thin pb-32 relative z-10">
         {!currentThreadId ? (
           /* Hero Section - Centered */
           <div className="min-h-full flex flex-col items-center justify-center px-4">
             {/* Badge */}
-            <div className="glass-light px-6 py-3 rounded-full mb-8 shadow-sm border border-cyan-200/40 dark:border-cyan-800/40 backdrop-blur-xl">
+            <div className="glass-light px-6 py-3 rounded-full mb-8 shadow-sm border border-orange-200/40 dark:border-orange-800/40 backdrop-blur-xl">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-cyan-500" />
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                <Sparkles className="w-4 h-4 text-orange-500" />
+                <span className="text-sm font-medium text-stone-600 dark:text-gray-300">
                   Modern • Beautiful • AI-Powered
                 </span>
               </div>
@@ -370,21 +370,21 @@ const ChatPage: React.FC = () => {
             {/* Main Heading */}
             <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 text-center max-w-4xl leading-tight">
               <span className="inline-flex items-center justify-center mr-4">
-                <Wand2 className="w-12 h-12 md:w-16 md:h-16 text-cyan-500 animate-float drop-shadow-[0_0_15px_rgba(0,216,255,0.4)]" />
+                <Wand2 className="w-12 h-12 md:w-16 md:h-16 text-orange-500 animate-float drop-shadow-[0_0_15px_rgba(249,115,22,0.4)]" />
               </span>
-              <span className="text-gray-900 dark:text-white">
+              <span className="text-stone-900 dark:text-white">
                 What would you like to create?
               </span>
             </h1>
 
             {/* Subheading */}
-            <p className="text-gray-400 opacity-60 text-center mb-12 max-w-2xl leading-relaxed text-lg px-4 font-medium transition-all duration-300">
+            <p className="text-stone-500 text-center mb-12 max-w-2xl leading-relaxed text-lg px-4 font-medium transition-all duration-300">
               Describe any UI component and watch AI generate it instantly with
-              <span className="text-gray-400 dark:text-gray-500 block mt-1"> beautiful, production-ready designs.</span>
+              <span className="text-stone-400 dark:text-gray-500 block mt-1"> beautiful, production-ready designs.</span>
             </p>
 
             {/* Quick Start Cards */}
-            <div className="flex flex-wrap gap-4 justify-center max-w-4xl px-4">
+            <div className="flex flex-wrap gap-3 md:gap-4 justify-center max-w-5xl px-4">
               {quickStarts.map((item, index) => (
                 <button
                   key={item.label}
@@ -394,23 +394,24 @@ const ChatPage: React.FC = () => {
                     setTimeout(() => handleSend(item.prompt), 50);
                   }}
                   className={`
-                    group relative px-6 py-4 rounded-2xl transition-all duration-300
-                    hover:scale-105 hover:-translate-y-2 flex items-center gap-3
-                    bg-gradient-to-br ${item.gradient} text-white shadow-lg hover:shadow-2xl
-                    border border-white/20
+                    group relative px-4 py-3.5 rounded-2xl transition-all duration-300
+                    hover:scale-[1.02] hover:-translate-y-1 flex items-center gap-3
+                    bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl shadow-sm hover:shadow-lg
+                    border border-stone-200/50 dark:border-gray-700/50
+                    focus:outline-none focus:ring-2 focus:ring-orange-500/50
                   `}
                   style={{
                     animationDelay: `${index * 0.1}s`,
                   }}
                 >
-                  <div className="text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.6)] group-hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.9)] group-hover:scale-110 transition-all duration-300">
-                    <item.icon className="w-7 h-7" strokeWidth={1.5} />
+                  <div className="w-10 h-10 rounded-xl bg-orange-50 dark:bg-gray-700 flex items-center justify-center group-hover:bg-gradient-to-br group-hover:from-orange-500 group-hover:to-pink-600 transition-all duration-300 group-hover:shadow-[0_0_15px_rgba(249,115,22,0.4)]">
+                    <item.icon className="w-5 h-5 text-orange-500 dark:text-gray-300 group-hover:text-white transition-colors duration-300" strokeWidth={2} />
                   </div>
                   <div className="text-left">
-                    <div className="font-bold text-base">{item.label}</div>
-                    <div className="text-xs opacity-90 font-medium">Click to try</div>
+                    <div className="font-bold text-[15px] text-stone-800 dark:text-gray-100">{item.label}</div>
+                    <div className="text-[11px] text-stone-500 dark:text-gray-400 font-medium tracking-wide">Click to try</div>
                   </div>
-                  <div className="absolute inset-0 rounded-2xl bg-white/0 group-hover:bg-white/10 transition-colors duration-300" />
+                  <div className="absolute inset-0 rounded-2xl bg-orange-500/0 group-hover:bg-orange-500/[0.02] dark:group-hover:bg-white/5 transition-colors duration-300" />
                 </button>
               ))}
             </div>
@@ -422,15 +423,15 @@ const ChatPage: React.FC = () => {
               {/* Status Badge */}
               {jobStatus && (
                 <div className="flex justify-center animate-slide-up">
-                  <div className="inline-flex items-center gap-3 px-5 py-3 rounded-full bg-white/50 dark:bg-gray-800/50 border border-cyan-200/50 dark:border-cyan-800/50 backdrop-blur-xl shadow-sm">
+                  <div className="inline-flex items-center gap-3 px-5 py-3 rounded-full bg-white/50 dark:bg-gray-800/50 border border-orange-200/50 dark:border-orange-800/50 backdrop-blur-xl shadow-sm">
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
-                      <span className="text-sm font-medium tracking-wide text-gray-700 dark:text-gray-300">
+                      <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+                      <span className="text-sm font-medium tracking-wide text-stone-700 dark:text-gray-300">
                         {jobStatus}
                       </span>
                     </div>
                     {queueStatus && (
-                      <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">
+                      <span className="text-xs text-stone-600 dark:text-gray-400 font-medium">
                         {queueStatus.jobs.queued} in queue
                       </span>
                     )}
@@ -492,10 +493,10 @@ const ChatPage: React.FC = () => {
                             initial={{ opacity: 0, y: 10, scale: 0.98 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                            className="w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl rounded-tl-md p-4 md:p-8 shadow-2xl border border-gray-200/50 dark:border-gray-700/50 hover:shadow-3xl transition-shadow duration-300"
+                            className="w-full relative mt-2"
                           >
-                            <div className="w-full min-w-0 p-1 md:p-2">
-                              <ResponsiveComponentWrapper>
+                            <div className="w-full min-w-0 flex items-start justify-start">
+                              <ResponsiveComponentWrapper alignLeft={true}>
                                 <ComponentRenderer spec={message.content as ComponentSpec} />
                               </ResponsiveComponentWrapper>
                             </div>
@@ -542,7 +543,7 @@ const ChatPage: React.FC = () => {
                     className="flex flex-col items-start gap-4 w-full pb-8"
                   >
                     {/* Modern Skeleton UI */}
-                    <div className="w-full max-w-3xl bg-white/40 dark:bg-gray-800/40 backdrop-blur-xl rounded-[2rem] rounded-tl-md p-4 md:p-6 shadow-2xl border border-white/20 dark:border-gray-700/30 overflow-hidden">
+                    <div className="w-full max-w-3xl overflow-hidden mt-2">
                       <DashboardSkeleton />
                     </div>
 
@@ -572,10 +573,10 @@ const ChatPage: React.FC = () => {
         <div className="max-w-4xl mx-auto pointer-events-auto">
           <div className="relative">
             {/* Subtle glow effect */}
-            <div className="absolute inset-0 bg-cyan-500/10 dark:bg-cyan-500/20 rounded-full blur-xl" />
+            <div className="absolute inset-0 bg-orange-500/10 dark:bg-orange-500/20 rounded-full blur-xl" />
 
             {/* Input container */}
-            <div className="relative bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-2xl p-2 flex items-center gap-2 shadow-md border border-gray-200 dark:border-gray-800 focus-within:ring-1 focus-within:ring-cyan-500/50 focus-within:border-cyan-500/50 transition-all duration-300">
+            <div className="relative bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-2xl p-2 flex items-center gap-2 shadow-md border border-stone-200 dark:border-gray-800 focus-within:ring-1 focus-within:ring-orange-500/50 focus-within:border-orange-500/50 transition-all duration-300">
               <input
                 type="text"
                 value={input}
@@ -596,7 +597,7 @@ const ChatPage: React.FC = () => {
               <button
                 onClick={() => handleSend()}
                 disabled={!input.trim() || isLoading}
-                className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 disabled:from-gray-200 disabled:to-gray-200 dark:disabled:from-gray-800 dark:disabled:to-gray-800 dark:disabled:text-gray-600 disabled:text-gray-400 text-white p-3 rounded-xl transition-all disabled:cursor-not-allowed flex items-center justify-center shadow-sm active:scale-95"
+                className="bg-gradient-to-r from-orange-500 to-pink-600 hover:from-orange-400 hover:to-pink-500 disabled:from-stone-200 disabled:to-stone-200 dark:disabled:from-gray-800 dark:disabled:to-gray-800 dark:disabled:text-gray-600 disabled:text-stone-400 text-white p-3 rounded-xl transition-all disabled:cursor-not-allowed flex items-center justify-center shadow-sm active:scale-95"
               >
                 <Send className="w-5 h-5" />
               </button>

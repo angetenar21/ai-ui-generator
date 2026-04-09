@@ -35,9 +35,9 @@ const InsightCard: React.FC<InsightCardProps> = ({
 }) => {
   const variantConfig = {
     info: {
-      bgClass: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800',
-      textClass: 'text-blue-700 dark:text-blue-300',
-      iconClass: 'text-blue-600 dark:text-blue-400',
+      bgClass: 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800',
+      textClass: 'text-indigo-700 dark:text-indigo-300',
+      iconClass: 'text-indigo-600 dark:text-indigo-400',
       Icon: Info,
     },
     success: {
@@ -59,9 +59,9 @@ const InsightCard: React.FC<InsightCardProps> = ({
       Icon: XCircle,
     },
     neutral: {
-      bgClass: 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700',
-      textClass: 'text-gray-900 dark:text-gray-100',
-      iconClass: 'text-emerald-500 dark:text-emerald-400',
+      bgClass: 'bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700',
+      textClass: 'text-zinc-900 dark:text-zinc-100',
+      iconClass: 'text-indigo-500 dark:text-indigo-400',
       Icon: Info,
     },
   };
@@ -78,14 +78,14 @@ const InsightCard: React.FC<InsightCardProps> = ({
       case 'down':
         return <TrendingDown className="w-4 h-4 text-red-600 dark:text-red-400" />;
       case 'neutral':
-        return <Minus className="w-4 h-4 text-gray-500 dark:text-gray-400" />;
+        return <Minus className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />;
       default:
         return null;
     }
   };
 
   return (
-    <div className={`h-full flex flex-col bg-white dark:bg-gray-800 rounded-xl p-6 border ${config.bgClass} hover:shadow-lg transition-all duration-200 text-gray-900 dark:text-white`}>
+    <div className={`h-full flex flex-col bg-white dark:bg-zinc-800 rounded-xl p-6 border ${config.bgClass} hover:shadow-lg transition-all duration-200 text-zinc-900 dark:text-white`}>
       <div className="flex-1 flex flex-col items-start gap-4">
         {/* Icon */}
         {showIcon && (
@@ -99,18 +99,18 @@ const InsightCard: React.FC<InsightCardProps> = ({
           <h4 className={`text-lg font-display font-semibold ${config.textClass} mb-2`}>
             {title}
           </h4>
-          <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-6">
+          <p className="text-zinc-600 dark:text-zinc-300 text-sm leading-relaxed mb-6">
             {description}
           </p>
 
           {/* Metric (Pushed to bottom using mt-auto) */}
           {metric && (
-            <div className="mt-auto flex justify-between items-end gap-4 pt-4 border-t border-gray-100 dark:border-gray-700/50">
+            <div className="mt-auto flex justify-between items-end gap-4 pt-4 border-t border-zinc-100 dark:border-zinc-700/50">
               <div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 font-semibold tracking-wider mb-1">
+                <div className="text-xs text-zinc-500 dark:text-zinc-400 font-semibold tracking-wider mb-1">
                   {metric.label}
                 </div>
-                <div className="text-3xl font-display font-bold text-gray-900 dark:text-white">
+                <div className="text-3xl font-display font-bold text-zinc-900 dark:text-white">
                   {metric.value}
                 </div>
               </div>
@@ -120,7 +120,7 @@ const InsightCard: React.FC<InsightCardProps> = ({
                   {getTrendIcon()}
                   <span className={`text-sm font-semibold ${metric.trend === 'up' ? 'text-green-600 dark:text-green-400' :
                     metric.trend === 'down' ? 'text-red-600 dark:text-red-400' :
-                      'text-gray-500 dark:text-gray-400'
+                      'text-zinc-500 dark:text-zinc-400'
                     }`}>
                     {metric.trendValue}
                   </span>

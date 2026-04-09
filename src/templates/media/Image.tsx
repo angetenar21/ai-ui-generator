@@ -201,7 +201,7 @@ const Image: React.FC<ImageProps> = ({
           relative overflow-hidden
           ${roundedClasses[rounded as keyof typeof roundedClasses] || roundedClasses.md}
           ${shadowClasses[shadow as keyof typeof shadowClasses] || ''}
-          ${border ? 'border-2 border-gray-700' : ''}
+          ${border ? 'border-2 border-zinc-700' : ''}
           ${aspectRatioClasses[aspectRatio]}
           ${zoom ? 'cursor-zoom-in' : onClick ? 'cursor-pointer' : ''}
         `.trim().replace(/\s+/g, ' ')}
@@ -210,9 +210,9 @@ const Image: React.FC<ImageProps> = ({
       >
         {/* Loading Skeleton */}
         {isLoading && (
-          <div className="absolute inset-0 bg-gray-800/50 animate-pulse flex items-center justify-center">
+          <div className="absolute inset-0 bg-zinc-800/50 animate-pulse flex items-center justify-center">
             <svg
-              className="w-12 h-12 text-gray-600 animate-spin"
+              className="w-12 h-12 text-zinc-600 animate-spin"
               fill="none"
               viewBox="0 0 24 24"
             >
@@ -262,8 +262,8 @@ const Image: React.FC<ImageProps> = ({
 
         {/* Error State */}
         {fallbackFailed && (
-          <div className="absolute inset-0 bg-gray-900/90 dark:bg-gray-800/90 flex flex-col items-center justify-center p-4">
-            <div className="text-center text-gray-400 dark:text-gray-500">
+          <div className="absolute inset-0 bg-zinc-900/90 dark:bg-zinc-800/90 flex flex-col items-center justify-center p-4">
+            <div className="text-center text-zinc-400 dark:text-zinc-500">
               <svg
                 className="w-16 h-16 mx-auto mb-3"
                 fill="none"
@@ -280,7 +280,7 @@ const Image: React.FC<ImageProps> = ({
               <p className="text-sm font-medium mb-1">
                 {isMapImage ? 'Map visualization unavailable' : 'Image unavailable'}
               </p>
-              <p className="text-xs text-gray-500 dark:text-gray-600">
+              <p className="text-xs text-zinc-500 dark:text-zinc-600">
                 {isMapImage ? 'Using placeholder map' : 'Using placeholder image'}
               </p>
             </div>
@@ -290,7 +290,7 @@ const Image: React.FC<ImageProps> = ({
 
       {/* Caption */}
       {caption && (
-        <p className="mt-2 text-sm text-gray-400 text-center">{caption}</p>
+        <p className="mt-2 text-sm text-zinc-400 text-center">{caption}</p>
       )}
 
       {/* Zoom Modal */}
@@ -305,7 +305,7 @@ const Image: React.FC<ImageProps> = ({
             className="max-w-full max-h-full object-contain"
           />
           <button
-            className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors"
+            className="absolute top-4 right-4 text-white hover:text-zinc-300 transition-colors"
             onClick={() => setIsZoomed(false)}
           >
             <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">

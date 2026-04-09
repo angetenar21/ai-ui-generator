@@ -53,16 +53,16 @@ const Widget: React.FC<WidgetProps> = ({
 
   if (!title) {
     return (
-      <div className="card border border-gray-200 dark:border-gray-700 rounded-lg p-4 my-2">
-        <div className="text-gray-600 dark:text-gray-400 text-sm">Widget requires a title</div>
+      <div className="card border border-zinc-200 dark:border-zinc-700 rounded-lg p-4 my-2">
+        <div className="text-zinc-600 dark:text-zinc-400 text-sm">Widget requires a title</div>
       </div>
     );
   }
 
   const variantClasses = {
-    default: 'card border border-gray-200 dark:border-gray-700',
-    compact: 'bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700',
-    highlighted: 'bg-gradient-to-br from-emerald-100 dark:from-emerald-900/20 to-teal-100 dark:to-teal-900/20 border border-emerald-300 dark:border-emerald-700',
+    default: 'card border border-zinc-200 dark:border-zinc-700',
+    compact: 'bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700',
+    highlighted: 'bg-gradient-to-br from-indigo-100 dark:from-indigo-900/20 to-indigo-100 dark:to-indigo-900/20 border border-indigo-300 dark:border-indigo-700',
   };
 
   const variantPadding = {
@@ -77,11 +77,11 @@ const Widget: React.FC<WidgetProps> = ({
       <div className={`
         flex items-center justify-between
         ${variantPadding[variant]}
-        ${content || children ? 'border-b border-gray-200 dark:border-gray-700' : ''}
+        ${content || children ? 'border-b border-zinc-200 dark:border-zinc-700' : ''}
         rounded-t-lg
         ${isCollapsed && !footer ? 'rounded-b-lg border-b-0' : ''}
       `}>
-        <h3 className="text-gray-900 dark:text-white font-semibold text-lg flex-1">
+        <h3 className="text-zinc-900 dark:text-white font-semibold text-lg flex-1">
           {title}
         </h3>
 
@@ -91,7 +91,7 @@ const Widget: React.FC<WidgetProps> = ({
             {collapsible && (
               <button
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className="p-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:text-white transition-colors rounded hover:bg-gray-100 dark:bg-gray-800"
+                className="p-1 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:text-white transition-colors rounded hover:bg-zinc-100 dark:bg-zinc-800"
                 title={isCollapsed ? 'Expand' : 'Collapse'}
               >
                 {isCollapsed ? (
@@ -103,7 +103,7 @@ const Widget: React.FC<WidgetProps> = ({
             )}
 
             <button
-              className="p-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:text-white transition-colors rounded hover:bg-gray-100 dark:bg-gray-800"
+              className="p-1 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:text-white transition-colors rounded hover:bg-zinc-100 dark:bg-zinc-800"
               title="More options"
             >
               <MoreVertical className="w-4 h-4" />
@@ -112,7 +112,7 @@ const Widget: React.FC<WidgetProps> = ({
             {closeable && (
               <button
                 onClick={() => setIsClosed(true)}
-                className="p-1 text-gray-600 dark:text-gray-400 hover:text-red-500 transition-colors rounded hover:bg-gray-100 dark:bg-gray-800"
+                className="p-1 text-zinc-600 dark:text-zinc-400 hover:text-red-500 transition-colors rounded hover:bg-zinc-100 dark:bg-zinc-800"
                 title="Close"
               >
                 <X className="w-4 h-4" />
@@ -127,7 +127,7 @@ const Widget: React.FC<WidgetProps> = ({
         <>
           <div className={variantPadding[variant]}>
             {content && (
-              <div className="text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-wrap break-words">
+              <div className="text-zinc-600 dark:text-zinc-300 leading-relaxed whitespace-pre-wrap break-words">
                 {content}
               </div>
             )}
@@ -141,7 +141,7 @@ const Widget: React.FC<WidgetProps> = ({
             )}
 
             {!content && (!children || children.length === 0) && (
-              <div className="text-gray-600 dark:text-gray-400 text-sm text-center py-4">
+              <div className="text-zinc-600 dark:text-zinc-400 text-sm text-center py-4">
                 No content
               </div>
             )}
@@ -151,10 +151,10 @@ const Widget: React.FC<WidgetProps> = ({
           {footer && (
             <div className={`
               ${variant === 'compact' ? 'px-4 py-2' : 'px-6 py-3'}
-              border-t border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/30
+              border-t border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800/30
               rounded-b-lg
             `}>
-              <div className="text-gray-600 dark:text-gray-400 text-sm">
+              <div className="text-zinc-600 dark:text-zinc-400 text-sm">
                 {footer}
               </div>
             </div>

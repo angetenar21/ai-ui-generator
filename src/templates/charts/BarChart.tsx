@@ -98,7 +98,7 @@ const BarChart: React.FC<BarChartProps> = ({
   grid = { horizontal: true, vertical: false },
   legend = true,
   margin = { top: 40, right: 20, bottom: 40, left: 60 },
-  variant = 'default',
+  variant = 'transparent',
   elevation = 'raised',
   emphasis: _emphasis = 'medium',
   palette = 'default',
@@ -220,18 +220,18 @@ const BarChart: React.FC<BarChartProps> = ({
         {(title || description) && (
           <div className="mb-6">
             {title && (
-              <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
+              <h3 className="text-2xl font-display font-semibold text-zinc-900 dark:text-white mb-2">
                 {title}
               </h3>
             )}
             {description && (
-              <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+              <p className="text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed">
                 {description}
               </p>
             )}
           </div>
         )}
-        <div className="flex justify-center items-center min-h-[300px] text-gray-600 dark:text-gray-300">
+        <div className="flex justify-center items-center min-h-[300px] text-zinc-600 dark:text-zinc-300">
           <div className="text-center">
             <div className="text-4xl mb-2">📊</div>
             <div>No data available</div>
@@ -303,6 +303,7 @@ const BarChart: React.FC<BarChartProps> = ({
               },
               '& .MuiChartsAxis-tickLabel': {
                 fill: chartColors.tickLabel,
+                      fontFamily: 'inherit',
                 fontSize: '13px',
                 fontWeight: 500,
                 ...(labelRotation !== 0 ? {
@@ -324,6 +325,7 @@ const BarChart: React.FC<BarChartProps> = ({
               },
               '& .MuiChartsLegend-series text': {
                 fill: `${chartColors.legendText} !important`,
+                      fontFamily: 'inherit',
                 fontSize: '12px',
                 fontWeight: 500,
               },

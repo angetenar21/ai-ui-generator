@@ -48,14 +48,14 @@ const Timeline: React.FC<TimelineProps> = ({
       text: 'text-green-400',
     },
     active: {
-      bg: 'bg-blue-600',
-      border: 'border-blue-500',
-      text: 'text-blue-400',
+      bg: 'bg-indigo-600',
+      border: 'border-indigo-500',
+      text: 'text-indigo-400',
     },
     pending: {
-      bg: 'bg-gray-600',
-      border: 'border-gray-500',
-      text: 'text-gray-400',
+      bg: 'bg-zinc-600',
+      border: 'border-zinc-500',
+      text: 'text-zinc-400',
     },
     error: {
       bg: 'bg-red-600',
@@ -79,9 +79,9 @@ const Timeline: React.FC<TimelineProps> = ({
 
   if (orientation === 'horizontal') {
     return (
-      <div className="card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 my-4 overflow-x-auto">
+      <div className="card border border-zinc-200 dark:border-zinc-700 rounded-2xl p-6 my-4 overflow-x-auto">
         {title && (
-          <h3 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-6">
+          <h3 className="text-xl font-display font-semibold text-zinc-900 dark:text-white mb-6">
             {title}
           </h3>
         )}
@@ -97,8 +97,8 @@ const Timeline: React.FC<TimelineProps> = ({
                       w-10 h-10 rounded-full
                       ${styles.bg}
                       flex items-center justify-center
-                      text-gray-900 dark:text-white font-semibold
-                      border-4 border-gray-900
+                      text-zinc-900 dark:text-white font-semibold
+                      border-4 border-zinc-900
                       shadow-lg
                     `}
                   >
@@ -109,12 +109,12 @@ const Timeline: React.FC<TimelineProps> = ({
                       {safeStr(item.title)}
                     </div>
                     {item.timestamp && (
-                      <div className="text-xs text-gray-400 mb-1">
+                      <div className="text-xs text-zinc-400 mb-1">
                         {safeStr(item.timestamp)}
                       </div>
                     )}
                     {item.description && (
-                      <div className="text-xs text-gray-300 line-clamp-2">
+                      <div className="text-xs text-zinc-300 line-clamp-2">
                         {safeStr(item.description)}
                       </div>
                     )}
@@ -136,9 +136,9 @@ const Timeline: React.FC<TimelineProps> = ({
 
   // Vertical orientation
   return (
-    <div className="card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 my-4">
+    <div className="card border border-zinc-200 dark:border-zinc-700 rounded-2xl p-6 my-4">
       {title && (
-        <h3 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-6">
+        <h3 className="text-xl font-display font-semibold text-zinc-900 dark:text-white mb-6">
           {title}
         </h3>
       )}
@@ -153,7 +153,7 @@ const Timeline: React.FC<TimelineProps> = ({
               {showConnector && !isLast && (
                 <div
                   className={`
-                    absolute top-10 ${align === 'alternate' ? 'left-1/2 -translate-x-1/2' : 'left-5'}
+                    absolute top-10 ${align === 'alternate' ? 'left-1/2 -tranzinc-x-1/2' : 'left-5'}
                     w-0.5 h-full ${styles.bg} opacity-30
                   `}
                 />
@@ -170,11 +170,11 @@ const Timeline: React.FC<TimelineProps> = ({
                     flex-shrink-0 w-10 h-10 rounded-full
                     ${styles.bg}
                     flex items-center justify-center
-                    text-gray-900 dark:text-white font-semibold text-sm
-                    border-4 border-gray-900
+                    text-zinc-900 dark:text-white font-semibold text-sm
+                    border-4 border-zinc-900
                     shadow-lg
                     z-10
-                    ${align === 'alternate' ? 'absolute left-1/2 -translate-x-1/2' : ''}
+                    ${align === 'alternate' ? 'absolute left-1/2 -tranzinc-x-1/2' : ''}
                   `}
                 >
                   {item.icon || index + 1}
@@ -185,22 +185,22 @@ const Timeline: React.FC<TimelineProps> = ({
                     flex-1 ${align === 'alternate' ? (itemAlign === 'right' ? 'text-right pl-8' : 'text-left pr-8 ml-14') : 'ml-0'}
                   `}
                 >
-                  <div className="bg-gray-100 dark:bg-gray-800/30 rounded-lg p-4 hover:bg-gray-200 dark:hover:bg-gray-800/50 transition-colors">
+                  <div className="bg-zinc-100 dark:bg-zinc-800/30 rounded-lg p-4 hover:bg-zinc-200 dark:hover:bg-zinc-800/50 transition-colors">
                     {item.timestamp && (
                       <div className={`text-xs ${styles.text} mb-2`}>
                         {safeStr(item.timestamp)}
                       </div>
                     )}
-                    <div className="text-gray-900 dark:text-white font-semibold text-base mb-2">
+                    <div className="text-zinc-900 dark:text-white font-semibold text-base mb-2">
                       {safeStr(item.title)}
                     </div>
                     {item.description && (
-                      <div className="text-gray-600 dark:text-gray-300 text-sm">
+                      <div className="text-zinc-600 dark:text-zinc-300 text-sm">
                         {safeStr(item.description)}
                       </div>
                     )}
                     {item.content && (
-                      <div className="mt-3 pt-3 border-t border-gray-700/50">
+                      <div className="mt-3 pt-3 border-t border-zinc-700/50">
                         {item.content}
                       </div>
                     )}

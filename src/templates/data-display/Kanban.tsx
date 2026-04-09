@@ -71,7 +71,7 @@ const Kanban: React.FC<KanbanProps> = ({
   };
 
   return (
-    <div className="card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 my-4">
+    <div className="card border border-zinc-200 dark:border-zinc-700 rounded-2xl p-6 my-4">
       <div className="mb-6">
         <h3 className="text-xl font-display font-semibold text-white">
           {title}
@@ -87,7 +87,7 @@ const Kanban: React.FC<KanbanProps> = ({
             onDrop={() => handleDrop(column.id)}
           >
             {/* Column Header */}
-            <div className="bg-gray-800/50 rounded-lg p-4 mb-3">
+            <div className="bg-zinc-800/50 rounded-lg p-4 mb-3">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                   {column.color && (
@@ -96,7 +96,7 @@ const Kanban: React.FC<KanbanProps> = ({
                     />
                   )}
                   <h4 className="font-semibold text-white">{column.title}</h4>
-                  <span className="text-sm text-gray-400">
+                  <span className="text-sm text-zinc-400">
                     ({(column.cards || []).length}
                     {column.limit ? `/${column.limit}` : ''})
                   </span>
@@ -117,8 +117,8 @@ const Kanban: React.FC<KanbanProps> = ({
                   draggable
                   onDragStart={() => handleDragStart(card, column.id)}
                   onClick={() => onCardClick?.(card)}
-                  className="bg-gray-800/30 border border-gray-700/50 rounded-lg p-4
-                           hover:bg-gray-800/50 hover:border-gray-600/50
+                  className="bg-zinc-800/30 border border-zinc-700/50 rounded-lg p-4
+                           hover:bg-zinc-800/50 hover:border-zinc-600/50
                            cursor-pointer transition-all duration-200
                            hover:shadow-lg hover:scale-[1.02]"
                 >
@@ -140,7 +140,7 @@ const Kanban: React.FC<KanbanProps> = ({
 
                   {/* Description */}
                   {card.description && (
-                    <p className="text-gray-400 text-xs mb-3 line-clamp-2">
+                    <p className="text-zinc-400 text-xs mb-3 line-clamp-2">
                       {card.description}
                     </p>
                   )}
@@ -151,8 +151,8 @@ const Kanban: React.FC<KanbanProps> = ({
                       {card.tags.map((tag, index) => (
                         <span
                           key={index}
-                          className="px-2 py-0.5 bg-blue-900/30 text-blue-300
-                                   border border-blue-700/50 rounded text-xs"
+                          className="px-2 py-0.5 bg-indigo-900/30 text-indigo-300
+                                   border border-indigo-700/50 rounded text-xs"
                         >
                           {safeStr(tag)}
                         </span>
@@ -171,20 +171,20 @@ const Kanban: React.FC<KanbanProps> = ({
                             className="w-6 h-6 rounded-full"
                           />
                         ) : (
-                          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
+                          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
                             <span className="text-white text-xs font-semibold">
                               {card.assignee.charAt(0).toUpperCase()}
                             </span>
                           </div>
                         )}
-                        <span className="text-xs text-gray-400">
+                        <span className="text-xs text-zinc-400">
                           {card.assignee}
                         </span>
                       </div>
                     )}
 
                     {card.dueDate && (
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-zinc-500">
                         {new Date(card.dueDate).toLocaleDateString()}
                       </div>
                     )}
@@ -193,7 +193,7 @@ const Kanban: React.FC<KanbanProps> = ({
               ))}
 
               {(column.cards || []).length === 0 && (
-                <div className="text-center py-8 text-gray-500 text-sm">
+                <div className="text-center py-8 text-zinc-500 text-sm">
                   Drop cards here
                 </div>
               )}
@@ -203,7 +203,7 @@ const Kanban: React.FC<KanbanProps> = ({
       </div>
 
       {safeColumns.length === 0 && (
-        <div className="text-center py-12 text-gray-400">
+        <div className="text-center py-12 text-zinc-400">
           No columns to display
         </div>
       )}

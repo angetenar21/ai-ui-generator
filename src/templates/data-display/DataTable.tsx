@@ -223,25 +223,25 @@ const DataTable: React.FC<DataTableProps> = ({
   }
 
   return (
-    <div className="w-full max-w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-x-auto my-2">
+    <div className="w-full max-w-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-x-auto my-2">
       {title && (
-        <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-800">
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
+        <div className="px-5 py-4 border-b border-zinc-100 dark:border-zinc-800">
+          <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate">
             {title}
           </h3>
         </div>
       )}
 
       {searchable && (
-        <div className="px-5 py-3 border-b border-gray-100 dark:border-gray-800">
+        <div className="px-5 py-3 border-b border-zinc-100 dark:border-zinc-800">
           <input
             type="text"
             placeholder="Search table..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-xl
-                     bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400
-                     focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-transparent"
+            className="w-full px-3 py-2 text-sm border border-zinc-200 dark:border-zinc-700 rounded-xl
+                     bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400
+                     focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent"
           />
         </div>
       )}
@@ -249,19 +249,19 @@ const DataTable: React.FC<DataTableProps> = ({
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
           <thead className="sticky top-0 z-10">
-            <tr className="bg-gray-50/90 dark:bg-gray-800/90 backdrop-blur-sm">
+            <tr className="bg-zinc-50/90 dark:bg-zinc-800/90 backdrop-blur-sm">
               {normalizedColumns.map((column, index) => (
                 <th
                   key={index}
                   onClick={() => handleSort(index)}
-                  className={`px-5 py-3.5 text-left text-[11px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest
-                           border-b border-gray-200 dark:border-gray-700 whitespace-nowrap
-                           ${sortable ? 'cursor-pointer hover:text-gray-900 dark:hover:text-gray-100 select-none' : ''}`}
+                  className={`px-5 py-3.5 text-left text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-widest
+                           border-b border-zinc-200 dark:border-zinc-700 whitespace-nowrap
+                           ${sortable ? 'cursor-pointer hover:text-zinc-900 dark:hover:text-zinc-100 select-none' : ''}`}
                 >
                   <div className="flex items-center gap-1">
                     {column}
                     {sortable && sortColumn === index && (
-                      <span className="text-xs text-emerald-500 font-bold">
+                      <span className="text-xs text-indigo-500 font-bold">
                         {sortDirection === 'asc' ? '↑' : '↓'}
                       </span>
                     )}
@@ -276,15 +276,15 @@ const DataTable: React.FC<DataTableProps> = ({
                 key={rowIndex}
                 className={`
                   transition-colors duration-150
-                  hover:bg-emerald-50/30 dark:hover:bg-emerald-900/10
-                  ${rowIndex % 2 === 0 ? 'bg-white dark:bg-gray-900' : 'bg-gray-50/60 dark:bg-gray-800/30'}
+                  hover:bg-indigo-50/30 dark:hover:bg-indigo-900/10
+                  ${rowIndex % 2 === 0 ? 'bg-white dark:bg-zinc-900' : 'bg-zinc-50/60 dark:bg-zinc-800/30'}
                 `}
               >
                 {row.map((cell, cellIndex) => (
                   <td
                     key={cellIndex}
-                    className="px-5 py-3.5 text-sm text-gray-700 dark:text-gray-300
-                             border-b border-gray-100 dark:border-gray-800/60
+                    className="px-5 py-3.5 text-sm text-zinc-700 dark:text-zinc-300
+                             border-b border-zinc-100 dark:border-zinc-800/60
                              max-w-[240px]"
                     title={typeof cell === 'string' || typeof cell === 'number' ? String(cell) : undefined}
                   >
@@ -299,7 +299,7 @@ const DataTable: React.FC<DataTableProps> = ({
         </table>
 
         {displayRows.length === 0 && (
-          <div className="text-center py-12 text-gray-400 text-sm">
+          <div className="text-center py-12 text-zinc-400 text-sm">
             {filterByContext ? 'No matching records.' : 'No data found'}
           </div>
         )}
@@ -307,14 +307,14 @@ const DataTable: React.FC<DataTableProps> = ({
 
       {/* Footer: row count indicator */}
       {displayRows.length > 0 && (
-        <div className="px-5 py-2.5 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between">
-          <span className="text-xs text-gray-400 dark:text-gray-500">
+        <div className="px-5 py-2.5 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
+          <span className="text-xs text-zinc-400 dark:text-zinc-500">
             {isLimited
               ? `Showing ${displayedCount} rows (representative sample)`
               : `${displayedCount} ${displayedCount === 1 ? 'row' : 'rows'}`}
           </span>
           {filterByContext && data && data[filterByContext] && (
-            <span className="text-xs text-emerald-500 font-medium">
+            <span className="text-xs text-indigo-500 font-medium">
               Filtered by: {String(data[filterByContext])}
             </span>
           )}

@@ -51,7 +51,7 @@ const HistogramChart: React.FC<HistogramChartProps> = (props) => {
   const { 
     title, 
     height = 400,
-    variant = 'default',
+    variant = 'transparent',
     elevation = 'raised',
   } = props;
 
@@ -69,8 +69,8 @@ const HistogramChart: React.FC<HistogramChartProps> = (props) => {
     if (!series || !Array.isArray(series) || series.length === 0) {
       return (
         <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
-          {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>}
-          <div className="text-center text-gray-400">
+          {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
+          <div className="text-center text-zinc-400">
             <p className="text-sm">No series data for histogram</p>
           </div>
         </div>
@@ -118,8 +118,8 @@ const HistogramChart: React.FC<HistogramChartProps> = (props) => {
     if (!chartData || !Array.isArray(chartData) || chartData.length === 0) {
       return (
         <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
-          {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>}
-          <div className="text-center text-gray-400">
+          {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
+          <div className="text-center text-zinc-400">
             <p className="text-sm">No data available for histogram</p>
           </div>
         </div>
@@ -131,8 +131,8 @@ const HistogramChart: React.FC<HistogramChartProps> = (props) => {
     // Invalid format
     return (
       <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
-        {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>}
-        <div className="text-center text-gray-400">
+        {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
+        <div className="text-center text-zinc-400">
           <p className="text-sm">Invalid histogram configuration</p>
         </div>
       </div>
@@ -141,9 +141,9 @@ const HistogramChart: React.FC<HistogramChartProps> = (props) => {
 
   return (
     <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
-      {title && <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 text-center">{title}</h3>}
+      {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4 text-center">{title}</h3>}
       {description && (
-        <p className="text-sm text-gray-400 mb-4 text-center">{description}</p>
+        <p className="text-sm text-zinc-400 mb-4 text-center">{description}</p>
       )}
       {(() => {
         // Detect dark mode

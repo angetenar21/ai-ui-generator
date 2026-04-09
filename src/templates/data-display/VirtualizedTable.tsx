@@ -97,13 +97,13 @@ const VirtualizedTable: React.FC<VirtualizedTableProps> = ({
   };
 
   return (
-    <div className="card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 my-4">
+    <div className="card border border-zinc-200 dark:border-zinc-700 rounded-2xl p-6 my-4">
       {title && (
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-display font-semibold text-white">
             {title}
           </h3>
-          <div className="text-sm text-gray-400">
+          <div className="text-sm text-zinc-400">
             {safeRows.length.toLocaleString()} rows (virtualized)
           </div>
         </div>
@@ -111,19 +111,19 @@ const VirtualizedTable: React.FC<VirtualizedTableProps> = ({
 
       <div
         ref={containerRef}
-        className="overflow-auto border border-gray-700/50 rounded-lg"
+        className="overflow-auto border border-zinc-700/50 rounded-lg"
         style={{ height: `${containerHeight}px` }}
         onScroll={handleScroll}
       >
         {/* Sticky Header */}
         {stickyHeader && (
-          <div className="sticky top-0 z-10 bg-gray-800/95 backdrop-blur-sm">
-            <div className="flex border-b border-gray-700">
+          <div className="sticky top-0 z-10 bg-zinc-800/95 backdrop-blur-sm">
+            <div className="flex border-b border-zinc-700">
               {safeCols.map((column) => (
                 <div
                   key={column.id}
                   className={`
-                    px-4 py-3 text-sm font-semibold text-gray-300
+                    px-4 py-3 text-sm font-semibold text-zinc-300
                     ${getAlignment(column.align)}
                   `}
                   style={{
@@ -158,11 +158,11 @@ const VirtualizedTable: React.FC<VirtualizedTableProps> = ({
                   onClick={() => onRowClick?.(row)}
                   className={`
                     flex items-center
-                    ${isEven ? 'bg-gray-800/20' : 'bg-transparent'}
-                    hover:bg-gray-700/30
+                    ${isEven ? 'bg-zinc-800/20' : 'bg-transparent'}
+                    hover:bg-zinc-700/30
                     transition-colors
                     ${onRowClick ? 'cursor-pointer' : ''}
-                    border-b border-gray-700/30
+                    border-b border-zinc-700/30
                   `}
                   style={{ height: `${rowHeight}px` }}
                 >
@@ -170,7 +170,7 @@ const VirtualizedTable: React.FC<VirtualizedTableProps> = ({
                     <div
                       key={column.id}
                       className={`
-                        px-4 text-sm text-gray-200
+                        px-4 text-sm text-zinc-200
                         ${getAlignment(column.align)}
                         truncate
                       `}
@@ -191,14 +191,14 @@ const VirtualizedTable: React.FC<VirtualizedTableProps> = ({
         </div>
 
         {safeRows.length === 0 && (
-          <div className="text-center py-12 text-gray-400">
+          <div className="text-center py-12 text-zinc-400">
             No data to display
           </div>
         )}
       </div>
 
       {/* Performance info */}
-      <div className="mt-4 text-xs text-gray-500 flex items-center gap-4">
+      <div className="mt-4 text-xs text-zinc-500 flex items-center gap-4">
         <div>
           Rendering {visibleRows.length} of {safeRows.length} rows
         </div>

@@ -13,18 +13,18 @@
 // SURFACE VARIANTS
 // ============================================================================
 
-export type SurfaceVariant = 'default' | 'gradient' | 'accent' | 'glass' | 'elevated' | 'subtle';
+export type SurfaceVariant = 'default' | 'gradient' | 'accent' | 'glass' | 'elevated' | 'subtle' | 'transparent';
 
 export const surfaces: Record<SurfaceVariant, string> = {
   // Default: Clean white surface with subtle ring highlight for depth
   default: 'bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-800 ring-1 ring-black/[0.04] dark:ring-white/[0.04]',
 
-  // Gradient: Rich cool gradient background for dashboard hero panels
-  gradient: 'bg-gradient-to-br from-emerald-100 via-teal-50 to-cyan-50/30 dark:from-emerald-950/40 dark:via-gray-900 dark:to-gray-900 border border-emerald-200/60 dark:border-emerald-500/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]',
+  // Gradient: Rich warm gradient background for dashboard hero panels
+  gradient: 'bg-gradient-to-br from-orange-100 via-rose-50 to-pink-50/30 dark:from-emerald-950/40 dark:via-gray-900 dark:to-gray-900 border border-orange-200/60 dark:border-emerald-500/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]',
 
 
-  // Accent: Vibrant emerald border glow for primary KPI emphasis
-  accent: 'bg-white dark:bg-gray-900 border-2 border-emerald-500 dark:border-emerald-400 shadow-[0_0_0_4px_rgba(16,185,129,0.08),0_4px_16px_rgba(16,185,129,0.15)] dark:shadow-[0_0_0_4px_rgba(16,185,129,0.15),0_4px_20px_rgba(16,185,129,0.4)]',
+  // Accent: Vibrant orange border glow for primary KPI emphasis
+  accent: 'bg-white dark:bg-gray-900 border-2 border-orange-500 dark:border-emerald-400 shadow-[0_0_0_4px_rgba(249,115,22,0.08),0_4px_16px_rgba(249,115,22,0.15)] dark:shadow-[0_0_0_4px_rgba(16,185,129,0.15),0_4px_20px_rgba(16,185,129,0.4)]',
 
   // Glass: Semi-transparent glassmorphism with warm inner glow
   glass: 'bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl border border-white/40 dark:border-gray-800/40 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]',
@@ -34,6 +34,9 @@ export const surfaces: Record<SurfaceVariant, string> = {
 
   // Subtle: Minimal visual weight
   subtle: 'bg-transparent border border-gray-100 dark:border-gray-800',
+
+  // Transparent: No background or border, seamlessly integrates into parent container
+  transparent: 'bg-transparent border-none shadow-none',
 };
 
 // ============================================================================
@@ -73,7 +76,7 @@ export const emphasis: Record<EmphasisLevel, { scale: string; border: string }> 
   },
   high: {
     scale: 'scale-100 hover:scale-[1.03] transition-transform duration-300',
-    border: 'border-2 ring-2 ring-emerald-500/20',
+    border: 'border-2 ring-2 ring-orange-500/20',
   },
 };
 
@@ -90,14 +93,14 @@ export const tones: Record<ToneVariant, { bg: string; border: string; text: stri
     text: 'text-gray-900 dark:text-gray-100',
   },
   primary: {
-    bg: 'bg-emerald-50 dark:bg-[#1A2E26]',
-    border: 'border-emerald-200 dark:border-[#1A2E26]',
-    text: 'text-emerald-900 dark:text-white',
+    bg: 'bg-orange-50 dark:bg-[#1A2E26]',
+    border: 'border-orange-200 dark:border-[#1A2E26]',
+    text: 'text-orange-900 dark:text-white',
   },
   accent: {
-    bg: 'bg-teal-50 dark:bg-[#152D2E]',
-    border: 'border-teal-200 dark:border-[#152D2E]',
-    text: 'text-teal-900 dark:text-white',
+    bg: 'bg-rose-50 dark:bg-[#152D2E]',
+    border: 'border-rose-200 dark:border-[#152D2E]',
+    text: 'text-rose-900 dark:text-white',
   },
   success: {
     bg: 'bg-green-50 dark:bg-green-950',
@@ -130,14 +133,14 @@ export type ChartPaletteType = 'default' | 'vibrant' | 'pastel' | 'gradient' | '
 export const chartPalettes: Record<ChartPaletteType, string[]> = {
   // Default: Balanced, professional colors
   default: [
+    '#F97316', // Orange
+    '#EC4899', // Pink
+    '#8B5CF6', // Purple
     '#10B981', // Emerald
     '#3B82F6', // Blue
-    '#06b6d4', // Cyan
-    '#8B5CF6', // Purple
     '#14B8A6', // Teal
-    '#6366f1', // Indigo
-    '#EC4899', // Pink
-    '#F59E0B', // Teal
+    '#F59E0B', // Amber
+    '#06b6d4', // Cyan
   ],
 
   // Vibrant: High saturation, energetic
@@ -176,21 +179,21 @@ export const chartPalettes: Record<ChartPaletteType, string[]> = {
     '#F67280', // Pink
   ],
 
-  // Monochrome: Shades of emerald (brand color)
+  // Monochrome: Shades of orange (brand color)
   monochrome: [
-    '#ECFDF5', // Lightest
-    '#D1FAE5', // Lighter
-    '#A7F3D0', // Light
-    '#6EE7B7', // Medium-Light
-    '#10B981', // Base
-    '#059669', // Medium-Dark
-    '#047857', // Dark
-    '#064E3B', // Darkest
+    '#FFF7ED', // Lightest
+    '#FFEDD5', // Lighter
+    '#FDBA74', // Light
+    '#FB923C', // Medium-Light
+    '#F97316', // Base
+    '#EA580C', // Medium-Dark
+    '#C2410C', // Dark
+    '#7C2D12', // Darkest
   ],
 
   // Semantic: Purpose-driven colors
   semantic: [
-    '#10B981', // Success
+    '#F97316', // Success (orange brand)
     '#F59E0B', // Warning
     '#EF4444', // Error
     '#3B82F6', // Info
@@ -207,19 +210,19 @@ export const chartPalettes: Record<ChartPaletteType, string[]> = {
 
 export const chartGradients = {
   emerald: {
-    from: '#10B981',
-    to: '#06b6d4',
+    from: '#F97316',
+    to: '#EC4899',
     stops: [
-      { offset: '0%', color: '#10B981', opacity: 0.8 },
-      { offset: '100%', color: '#06b6d4', opacity: 0.2 },
+      { offset: '0%', color: '#F97316', opacity: 0.8 },
+      { offset: '100%', color: '#EC4899', opacity: 0.2 },
     ],
   },
   green: {
-    from: '#10B981',
-    to: '#14B8A6',
+    from: '#FB923C',
+    to: '#F472B6',
     stops: [
-      { offset: '0%', color: '#10B981', opacity: 0.8 },
-      { offset: '100%', color: '#14B8A6', opacity: 0.2 },
+      { offset: '0%', color: '#FB923C', opacity: 0.8 },
+      { offset: '100%', color: '#F472B6', opacity: 0.2 },
     ],
   },
   purple: {
@@ -310,6 +313,9 @@ export function getSurfaceClasses(
   variant: SurfaceVariant = 'default',
   elevationLevel: ElevationLevel = 'raised'
 ): string {
+  if (variant === 'transparent') {
+    return surfaces[variant];
+  }
   return `${surfaces[variant]} ${elevation[elevationLevel]}`;
 }
 

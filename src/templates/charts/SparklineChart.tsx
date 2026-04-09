@@ -102,14 +102,14 @@ const SparklineChart: React.FC<SparklineChartProps> = ({
     return (
       <div
         ref={containerRef}
-        className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 flex flex-col items-center justify-center min-h-[250px]"
+        className="w-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-4 flex flex-col items-center justify-center min-h-[250px]"
       >
         {title && (
-          <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
+          <h4 className="text-sm font-semibold text-zinc-900 dark:text-white mb-2">
             {title}
           </h4>
         )}
-        <div className="text-xs text-gray-600 dark:text-gray-400 text-center">
+        <div className="text-xs text-zinc-600 dark:text-zinc-400 text-center">
           No data available
         </div>
       </div>
@@ -127,12 +127,12 @@ const SparklineChart: React.FC<SparklineChartProps> = ({
   return (
     <div
       ref={containerRef}
-      className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md dark:hover:shadow-lg transition-all duration-200"
+      className="w-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-4 hover:shadow-md dark:hover:shadow-lg transition-all duration-200"
     >
       {/* Header Section */}
       <div className="flex flex-col gap-2 mb-4">
         {title && (
-          <h4 className="text-sm font-semibold text-gray-900 dark:text-white leading-tight">
+          <h4 className="text-sm font-semibold text-zinc-900 dark:text-white leading-tight">
             {title}
           </h4>
         )}
@@ -140,7 +140,7 @@ const SparklineChart: React.FC<SparklineChartProps> = ({
         {/* Value and Trend Row */}
         <div className="flex items-baseline gap-2">
           {value && (
-            <span className="text-lg font-bold text-gray-900 dark:text-white">
+            <span className="text-lg font-bold text-zinc-900 dark:text-white">
               {value}
             </span>
           )}
@@ -152,13 +152,13 @@ const SparklineChart: React.FC<SparklineChartProps> = ({
         </div>
 
         {description && (
-          <p className="text-xs text-gray-600 dark:text-gray-400">
+          <p className="text-xs text-zinc-600 dark:text-zinc-400">
             {description}
           </p>
         )}
 
         {metric && !title && (
-          <p className="text-xs text-gray-600 dark:text-gray-400">
+          <p className="text-xs text-zinc-600 dark:text-zinc-400">
             {metric}
           </p>
         )}
@@ -202,6 +202,7 @@ const SparklineChart: React.FC<SparklineChartProps> = ({
                   },
                   '& .MuiChartsAxis-tickLabel': {
                     fill: isDark ? '#E5E7EB' : '#6B7280',
+                      fontFamily: 'inherit',
                     fontSize: '11px',
                     fontWeight: 500,
                   },
@@ -224,7 +225,7 @@ const SparklineChart: React.FC<SparklineChartProps> = ({
             console.warn('[SparklineChart] Render error:', error);
             return (
               <div className="w-full h-[250px] flex items-center justify-center">
-                <span className="text-xs text-gray-500 dark:text-gray-400">Unable to render chart</span>
+                <span className="text-xs text-zinc-500 dark:text-zinc-400">Unable to render chart</span>
               </div>
             );
           }
@@ -232,18 +233,18 @@ const SparklineChart: React.FC<SparklineChartProps> = ({
       </div>
 
       {/* Footer Stats */}
-      <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+      <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-zinc-200 dark:border-zinc-700">
         <div className="text-center">
-          <p className="text-xs text-gray-600 dark:text-gray-400">Min</p>
-          <p className="text-sm font-semibold text-gray-900 dark:text-white">{minValue.toFixed(1)}</p>
+          <p className="text-xs text-zinc-600 dark:text-zinc-400">Min</p>
+          <p className="text-sm font-semibold text-zinc-900 dark:text-white">{minValue.toFixed(1)}</p>
         </div>
         <div className="text-center">
-          <p className="text-xs text-gray-600 dark:text-gray-400">Max</p>
-          <p className="text-sm font-semibold text-gray-900 dark:text-white">{maxValue.toFixed(1)}</p>
+          <p className="text-xs text-zinc-600 dark:text-zinc-400">Max</p>
+          <p className="text-sm font-semibold text-zinc-900 dark:text-white">{maxValue.toFixed(1)}</p>
         </div>
         <div className="text-center">
-          <p className="text-xs text-gray-600 dark:text-gray-400">Avg</p>
-          <p className="text-sm font-semibold text-gray-900 dark:text-white">{(validData.reduce((a, b) => a + b, 0) / validData.length).toFixed(1)}</p>
+          <p className="text-xs text-zinc-600 dark:text-zinc-400">Avg</p>
+          <p className="text-sm font-semibold text-zinc-900 dark:text-white">{(validData.reduce((a, b) => a + b, 0) / validData.length).toFixed(1)}</p>
         </div>
       </div>
     </div>

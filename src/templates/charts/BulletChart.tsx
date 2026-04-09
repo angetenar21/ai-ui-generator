@@ -74,7 +74,7 @@ const BulletChart: React.FC<BulletChartProps> = ({
   height = 100,
   unit = '',
   cardBackgroundColor,
-  variant = 'default',
+  variant = 'transparent',
   elevation = 'raised',
   emphasis: _emphasis = 'medium',
   showLabels = true,
@@ -178,7 +178,7 @@ const BulletChart: React.FC<BulletChartProps> = ({
 
           {/* Main value bar */}
           <div
-            className="absolute top-1/2 -translate-y-1/2 h-10 rounded-lg transition-all duration-300"
+            className="absolute top-1/2 -tranzinc-y-1/2 h-10 rounded-lg transition-all duration-300"
             style={{
               width: `${valuePercent}%`,
               backgroundColor: valueColor,
@@ -189,7 +189,7 @@ const BulletChart: React.FC<BulletChartProps> = ({
           {/* Comparative marker */}
           {comparativePercent !== undefined && (
             <div
-              className="absolute top-1/2 -translate-y-1/2 h-16 rounded-sm"
+              className="absolute top-1/2 -tranzinc-y-1/2 h-16 rounded-sm"
               style={{
                 left: `${comparativePercent}%`,
                 width: '3px',
@@ -203,7 +203,7 @@ const BulletChart: React.FC<BulletChartProps> = ({
           {/* Target marker */}
           {targetPercent !== undefined && (
             <div
-              className="absolute top-1/2 -translate-y-1/2 h-full rounded-sm"
+              className="absolute top-1/2 -tranzinc-y-1/2 h-full rounded-sm"
               style={{
                 left: `${targetPercent}%`,
                 width: '3px',

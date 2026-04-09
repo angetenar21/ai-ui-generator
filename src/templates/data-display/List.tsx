@@ -79,10 +79,10 @@ const List: React.FC<ListProps> = ({
   const isSelected = (id: string) => selected.includes(id);
 
   return (
-    <div className="card border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden my-4">
+    <div className="card border border-zinc-200 dark:border-zinc-700 rounded-2xl overflow-hidden my-4">
       {title && (
-        <div className="px-6 py-4 border-b border-gray-700/50">
-          <h3 className="text-xl font-display font-semibold text-gray-900 dark:text-white">
+        <div className="px-6 py-4 border-b border-zinc-700/50">
+          <h3 className="text-xl font-display font-semibold text-zinc-900 dark:text-white">
             {title}
           </h3>
         </div>
@@ -90,7 +90,7 @@ const List: React.FC<ListProps> = ({
 
       <ul
         className={`
-          ${variant === 'bordered' ? 'border-x border-gray-700/50' : ''}
+          ${variant === 'bordered' ? 'border-x border-zinc-700/50' : ''}
         `}
       >
         {safeItems.filter(item => item && item.id).map((item, index) => (
@@ -101,10 +101,10 @@ const List: React.FC<ListProps> = ({
               ${densityStyles[density]}
               flex items-center gap-4
               transition-colors
-              ${variant === 'divided' && index !== safeItems.length - 1 ? 'border-b border-gray-700/30' : ''}
+              ${variant === 'divided' && index !== safeItems.length - 1 ? 'border-b border-zinc-700/30' : ''}
               ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''}
-              ${!item.disabled && (selectable || onItemClick) ? 'cursor-pointer hover:bg-gray-800/30' : ''}
-              ${isSelected(item.id) ? 'bg-blue-900/20 border-l-4 border-l-blue-500' : ''}
+              ${!item.disabled && (selectable || onItemClick) ? 'cursor-pointer hover:bg-zinc-800/30' : ''}
+              ${isSelected(item.id) ? 'bg-indigo-900/20 border-l-4 border-l-indigo-500' : ''}
             `}
           >
             {selectable && (
@@ -113,7 +113,7 @@ const List: React.FC<ListProps> = ({
                   type="checkbox"
                   checked={isSelected(item.id)}
                   onChange={() => { }}
-                  className="w-4 h-4 rounded border-gray-600 text-blue-600 focus:ring-emerald-500 focus:ring-offset-gray-900"
+                  className="w-4 h-4 rounded border-zinc-600 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-zinc-900"
                   disabled={item.disabled}
                 />
               </div>
@@ -121,7 +121,7 @@ const List: React.FC<ListProps> = ({
 
             {item.avatar && (
               <div className="flex-shrink-0">
-                <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-blue-600 to-purple-600">
+                <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-indigo-600 to-purple-600">
                   <img
                     src={item.avatar}
                     alt={item.primary}
@@ -132,17 +132,17 @@ const List: React.FC<ListProps> = ({
             )}
 
             {item.icon && !item.avatar && (
-              <div className="flex-shrink-0 text-gray-400">
+              <div className="flex-shrink-0 text-zinc-400">
                 <DynamicIcon name={item.icon} className="w-5 h-5" />
               </div>
             )}
 
             <div className="flex-1 min-w-0">
-              <div className="text-gray-900 dark:text-white font-medium truncate">
+              <div className="text-zinc-900 dark:text-white font-medium truncate">
                 {safeStr(item.primary)}
               </div>
               {item.secondary && (
-                <div className="text-sm text-gray-500 dark:text-gray-400 truncate mt-0.5">
+                <div className="text-sm text-zinc-500 dark:text-zinc-400 truncate mt-0.5">
                   {safeStr(item.secondary)}
                 </div>
               )}
@@ -156,7 +156,7 @@ const List: React.FC<ListProps> = ({
       </ul>
 
       {safeItems.length === 0 && (
-        <div className="text-center py-12 text-gray-400">
+        <div className="text-center py-12 text-zinc-400">
           No items to display
         </div>
       )}

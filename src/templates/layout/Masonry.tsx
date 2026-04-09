@@ -55,7 +55,7 @@ const Masonry: React.FC<MasonryProps> = ({
   if (!children || children.length === 0) {
     return (
       <div className="card rounded-card p-8 text-center">
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className="text-zinc-600 dark:text-zinc-400">
           Masonry layout ({columns} columns) - Add child components
         </p>
       </div>

@@ -15,9 +15,9 @@ export default {
 
         // Primary Accent (Cool Analytical)
         accent: {
-          from: '#00D8FF',   // cyan logo
-          to: '#007BFF',     // deeper blue
-          solid: '#0ea5e9',  // sky-500
+          from: '#F97316',   // orange
+          to: '#EC4899',     // pink
+          solid: '#F97316',  // orange-500
         },
 
         // Semantic colors
@@ -60,14 +60,14 @@ export default {
 
         // Data visualization palette
         chart: {
-          primary: '#0ea5e9',   // blue/sky
-          secondary: '#10B981', // green
-          tertiary: '#EC4899',  // pink
-          quaternary: '#8B5CF6',// purple
-          accent1: '#00D8FF',   // cyan
-          accent2: '#22C55E',   // jade
-          accent3: '#A855F7',   // violet
-          neutral: '#6B7280',   // gray
+          primary: '#F97316',   // orange
+          secondary: '#EC4899', // pink
+          tertiary: '#8B5CF6',  // purple
+          quaternary: '#10B981',// emerald
+          accent1: '#F97316',   // orange
+          accent2: '#FB923C',   // orange-400
+          accent3: '#F472B6',   // pink-400
+          neutral: '#78716C',   // stone-500
         },
       },
 

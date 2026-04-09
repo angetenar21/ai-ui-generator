@@ -5,7 +5,7 @@ import type { ComponentType, ReactNode } from 'react';
  */
 
 /** Surface variant for visual hierarchy */
-export type SurfaceVariant = 'default' | 'gradient' | 'accent' | 'glass' | 'elevated' | 'subtle';
+export type SurfaceVariant = 'default' | 'gradient' | 'accent' | 'glass' | 'elevated' | 'subtle' | 'transparent';
 
 /** Elevation level for depth */
 export type ElevationLevel = 'flat' | 'raised' | 'floating' | 'overlay';

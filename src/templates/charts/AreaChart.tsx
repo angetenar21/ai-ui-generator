@@ -75,7 +75,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
   margin,
   stack = true,
   gradientOpacity = [0.8, 0.2],
-  variant = 'default',
+  variant = 'transparent',
   elevation = 'raised',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -125,18 +125,18 @@ const AreaChart: React.FC<AreaChartProps> = ({
         {(title || description) && (
           <div className="mb-6">
             {title && (
-              <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
+              <h3 className="text-2xl font-display font-semibold text-zinc-900 dark:text-white mb-2">
                 {title}
               </h3>
             )}
             {description && (
-              <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+              <p className="text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed">
                 {description}
               </p>
             )}
           </div>
         )}
-        <div className="flex justify-center items-center min-h-[300px] text-gray-600 dark:text-gray-300">
+        <div className="flex justify-center items-center min-h-[300px] text-zinc-600 dark:text-zinc-300">
           <div className="text-center">
             <div className="text-4xl mb-2">📊</div>
             <div>No data available</div>
@@ -213,17 +213,17 @@ const AreaChart: React.FC<AreaChartProps> = ({
   };
 
   return (
-    <div className="w-full h-full max-w-full min-w-0 bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-700 overflow-x-auto flex flex-col">
+    <div className="w-full h-full max-w-full min-w-0 bg-white dark:bg-zinc-900 rounded-xl p-4 shadow-sm border border-zinc-200 dark:border-zinc-700 overflow-x-auto flex flex-col">
       {/* Header */}
       {(title || description) && (
         <div className="mb-3 px-1">
           {title && (
-            <h3 className="text-base font-semibold text-gray-900 dark:text-white">
+            <h3 className="text-base font-semibold text-zinc-900 dark:text-white">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">
+            <p className="text-xs text-zinc-600 dark:text-zinc-300 mt-1">
               {description}
             </p>
           )}
@@ -263,6 +263,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
                     },
                     '& .MuiChartsAxis-tickLabel': {
                       fill: chartColors.tickLabel,
+                      fontFamily: 'inherit',
                       fontSize: '13px',
                       fontWeight: 500,
                     },
@@ -283,6 +284,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
                     },
                     '& .MuiChartsLegend-series text': {
                       fill: `${chartColors.legendText} !important`,
+                      fontFamily: 'inherit',
                       fontSize: '12px',
                       fontWeight: 500,
                     },
@@ -322,7 +324,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
             } catch (error) {
               console.error('[AreaChart] Error rendering chart:', error);
               return (
-                <div className="flex justify-center items-center min-h-[300px] text-gray-500 dark:text-gray-400">
+                <div className="flex justify-center items-center min-h-[300px] text-zinc-500 dark:text-zinc-400">
                   <div className="text-center">
                     <div className="text-4xl mb-2">⚠️</div>
                     <div>Error rendering chart</div>

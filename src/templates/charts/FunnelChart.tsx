@@ -51,18 +51,18 @@ const FunnelChart: React.FC<FunnelChartProps> = ({
 
   if (!validData.length) {
     return (
-      <div className="w-full bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
+      <div className="w-full bg-white dark:bg-zinc-800 rounded-xl p-4 border border-zinc-200 dark:border-zinc-700">
         {(title || description) && (
           <div className="mb-3 text-center">
             {title && (
-              <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
+              <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">{title}</h3>
             )}
             {description && (
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{description}</p>
+              <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">{description}</p>
             )}
           </div>
         )}
-        <div className="flex items-center justify-center min-h-[220px] text-sm text-gray-600 dark:text-gray-300">
+        <div className="flex items-center justify-center min-h-[220px] text-sm text-zinc-600 dark:text-zinc-300">
           No data available
         </div>
       </div>
@@ -112,17 +112,17 @@ const FunnelChart: React.FC<FunnelChartProps> = ({
   );
 
   return (
-    <div className="w-full bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
+    <div className="w-full bg-white dark:bg-zinc-800 rounded-xl p-4 border border-zinc-200 dark:border-zinc-700">
       {/* Header */}
       {(title || description) && (
         <div className="mb-3 text-center">
           {title && (
-            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+            <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+            <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
               {description}
             </p>
           )}

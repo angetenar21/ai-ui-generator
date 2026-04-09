@@ -115,7 +115,7 @@ const OTPInput: React.FC<OTPInputProps> = ({
   return (
     <div className="my-4">
       {label && (
-        <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
+        <label className="block text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-3">
           {label}
           {required && <span className="text-red-400 ml-1">*</span>}
         </label>
@@ -138,10 +138,10 @@ const OTPInput: React.FC<OTPInputProps> = ({
             autoFocus={autoFocus && index === 0}
             className={`
               ${sizeClasses[size]}
-              ${error ? 'border-red-500' : 'border-gray-600 focus:border-blue-500'}
+              ${error ? 'border-red-500' : 'border-zinc-600 focus:border-indigo-500'}
               text-center font-mono font-bold text-white bg-transparent
               border-2 rounded-lg
-              focus:outline-none focus:ring-2 focus:ring-emerald-500/50
+              focus:outline-none focus:ring-2 focus:ring-indigo-500/50
               disabled:opacity-50 disabled:cursor-not-allowed
               transition-all duration-200
             `.trim().replace(/\s+/g, ' ')}
@@ -149,7 +149,7 @@ const OTPInput: React.FC<OTPInputProps> = ({
         ))}
       </div>
       {(helperText || (error && errorMessage)) && (
-        <p className={`mt-2 text-xs text-center ${error ? 'text-red-400' : 'text-gray-400'}`}>
+        <p className={`mt-2 text-xs text-center ${error ? 'text-red-400' : 'text-zinc-400'}`}>
           {error && errorMessage ? errorMessage : helperText}
         </p>
       )}

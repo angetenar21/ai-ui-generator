@@ -61,29 +61,29 @@ const Toggle: React.FC<ToggleProps> = ({
     small: {
       track: 'w-8 h-4',
       thumb: 'w-3 h-3',
-      translateX: 'translate-x-4',
+      translateX: 'tranzinc-x-4',
     },
     medium: {
       track: 'w-11 h-6',
       thumb: 'w-5 h-5',
-      translateX: 'translate-x-5',
+      translateX: 'tranzinc-x-5',
     },
     large: {
       track: 'w-14 h-7',
       thumb: 'w-6 h-6',
-      translateX: 'translate-x-7',
+      translateX: 'tranzinc-x-7',
     },
   };
 
   // Variant colors
   const variantClasses = {
-    default: 'bg-gray-200 dark:bg-gray-700',
-    primary: 'bg-emerald-600 dark:bg-emerald-500',
+    default: 'bg-zinc-200 dark:bg-zinc-700',
+    primary: 'bg-indigo-600 dark:bg-indigo-500',
     success: 'bg-green-600 dark:bg-green-500',
     danger: 'bg-red-600 dark:bg-red-500',
   };
 
-  const activeClass = isChecked ? variantClasses[variant] : 'bg-gray-200 dark:bg-gray-700';
+  const activeClass = isChecked ? variantClasses[variant] : 'bg-zinc-200 dark:bg-zinc-700';
   const currentSize = sizeClasses[size];
 
   return (
@@ -99,7 +99,7 @@ const Toggle: React.FC<ToggleProps> = ({
           ${activeClass}
           relative inline-flex shrink-0 cursor-pointer rounded-full border-2 border-transparent
           transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 
-          focus:ring-emerald-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900
+          focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-zinc-900
           ${disabled ? 'cursor-not-allowed' : ''}
         `}
       >
@@ -107,7 +107,7 @@ const Toggle: React.FC<ToggleProps> = ({
           aria-hidden="true"
           className={`
             ${currentSize.thumb}
-            ${isChecked ? currentSize.translateX : 'translate-x-0'}
+            ${isChecked ? currentSize.translateX : 'tranzinc-x-0'}
             pointer-events-none inline-block transform rounded-full bg-white shadow-lg ring-0 
             transition duration-200 ease-in-out
           `}
@@ -116,12 +116,12 @@ const Toggle: React.FC<ToggleProps> = ({
       {(label || description) && (
         <div className="flex flex-col">
           {label && (
-            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+            <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
               {label}
             </span>
           )}
           {description && (
-            <span className="text-sm text-gray-500 dark:text-gray-400">
+            <span className="text-sm text-zinc-500 dark:text-zinc-400">
               {description}
             </span>
           )}

@@ -18,7 +18,7 @@ interface GroupedBarChartProps {
 }
 
 const GroupedBarChart: React.FC<GroupedBarChartProps> = ({ title, description, data, height = 400,
-  variant = 'default',
+  variant = 'transparent',
   elevation = 'raised',
 }) => {
   const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
@@ -33,12 +33,12 @@ const GroupedBarChart: React.FC<GroupedBarChartProps> = ({ title, description, d
       {(title || description) && (
         <div className="mb-6">
           {title && (
-            <h3 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-2">
+            <h3 className="text-2xl font-display font-semibold text-zinc-900 dark:text-white mb-2">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+            <p className="text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed">
               {description}
             </p>
           )}

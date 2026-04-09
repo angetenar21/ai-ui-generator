@@ -67,12 +67,12 @@ const Button: React.FC<ButtonProps> = ({
   };
 
   const variantClasses = {
-    primary: 'bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white shadow-[0_0_0_1px_rgba(255,255,255,0.1)_inset,0_2px_4px_rgba(16,185,129,0.3)] hover:shadow-[0_0_0_1px_rgba(255,255,255,0.2)_inset,0_4px_12px_rgba(16,185,129,0.4)]',
-    secondary: 'bg-gray-800 hover:bg-gray-700 active:bg-gray-900 text-white shadow-[0_0_0_1px_rgba(255,255,255,0.05)_inset,0_1px_2px_rgba(0,0,0,0.2)]',
-    outline: 'border border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 shadow-sm',
-    ghost: 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 active:bg-gray-200 dark:active:bg-white/20',
+    primary: 'bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700 text-white shadow-[0_0_0_1px_rgba(255,255,255,0.1)_inset,0_2px_4px_rgba(16,185,129,0.3)] hover:shadow-[0_0_0_1px_rgba(255,255,255,0.2)_inset,0_4px_12px_rgba(16,185,129,0.4)]',
+    secondary: 'bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-900 text-white shadow-[0_0_0_1px_rgba(255,255,255,0.05)_inset,0_1px_2px_rgba(0,0,0,0.2)]',
+    outline: 'border border-zinc-200 dark:border-zinc-700 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm text-zinc-900 dark:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 shadow-sm',
+    ghost: 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/10 active:bg-zinc-200 dark:active:bg-white/20',
     danger: 'bg-red-500 hover:bg-red-600 active:bg-red-700 text-white shadow-[0_0_0_1px_rgba(255,255,255,0.1)_inset,0_2px_4px_rgba(239,68,68,0.3)]',
-    success: 'bg-teal-500 hover:bg-teal-600 active:bg-teal-700 text-white shadow-[0_0_0_1px_rgba(255,255,255,0.1)_inset,0_2px_4px_rgba(20,184,166,0.3)]',
+    success: 'bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700 text-white shadow-[0_0_0_1px_rgba(255,255,255,0.1)_inset,0_2px_4px_rgba(20,184,166,0.3)]',
   };
 
   const sizeClasses = {

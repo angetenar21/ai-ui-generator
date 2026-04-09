@@ -62,7 +62,7 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
   height = 400,
   colors = COLORS,
   showLabels = true,
-  variant = 'default',
+  variant = 'transparent',
   elevation = 'raised',
 }) => {
 
@@ -100,11 +100,11 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
     return (
       <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && (
-          <h3 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-4">
+          <h3 className="text-xl font-display font-semibold text-zinc-900 dark:text-white mb-4">
             {title}
           </h3>
         )}
-        <div className="flex items-center justify-center h-64 text-gray-500">
+        <div className="flex items-center justify-center h-64 text-zinc-500">
           No data available
         </div>
       </div>
@@ -165,7 +165,7 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
   return (
     <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
       {title && (
-        <h3 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-4">
+        <h3 className="text-xl font-display font-semibold text-zinc-900 dark:text-white mb-4">
           {title}
         </h3>
       )}

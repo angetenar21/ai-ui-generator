@@ -60,22 +60,22 @@ const TimePicker: React.FC<TimePickerProps> = ({
   };
 
   const variantClasses = {
-    outlined: `border-2 ${error ? 'border-red-500' : 'border-gray-600'} focus:border-blue-500 bg-transparent`,
-    filled: `border-b-2 ${error ? 'border-red-500' : 'border-gray-600'} focus:border-blue-500 bg-gray-800/50`,
-    standard: `border-b-2 ${error ? 'border-red-500' : 'border-gray-600'} focus:border-blue-500 bg-transparent`,
+    outlined: `border-2 ${error ? 'border-red-500' : 'border-zinc-600'} focus:border-indigo-500 bg-transparent`,
+    filled: `border-b-2 ${error ? 'border-red-500' : 'border-zinc-600'} focus:border-indigo-500 bg-zinc-800/50`,
+    standard: `border-b-2 ${error ? 'border-red-500' : 'border-zinc-600'} focus:border-indigo-500 bg-transparent`,
   };
 
   return (
     <div className={`my-4 ${fullWidth ? 'w-full' : 'max-w-md'}`}>
       {label && (
-        <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
+        <label className="block text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
           {label}
           {required && <span className="text-red-400 ml-1">*</span>}
         </label>
       )}
       <div className="relative">
         {showClockIcon && (
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+          <div className="absolute left-3 top-1/2 -tranzinc-y-1/2 text-zinc-400 pointer-events-none">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -98,7 +98,7 @@ const TimePicker: React.FC<TimePickerProps> = ({
             ${showClockIcon ? 'pl-10' : ''}
             ${fullWidth ? 'w-full' : 'w-full'}
             rounded-lg text-white
-            focus:outline-none focus:ring-2 focus:ring-emerald-500/50
+            focus:outline-none focus:ring-2 focus:ring-indigo-500/50
             disabled:opacity-50 disabled:cursor-not-allowed
             transition-all duration-200
             [color-scheme:dark]
@@ -106,7 +106,7 @@ const TimePicker: React.FC<TimePickerProps> = ({
         />
       </div>
       {(helperText || (error && errorMessage)) && (
-        <p className={`mt-1 text-xs ${error ? 'text-red-400' : 'text-gray-400'}`}>
+        <p className={`mt-1 text-xs ${error ? 'text-red-400' : 'text-zinc-400'}`}>
           {error && errorMessage ? errorMessage : helperText}
         </p>
       )}

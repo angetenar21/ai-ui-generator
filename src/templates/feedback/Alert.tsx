@@ -32,10 +32,10 @@ const Alert: React.FC<AlertProps> = ({
   const severityConfig = {
     info: {
       icon: 'info',
-      bg: 'bg-blue-50/80 dark:bg-blue-900/20',
-      border: 'border-blue-200/50 dark:border-blue-500/30',
-      text: 'text-blue-800 dark:text-blue-300',
-      filled: 'bg-blue-600 dark:bg-blue-500 text-white',
+      bg: 'bg-indigo-50/80 dark:bg-indigo-900/20',
+      border: 'border-indigo-200/50 dark:border-indigo-500/30',
+      text: 'text-indigo-800 dark:text-indigo-300',
+      filled: 'bg-indigo-600 dark:bg-indigo-500 text-white',
     },
     success: {
       icon: 'check-circle',
@@ -46,10 +46,10 @@ const Alert: React.FC<AlertProps> = ({
     },
     warning: {
       icon: 'alert-triangle',
-      bg: 'bg-teal-50/80 dark:bg-teal-900/20',
-      border: 'border-teal-200/50 dark:border-teal-500/30',
-      text: 'text-teal-800 dark:text-teal-300',
-      filled: 'bg-teal-500 dark:bg-teal-500 text-white',
+      bg: 'bg-indigo-50/80 dark:bg-indigo-900/20',
+      border: 'border-indigo-200/50 dark:border-indigo-500/30',
+      text: 'text-indigo-800 dark:text-indigo-300',
+      filled: 'bg-indigo-500 dark:bg-indigo-500 text-white',
     },
     error: {
       icon: 'x-circle',

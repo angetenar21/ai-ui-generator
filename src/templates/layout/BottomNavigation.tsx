@@ -47,20 +47,20 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
   );
 
   const variantClasses = {
-    default: 'bg-gray-50 dark:bg-gray-700 border-t border-emerald-600',
-    elevated: 'bg-gray-50 dark:bg-gray-700 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]',
+    default: 'bg-zinc-50 dark:bg-zinc-700 border-t border-indigo-600',
+    elevated: 'bg-zinc-50 dark:bg-zinc-700 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]',
   };
 
   const activeColorClasses = {
-    primary: 'text-emerald-600',
+    primary: 'text-indigo-600',
     accent: 'text-accent-from',
-    secondary: 'text-gray-900 dark:text-white',
+    secondary: 'text-zinc-900 dark:text-white',
   };
 
   if (safeItems.length === 0) {
     return (
       <div className="card rounded-card p-8 text-center">
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className="text-zinc-600 dark:text-zinc-400">
           Bottom Navigation - Add items to display
         </p>
       </div>
@@ -81,7 +81,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
               onClick={() => setSelectedValue(item.value)}
               className={`flex flex-col items-center justify-center gap-1 min-w-[64px] h-full transition-colors ${isActive
                   ? activeColorClasses[activeColor]
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-600 dark:text-gray-300'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-600 dark:text-zinc-300'
                 }`}
             >
               <div className="relative">

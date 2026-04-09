@@ -44,10 +44,10 @@ const LinearProgress: React.FC<LinearProgressProps> = ({
   } as const;
 
   const colorClasses = {
-    primary: 'bg-emerald-600 dark:bg-emerald-500',
-    secondary: 'bg-gray-500 dark:bg-gray-500',
+    primary: 'bg-indigo-600 dark:bg-indigo-500',
+    secondary: 'bg-zinc-500 dark:bg-zinc-500',
     success: 'bg-green-600 dark:bg-green-500',
-    warning: 'bg-teal-600 dark:bg-teal-500',
+    warning: 'bg-indigo-600 dark:bg-indigo-500',
     error: 'bg-red-600 dark:bg-red-500',
   } as const;
 
@@ -74,11 +74,11 @@ const LinearProgress: React.FC<LinearProgressProps> = ({
       <div className="w-full">
         {(label || valueLabel) && (
           <div className="flex justify-between items-center mb-2">
-            {label ? <span className="text-sm text-gray-700 dark:text-gray-300">{label}</span> : <span />}
-            {valueLabel && <span className="text-sm text-gray-600 dark:text-gray-400">{valueLabel}</span>}
+            {label ? <span className="text-sm text-zinc-700 dark:text-zinc-300">{label}</span> : <span />}
+            {valueLabel && <span className="text-sm text-zinc-600 dark:text-zinc-400">{valueLabel}</span>}
           </div>
         )}
-        <div className={`w-full ${sizeClasses[size]} bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden`}>
+        <div className={`w-full ${sizeClasses[size]} bg-zinc-200 dark:bg-zinc-700 rounded-full overflow-hidden`}>
           <div
             className={`
               ${sizeClasses[size]}

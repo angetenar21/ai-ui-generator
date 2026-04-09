@@ -68,8 +68,8 @@ const Rating: React.FC<RatingProps> = ({
   };
 
   const colorClasses = {
-    primary: 'text-blue-500',
-    secondary: 'text-gray-500',
+    primary: 'text-indigo-500',
+    secondary: 'text-zinc-500',
     warning: 'text-yellow-500',
     error: 'text-red-500',
   };
@@ -181,10 +181,10 @@ const Rating: React.FC<RatingProps> = ({
         onMouseLeave={handleMouseLeave}
         disabled={disabled || readOnly}
         className={`
-          ${fillType !== 'empty' ? colorClasses[color] : 'text-gray-600'}
+          ${fillType !== 'empty' ? colorClasses[color] : 'text-zinc-600'}
           ${disabled || readOnly ? 'cursor-default' : 'cursor-pointer hover:scale-110'}
           transition-transform duration-150
-          focus:outline-none focus:ring-2 focus:ring-emerald-500/50 rounded
+          focus:outline-none focus:ring-2 focus:ring-indigo-500/50 rounded
         `.trim().replace(/\s+/g, ' ')}
       >
         {getIcon(fillType, i)}
@@ -195,7 +195,7 @@ const Rating: React.FC<RatingProps> = ({
   return (
     <div className="my-4">
       {label && (
-        <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
+        <label className="block text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
           {label}
           {required && <span className="text-red-400 ml-1">*</span>}
         </label>
@@ -203,13 +203,13 @@ const Rating: React.FC<RatingProps> = ({
       <div className="flex items-center gap-1">
         {items}
         {showValue && (
-          <span className="ml-2 text-sm text-gray-400 font-mono">
+          <span className="ml-2 text-sm text-zinc-400 font-mono">
             {displayValue.toFixed(precision === 0.5 ? 1 : 0)} / {max}
           </span>
         )}
       </div>
       {(helperText || (error && errorMessage)) && (
-        <p className={`mt-1 text-xs ${error ? 'text-red-400' : 'text-gray-400'}`}>
+        <p className={`mt-1 text-xs ${error ? 'text-red-400' : 'text-zinc-400'}`}>
           {error && errorMessage ? errorMessage : helperText}
         </p>
       )}
