@@ -61,7 +61,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="w-full bg-[#FFFBF5]/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-stone-200 dark:border-gray-800 px-6 py-1.5 flex items-center justify-between sticky top-0 z-20 flex-shrink-0 animate-slide-in-top">
+    <header className="w-full bg-white/30 dark:bg-gray-900/40 backdrop-blur-xl border-b border-white/20 dark:border-gray-800/50 px-6 py-2 flex items-center justify-between sticky top-0 z-30 flex-shrink-0 transition-colors duration-300">
       <div className="flex items-center gap-3">
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}

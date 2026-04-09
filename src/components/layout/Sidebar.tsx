@@ -46,10 +46,10 @@ const Sidebar: React.FC = () => {
       {/* Sidebar */}
       <aside
         className={`relative bg-[#FFFBF5]/90 dark:bg-gray-900/90 backdrop-blur-md
-                   border-r border-stone-200 dark:border-gray-800
+                   border border-stone-200 dark:border-gray-800
                    transform transition-all duration-300 z-30
                    flex flex-col flex-shrink-0 animate-slide-in-left
-                   h-full shadow-[4px_0_24px_rgba(0,0,0,0.02)]
+                   h-[calc(100%-1.5rem)] ml-4 mt-2 mb-4 rounded-2xl shadow-xl
                    ${sidebarCollapsed ? 'w-20' : 'w-56'}
                    ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
