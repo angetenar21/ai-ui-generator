@@ -51,7 +51,7 @@ const FunnelChart: React.FC<FunnelChartProps> = ({
 
   if (!validData.length) {
     return (
-      <div className="w-full bg-white dark:bg-zinc-800 rounded-xl p-4 border border-zinc-200 dark:border-zinc-700">
+      <div className="w-full bg-transparent dark:bg-transparent rounded-xl p-4 border border-zinc-200 dark:border-zinc-700">
         {(title || description) && (
           <div className="mb-3 text-center">
             {title && (
@@ -112,7 +112,7 @@ const FunnelChart: React.FC<FunnelChartProps> = ({
   );
 
   return (
-    <div className="w-full bg-white dark:bg-zinc-800 rounded-xl p-4 border border-zinc-200 dark:border-zinc-700">
+    <div className="w-full bg-transparent dark:bg-transparent rounded-xl p-4 border border-zinc-200 dark:border-zinc-700">
       {/* Header */}
       {(title || description) && (
         <div className="mb-3 text-center">

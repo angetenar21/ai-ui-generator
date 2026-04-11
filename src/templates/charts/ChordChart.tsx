@@ -43,7 +43,7 @@ const ChordChart: React.FC<ChordChartProps> = ({
   // Validate
   if (!nodes || !Array.isArray(nodes) || nodes.length === 0) {
     return (
-      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
+      <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
         {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
         <div className="text-center text-zinc-400">
           <p className="text-sm">No nodes data for chord chart</p>
@@ -54,7 +54,7 @@ const ChordChart: React.FC<ChordChartProps> = ({
 
   if (!matrix || !Array.isArray(matrix) || matrix.length === 0) {
     return (
-      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
+      <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
         {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
         <div className="text-center text-zinc-400">
           <p className="text-sm">No matrix data for chord chart</p>
@@ -74,7 +74,7 @@ const ChordChart: React.FC<ChordChartProps> = ({
   const maxValue = Math.max(...matrix.flat());
 
   return (
-    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
+    <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
       {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4 text-center">{title}</h3>}
       {description && (
         <p className="text-sm text-zinc-400 mb-4 text-center">{description}</p>

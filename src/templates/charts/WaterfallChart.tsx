@@ -56,7 +56,7 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
   // Validate
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
-      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
+      <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
         {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
         <div className="text-center text-zinc-600 dark:text-zinc-400">
           <p className="text-sm">No series data for waterfall chart</p>
@@ -70,7 +70,7 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
   // Validate that we have data
   if (!firstSeries || !firstSeries.data || firstSeries.data.length === 0) {
     return (
-      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
+      <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
         {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
         <div className="text-center text-zinc-600 dark:text-zinc-400">
           <p className="text-sm">No data values in series</p>
@@ -210,7 +210,7 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
   ];
 
   return (
-    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
+    <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
       {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4 text-center">{title}</h3>}
       {description && (
         <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4 text-center">{description}</p>

@@ -102,7 +102,7 @@ const SparklineChart: React.FC<SparklineChartProps> = ({
     return (
       <div
         ref={containerRef}
-        className="w-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-4 flex flex-col items-center justify-center min-h-[250px]"
+        className="w-full bg-transparent dark:bg-transparent border border-zinc-200 dark:border-zinc-700 rounded-lg p-4 flex flex-col items-center justify-center min-h-[250px]"
       >
         {title && (
           <h4 className="text-sm font-semibold text-zinc-900 dark:text-white mb-2">
@@ -127,7 +127,7 @@ const SparklineChart: React.FC<SparklineChartProps> = ({
   return (
     <div
       ref={containerRef}
-      className="w-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-4 hover:shadow-md dark:hover:shadow-lg transition-all duration-200"
+      className="w-full bg-transparent dark:bg-transparent border border-zinc-200 dark:border-zinc-700 rounded-lg p-4 hover:shadow-none dark:hover:shadow-lg transition-all duration-200"
     >
       {/* Header Section */}
       <div className="flex flex-col gap-2 mb-4">

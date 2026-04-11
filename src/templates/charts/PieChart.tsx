@@ -110,7 +110,7 @@ const PieChart: React.FC<PieChartProps> = ({
 
   if (!hasValidData) {
     return (
-      <div className={`${className || 'w-full h-full'} ${getSurfaceClasses(variant, elevation)} rounded-2xl p-6`}>
+      <div className={`${className || 'w-full h-full'} bg-transparent border-transparent rounded-2xl p-6`}>
         {(title || description) && (
           <div className="mb-6 text-center">
             {title && (

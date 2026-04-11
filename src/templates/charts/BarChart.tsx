@@ -202,7 +202,7 @@ const BarChart: React.FC<BarChartProps> = ({
   };
 
   // Build classes using design tokens
-  const surfaceClasses = getSurfaceClasses(variant, elevation);
+  const surfaceClasses = 'bg-transparent border-transparent';
 
   // Determine text colors based on card background
   const titleTextColor = getTextColorForBackground(cardBackgroundColor);
@@ -294,15 +294,17 @@ const BarChart: React.FC<BarChartProps> = ({
               backgroundColor: chartColors.background,
               borderRadius: '8px',
               '& .MuiChartsAxis-line': {
-                stroke: chartColors.axisLine,
+                stroke: 'currentColor', 
+                opacity: 0.2,
                 strokeWidth: 1.5,
               },
               '& .MuiChartsAxis-tick': {
-                stroke: chartColors.axisTick,
+                stroke: 'currentColor', 
+                opacity: 0.2,
                 strokeWidth: 1,
               },
               '& .MuiChartsAxis-tickLabel': {
-                fill: chartColors.tickLabel,
+                fill: 'currentColor',
                       fontFamily: 'inherit',
                 fontSize: '13px',
                 fontWeight: 500,
@@ -335,7 +337,7 @@ const BarChart: React.FC<BarChartProps> = ({
                 height: '12px',
               },
               '& .MuiChartsGrid-line': {
-                stroke: chartColors.gridLine,
+                stroke: 'currentColor',
                 strokeDasharray: '4 4',
                 opacity: 0.8,
               },

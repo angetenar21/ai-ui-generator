@@ -160,7 +160,7 @@ const Sidebar: React.FC = () => {
                       {/* Active Job Badge */}
                       {item.label === 'Chat' && activeJobCount > 0 && (
                         <div className={`
-                      flex items-center justify-center bg-blue-500 text-white text-[10px] font-bold rounded-full
+                      flex items-center justify-center bg-white/20 backdrop-blur-md border border-white/30 text-white text-[10px] font-bold rounded-full
                       ${sidebarCollapsed ? 'absolute -top-1 -right-1 w-4 h-4' : 'px-2 py-0.5 ml-auto'}
                       animate-pulse shadow-sm
                     `}>

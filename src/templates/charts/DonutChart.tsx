@@ -108,7 +108,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
 
   if (!hasValidData) {
     return (
-      <div className="w-full h-full p-6 card rounded-xl shadow-sm border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex flex-col">
+      <div className="w-full h-full p-6 card rounded-xl shadow-none border border-zinc-200 dark:border-zinc-800 bg-transparent dark:bg-transparent flex flex-col">
         {(title || description) && (
           <div className="mb-6 text-center">
             {title && (

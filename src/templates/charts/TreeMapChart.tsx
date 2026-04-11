@@ -98,7 +98,7 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
   // Don't render if no data
   if (!chartData || chartData.length === 0) {
     return (
-      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
+      <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
         {title && (
           <h3 className="text-xl font-display font-semibold text-zinc-900 dark:text-white mb-4">
             {title}
@@ -163,7 +163,7 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
   };
 
   return (
-    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
+    <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
       {title && (
         <h3 className="text-xl font-display font-semibold text-zinc-900 dark:text-white mb-4">
           {title}

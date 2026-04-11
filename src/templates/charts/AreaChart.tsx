@@ -121,7 +121,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
   if (!hasValidData) {
     console.warn('[AreaChart] No valid series data provided:', { series });
     return (
-      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
+      <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
         {(title || description) && (
           <div className="mb-6">
             {title && (
@@ -213,7 +213,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
   };
 
   return (
-    <div className="w-full h-full max-w-full min-w-0 bg-white dark:bg-zinc-900 rounded-xl p-4 shadow-sm border border-zinc-200 dark:border-zinc-700 overflow-x-auto flex flex-col">
+    <div className="w-full h-full max-w-full min-w-0 bg-transparent dark:bg-transparent rounded-xl p-4 shadow-none border border-zinc-200 dark:border-zinc-700 overflow-x-auto flex flex-col">
       {/* Header */}
       {(title || description) && (
         <div className="mb-3 px-1">
@@ -254,15 +254,17 @@ const AreaChart: React.FC<AreaChartProps> = ({
                   }}
                   sx={{
                     '& .MuiChartsAxis-line': {
-                      stroke: chartColors.axisLine,
+                      stroke: 'currentColor',
+                      opacity: 0.2,
                       strokeWidth: 1.5,
                     },
                     '& .MuiChartsAxis-tick': {
-                      stroke: chartColors.axisTick,
+                      stroke: 'currentColor',
+                      opacity: 0.2,
                       strokeWidth: 1,
                     },
                     '& .MuiChartsAxis-tickLabel': {
-                      fill: chartColors.tickLabel,
+                      fill: 'currentColor',
                       fontFamily: 'inherit',
                       fontSize: '13px',
                       fontWeight: 500,
@@ -294,7 +296,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
                       height: '12px',
                     },
                     '& .MuiChartsGrid-line': {
-                      stroke: chartColors.gridLine,
+                      stroke: 'currentColor', 
                       strokeDasharray: '4 4',
                       opacity: 0.8,
                     },

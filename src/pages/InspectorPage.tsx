@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Copy, Check, Eye, Maximize2, Minimize2, Columns2, Code2, Monitor, Search, Trash2, X, Braces } from 'lucide-react';
+import { Copy, Check, Eye, Maximize2, Minimize2, Columns2, Code2, Monitor, Search, Trash2, X, Braces, Wand2 } from 'lucide-react';
 import { useAppStore } from '../store/appStore';
 import StorageService from '../services/storageService';
 import { ComponentRenderer } from '../templates';
@@ -246,79 +246,82 @@ const InspectorPage: React.FC = () => {
 
   const modeButtonClasses = (mode: ViewMode) =>
     [
-      'inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium btn-press transition-all',
+      'inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-all rounded-lg',
       viewMode === mode
-        ? 'bg-gradient-to-r from-orange-500 to-pink-600 text-white shadow-card rounded-lg'
-        : 'card-sub text-text-secondary hover:bg-bg-card rounded-pill',
+        ? 'bg-white dark:bg-gray-800 text-stone-800 dark:text-gray-100 shadow-sm border border-stone-200/50 dark:border-gray-700'
+        : 'text-stone-500 hover:text-stone-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-black/5 dark:hover:bg-white/5',
     ].join(' ');
 
   const jsonString = selectedComponent ? JSON.stringify(selectedComponent, null, 2) : '';
 
   return (
-    <div className="max-w-page mx-auto px-6 pt-8 pb-10 flex flex-col min-h-[calc(100vh-80px)]">
+    <div className="h-full w-full max-w-[1600px] mx-auto px-4 md:px-8 pt-8 pb-10 flex flex-col bg-transparent relative z-10">
       {/* Header */}
-      <div className="mb-6">
-        <p className="text-xs font-medium uppercase tracking-[0.18em] text-text-muted mb-2">
-          Inspector
-        </p>
-        <div className="flex items-baseline justify-between gap-3">
-          <div>
-            <h2 className="text-3xl md:text-4xl font-display font-bold text-text-primary mb-1">
-              Component Inspector
-            </h2>
-            <p className="text-text-secondary text-sm md:text-base">
-              View, edit, and preview generated component specifications.
-            </p>
-          </div>
+      <div className="mb-6 pl-2">
+        <div>
+          <h2 className="text-3xl md:text-5xl font-display font-bold text-stone-900 dark:text-white mb-2 tracking-tight">
+            Component Inspector
+          </h2>
+          <p className="text-stone-500 dark:text-gray-400 text-sm md:text-base max-w-2xl">
+            View, edit, and preview generated component specifications. Check real-time outputs from the chat generation engine.
+          </p>
         </div>
       </div>
 
       {allComponents.length === 0 ? (
         <div className="flex-1 flex items-center justify-center">
-          <div className="card rounded-card p-12 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-orange-500 to-pink-600 flex items-center justify-center shadow-lg">
-              <Eye className="w-8 h-8 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
+          <div className="max-w-md w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-12 text-center border border-stone-200/50 dark:border-gray-700/50 shadow-sm animate-fade-in-up">
+            <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-orange-50 dark:bg-gray-900/50 flex items-center justify-center border border-orange-100/50 dark:border-gray-700 shadow-inner">
+              <Eye className="w-8 h-8 text-orange-500 drop-shadow-[0_0_8px_rgba(249,115,22,0.4)]" />
             </div>
-            <h3 className="text-2xl font-display font-semibold text-text-primary mb-2">
+            <h3 className="text-2xl font-display font-semibold text-stone-900 dark:text-white mb-2">
               No components yet
             </h3>
-            <p className="text-text-secondary">
+            <p className="text-stone-500 dark:text-gray-400">
               Generate some UI components in the Chat to inspect them here.
             </p>
           </div>
         </div>
       ) : (
-        <div className="flex-1 flex gap-6 overflow-hidden rounded-card">
+        <div className="flex-1 flex gap-6 overflow-hidden min-h-0 animate-fade-in-up">
           {/* Component list (hidden in fullscreen) */}
           {!isFullscreen && (
-            <aside className="w-72 flex-shrink-0 flex flex-col gap-3 overflow-hidden">
+            <aside className="w-80 flex-shrink-0 flex flex-col gap-4 overflow-hidden">
               {/* Search bar */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -tranzinc-y-1/2 w-3.5 h-3.5 text-text-muted pointer-events-none" />
-                <input
-                  type="text"
-                  placeholder="Search components…"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-8 pr-8 py-2 text-xs rounded-xl border border-border-primary bg-bg-sub text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent-from focus:border-transparent"
-                />
-                {search && (
-                  <button
-                    onClick={() => setSearch('')}
-                    className="absolute right-2.5 top-1/2 -tranzinc-y-1/2 text-text-muted hover:text-text-secondary"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                )}
+              <div className="relative group flex-shrink-0">
+                <div className="absolute inset-0 bg-transparent rounded-2xl blur-xl group-focus-within:bg-orange-500/5 dark:group-focus-within:bg-orange-900/20 transition-colors" />
+                <div className="relative bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-stone-200/60 dark:border-gray-800 focus-within:ring-2 focus-within:ring-orange-500/30 focus-within:border-orange-500/50 transition-all flex items-center shadow-sm">
+                  <Search className="w-4 h-4 ml-4 flex-shrink-0 text-stone-400" />
+                  <input
+                    type="text"
+                    placeholder="Search components…"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="w-full bg-transparent border-0 px-3 py-3 text-sm outline-none text-stone-800 dark:text-gray-200 placeholder-stone-400"
+                  />
+                  {search && (
+                    <button
+                      onClick={() => setSearch('')}
+                      className="p-2 mr-2 text-stone-400 hover:text-stone-600 dark:hover:text-gray-300 transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
               </div>
 
-              <h3 className="text-xs font-semibold text-text-secondary uppercase tracking-wide">
-                {filteredComponents.length} / {allComponents.length} components
-              </h3>
+              <div className="flex items-center justify-between px-1 flex-shrink-0">
+                <h3 className="text-[11px] font-semibold text-stone-400 dark:text-gray-500 uppercase tracking-widest pl-1">
+                  History
+                </h3>
+                <span className="text-[11px] font-medium text-stone-500 bg-white/80 dark:bg-gray-800 border border-stone-200/50 dark:border-gray-700 px-2 py-0.5 rounded-full shadow-sm">
+                   {filteredComponents.length}
+                </span>
+              </div>
 
-              <div className="space-y-2 overflow-y-auto pb-4 pr-1">
+              <div className="flex-1 flex flex-col gap-2 overflow-y-auto pr-1 scrollbar-thin scroll-smooth pb-4">
                 {filteredComponents.length === 0 ? (
-                  <p className="text-xs text-text-muted italic py-4 text-center">No results for "{search}"</p>
+                  <p className="text-xs text-stone-400 italic py-8 text-center bg-stone-50/50 dark:bg-gray-800/30 rounded-2xl border border-dashed border-stone-200 dark:border-gray-700">No results found.</p>
                 ) : (
                   filteredComponents.map((item, index) => {
                     const isActive = selectedComponent === item.component;
@@ -334,18 +337,22 @@ const InspectorPage: React.FC = () => {
                           setSelectedHistoryId(item.historyId);
                         }}
                         className={[
-                          'w-full text-left px-3 py-2.5 rounded-xl text-xs md:text-sm btn-press transition-all',
-                          'flex flex-col gap-0.5',
+                          'w-full text-left px-4 py-3.5 rounded-2xl transition-all duration-200 group relative',
+                          'flex flex-col gap-1 border flex-shrink-0',
                           isActive
-                            ? 'bg-gradient-to-r from-orange-500 to-pink-600 text-white shadow-md'
-                            : 'card-sub text-text-secondary hover:bg-bg-card',
+                            ? 'bg-orange-500/10 dark:bg-orange-900/20 border-orange-500/30 dark:border-orange-800/50'
+                            : 'bg-transparent border-transparent hover:bg-stone-500/10 dark:hover:bg-gray-700/50',
                         ].join(' ')}
                       >
-                        <span className="font-medium truncate">{label}</span>
-                        <span className={`text-[11px] truncate ${isActive ? 'text-white/70' : 'text-text-muted'}`}>
-                          {typeName}
-                          {isFromPrompt ? ` · ${item.prompt.slice(0, 32)}${item.prompt.length > 32 ? '…' : ''}` : ''}
+                        <span className={`font-semibold truncate text-sm transition-colors ${isActive ? 'text-stone-900 dark:text-white' : 'text-stone-700 dark:text-gray-300 group-hover:text-stone-900 dark:group-hover:text-white'}`}>
+                          {label}
                         </span>
+                        <div className="flex items-center gap-2 text-[11px] truncate">
+                           <span className={`font-mono px-1.5 py-0.5 rounded shadow-sm border ${isActive ? 'bg-orange-50 text-orange-600 border-orange-100 dark:bg-orange-900/20 dark:text-orange-400 dark:border-orange-800/30' : 'bg-stone-50 text-stone-500 border-stone-200/50 dark:bg-gray-900/50 dark:text-gray-400 dark:border-gray-700'}`}>{typeName}</span>
+                           <span className={`truncate ${isActive ? 'text-stone-500 dark:text-gray-400' : 'text-stone-400 dark:text-gray-500'}`}>
+                             {isFromPrompt ? item.prompt : 'Current section'}
+                           </span>
+                        </div>
                       </button>
                     );
                   })
@@ -355,24 +362,29 @@ const InspectorPage: React.FC = () => {
           )}
 
           {/* Inspector panel */}
-          <section className="flex-1 flex flex-col overflow-hidden">
+          <section className="flex-1 flex flex-col overflow-hidden min-w-0 shadow-sm relative">
             {selectedComponent && (
-              <>
+              <div className="h-full flex flex-col relative z-20">
                 {/* Controls */}
-                <div className="flex flex-wrap items-center justify-between mb-4 gap-3">
-                  <div className="min-w-0">
-                    <h3 className="text-xl md:text-2xl font-display font-semibold text-text-primary truncate">
-                      {getComponentLabel(selectedComponent)}
-                    </h3>
-                    <p className="text-xs md:text-sm text-text-secondary mt-1 truncate">
-                      {selectedComponent.metadata?.description
-                        || `${selectedComponent.name || selectedComponent.type} spec`}
-                    </p>
+                <div className="flex flex-wrap items-center justify-between pb-4 mb-4 pt-1 gap-3 border-b border-stone-200/60 dark:border-gray-800/60 flex-shrink-0">
+                  <div className="min-w-0 flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-orange-50/50 dark:bg-orange-900/20 border border-orange-100/50 dark:border-orange-800/30 flex items-center justify-center shadow-inner flex-shrink-0">
+                      <Code2 className="w-5 h-5 text-orange-500" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg md:text-xl font-display font-semibold text-stone-900 dark:text-white truncate">
+                        {getComponentLabel(selectedComponent)}
+                      </h3>
+                      <p className="text-[11px] md:text-xs text-stone-500 dark:text-gray-400 mt-0.5 truncate">
+                        {selectedComponent.metadata?.description
+                          || `${selectedComponent.name || selectedComponent.type} component`}
+                      </p>
+                    </div>
                   </div>
 
                   <div className="flex items-center gap-2 flex-shrink-0">
                     {/* View mode toggle */}
-                    <div className="flex items-center gap-1 bg-bg-sub rounded-pill px-1 py-1">
+                    <div className="flex items-center gap-1 bg-stone-100/50 dark:bg-gray-900/50 rounded-xl p-1 border border-stone-200/50 dark:border-gray-700 shadow-inner">
                       <button
                         type="button"
                         onClick={() => setViewMode('split')}
@@ -399,42 +411,26 @@ const InspectorPage: React.FC = () => {
                       </button>
                     </div>
 
+                    <div className="w-px h-6 bg-stone-200 dark:bg-gray-700 mx-1" />
+
                     {/* Fullscreen toggle */}
                     <button
                       type="button"
                       onClick={() => setIsFullscreen((prev) => !prev)}
-                      className="px-3 py-2 rounded-btn text-xs md:text-sm font-medium btn-press card-sub flex items-center gap-1.5"
+                      className="p-2 rounded-xl text-stone-500 hover:text-stone-700 hover:bg-stone-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-800 transition-colors tooltip-trigger border border-transparent shadow-sm"
+                      title={isFullscreen ? "Exit full screen" : "Full screen"}
                     >
-                      {isFullscreen ? (
-                        <>
-                          <Minimize2 className="w-4 h-4 text-text-muted" />
-                          <span className="hidden sm:inline">Exit full screen</span>
-                        </>
-                      ) : (
-                        <>
-                          <Maximize2 className="w-4 h-4 text-text-muted" />
-                          <span className="hidden sm:inline">Full screen</span>
-                        </>
-                      )}
+                      {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
                     </button>
 
                     {/* Copy JSON */}
                     <button
                       type="button"
                       onClick={handleCopy}
-                      className="px-3 py-2 rounded-btn text-xs md:text-sm font-medium btn-press hover-lift transition-all card-sub flex items-center gap-1.5"
+                      className="p-2 rounded-xl text-stone-500 hover:text-stone-700 hover:bg-stone-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-800 transition-colors tooltip-trigger border border-transparent shadow-sm"
+                      title="Copy JSON"
                     >
-                      {copied ? (
-                        <>
-                          <Check className="w-4 h-4 text-success-default" />
-                          <span>Copied</span>
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="w-4 h-4 text-text-muted" />
-                          <span>Copy JSON</span>
-                        </>
-                      )}
+                      {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
                     </button>
 
                     {/* Delete (only if from history) */}
@@ -442,21 +438,17 @@ const InspectorPage: React.FC = () => {
                       <button
                         type="button"
                         onClick={handleDelete}
-                        title="Remove from history"
-                        className="px-3 py-2 rounded-btn text-xs md:text-sm font-medium btn-press transition-all flex items-center gap-1.5 text-red-500 hover:bg-red-50 border border-red-200 hover:border-red-300"
+                        className="p-2 rounded-xl text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors tooltip-trigger border border-transparent hover:border-red-100 dark:hover:border-red-900/50 shadow-sm"
+                        title="Delete from history"
                       >
                         <Trash2 className="w-4 h-4" />
-                        <span className="hidden sm:inline">Delete</span>
                       </button>
                     )}
                   </div>
                 </div>
 
                 {/* Content area */}
-                <div
-                  className="flex-1 flex gap-4 overflow-hidden"
-                  style={{ minHeight: '360px' }}
-                >
+                <div className="flex-1 flex gap-2 overflow-hidden min-h-[360px] pl-1 pb-1 pr-1">
                   {/* Code / JSON pane */}
                   {(viewMode === 'split' || viewMode === 'code') && (() => {
                     const jsxCode = specToJSX(selectedComponent);
@@ -471,52 +463,45 @@ const InspectorPage: React.FC = () => {
                       <CodePaneErrorBoundary>
                         <div
                           className={[
-                            'rounded-card overflow-auto border border-border-subtle bg-bg-sub flex flex-col',
+                            'flex flex-col relative',
                             viewMode === 'split' ? 'basis-1/2' : 'flex-1',
                           ].join(' ')}
                         >
                           {/* Toolbar */}
-                          <div className="sticky top-0 z-10 flex items-center justify-between px-4 py-2 bg-bg-card border-b border-border-subtle">
+                          <div className="sticky top-0 z-10 flex items-center justify-between px-4 py-2 bg-stone-50/90 dark:bg-gray-800/90 backdrop-blur-md border-b border-stone-200/80 dark:border-gray-700/80">
                             {/* Tab toggle: JSX / JSON */}
-                            <div className="flex items-center gap-1 bg-bg-sub rounded-lg px-0.5 py-0.5">
+                            <div className="flex items-center gap-1 bg-stone-200/50 dark:bg-gray-900/80 rounded-lg p-0.5 border border-stone-300/30 dark:border-gray-700/50 shadow-inner">
                               <button
                                 onClick={() => setCodeTab('jsx')}
                                 className={[
-                                  'inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all',
+                                  'inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold transition-all',
                                   codeTab === 'jsx'
-                                    ? 'bg-white text-orange-600 shadow-sm border border-border-subtle'
-                                    : 'text-text-muted hover:text-text-secondary',
+                                    ? 'bg-white dark:bg-gray-700 text-orange-600 dark:text-orange-400 shadow-sm border border-transparent'
+                                    : 'text-stone-500 dark:text-gray-400 hover:text-stone-700 dark:hover:text-gray-200 hover:bg-stone-100/50 dark:hover:bg-gray-800/50',
                                 ].join(' ')}
                               >
-                                <Code2 className="w-3 h-3" />
+                                <Code2 className="w-3.5 h-3.5 opacity-70" />
                                 JSX
                               </button>
                               <button
                                 onClick={() => setCodeTab('json')}
                                 className={[
-                                  'inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all',
+                                  'inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold transition-all',
                                   codeTab === 'json'
-                                    ? 'bg-white text-orange-600 shadow-sm border border-border-subtle'
-                                    : 'text-text-muted hover:text-text-secondary',
+                                    ? 'bg-white dark:bg-gray-700 text-orange-600 dark:text-orange-400 shadow-sm border border-transparent'
+                                    : 'text-stone-500 dark:text-gray-400 hover:text-stone-700 dark:hover:text-gray-200 hover:bg-stone-100/50 dark:hover:bg-gray-800/50',
                                 ].join(' ')}
                               >
-                                <Braces className="w-3 h-3" />
+                                <Braces className="w-3.5 h-3.5 opacity-70" />
                                 JSON
                               </button>
                             </div>
-                            <div className="flex items-center gap-3">
-                              <span className="text-[11px] text-text-muted font-mono">{lineCount} lines</span>
-                              <button
-                                onClick={copyContent}
-                                className="text-[11px] text-text-secondary hover:text-text-primary transition-colors flex items-center gap-1"
-                              >
-                                {copied ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}
-                                {copied ? 'Copied' : 'Copy'}
-                              </button>
+                            <div className="flex items-center gap-4">
+                              <span className="text-[11px] text-stone-400 dark:text-gray-500 font-mono font-medium">{lineCount} lines</span>
                             </div>
                           </div>
                           {/* Code body */}
-                          <pre className="p-4 overflow-x-auto flex-1">
+                          <pre className="p-5 overflow-auto flex-1 scrollbar-thin">
                             {codeTab === 'jsx'
                               ? <JsxHighlight code={jsxCode} />
                               : <JsonHighlight json={jsonString} />}
@@ -530,22 +515,25 @@ const InspectorPage: React.FC = () => {
                   {(viewMode === 'split' || viewMode === 'preview') && (
                     <div
                       className={[
-                        'card rounded-card p-4 md:p-6 overflow-auto bg-bg-card',
+                        'flex flex-col relative',
                         viewMode === 'split' ? 'basis-1/2' : 'flex-1',
                       ].join(' ')}
                     >
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-[11px] font-semibold uppercase tracking-wide text-text-muted">
-                          Live preview
+                      {/* Decorative header inner */}
+                      <div className="absolute top-0 inset-x-0 h-10 bg-gradient-to-b from-stone-50/80 to-transparent dark:from-gray-800/50 pointer-events-none z-10" />
+                      
+                      <div className="flex items-center justify-between px-5 pt-4 pb-2 relative z-20">
+                        <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-400 dark:text-gray-500 flex items-center gap-2">
+                          <Monitor className="w-3.5 h-3.5" /> Live Preview
                         </span>
                       </div>
-                      <div className="bg-white rounded-card shadow-card p-4 md:p-6 min-h-[260px]">
+                      <div className="flex-1 overflow-auto p-5 scrollbar-thin relative z-20">
                         <ComponentRenderer spec={selectedComponent} />
                       </div>
                     </div>
                   )}
                 </div>
-              </>
+              </div>
             )}
           </section>
         </div>

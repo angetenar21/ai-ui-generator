@@ -175,7 +175,7 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`w-full ${getSurfaceClasses(variant, elevation)} rounded-xl p-4 transition-all duration-300`}
+      className={`w-full bg-transparent border-transparent rounded-xl p-4 transition-all duration-300`}
     >
       {(title || description) && (
         <div className="mb-3 text-center">

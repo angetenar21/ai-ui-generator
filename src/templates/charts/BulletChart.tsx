@@ -103,7 +103,7 @@ const BulletChart: React.FC<BulletChartProps> = ({
   const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
 
   // Get surface classes
-  const surfaceClasses = getSurfaceClasses(variant, elevation);
+  const surfaceClasses = 'bg-transparent border-transparent';
   const bgColor = cardBackgroundColor || (isDarkMode ? '#1F2937' : '#FFFFFF');
   const textColor = getTextColorForBackground(bgColor);
   const secondaryTextColor = getSecondaryTextColorForBackground(bgColor);

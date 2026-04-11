@@ -94,7 +94,7 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
 
   if (safeSeries.length === 0) {
     return (
-      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
+      <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
         <div className="flex justify-center items-center min-h-[300px] text-zinc-600 dark:text-zinc-300">
           <div className="text-center">
             <div className="text-4xl mb-2">📊</div>
@@ -158,7 +158,7 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
   }
 
   return (
-    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
+    <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
       {(title || description) && (
         <div className="mb-6">
           {title && (

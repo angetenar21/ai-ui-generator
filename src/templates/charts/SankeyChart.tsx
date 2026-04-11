@@ -64,7 +64,7 @@ const SankeyChart: React.FC<SankeyChartProps> = ({
   // Validate data
   if (!nodes || !Array.isArray(nodes) || nodes.length === 0) {
     return (
-      <div className="w-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-6">
+      <div className="w-full bg-transparent dark:bg-transparent border border-zinc-200 dark:border-zinc-700 rounded-lg p-6">
         {title && (
           <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-2">
             {title}
@@ -79,7 +79,7 @@ const SankeyChart: React.FC<SankeyChartProps> = ({
 
   if (!links || !Array.isArray(links) || links.length === 0) {
     return (
-      <div className="w-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-6">
+      <div className="w-full bg-transparent dark:bg-transparent border border-zinc-200 dark:border-zinc-700 rounded-lg p-6">
         {title && (
           <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-2">
             {title}
@@ -166,7 +166,7 @@ const SankeyChart: React.FC<SankeyChartProps> = ({
   return (
     <div
       ref={containerRef}
-      className="w-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-6 hover:shadow-md dark:hover:shadow-lg transition-shadow duration-200"
+      className="w-full bg-transparent dark:bg-transparent border border-zinc-200 dark:border-zinc-700 rounded-lg p-6 hover:shadow-none dark:hover:shadow-lg transition-shadow duration-200"
     >
       {/* Header */}
       {(title || description) && (

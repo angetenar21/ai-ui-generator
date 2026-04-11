@@ -1,1 +1,4 @@
 .vercel
+service-account.json
+service_accounts.json
+*-firebase-adminsdk-*.json

@@ -1,0 +1,31 @@
+rules_version = '2';
+
+// 🛑 PRODUCTION FIRESTORE SECURITY RULES 🛑
+// To deploy these rules, either:
+// 1. Go to your Firebase Console -> Firestore Database -> Rules tab, replace everything with this code, and click "Publish".
+// 2. Or, run `firebase deploy --only firestore:rules` from your command line if you have the Firebase CLI configured.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // USERS COLLECTION
+    match /users/{userId} {
+      // Users can solely read and edit their own isolated profile
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // AI GENERATED COMPONENTS COLLECTION
+    match /components/{compId} {
+      // Users are strictly only allowed to access code blocks that they mathematically own
+      allow read, delete: if request.auth != null && resource.data.userId == request.auth.uid;
+      
+      // CRITICAL: Prevent ANY client device from forging or fabricating fake AI components
+      // Only the secure backend Express Node worker is allowed to create records natively (via Admin SDK)
+      allow create: if false; 
+      
+      // Users can update specific fields (e.g., 'isPublic') if they own it
+      allow update: if request.auth != null && resource.data.userId == request.auth.uid;
+    }
+    
+  }
+}

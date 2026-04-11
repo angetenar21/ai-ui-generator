@@ -7,6 +7,8 @@ import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 import Logger from './logger.js';
 import { getFewShotForMessage, getRelevantComponents } from './fewShotExamples.js';
+import { requireAuth } from './middleware/firebaseAuth.js';
+import admin, { db } from './config/firebase-admin.js';
 
 // Load environment variables from .env when running locally
 // Try multiple locations: backend/.env, project root .env
@@ -1376,7 +1378,7 @@ function extractJsonObject(text) {
 let isWorkerRunning = false;
 
 async function processJob(job) {
-  const { jobId, sessionId, message, threadId, context } = job;
+  const { jobId, sessionId, userId, message, threadId, context } = job;
   const startTime = Date.now();
   const MAX_JOB_DURATION = 5 * 60 * 1000; // 5 minutes timeout
 
@@ -1478,6 +1480,26 @@ ORIGINAL USER REQUEST: ${message}`;
         threadId,
       },
     });
+
+    if (db && userId) {
+      try {
+        await db.collection('components').add({
+          jobId,
+          userId,
+          prompt: message,
+          code: serializeSpec(spec),
+          spec: JSON.stringify(spec),
+          threadId: threadId || jobId,
+          status: 'completed',
+          timestamp: Date.now(),
+          isPublic: false,
+          createdAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+        Logger.info(`Saved generation ${jobId} to Firestore for user ${userId}`);
+      } catch (dbErr) {
+        Logger.error(`Failed to save generation to Firestore: ${dbErr.message}`);
+      }
+    }
 
     const duration = Date.now() - startTime;
     Logger.jobCompleted(jobId, duration);
@@ -1596,7 +1618,7 @@ app.use(express.json({ limit: '1mb' }));
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') {
     return res.sendStatus(200);
   }
@@ -1609,7 +1631,7 @@ app.get('/tools', (_, res) => {
 });
 
 // Legacy endpoint - kept for backward compatibility
-app.post('/validate', (req, res) => {
+app.post('/validate', requireAuth, (req, res) => {
   const spec = req.body?.spec;
   if (!spec) {
     return res.status(400).json({ error: 'Missing spec payload' });
@@ -1619,7 +1641,7 @@ app.post('/validate', (req, res) => {
 });
 
 // Legacy synchronous endpoint - kept for backward compatibility
-app.post('/generate', async (req, res) => {
+app.post('/generate', requireAuth, async (req, res) => {
   const { prompt, context = '' } = req.body ?? {};
   if (typeof prompt !== 'string' || !prompt.trim()) {
     return res.status(400).json({ error: 'Prompt string is required' });
@@ -1650,7 +1672,7 @@ app.post('/generate', async (req, res) => {
 // NEW ASYNC API ENDPOINTS
 
 // POST /api/agent - Enqueue a new job
-app.post('/api/agent', (req, res) => {
+app.post('/api/agent', requireAuth, (req, res) => {
   const { sessionId, message, threadId, context } = req.body ?? {};
 
   // Validate required fields
@@ -1667,6 +1689,7 @@ app.post('/api/agent', (req, res) => {
   const job = {
     jobId,
     sessionId,
+    userId: req.user.uid,
     message,
     threadId: threadId || null,
     context: context || null,

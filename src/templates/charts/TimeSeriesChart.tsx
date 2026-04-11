@@ -110,7 +110,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   // Validate
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
-      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
+      <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
         {title && (
           <h3 className="text-2xl font-display font-semibold text-zinc-900 dark:text-white mb-2">
             {title}
@@ -253,7 +253,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   if (!hasValidData) {
     console.warn('[TimeSeriesChart] No valid data after normalization:', { series });
     return (
-      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
+      <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
         {title && (
           <h3 className="text-2xl font-display font-semibold text-zinc-900 dark:text-white mb-2">
             {title}
@@ -305,7 +305,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   };
 
   return (
-    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
+    <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
       {/* Header */}
       {(title || description) && (
         <div className="mb-6">
@@ -347,15 +347,17 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
           }}
           sx={{
             '& .MuiChartsAxis-line': {
-              stroke: chartColors.axisLine,
+              stroke: 'currentColor',
+              opacity: 0.2,
               strokeWidth: 1.5,
             },
             '& .MuiChartsAxis-tick': {
-              stroke: chartColors.axisTick,
+              stroke: 'currentColor', 
+              opacity: 0.2,
               strokeWidth: 1,
             },
             '& .MuiChartsAxis-tickLabel': {
-              fill: chartColors.tickLabel,
+              fill: 'currentColor',
                       fontFamily: 'inherit',
               fontSize: '13px',
               fontWeight: 500,
@@ -384,7 +386,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
               height: '12px',
             },
             '& .MuiChartsGrid-line': {
-              stroke: chartColors.gridLine,
+              stroke: 'currentColor', 
               strokeDasharray: '4 4',
               opacity: 0.8,
             },

@@ -32,9 +32,6 @@ const GalleryPage: React.FC = () => {
     <div className="max-w-page mx-auto px-6 pt-8 pb-24">
       {/* Header */}
       <div className="mb-8">
-        <p className="text-xs font-medium uppercase tracking-[0.18em] text-text-muted mb-2">
-          Templates
-        </p>
         <h2 className="text-4xl font-display font-bold text-text-primary mb-2">
           Template Gallery
         </h2>

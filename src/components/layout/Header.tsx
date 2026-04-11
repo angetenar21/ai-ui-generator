@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Menu } from 'lucide-react';
 import { useAppStore } from '../../store/appStore';
 import ThemeToggle from '../ThemeToggle';
+import UserProfile from '../UserProfile';
 import ApiService from '../../services/apiService';
 
 const Header: React.FC = () => {
@@ -91,6 +92,9 @@ const Header: React.FC = () => {
 
         {/* Theme Toggle */}
         <ThemeToggle />
+
+        {/* User Profile */}
+        <UserProfile />
       </div>
     </header>
   );

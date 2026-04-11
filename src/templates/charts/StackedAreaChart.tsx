@@ -75,7 +75,7 @@ const StackedAreaChart: React.FC<StackedAreaChartProps> = ({
   // Validate data
   if (!data || data.length === 0 || !detectedSeries || detectedSeries.length === 0) {
     return (
-      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
+      <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
         {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
         {description && <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">{description}</p>}
         <div className="flex items-center justify-center h-64 text-zinc-400 dark:text-zinc-500">
@@ -86,7 +86,7 @@ const StackedAreaChart: React.FC<StackedAreaChartProps> = ({
   }
 
   return (
-    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
+    <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
       {(title || description) && (
         <div className="mb-4">
           {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-2">{title}</h3>}

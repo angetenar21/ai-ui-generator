@@ -18,6 +18,7 @@ import type {
 } from '../types/api.types';
 import type { ComponentSpec } from '../templates/core/types';
 import SessionManager from './sessionManager';
+import { auth } from '../config/firebase';
 
 const envUrl = import.meta.env.VITE_API_BASE_URL;
 const API_BASE_URL = envUrl !== undefined ? (envUrl.endsWith('/') ? envUrl.slice(0, -1) : envUrl) : 'http://localhost:4000';
@@ -34,6 +35,28 @@ class ApiService {
       '$$typeof' in (data as Record<string, unknown>)
     );
   }
+
+  /**
+   * Helper to retrieve Firebase ID Token headers
+   * @param forceRefresh - If true, forcefully invalidates the cached JWT and mints a fresh token
+   */
+  private static async getHeaders(forceRefresh = false): Promise<HeadersInit> {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    
+    if (auth.currentUser) {
+      try {
+        const token = await auth.currentUser.getIdToken(forceRefresh);
+        headers['Authorization'] = `Bearer ${token}`;
+      } catch (e) {
+        console.error('[ApiService] Failed to fetch Firebase auth token', e);
+      }
+    }
+    
+    return headers;
+  }
+
   /**
    * Send a message and wait for completion using async polling
    */
@@ -73,18 +96,30 @@ class ApiService {
   static async enqueueJob(request: JobRequest): Promise<string>;
   static async enqueueJob(request: JobRequest, signal?: AbortSignal): Promise<string>;
   /**
-   * Enqueue a new job with optional abort signal
+   * Enqueue a new job with optional abort signal and token retry mechanisms
    */
-  static async enqueueJob(request: JobRequest, signal?: AbortSignal): Promise<string> {
+  static async enqueueJob(request: JobRequest, signal?: AbortSignal, retryOn401 = true): Promise<string> {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/agent`, {
+      let headers = await this.getHeaders(false);
+      let response = await fetch(`${API_BASE_URL}/api/agent`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
         body: JSON.stringify(request),
         signal,
       });
+
+      // SECURITY/UX FIX: Intercept 401 Unauthorized errors caused by expired tokens.
+      // Forcefully grab a perfectly fresh token and replay the network request automatically.
+      if (response.status === 401 && retryOn401) {
+        console.warn('[ApiService] Session token detected as expired (401). Force-refreshing JWT and retrying network request...');
+        headers = await this.getHeaders(true);
+        response = await fetch(`${API_BASE_URL}/api/agent`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(request),
+          signal,
+        });
+      }
 
       if (!response.ok) {
         const errorData: ApiError = await response.json().catch(() => ({
@@ -130,9 +165,7 @@ class ApiService {
       try {
         const response = await fetch(`${API_BASE_URL}/api/agent/${jobId}`, {
           method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: await this.getHeaders(),
           signal,
         });
 
@@ -214,9 +247,7 @@ class ApiService {
     try {
       const response = await fetch(`${API_BASE_URL}/api/agent/${jobId}`, {
         method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: await this.getHeaders(),
       });
 
       if (!response.ok) {
@@ -237,9 +268,7 @@ class ApiService {
     try {
       const response = await fetch(`${API_BASE_URL}/api/queue/status`, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: await this.getHeaders(),
       });
 
       if (!response.ok) {
@@ -260,9 +289,7 @@ class ApiService {
     try {
       const response = await fetch(`${API_BASE_URL}/api/health`, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: await this.getHeaders(),
       });
 
       if (!response.ok) {

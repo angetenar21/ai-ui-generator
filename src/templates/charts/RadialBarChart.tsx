@@ -48,7 +48,7 @@ const RadialBarChart: React.FC<RadialBarChartProps> = ({
   // Validate
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
-      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
+      <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
         {title && (
           <h3 className="text-2xl font-display font-semibold text-zinc-900 dark:text-white mb-2">
             {title}
@@ -89,7 +89,7 @@ const RadialBarChart: React.FC<RadialBarChartProps> = ({
     if (active && payload && payload.length > 0) {
       const data = payload[0].payload;
       return (
-        <div className="bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-3 shadow-lg">
+        <div className="bg-transparent dark:bg-transparent border border-zinc-200 dark:border-zinc-700 rounded-lg p-3 shadow-lg">
           <p className="font-semibold text-zinc-900 dark:text-white mb-1">{data.name}</p>
           <p className="text-sm text-zinc-600 dark:text-zinc-300">
             Value: <span className="font-medium text-zinc-900 dark:text-white">{data.value.toFixed(2)}</span>
@@ -101,7 +101,7 @@ const RadialBarChart: React.FC<RadialBarChartProps> = ({
   };
 
   return (
-    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
+    <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
       {/* Header */}
       {(title || description) && (
         <div className="mb-6">
