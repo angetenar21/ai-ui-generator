@@ -46,7 +46,7 @@ const HistoryPage: React.FC = () => {
       const querySnapshot = await getDocs(q);
       
       const history: GenerationHistory[] = [];
-      querySnapshot.forEach((document) => {
+      querySnapshot.forEach((document: any) => {
         const data = document.data();
         history.push({
           id: document.id,

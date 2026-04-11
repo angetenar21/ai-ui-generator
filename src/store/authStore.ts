@@ -16,7 +16,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
   isLoading: true, // true by default until Firebase verifies state
   initializeAuth: () => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user: User | null) => {
       // Sync user data to Firestore
       if (user) {
         try {
