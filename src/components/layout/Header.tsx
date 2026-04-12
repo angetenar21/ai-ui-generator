@@ -5,6 +5,7 @@ import { useAppStore } from '../../store/appStore';
 import ThemeToggle from '../ThemeToggle';
 import UserProfile from '../UserProfile';
 import ApiService from '../../services/apiService';
+import { motion } from 'framer-motion';
 
 const Header: React.FC = () => {
   const { sidebarOpen, setSidebarOpen } = useAppStore();
@@ -62,8 +63,13 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="w-full bg-white/30 dark:bg-gray-900/40 backdrop-blur-xl border-b border-white/20 dark:border-gray-800/50 px-6 py-2 flex items-center justify-between sticky top-0 z-30 flex-shrink-0 transition-colors duration-300">
-      <div className="flex items-center gap-3">
+    <motion.header 
+      initial={{ y: -20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="w-full bg-white/40 dark:bg-gray-900/40 backdrop-blur-xl border-b border-white/20 dark:border-gray-800/50 px-3 sm:px-4 md:px-6 py-2.5 flex items-center justify-between sticky top-0 z-30 flex-shrink-0 transition-colors duration-300"
+    >
+      <div className="flex items-center gap-2 sm:gap-3">
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
           className="p-2 hover:bg-white/10 dark:hover:bg-gray-700/50 rounded-lg transition-colors lg:hidden"
@@ -76,12 +82,12 @@ const Header: React.FC = () => {
           <img
             src="/doc-e-logo.png"
             alt="Doc-E.ai"
-            className="w-10 h-10 object-contain flex-shrink-0"
+            className="w-8 h-8 sm:w-10 sm:h-10 object-contain flex-shrink-0"
           />
         </Link>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
         {/* Connection Status */}
         <div className={`group flex items-center gap-0 hover:gap-2 px-2 hover:px-3 py-1.5 rounded-full transition-all duration-300 bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 border border-transparent hover:border-gray-200 dark:hover:border-gray-700`}>
           <span className={`w-2 h-2 rounded-full ${getStatusDot()}`}></span>
@@ -96,7 +102,7 @@ const Header: React.FC = () => {
         {/* User Profile */}
         <UserProfile />
       </div>
-    </header>
+    </motion.header>
   );
 };
 

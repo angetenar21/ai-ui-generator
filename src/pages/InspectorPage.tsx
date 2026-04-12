@@ -255,11 +255,11 @@ const InspectorPage: React.FC = () => {
   const jsonString = selectedComponent ? JSON.stringify(selectedComponent, null, 2) : '';
 
   return (
-    <div className="h-full w-full max-w-[1600px] mx-auto px-4 md:px-8 pt-8 pb-10 flex flex-col bg-transparent relative z-10">
+    <div className="h-full w-full max-w-[1600px] mx-auto px-3 sm:px-4 md:px-8 pt-4 sm:pt-6 md:pt-8 pb-10 flex flex-col bg-transparent relative z-10">
       {/* Header */}
       <div className="mb-6 pl-2">
         <div>
-          <h2 className="text-3xl md:text-5xl font-display font-bold text-stone-900 dark:text-white mb-2 tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-5xl font-display font-bold text-stone-900 dark:text-white mb-1 sm:mb-2 tracking-tight">
             Component Inspector
           </h2>
           <p className="text-stone-500 dark:text-gray-400 text-sm md:text-base max-w-2xl">
@@ -283,10 +283,10 @@ const InspectorPage: React.FC = () => {
           </div>
         </div>
       ) : (
-        <div className="flex-1 flex gap-6 overflow-hidden min-h-0 animate-fade-in-up">
+        <div className="flex-1 flex flex-col md:flex-row gap-3 md:gap-6 overflow-hidden min-h-0 animate-fade-in-up">
           {/* Component list (hidden in fullscreen) */}
           {!isFullscreen && (
-            <aside className="w-80 flex-shrink-0 flex flex-col gap-4 overflow-hidden">
+            <aside className="w-full md:w-72 lg:w-80 flex-shrink-0 flex flex-col gap-3 md:gap-4 overflow-hidden md:max-h-full max-h-[35vh]">
               {/* Search bar */}
               <div className="relative group flex-shrink-0">
                 <div className="absolute inset-0 bg-transparent rounded-2xl blur-xl group-focus-within:bg-orange-500/5 dark:group-focus-within:bg-orange-900/20 transition-colors" />
@@ -319,7 +319,7 @@ const InspectorPage: React.FC = () => {
                 </span>
               </div>
 
-              <div className="flex-1 flex flex-col gap-2 overflow-y-auto pr-1 scrollbar-thin scroll-smooth pb-4">
+              <div className="flex-1 flex flex-col md:flex-col gap-2 overflow-y-auto md:overflow-y-auto pr-1 scrollbar-thin scroll-smooth pb-4">
                 {filteredComponents.length === 0 ? (
                   <p className="text-xs text-stone-400 italic py-8 text-center bg-stone-50/50 dark:bg-gray-800/30 rounded-2xl border border-dashed border-stone-200 dark:border-gray-700">No results found.</p>
                 ) : (
@@ -366,13 +366,13 @@ const InspectorPage: React.FC = () => {
             {selectedComponent && (
               <div className="h-full flex flex-col relative z-20">
                 {/* Controls */}
-                <div className="flex flex-wrap items-center justify-between pb-4 mb-4 pt-1 gap-3 border-b border-stone-200/60 dark:border-gray-800/60 flex-shrink-0">
+                <div className="flex flex-wrap items-center justify-between pb-3 sm:pb-4 mb-3 sm:mb-4 pt-1 gap-2 sm:gap-3 border-b border-stone-200/60 dark:border-gray-800/60 flex-shrink-0">
                   <div className="min-w-0 flex items-center gap-4">
                     <div className="w-10 h-10 rounded-xl bg-orange-50/50 dark:bg-orange-900/20 border border-orange-100/50 dark:border-orange-800/30 flex items-center justify-center shadow-inner flex-shrink-0">
                       <Code2 className="w-5 h-5 text-orange-500" />
                     </div>
                     <div>
-                      <h3 className="text-lg md:text-xl font-display font-semibold text-stone-900 dark:text-white truncate">
+                      <h3 className="text-base sm:text-lg md:text-xl font-display font-semibold text-stone-900 dark:text-white truncate">
                         {getComponentLabel(selectedComponent)}
                       </h3>
                       <p className="text-[11px] md:text-xs text-stone-500 dark:text-gray-400 mt-0.5 truncate">
@@ -382,9 +382,9 @@ const InspectorPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 flex-shrink-0">
+                  <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0 flex-wrap">
                     {/* View mode toggle */}
-                    <div className="flex items-center gap-1 bg-stone-100/50 dark:bg-gray-900/50 rounded-xl p-1 border border-stone-200/50 dark:border-gray-700 shadow-inner">
+                    <div className="flex items-center gap-0.5 sm:gap-1 bg-stone-100/50 dark:bg-gray-900/50 rounded-xl p-0.5 sm:p-1 border border-stone-200/50 dark:border-gray-700 shadow-inner">
                       <button
                         type="button"
                         onClick={() => setViewMode('split')}
@@ -448,7 +448,7 @@ const InspectorPage: React.FC = () => {
                 </div>
 
                 {/* Content area */}
-                <div className="flex-1 flex gap-2 overflow-hidden min-h-[360px] pl-1 pb-1 pr-1">
+                <div className="flex-1 flex gap-2 overflow-hidden min-h-[200px] sm:min-h-[360px] pl-1 pb-1 pr-1">
                   {/* Code / JSON pane */}
                   {(viewMode === 'split' || viewMode === 'code') && (() => {
                     const jsxCode = specToJSX(selectedComponent);

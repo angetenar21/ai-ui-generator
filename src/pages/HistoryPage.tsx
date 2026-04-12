@@ -146,11 +146,11 @@ const HistoryPage: React.FC = () => {
   };
 
   return (
-    <div className="h-full w-full max-w-[1600px] mx-auto px-4 md:px-8 pt-8 pb-24 flex flex-col bg-transparent relative z-10 overflow-y-auto scrollbar-thin">
+    <div className="h-full w-full max-w-[1600px] mx-auto px-3 sm:px-4 md:px-8 pt-4 sm:pt-6 md:pt-8 pb-24 flex flex-col bg-transparent relative z-10 overflow-y-auto scrollbar-thin">
       {/* Header */}
-      <div className="mb-8 flex flex-wrap items-end justify-between gap-4 pl-2">
+      <div className="mb-4 sm:mb-6 md:mb-8 flex flex-wrap items-end justify-between gap-3 sm:gap-4 pl-2">
         <div>
-          <h2 className="text-3xl md:text-5xl font-display font-bold text-stone-900 dark:text-white mb-2 tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-5xl font-display font-bold text-stone-900 dark:text-white mb-1 sm:mb-2 tracking-tight">
             Chat History
           </h2>
           <p className="text-stone-500 dark:text-gray-400 text-sm md:text-base max-w-2xl">
@@ -161,11 +161,12 @@ const HistoryPage: React.FC = () => {
         {threads.length > 0 && (
           <button
             onClick={handleClearAll}
-            className="px-5 py-2.5 bg-red-50 hover:bg-red-100 dark:bg-red-900/10 dark:hover:bg-red-900/20 border border-red-200/60 dark:border-red-800/40 text-red-600 dark:text-red-400 rounded-2xl
-                     font-medium transition-all hover:scale-[1.02] active:scale-95 flex items-center gap-2 shadow-sm"
+            className="px-3 sm:px-5 py-2 sm:py-2.5 bg-red-50 hover:bg-red-100 dark:bg-red-900/10 dark:hover:bg-red-900/20 border border-red-200/60 dark:border-red-800/40 text-red-600 dark:text-red-400 rounded-2xl
+                     text-sm sm:text-base font-medium transition-all hover:scale-[1.02] active:scale-95 flex items-center gap-1.5 sm:gap-2 shadow-sm"
           >
-            <Trash2 className="w-4 h-4" />
-            Clear All
+            <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            <span className="hidden sm:inline">Clear All</span>
+            <span className="sm:hidden">Clear</span>
           </button>
         )}
       </div>
@@ -189,7 +190,7 @@ const HistoryPage: React.FC = () => {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 animate-fade-in-up">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5 animate-fade-in-up">
           {threads.map((thread) => (
             <div
               key={thread.id}

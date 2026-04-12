@@ -5,11 +5,31 @@ import ApiService from '../services/apiService';
 import StorageService from '../services/storageService';
 import { ComponentRenderer } from '../templates';
 import { useAppStore } from '../store/appStore';
-import { motion, AnimatePresence } from 'framer-motion';
+// Used for auto-closing sidebar on mobile when input is focused
+const MOBILE_BREAKPOINT = 1024;
 import ResponsiveComponentWrapper from '../components/ResponsiveComponentWrapper';
+import { motion, AnimatePresence } from 'framer-motion';
+import type { Variants } from 'framer-motion';
 import { DashboardSkeleton } from '../components/Skeleton';
 import type { ComponentSpec } from '../templates/core/types';
 import { generateUUID } from '../utils/uuid';
+
+const heroContainerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1, delayChildren: 0.1 }
+  }
+};
+
+const heroItemVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { type: "spring", stiffness: 300, damping: 24 }
+  }
+};
 
 interface ChatMessage {
   id: string;
@@ -356,37 +376,43 @@ const ChatPage: React.FC = () => {
       <div className="flex-1 overflow-y-auto scrollbar-thin pb-32 relative z-10">
         {!currentThreadId ? (
           /* Hero Section - Centered */
-          <div className="min-h-full flex flex-col items-center justify-center px-4">
+          <motion.div 
+            variants={heroContainerVariants}
+            initial="hidden"
+            animate="visible"
+            className="hero-container min-h-full flex flex-col items-center justify-center px-3 sm:px-4"
+          >
             {/* Badge */}
-            <div className="glass-light px-6 py-3 rounded-full mb-8 shadow-sm border border-orange-200/40 dark:border-orange-800/40 backdrop-blur-xl">
+            <motion.div variants={heroItemVariants} className="hero-badge glass-light px-4 sm:px-6 py-2 sm:py-3 rounded-full mb-4 sm:mb-8 shadow-sm border border-orange-200/40 dark:border-orange-800/40 backdrop-blur-xl">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-orange-500" />
                 <span className="text-sm font-medium text-stone-600 dark:text-gray-300">
                   Modern • Beautiful • AI-Powered
                 </span>
               </div>
-            </div>
+            </motion.div>
 
             {/* Main Heading */}
-            <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 text-center max-w-4xl leading-tight">
-              <span className="inline-flex items-center justify-center mr-4">
-                <Wand2 className="w-12 h-12 md:w-16 md:h-16 text-orange-500 animate-float drop-shadow-[0_0_15px_rgba(249,115,22,0.4)]" />
+            <motion.h1 variants={heroItemVariants} className="hero-heading text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-display font-semibold mb-4 sm:mb-6 text-center max-w-4xl leading-tight">
+              <span className="hero-icon inline-flex items-center justify-center mr-2 sm:mr-4">
+                <Wand2 className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-16 lg:h-16 text-orange-500 animate-float drop-shadow-[0_0_15px_rgba(249,115,22,0.4)]" />
               </span>
               <span className="text-stone-900 dark:text-white">
                 What would you like to create?
               </span>
-            </h1>
+            </motion.h1>
 
             {/* Subheading */}
-            <p className="text-stone-500 text-center mb-12 max-w-2xl leading-relaxed text-lg px-4 font-medium transition-all duration-300">
+            <motion.p variants={heroItemVariants} className="hero-subheading text-stone-500 text-center mb-6 sm:mb-12 max-w-2xl leading-relaxed text-sm sm:text-base md:text-lg px-3 sm:px-4 font-medium transition-all duration-300">
               Describe any UI component and watch AI generate it instantly with
               <span className="text-stone-400 dark:text-gray-500 block mt-1"> beautiful, production-ready designs.</span>
-            </p>
+            </motion.p>
 
             {/* Quick Start Cards */}
-            <div className="flex flex-wrap gap-3 md:gap-4 justify-center max-w-5xl px-4">
+            <div className="hero-cards grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3 md:gap-4 w-full max-w-5xl px-2 sm:px-4">
               {quickStarts.map((item, index) => (
-                <button
+                <motion.button
+                  variants={heroItemVariants}
                   key={item.label}
                   onClick={() => {
                     setInput(item.prompt);
@@ -394,31 +420,28 @@ const ChatPage: React.FC = () => {
                     setTimeout(() => handleSend(item.prompt), 50);
                   }}
                   className={`
-                    group relative px-4 py-3.5 rounded-2xl transition-all duration-300
-                    hover:scale-[1.02] hover:-translate-y-1 flex items-center gap-3
+                    hero-card group relative px-3 sm:px-4 py-2.5 sm:py-3.5 rounded-2xl transition-all duration-300
+                    hover:scale-[1.02] hover:-translate-y-1 flex items-center gap-2 sm:gap-3
                     bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl shadow-sm hover:shadow-lg
                     border border-stone-200/50 dark:border-gray-700/50
                     focus:outline-none focus:ring-2 focus:ring-orange-500/50
                   `}
-                  style={{
-                    animationDelay: `${index * 0.1}s`,
-                  }}
                 >
-                  <div className="w-10 h-10 rounded-xl bg-orange-50 dark:bg-gray-700 flex items-center justify-center group-hover:bg-gradient-to-br group-hover:from-orange-500 group-hover:to-pink-600 transition-all duration-300 group-hover:shadow-[0_0_15px_rgba(249,115,22,0.4)]">
-                    <item.icon className="w-5 h-5 text-orange-500 dark:text-gray-300 group-hover:text-white transition-colors duration-300" strokeWidth={2} />
+                  <div className="hero-card-icon w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-orange-50 dark:bg-gray-700 flex items-center justify-center group-hover:bg-gradient-to-br group-hover:from-orange-500 group-hover:to-pink-600 transition-all duration-300 group-hover:shadow-[0_0_15px_rgba(249,115,22,0.4)]">
+                    <item.icon className="w-4 h-4 sm:w-5 sm:h-5 text-orange-500 dark:text-gray-300 group-hover:text-white transition-colors duration-300" strokeWidth={2} />
                   </div>
                   <div className="text-left">
-                    <div className="font-bold text-[15px] text-stone-800 dark:text-gray-100">{item.label}</div>
-                    <div className="text-[11px] text-stone-500 dark:text-gray-400 font-medium tracking-wide">Click to try</div>
+                    <div className="hero-card-label font-bold text-[13px] sm:text-[15px] text-stone-800 dark:text-gray-100">{item.label}</div>
+                    <div className="text-[10px] sm:text-[11px] text-stone-500 dark:text-gray-400 font-medium tracking-wide hidden sm:block">Click to try</div>
                   </div>
                   <div className="absolute inset-0 rounded-2xl bg-orange-500/0 group-hover:bg-orange-500/[0.02] dark:group-hover:bg-white/5 transition-colors duration-300" />
-                </button>
+                </motion.button>
               ))}
             </div>
-          </div>
+          </motion.div>
         ) : (
           /* Messages Area */
-          <div className="flex flex-col px-4 pt-8">
+          <div className="flex flex-col px-2 sm:px-4 pt-4 sm:pt-8">
             <div className="w-full max-w-5xl mx-auto space-y-3">
               {/* Status Badge */}
               {jobStatus && (
@@ -448,7 +471,7 @@ const ChatPage: React.FC = () => {
                 >
                   {message.role === 'user' ? (
                     // User Message
-                    <div className="max-w-[75%] md:max-w-[65%] relative group">
+                    <div className="max-w-[85%] sm:max-w-[75%] md:max-w-[65%] relative group">
                       <div className="bg-gray-50/50 dark:bg-gray-900/30 text-gray-600 dark:text-gray-400 px-6 py-4 rounded-3xl rounded-tr-md shadow-sm border border-gray-100 dark:border-gray-800 backdrop-blur-sm transition-all duration-300 hover:bg-white dark:hover:bg-gray-800/50 hover:shadow-md">
                         {(() => {
                           const rawContent = message.content as string;
@@ -569,7 +592,7 @@ const ChatPage: React.FC = () => {
       </div>
 
       {/* Floating Input Bar - Absolutely Positioned */}
-      <div className="absolute bottom-6 left-0 right-0 px-4 z-30 pointer-events-none">
+      <div className="absolute bottom-3 sm:bottom-6 left-0 right-0 px-2 sm:px-4 z-[15] pointer-events-none">
         <div className="max-w-4xl mx-auto pointer-events-auto">
           <div className="relative">
             {/* Subtle glow effect */}
@@ -585,6 +608,12 @@ const ChatPage: React.FC = () => {
                   if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
                     handleSend();
+                  }
+                }}
+                onFocus={() => {
+                  // Auto-hide sidebar on mobile when user starts typing
+                  if (window.innerWidth < MOBILE_BREAKPOINT) {
+                    useAppStore.getState().setSidebarOpen(false);
                   }
                 }}
                 placeholder="Describe your perfect UI..."

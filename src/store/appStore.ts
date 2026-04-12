@@ -73,7 +73,7 @@ export const useAppStore = create<AppState>((set) => ({
     set({ theme });
   },
 
-  sidebarOpen: true,
+  sidebarOpen: false,
   setSidebarOpen: (open) => set({ sidebarOpen: open }),
 
   sidebarCollapsed: false,

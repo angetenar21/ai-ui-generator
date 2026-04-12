@@ -22,9 +22,9 @@ const AppLayout: React.FC = () => {
         </div>
 
         {/* Static Background Blobs (Shifted to Cool Tones to make Orange UI Pop) */}
-        <div className="absolute top-[-15%] left-[-10%] w-[70vw] max-w-[800px] h-[70vw] max-h-[800px] bg-teal-500/10 dark:bg-teal-400/15 rounded-full blur-[120px] md:blur-[160px]" />
-        <div className="absolute bottom-[-10%] right-[-5%] w-[60vw] max-w-[700px] h-[60vw] max-h-[700px] bg-blue-600/10 dark:bg-indigo-500/20 rounded-full blur-[100px] md:blur-[140px]" />
-        <div className="absolute top-[30%] right-[10%] w-[40vw] max-w-[400px] h-[40vw] max-h-[400px] bg-cyan-500/5 dark:bg-cyan-400/10 rounded-full blur-[80px] md:blur-[100px]" />
+        <div className="absolute top-[-15%] left-[-10%] w-[50vw] md:w-[70vw] max-w-[800px] h-[50vw] md:h-[70vw] max-h-[800px] bg-teal-500/8 md:bg-teal-500/10 dark:bg-teal-400/15 rounded-full blur-[80px] md:blur-[160px]" />
+        <div className="absolute bottom-[-10%] right-[-5%] w-[45vw] md:w-[60vw] max-w-[700px] h-[45vw] md:h-[60vw] max-h-[700px] bg-blue-600/8 md:bg-blue-600/10 dark:bg-indigo-500/20 rounded-full blur-[70px] md:blur-[140px]" />
+        <div className="absolute top-[30%] right-[10%] w-[30vw] md:w-[40vw] max-w-[400px] h-[30vw] md:h-[40vw] max-h-[400px] bg-cyan-500/5 dark:bg-cyan-400/10 rounded-full blur-[60px] md:blur-[100px]" />
       </div>
 
       {/* 100% Width Full-Space Navbar */}
@@ -38,7 +38,7 @@ const AppLayout: React.FC = () => {
         <Sidebar />
 
         {/* Main Content Area */}
-        <main className={`flex-1 ${isChatPage ? 'overflow-hidden p-0' : 'overflow-y-auto p-6'} relative min-w-0 bg-transparent animate-fade-in`}>
+        <main className={`flex-1 ${isChatPage ? 'overflow-hidden p-0' : 'overflow-y-auto p-3 sm:p-4 md:p-6'} relative min-w-0 bg-transparent animate-fade-in`}>
           <Outlet />
         </main>
       </div>
