@@ -46,7 +46,10 @@ export default function AuthPage() {
     setError('');
     try {
       await signInWithPopup(auth, provider);
-      navigate('/');
+      // Don't navigate here — let onAuthStateChanged in the auth store
+      // update isAuthenticated, which will trigger the AuthRoute guard
+      // in App.tsx to automatically redirect to '/'. This prevents the
+      // race condition where navigate fires before the store is updated.
     } catch (err: any) {
       setError(err.message || 'Authentication with provider failed.');
     }
