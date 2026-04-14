@@ -2,6 +2,7 @@ import React from 'react';
 import { ResponsiveContainer, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar } from 'recharts';
 import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
+import { useAppStore } from '@/store/appStore';
 
 interface HistogramChartPropsOld {
   /** Chart title */
@@ -147,7 +148,8 @@ const HistogramChart: React.FC<HistogramChartProps> = (props) => {
       )}
       {(() => {
         // Detect dark mode
-        const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+        const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
         const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
         const textColor = isDarkMode ? '#E5E7EB' : '#9CA3AF';
         const tooltipBg = isDarkMode ? '#1F2937' : '#FFFFFF';

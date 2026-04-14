@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { PieChart as MuiPieChart } from '@mui/x-charts/PieChart';
 import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
+import { useAppStore } from '@/store/appStore';
 
 interface PieChartProps {
   /** Chart title */
@@ -99,7 +100,8 @@ const PieChart: React.FC<PieChartProps> = ({
   }, [propWidth, propHeight]);
 
   // Detect dark mode for chart styling
-  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
   const legendTextColor = isDarkMode ? '#E5E7EB' : '#374151';
 
   // Validation

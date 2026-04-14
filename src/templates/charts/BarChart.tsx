@@ -4,6 +4,7 @@ import { processSeriesColors } from '../core/utils';
 import { getSurfaceClasses, getChartColors } from '@/theme/designTokens';
 import { getTextColorForBackground, getSecondaryTextColorForBackground } from '../core/colorUtils';
 import type { SurfaceVariant, ElevationLevel, EmphasisLevel, ChartPaletteType } from '../core/types';
+import { useAppStore } from '@/store/appStore';
 
 interface BarChartProps {
   /** Chart title */
@@ -191,7 +192,8 @@ const BarChart: React.FC<BarChartProps> = ({
   const effectiveMargin = { ...margin, bottom: bottomMargin };
 
   // Detect dark mode for chart styling
-  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
   const chartColors = {
     axisLine: isDarkMode ? '#9CA3AF' : '#6B7280',
     axisTick: isDarkMode ? '#9CA3AF' : '#6B7280',

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Funnel, Tooltip, ResponsiveContainer, FunnelChart as RechartsFunnelChart, Cell, LabelList } from 'recharts';
+import { useAppStore } from '@/store/appStore';
 
 interface FunnelChartProps {
   title?: string;
@@ -38,7 +39,8 @@ const FunnelChart: React.FC<FunnelChartProps> = ({
   legend = true,
 }) => {
   // Detect dark mode
-  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
   const textColor = isDarkMode ? '#D1D5DB' : '#374151';
   const secondaryText = isDarkMode ? '#9CA3AF' : '#6B7280';
 

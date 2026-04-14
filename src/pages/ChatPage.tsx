@@ -10,7 +10,7 @@ const MOBILE_BREAKPOINT = 1024;
 import ResponsiveComponentWrapper from '../components/ResponsiveComponentWrapper';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Variants } from 'framer-motion';
-import { DashboardSkeleton } from '../components/Skeleton';
+import { getDynamicSkeleton } from '../components/Skeleton';
 import type { ComponentSpec } from '../templates/core/types';
 import ErrorBoundary from '../components/ErrorBoundary';
 import { generateUUID } from '../utils/uuid';
@@ -41,21 +41,7 @@ interface ChatMessage {
 
 const ChatPage: React.FC = () => {
   const location = useLocation();
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  // Focus input on Cmd+K or Ctrl+K
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Focus input on Cmd+K (Mac) or Ctrl+K (Windows/Linux)
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        inputRef.current?.focus();
-      }
-    };
-    
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const {
     currentChatMessages: messages,
@@ -399,7 +385,7 @@ const ChatPage: React.FC = () => {
   return (
     <div className="relative h-full flex flex-col bg-transparent overflow-hidden">
       {/* Unified Scroll Container */}
-      <div className="flex-1 overflow-y-auto scrollbar-thin pb-32 relative z-10">
+      <div className="flex-1 overflow-y-auto scrollbar-thin pb-40 relative z-10">
         {!currentThreadId ? (
           /* Hero Section - Centered */
           <motion.div 
@@ -614,7 +600,7 @@ const ChatPage: React.FC = () => {
                   >
                     {/* Modern Skeleton UI */}
                     <div className="w-full max-w-3xl overflow-hidden mt-2">
-                      <DashboardSkeleton />
+                      {getDynamicSkeleton(messages.filter(m => m.role === 'user').pop()?.content as string || '')}
                     </div>
 
                     {/* Stop button during generation */}
@@ -646,14 +632,19 @@ const ChatPage: React.FC = () => {
             <div className="absolute inset-0 bg-orange-500/10 dark:bg-orange-500/20 rounded-full blur-xl" />
 
             {/* Input container */}
-            <div className="relative bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-2xl p-2 flex items-center gap-2 shadow-md border border-stone-200 dark:border-gray-800 focus-within:ring-1 focus-within:ring-orange-500/50 focus-within:border-orange-500/50 transition-all duration-300">
-              <input
+            <div className="relative bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-2xl p-2 flex items-end gap-2 shadow-md border border-stone-200 dark:border-gray-800 focus-within:ring-1 focus-within:ring-orange-500/50 focus-within:border-orange-500/50 transition-all duration-300">
+              <textarea
                 ref={inputRef}
-                type="text"
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
+                rows={1}
+                onChange={(e) => {
+                  setInput(e.target.value);
+                  e.target.style.height = 'auto';
+                  const newHeight = Math.min(e.target.scrollHeight, 200); // cap max height
+                  e.target.style.height = newHeight + 'px';
+                }}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
+                  if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
                     e.preventDefault();
                     handleSend();
                   }
@@ -664,9 +655,9 @@ const ChatPage: React.FC = () => {
                     useAppStore.getState().setSidebarOpen(false);
                   }
                 }}
-                placeholder={document.activeElement === inputRef.current ? "Describe your perfect UI..." : "Describe your perfect UI... (Cmd+K to focus)"}
+                placeholder={document.activeElement === inputRef.current ? "Describe your perfect UI..." : "Describe your perfect UI... (Cmd+Enter to send)"}
                 disabled={isLoading}
-                className="flex-1 bg-transparent border-0 outline-none text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 px-4 py-3 text-base font-medium"
+                className="flex-1 bg-transparent border-0 outline-none text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 px-4 py-3 text-base font-medium resize-none overflow-y-auto min-h-[48px] max-h-[200px]"
               />
 
               {/* Mic button removed — voice recording not yet implemented */}

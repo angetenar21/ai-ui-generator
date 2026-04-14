@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Gauge } from '@mui/x-charts/Gauge';
 import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
+import { useAppStore } from '@/store/appStore';
 
 interface ColorLevel {
   value: number;
@@ -162,7 +163,8 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
   const displayText = text || seriesLabel || '';
 
   // Detect dark mode for chart styling
-  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
   const gaugeStyles = {
     valueText: isDarkMode ? '#F3F4F6' : '#111827',
     referenceArc: isDarkMode ? '#374151' : '#E5E7EB',

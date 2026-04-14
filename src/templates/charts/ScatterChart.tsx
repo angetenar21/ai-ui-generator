@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ScatterChart as MuiScatterChart } from '@mui/x-charts/ScatterChart';
 import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
+import { useAppStore } from '@/store/appStore';
 
 interface ScatterChartProps {
   /** Chart title */
@@ -84,7 +85,8 @@ const ScatterChart: React.FC<ScatterChartProps> = ({
   const [chartWidth, setChartWidth] = useState(width);
 
   // Detect dark mode
-  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   useEffect(() => {
     const updateWidth = () => {

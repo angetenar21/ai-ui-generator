@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { Trash2, MessageSquare, Sparkles, AlertTriangle } from 'lucide-react';
+import { Trash2, MessageSquare, Sparkles, AlertTriangle, Search } from 'lucide-react';
 import { useAppStore } from '../store/appStore';
 import { useAuthStore } from '../store/authStore';
 import { useNavigate } from 'react-router-dom';
@@ -21,6 +21,7 @@ interface Thread {
 
 const HistoryPage: React.FC = () => {
   const [threads, setThreads] = useState<Thread[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
   const navigate = useNavigate();
@@ -162,11 +163,18 @@ const HistoryPage: React.FC = () => {
     return 'Just now';
   };
 
+  const filteredThreads = useMemo(() => {
+    if (!searchTerm.trim()) return threads;
+    return threads.filter(thread => 
+      thread.firstPrompt.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [threads, searchTerm]);
+
   return (
     <div className="h-full w-full max-w-[1600px] mx-auto px-3 sm:px-4 md:px-8 pt-4 sm:pt-6 md:pt-8 pb-24 flex flex-col bg-transparent relative z-10 overflow-y-auto scrollbar-thin">
       {/* Header */}
-      <div className="mb-4 sm:mb-6 md:mb-8 flex flex-wrap items-end justify-between gap-3 sm:gap-4 pl-2">
-        <div>
+      <div className="mb-4 sm:mb-6 md:mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4 pl-2">
+        <div className="flex-1">
           <h2 className="text-2xl sm:text-3xl md:text-5xl font-display font-bold text-stone-900 dark:text-white mb-1 sm:mb-2 tracking-tight">
             Chat History
           </h2>
@@ -175,17 +183,32 @@ const HistoryPage: React.FC = () => {
           </p>
         </div>
 
-        {threads.length > 0 && (
-          <button
-            onClick={() => setShowClearAllModal(true)}
-            className="px-3 sm:px-5 py-2 sm:py-2.5 bg-red-50 hover:bg-red-100 dark:bg-red-900/10 dark:hover:bg-red-900/20 border border-red-200/60 dark:border-red-800/40 text-red-600 dark:text-red-400 rounded-2xl
-                     text-sm sm:text-base font-medium transition-all hover:scale-[1.02] active:scale-95 flex items-center gap-1.5 sm:gap-2 shadow-sm"
-          >
-            <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-            <span className="hidden sm:inline">Clear All</span>
-            <span className="sm:hidden">Clear</span>
-          </button>
-        )}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+            <input
+              type="text"
+              placeholder="Search history..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full sm:w-64 pl-9 pr-4 py-2 sm:py-2.5 bg-white/50 dark:bg-gray-800/50 border border-stone-200/60 dark:border-gray-700/60 rounded-2xl text-sm
+                         backdrop-blur-xl transition-all focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500/50
+                         text-stone-900 dark:text-white placeholder-stone-400 dark:placeholder-gray-500 shadow-sm"
+            />
+          </div>
+
+          {threads.length > 0 && (
+            <button
+              onClick={() => setShowClearAllModal(true)}
+              className="px-3 sm:px-5 py-2 sm:py-2.5 bg-red-50 hover:bg-red-100 dark:bg-red-900/10 dark:hover:bg-red-900/20 border border-red-200/60 dark:border-red-800/40 text-red-600 dark:text-red-400 rounded-2xl
+                       text-sm sm:text-base font-medium transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-1.5 sm:gap-2 shadow-sm whitespace-nowrap"
+            >
+              <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">Clear All</span>
+              <span className="sm:hidden">Clear</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {isLoading ? (
@@ -213,9 +236,26 @@ const HistoryPage: React.FC = () => {
             </button>
           </div>
         </div>
+      ) : filteredThreads.length === 0 ? (
+        <div className="flex-1 flex items-center justify-center min-h-[400px]">
+           <div className="max-w-md w-full bg-white/40 dark:bg-gray-900/40 backdrop-blur-xl rounded-3xl p-12 text-center border border-stone-200/50 dark:border-gray-700/50 shadow-sm">
+            <h3 className="text-xl font-display font-semibold text-stone-900 dark:text-white mb-2">
+              No results found
+            </h3>
+            <p className="text-stone-500 dark:text-gray-400 leading-relaxed">
+              No chat history matches your search "{searchTerm}".
+            </p>
+            <button
+              onClick={() => setSearchTerm('')}
+              className="mt-4 px-4 py-2 text-sm font-medium text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 transition-colors"
+            >
+              Clear search
+            </button>
+          </div>
+        </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5 animate-fade-in-up">
-          {threads.map((thread) => (
+          {filteredThreads.map((thread) => (
             <div
               key={thread.id}
               className="bg-white/40 dark:bg-gray-900/40 backdrop-blur-xl rounded-[1.5rem] p-5 border border-stone-200/50 dark:border-gray-800 hover:border-orange-300/60 dark:hover:border-orange-800/60 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 cursor-pointer group relative overflow-hidden flex flex-col h-full"

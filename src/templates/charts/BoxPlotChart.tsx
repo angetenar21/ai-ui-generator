@@ -2,6 +2,7 @@ import React from 'react';
 import { ResponsiveContainer, ComposedChart, XAxis, YAxis, CartesianGrid, Tooltip, Bar, Line, Legend } from 'recharts';
 import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
+import { useAppStore } from '@/store/appStore';
 
 interface BoxPlotChartProps {
   /** Chart title */
@@ -92,7 +93,8 @@ const BoxPlotChart: React.FC<BoxPlotChartProps> = ({
         <p className="text-sm text-zinc-400 mb-4 text-center">{description}</p>
       )}
       {(() => {
-        const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+        const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
         const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
         const textColor = isDarkMode ? '#E5E7EB' : '#9CA3AF';
         const tooltipBg = isDarkMode ? '#1F2937' : '#FFFFFF';

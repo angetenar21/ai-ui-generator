@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
+import { useAppStore } from '@/store/appStore';
 
 interface SparklineChartProps {
   /** Chart title */
@@ -66,7 +67,8 @@ const SparklineChart: React.FC<SparklineChartProps> = ({
   const [chartWidth, setChartWidth] = useState(width);
 
   // Detect dark mode
-  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   // Set default color based on dark mode if not provided
   const chartColor = color || (isDarkMode ? '#60A5FA' : '#3B82F6');
@@ -168,7 +170,8 @@ const SparklineChart: React.FC<SparklineChartProps> = ({
       <div className="w-full overflow-x-auto">
         {(() => {
           try {
-            const isDark = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+            const theme = useAppStore(state => state.theme);
+  const isDark = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
             return (
               <LineChart

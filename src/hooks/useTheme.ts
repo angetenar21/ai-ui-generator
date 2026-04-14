@@ -57,28 +57,14 @@ export const useTheme = () => {
     }
   }, [theme]);
 
-  // Initialize theme immediately on first load
+  // Initialize theme from localStorage on first load
   useEffect(() => {
-    const root = document.documentElement;
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'system' | null;
-    
-    console.log('Initializing theme, saved theme:', savedTheme); // Debug log
     
     if (savedTheme) {
       setTheme(savedTheme);
-    } else {
-      // Set default to light mode if no saved theme
-      console.log('No saved theme, setting to light');
-      setTheme('light');
-      localStorage.setItem('theme', 'light');
-      root.classList.remove('dark'); // Ensure light mode is active immediately
     }
-    
-    // Force light mode if currently selected
-    if (!savedTheme || savedTheme === 'light') {
-      root.classList.remove('dark');
-      console.log('Forced light mode on initialization');
-    }
+    // If no saved theme, the store default ('light') is already applied
   }, [setTheme]);
 
   // Save theme to localStorage when it changes

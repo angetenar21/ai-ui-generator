@@ -2,6 +2,7 @@ import React from 'react';
 import { getSurfaceClasses } from '@/theme/designTokens';
 import { getTextColorForBackground, getSecondaryTextColorForBackground } from '../core/colorUtils';
 import type { SurfaceVariant, ElevationLevel, EmphasisLevel } from '../core/types';
+import { useAppStore } from '@/store/appStore';
 
 interface BulletChartProps {
   /** Chart title */
@@ -100,7 +101,8 @@ const BulletChart: React.FC<BulletChartProps> = ({
   const sortedRanges = [...defaultRanges].sort((a, b) => a.value - b.value);
 
   // Detect dark mode
-  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   // Get surface classes
   const surfaceClasses = 'bg-transparent border-transparent';

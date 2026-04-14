@@ -10,6 +10,7 @@ import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
+import { useAppStore } from '@/store/appStore';
 
 interface ComposedChartSeries {
   name: string;
@@ -86,7 +87,8 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
   }, [width]);
 
   // Detect dark mode
-  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   const safeSeries = Array.isArray(series) ? series : [];
   const safeXAxis = Array.isArray(xAxis) ? xAxis : [];

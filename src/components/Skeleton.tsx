@@ -101,3 +101,68 @@ export const DashboardSkeleton: React.FC = () => {
     </div>
   );
 };
+
+export const FormSkeleton: React.FC = () => {
+  return (
+    <div className="w-full max-w-md mx-auto space-y-6 animate-fade-in py-4 card p-6">
+      <Skeleton variant="text" width="60%" height={28} className="mb-6" />
+      
+      {[1, 2, 3, 4].map((i) => (
+        <div key={i} className="space-y-2">
+          <Skeleton variant="text" width={120} height={14} />
+          <Skeleton variant="rect" height={40} className="rounded-lg" />
+        </div>
+      ))}
+      <div className="pt-4 flex justify-end">
+        <Skeleton variant="rect" width={120} height={40} className="rounded-lg" />
+      </div>
+    </div>
+  );
+};
+
+export const ChartSkeleton: React.FC = () => {
+  return (
+    <div className="w-full space-y-6 animate-fade-in py-4 card p-6">
+      <div className="flex justify-between items-center mb-6">
+        <div className="space-y-2 w-1/2">
+          <Skeleton variant="text" width="80%" height={24} />
+          <Skeleton variant="text" width="50%" height={14} />
+        </div>
+        <Skeleton variant="rect" width={100} height={32} className="rounded-lg" />
+      </div>
+      
+      <div className="h-64 flex items-end justify-between gap-4 px-2">
+        {[40, 60, 30, 80, 50, 90, 70].map((h, i) => (
+          <Skeleton
+            key={i}
+            variant="rect"
+            height={`${h}%`}
+            className="flex-1 opacity-80"
+          />
+        ))}
+      </div>
+      <div className="flex justify-center gap-4 mt-6">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="flex items-center gap-2">
+            <Skeleton variant="circle" width={12} height={12} />
+            <Skeleton variant="text" width={60} height={12} className="mb-0" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export const getDynamicSkeleton = (prompt: string) => {
+  const lowercasePrompt = prompt.toLowerCase();
+  
+  if (lowercasePrompt.includes('form') || lowercasePrompt.includes('login') || lowercasePrompt.includes('signup') || lowercasePrompt.includes('input')) {
+    return <FormSkeleton />;
+  }
+  
+  if (lowercasePrompt.includes('chart') || lowercasePrompt.includes('graph') || lowercasePrompt.includes('plot') || lowercasePrompt.includes('analytics')) {
+    return <ChartSkeleton />;
+  }
+  
+  return <DashboardSkeleton />;
+};

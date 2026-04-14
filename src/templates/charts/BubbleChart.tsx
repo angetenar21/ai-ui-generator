@@ -2,6 +2,7 @@ import React from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
 import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
+import { useAppStore } from '@/store/appStore';
 
 interface BubbleChartProps {
   /** Chart title */
@@ -105,7 +106,8 @@ const BubbleChart: React.FC<BubbleChartProps> = ({
   }
 
   // Custom tooltip
-  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
   const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
   const textColor = isDarkMode ? '#E5E7EB' : '#374151';
   const axisColor = isDarkMode ? '#9CA3AF' : '#6B7280';

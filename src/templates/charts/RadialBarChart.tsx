@@ -1,6 +1,7 @@
 import React from 'react';
 import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
+import { useAppStore } from '@/store/appStore';
 import {
   RadialBarChart as RechartsRadialBarChart,
   RadialBar,
@@ -82,7 +83,8 @@ const RadialBarChart: React.FC<RadialBarChartProps> = ({
   }));
 
   // Custom tooltip
-  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
   const legendColor = isDarkMode ? '#E5E7EB' : '#374151';
 
   const CustomTooltip = ({ active, payload }: any) => {

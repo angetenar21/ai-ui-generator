@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
+import { useAppStore } from '@/store/appStore';
 
 interface AreaChartProps {
   /** Chart title */
@@ -195,7 +196,8 @@ const AreaChart: React.FC<AreaChartProps> = ({
   const yAxisMax = Math.ceil(maxStackedValue * 1.1); // Add 10% padding at top
 
   // Detect dark mode for chart styling
-  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
   const chartColors = {
     axisLine: isDarkMode ? '#6B7280' : '#9CA3AF',
     axisTick: isDarkMode ? '#6B7280' : '#9CA3AF',

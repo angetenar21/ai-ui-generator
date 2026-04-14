@@ -1,6 +1,7 @@
 import React from 'react';
 import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
+import { useAppStore } from '@/store/appStore';
 import {
   Radar,
   RadarChart as RechartsRadarChart,
@@ -131,7 +132,8 @@ const RadarChart: React.FC<RadarChartProps> = (props) => {
   } = props;
 
   // Detect dark mode
-  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   // Transform new format (axes + series) to Recharts format (data + dataKeys)
   let data: Array<{ subject: string; [key: string]: string | number }>;

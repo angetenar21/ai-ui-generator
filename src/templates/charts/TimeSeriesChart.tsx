@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { LineChart as MuiLineChart } from '@mui/x-charts/LineChart';
 import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
+import { useAppStore } from '@/store/appStore';
 
 interface TimeSeriesChartProps {
   /** Chart title */
@@ -77,7 +78,8 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   const [chartWidth, setChartWidth] = useState(width);
 
   // Detect dark mode
-  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   useEffect(() => {
     const updateWidth = () => {

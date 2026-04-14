@@ -1,6 +1,7 @@
 import React from 'react';
 import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
+import { useAppStore } from '@/store/appStore';
 import {
   ResponsiveContainer,
   RadarChart,
@@ -87,6 +88,17 @@ const PolarChart: React.FC<PolarChartProps> = ({
   variant = 'transparent',
   elevation = 'raised',
 }) => {
+  // Detect dark mode
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+  // Theme colors
+  const gridStroke = isDarkMode ? '#374151' : '#E5E7EB';
+  const textColor = isDarkMode ? '#D1D5DB' : '#6B7280';
+  const axisStroke = isDarkMode ? '#6B7280' : '#9CA3AF';
+  const tooltipBg = isDarkMode ? '#1F2937' : '#FFFFFF';
+  const tooltipBorder = isDarkMode ? '#374151' : '#E5E7EB';
+  const tooltipText = isDarkMode ? '#E5E7EB' : '#1F2937';
 
   // Validate series
   if (!series || !Array.isArray(series) || series.length === 0) {
@@ -191,21 +203,7 @@ const PolarChart: React.FC<PolarChartProps> = ({
       {description && (
         <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-4 text-center">{description}</p>
       )}
-      {(() => {
-        const isDarkMode =
-          typeof window !== 'undefined' &&
-          document.documentElement.classList.contains('dark');
-
-        // Theme colors
-        const gridStroke = isDarkMode ? '#374151' : '#E5E7EB';
-        const textColor = isDarkMode ? '#D1D5DB' : '#6B7280';
-        const axisStroke = isDarkMode ? '#6B7280' : '#9CA3AF';
-        const tooltipBg = isDarkMode ? '#1F2937' : '#FFFFFF';
-        const tooltipBorder = isDarkMode ? '#374151' : '#E5E7EB';
-        const tooltipText = isDarkMode ? '#E5E7EB' : '#1F2937';
-
-        return (
-          <ResponsiveContainer width="100%" height={height}>
+      <ResponsiveContainer width="100%" height={height}>
             <RadarChart
               cx="50%"
               cy="50%"
@@ -271,8 +269,6 @@ const PolarChart: React.FC<PolarChartProps> = ({
               })}
             </RadarChart>
           </ResponsiveContainer>
-        );
-      })()}
       <div className="text-xs text-zinc-400 dark:text-zinc-500 text-center mt-2">
         Polar area chart with {validSeries.length} series
       </div>

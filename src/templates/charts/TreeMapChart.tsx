@@ -2,6 +2,7 @@ import React from 'react';
 import { Treemap, ResponsiveContainer, Tooltip } from 'recharts';
 import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
+import { useAppStore } from '@/store/appStore';
 
 interface TreeMapChartProps {
   /** Chart title */
@@ -67,7 +68,8 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
 }) => {
 
   // Detect dark mode
-  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
   const textColor = isDarkMode ? '#FFFFFF' : '#000000';
   const strokeColor = isDarkMode ? '#1F2937' : '#FFFFFF';
 

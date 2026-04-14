@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Sankey, Tooltip, ResponsiveContainer } from 'recharts';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
+import { useAppStore } from '@/store/appStore';
 
 interface SankeyChartProps {
   /** Chart title */
@@ -42,7 +43,8 @@ const SankeyChart: React.FC<SankeyChartProps> = ({
   const [chartHeight, setChartHeight] = useState(height);
 
   // Detect dark mode
-  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   // Responsive sizing
   useEffect(() => {

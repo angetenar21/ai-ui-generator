@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { PieChart } from '@mui/x-charts/PieChart';
+import { useAppStore } from '@/store/appStore';
 
 interface DonutChartProps {
   /** Chart title */
@@ -99,7 +100,8 @@ const DonutChart: React.FC<DonutChartProps> = ({
   }, [propWidth, propHeight]);
 
   // Detect dark mode for chart styling
-  const isDarkMode = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
   const legendTextColor = isDarkMode ? '#E5E7EB' : '#374151';
 
   // Validation

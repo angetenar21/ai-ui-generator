@@ -68,7 +68,7 @@ export const useAppStore = create<AppState>((set) => ({
   inspectedComponent: null,
   setInspectedComponent: (component) => set({ inspectedComponent: component }),
 
-  theme: 'light', // Ensure default is light
+  theme: (typeof window !== 'undefined' && localStorage.getItem('theme') as 'light' | 'dark' | 'system') || 'light',
   setTheme: (theme) => {
     set({ theme });
   },
