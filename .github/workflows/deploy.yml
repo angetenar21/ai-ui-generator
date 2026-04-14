@@ -73,6 +73,7 @@ jobs:
             echo "=== Pulling latest code ==="
             cd /var/www/ai-ui-generator/ai-ui-generator
             git config --global --add safe.directory /var/www/ai-ui-generator/ai-ui-generator
+            git reset --hard HEAD
             git pull https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git main
 
             echo "=== Installing dependencies ==="
