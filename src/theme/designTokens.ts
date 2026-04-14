@@ -1,7 +1,7 @@
 /**
  * DESIGN TOKEN SYSTEM
  *
- * Centralized design tokens for the AI UI Generator.
+ * Centralized design tokens for the AI UI-UX Generator.
  * Provides visual hierarchy, surface variants, elevation, and color palettes.
  *
  * Usage:

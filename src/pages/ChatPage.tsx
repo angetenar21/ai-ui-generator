@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Send, Sparkles, RotateCcw, StopCircle, LayoutDashboard, FormInput, BarChart3, PanelTop, Grid, Wand2 } from 'lucide-react';
+import { Send, Sparkles, RotateCcw, StopCircle, LayoutDashboard, FormInput, BarChart3, PanelTop, Grid, Wand2, AlertTriangle } from 'lucide-react';
 import ApiService from '../services/apiService';
 import StorageService from '../services/storageService';
 import { ComponentRenderer } from '../templates';
@@ -12,6 +12,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import type { Variants } from 'framer-motion';
 import { DashboardSkeleton } from '../components/Skeleton';
 import type { ComponentSpec } from '../templates/core/types';
+import ErrorBoundary from '../components/ErrorBoundary';
 import { generateUUID } from '../utils/uuid';
 
 const heroContainerVariants: Variants = {
@@ -40,6 +41,22 @@ interface ChatMessage {
 
 const ChatPage: React.FC = () => {
   const location = useLocation();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Focus input on Cmd+K or Ctrl+K
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Focus input on Cmd+K (Mac) or Ctrl+K (Windows/Linux)
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const {
     currentChatMessages: messages,
     setCurrentChatMessages: setMessages,
@@ -306,13 +323,22 @@ const ChatPage: React.FC = () => {
       }
 
       console.error('Error:', error);
+
+      // Detect demo mode / missing API key scenarios
+      const errMsg = error instanceof Error ? error.message : 'Failed to generate UI';
+      const isDemoMode = /api.?key|gemini|model|quota|GOOGLE_API_KEY|unauthorized|500|503/i.test(errMsg);
+
+      const errorContent = isDemoMode
+        ? 'DEMO_MODE_ERROR'
+        : errMsg;
+
       const errorMessage: ChatMessage = {
         id: generateUUID(),
         role: 'assistant',
-        content: {
+        content: isDemoMode ? errorContent : {
           type: 'text',
           props: {
-            content: `Error: ${error instanceof Error ? error.message : 'Failed to generate UI'}.`,
+            content: `Error: ${errMsg}.`,
             variant: 'body',
           },
           metadata: {
@@ -330,7 +356,7 @@ const ChatPage: React.FC = () => {
       if (historyId && useAppStore.getState().activeThreads[threadId]?.historyItemId === historyId) {
         StorageService.updateHistoryItem(historyId, {
           prompt: promptText,
-          response: errorMessage.content as ComponentSpec,
+          response: (typeof errorMessage.content === 'string' ? { type: 'text', props: { content: errorMessage.content } } : errorMessage.content) as ComponentSpec,
           timestamp: Date.now(),
           status: 'error',
           threadId,
@@ -505,7 +531,26 @@ const ChatPage: React.FC = () => {
                     // Assistant Message
                     <div className="flex flex-col items-start w-full max-w-[90%] gap-2">
                       <div className="w-full">
-                        {typeof message.content === 'string' ? (
+                        {typeof message.content === 'string' && message.content === 'DEMO_MODE_ERROR' ? (
+                          <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="bg-amber-50/80 dark:bg-amber-900/20 backdrop-blur-xl rounded-2xl p-5 border border-amber-200/60 dark:border-amber-800/40 shadow-sm"
+                          >
+                            <div className="flex items-start gap-3">
+                              <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center flex-shrink-0">
+                                <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+                              </div>
+                              <div>
+                                <h4 className="text-sm font-bold text-amber-800 dark:text-amber-300 mb-1">Demo Mode Active</h4>
+                                <p className="text-sm text-amber-700/80 dark:text-amber-400/70 leading-relaxed">
+                                  Live component generation requires a valid Gemini API key configured on the backend. 
+                                  Please add your <code className="px-1 py-0.5 bg-amber-100 dark:bg-amber-900/40 rounded text-xs font-mono">GOOGLE_API_KEY</code> to continue creating!
+                                </p>
+                              </div>
+                            </div>
+                          </motion.div>
+                        ) : typeof message.content === 'string' ? (
                           <div className="glass-light rounded-3xl rounded-tl-md px-6 py-4 shadow-lg border border-gray-200/50 dark:border-gray-700/50">
                             <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
                               {message.content}
@@ -519,9 +564,11 @@ const ChatPage: React.FC = () => {
                             className="w-full relative mt-2"
                           >
                             <div className="w-full min-w-0 flex items-start justify-start">
-                              <ResponsiveComponentWrapper alignLeft={true}>
-                                <ComponentRenderer spec={message.content as ComponentSpec} />
-                              </ResponsiveComponentWrapper>
+                              <ErrorBoundary fallbackTitle="AI Component Error">
+                                <ResponsiveComponentWrapper alignLeft={true}>
+                                  <ComponentRenderer spec={message.content as ComponentSpec} />
+                                </ResponsiveComponentWrapper>
+                              </ErrorBoundary>
                             </div>
                           </motion.div>
                         )}
@@ -601,6 +648,7 @@ const ChatPage: React.FC = () => {
             {/* Input container */}
             <div className="relative bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-2xl p-2 flex items-center gap-2 shadow-md border border-stone-200 dark:border-gray-800 focus-within:ring-1 focus-within:ring-orange-500/50 focus-within:border-orange-500/50 transition-all duration-300">
               <input
+                ref={inputRef}
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -616,7 +664,7 @@ const ChatPage: React.FC = () => {
                     useAppStore.getState().setSidebarOpen(false);
                   }
                 }}
-                placeholder="Describe your perfect UI..."
+                placeholder={document.activeElement === inputRef.current ? "Describe your perfect UI..." : "Describe your perfect UI... (Cmd+K to focus)"}
                 disabled={isLoading}
                 className="flex-1 bg-transparent border-0 outline-none text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 px-4 py-3 text-base font-medium"
               />

@@ -2,10 +2,12 @@ import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Header from './Header';
 import Sidebar from './Sidebar';
+import { usePageTitle } from '../../hooks/usePageTitle';
 
 const AppLayout: React.FC = () => {
   const location = useLocation();
   const isChatPage = location.pathname === '/';
+  usePageTitle();
 
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-[#FAF9F7] dark:bg-gray-900 transition-colors duration-300 relative">

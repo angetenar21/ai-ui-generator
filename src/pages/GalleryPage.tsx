@@ -126,10 +126,25 @@ const GalleryPage: React.FC = () => {
       </div>
 
       {filteredTemplates.length === 0 && (
-        <div className="mt-12 card-sub rounded-card text-center py-16">
-          <p className="text-text-secondary text-lg">
-            No templates found matching your criteria.
-          </p>
+        <div className="flex items-center justify-center min-h-[300px] mt-8">
+          <div className="max-w-md w-full bg-white/40 dark:bg-gray-900/40 backdrop-blur-xl rounded-3xl p-10 text-center border border-stone-200/50 dark:border-gray-700/50 shadow-sm animate-fade-in-up">
+            <div className="w-14 h-14 mx-auto mb-5 rounded-2xl bg-orange-50 dark:bg-gray-900/50 flex items-center justify-center border border-orange-100/50 dark:border-gray-700 shadow-inner">
+              <Search className="w-7 h-7 text-orange-500 drop-shadow-[0_0_8px_rgba(249,115,22,0.4)]" />
+            </div>
+            <h3 className="text-xl font-display font-semibold text-stone-900 dark:text-white mb-2">
+              No templates found
+            </h3>
+            <p className="text-stone-500 dark:text-gray-400 text-sm mb-5 leading-relaxed">
+              Try a different search term or browse all categories.
+            </p>
+            <button
+              onClick={() => { setSearchQuery(''); setSelectedCategory('all'); }}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-orange-500 to-pink-500 text-white text-sm font-semibold rounded-xl hover:shadow-lg hover:shadow-orange-500/25 transition-all active:scale-95"
+            >
+              <Sparkles className="w-4 h-4" />
+              View All Templates
+            </button>
+          </div>
         </div>
       )}
     </div>

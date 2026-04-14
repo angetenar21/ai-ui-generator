@@ -9,6 +9,7 @@ import {
 import { auth, googleProvider, githubProvider } from '../config/firebase';
 import { Sparkles, Mail, Lock, Github, Chrome } from 'lucide-react';
 import { motion } from 'framer-motion';
+import Spinner from '../components/Spinner';
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -44,6 +45,7 @@ export default function AuthPage() {
 
   const handleProviderAuth = async (provider: any) => {
     setError('');
+    setIsLoading(true);
     try {
       await signInWithPopup(auth, provider);
       // Don't navigate here — let onAuthStateChanged in the auth store
@@ -52,6 +54,8 @@ export default function AuthPage() {
       // race condition where navigate fires before the store is updated.
     } catch (err: any) {
       setError(err.message || 'Authentication with provider failed.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -74,7 +78,7 @@ export default function AuthPage() {
             <Sparkles className="w-7 h-7 text-white" />
           </div>
           <h1 className="text-3xl md:text-4xl font-display font-bold text-stone-900 dark:text-white tracking-tight">
-            UI Generator
+            AI UI-UX Generator
           </h1>
         </div>
 
@@ -133,9 +137,14 @@ export default function AuthPage() {
             <button 
               type="submit" 
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white font-semibold py-3 rounded-xl transition-all mt-4 hover:shadow-lg hover:shadow-orange-500/25 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100"
+              className="w-full bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white font-semibold py-3 rounded-xl transition-all mt-4 hover:shadow-lg hover:shadow-orange-500/25 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100 flex items-center justify-center gap-2"
             >
-              {isLoading ? 'Authenticating...' : (isLogin ? 'Sign In' : 'Create Account')}
+              {isLoading ? (
+                <>
+                  <Spinner className="w-4 h-4 text-white" />
+                  Authenticating...
+                </>
+              ) : (isLogin ? 'Sign In' : 'Create Account')}
             </button>
           </form>
 
@@ -149,16 +158,18 @@ export default function AuthPage() {
           <div className="grid grid-cols-2 gap-4">
             <button 
               onClick={() => handleProviderAuth(googleProvider)}
-              type="button" 
-              className="flex items-center justify-center gap-3 bg-white dark:bg-slate-900/50 hover:bg-stone-50 dark:hover:bg-slate-800 border border-stone-200 dark:border-white/10 text-stone-700 dark:text-white font-medium py-3 rounded-xl transition-all shadow-sm hover:shadow-md"
+              type="button"
+              disabled={isLoading}
+              className="flex items-center justify-center gap-3 bg-white dark:bg-slate-900/50 hover:bg-stone-50 dark:hover:bg-slate-800 border border-stone-200 dark:border-white/10 text-stone-700 dark:text-white font-medium py-3 rounded-xl transition-all shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Chrome className="w-5 h-5 text-current opacity-80" />
               Google
             </button>
             <button 
               onClick={() => handleProviderAuth(githubProvider)}
-              type="button" 
-              className="flex items-center justify-center gap-3 bg-white dark:bg-slate-900/50 hover:bg-stone-50 dark:hover:bg-slate-800 border border-stone-200 dark:border-white/10 text-stone-700 dark:text-white font-medium py-3 rounded-xl transition-all shadow-sm hover:shadow-md"
+              type="button"
+              disabled={isLoading}
+              className="flex items-center justify-center gap-3 bg-white dark:bg-slate-900/50 hover:bg-stone-50 dark:hover:bg-slate-800 border border-stone-200 dark:border-white/10 text-stone-700 dark:text-white font-medium py-3 rounded-xl transition-all shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Github className="w-5 h-5 text-current opacity-80" />
               GitHub
@@ -169,7 +180,7 @@ export default function AuthPage() {
         
         {/* Toggle Login/Sign Up */}
         <p className="text-center text-stone-500 dark:text-neutral-400 mt-8 text-sm font-medium">
-          {isLogin ? "New to UI Generator? " : "Already have an account? "}
+          {isLogin ? "New to AI UI-UX Generator? " : "Already have an account? "}
           <button 
             onClick={() => setIsLogin(!isLogin)}
             className="text-orange-600 dark:text-orange-400 hover:text-pink-600 dark:hover:text-pink-400 font-bold transition-colors"

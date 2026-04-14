@@ -1,5 +1,5 @@
 /**
- * API Service for AI UI Generator
+ * API Service for AI UI-UX Generator
  *
  * Handles async job queue communication with the Express backend.
  * Replaces the old n8nService with a polling-based architecture.

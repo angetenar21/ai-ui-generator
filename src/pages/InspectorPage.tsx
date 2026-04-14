@@ -4,6 +4,7 @@ import { useAppStore } from '../store/appStore';
 import StorageService from '../services/storageService';
 import { ComponentRenderer } from '../templates';
 import type { ComponentSpec } from '../templates/core/types';
+import ErrorBoundary from '../components/ErrorBoundary';
 
 type ViewMode = 'split' | 'code' | 'preview';
 type CodeTab = 'jsx' | 'json';
@@ -528,7 +529,9 @@ const InspectorPage: React.FC = () => {
                         </span>
                       </div>
                       <div className="flex-1 overflow-auto p-5 scrollbar-thin relative z-20">
-                        <ComponentRenderer spec={selectedComponent} />
+                        <ErrorBoundary fallbackTitle="Preview Render Error">
+                          <ComponentRenderer spec={selectedComponent} />
+                        </ErrorBoundary>
                       </div>
                     </div>
                   )}

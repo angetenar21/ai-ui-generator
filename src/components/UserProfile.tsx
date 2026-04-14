@@ -5,6 +5,8 @@ import { useAuthStore } from '../store/authStore';
 import { auth } from '../config/firebase';
 import { updateProfile, signOut as firebaseSignOut, deleteUser, sendEmailVerification } from 'firebase/auth';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useToast } from './Toast';
+import Spinner from './Spinner';
 
 const UserProfile: React.FC = () => {
   const { user } = useAuthStore();
@@ -19,6 +21,7 @@ const UserProfile: React.FC = () => {
   const [showSignOutModal, setShowSignOutModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteInput, setDeleteInput] = useState('');
+  const { addToast } = useToast();
   
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -42,7 +45,7 @@ const UserProfile: React.FC = () => {
       setIsOpen(false);
       setShowSignOutModal(false);
     } catch (err: any) {
-      setError(err.message || 'Failed to sign out');
+      addToast(err.message || 'Failed to sign out', 'error');
     }
   };
 
@@ -54,10 +57,9 @@ const UserProfile: React.FC = () => {
       await updateProfile(auth.currentUser, { displayName: newName });
       useAuthStore.getState().setUser({ ...auth.currentUser });
       setIsEditing(false);
-      setMessage('Profile updated!');
-      setTimeout(() => setMessage(null), 3000);
+      addToast('Profile updated successfully!', 'success');
     } catch (err: any) {
-      setError(err.message || 'Failed to update profile');
+      addToast(err.message || 'Failed to update profile', 'error');
     } finally {
       setIsLoading(false);
     }
@@ -72,10 +74,10 @@ const UserProfile: React.FC = () => {
       setShowDeleteModal(false);
     } catch (err: any) {
       if (err.code === 'auth/requires-recent-login') {
-        setError('Please sign out and sign back in to delete your account.');
+        addToast('Please sign out and sign back in to delete your account.', 'warning', 6000);
         setShowDeleteModal(false);
       } else {
-        setError(err.message || 'Failed to delete account');
+        addToast(err.message || 'Failed to delete account', 'error');
       }
       setIsLoading(false);
     }
@@ -87,10 +89,9 @@ const UserProfile: React.FC = () => {
     setError(null);
     try {
       await sendEmailVerification(auth.currentUser);
-      setMessage('Verification email sent!');
-      setTimeout(() => setMessage(null), 4000);
+      addToast('Verification email sent!', 'success');
     } catch (err: any) {
-      setError(err.message || 'Failed to send verification email. Try again later.');
+      addToast(err.message || 'Failed to send verification email.', 'error');
     } finally {
       setIsLoading(false);
     }

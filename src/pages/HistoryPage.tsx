@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Trash2, MessageSquare } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { Trash2, MessageSquare, Sparkles, AlertTriangle } from 'lucide-react';
 import { useAppStore } from '../store/appStore';
 import { useAuthStore } from '../store/authStore';
 import { useNavigate } from 'react-router-dom';
 import { collection, query, where, orderBy, limit, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import type { GenerationHistory } from '../templates/core/types';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useToast } from '../components/Toast';
+import Spinner from '../components/Spinner';
 
 interface Thread {
   id: string;
@@ -18,9 +22,15 @@ interface Thread {
 const HistoryPage: React.FC = () => {
   const [threads, setThreads] = useState<Thread[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false);
   const navigate = useNavigate();
   const { setCurrentThreadId, clearGeneratedComponents, clearCurrentChatMessages, setCurrentChatInput } = useAppStore();
   const { user } = useAuthStore();
+  const { addToast } = useToast();
+
+  // Modal states
+  const [deleteThreadId, setDeleteThreadId] = useState<string | null>(null);
+  const [showClearAllModal, setShowClearAllModal] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -102,35 +112,42 @@ const HistoryPage: React.FC = () => {
     navigate('/');
   };
 
-  const handleDeleteThread = async (threadId: string) => {
-    if (confirm('Are you sure you want to delete this entire thread from the cloud?')) {
-      const thread = threads.find(t => t.id === threadId);
-      if (thread) {
-        try {
-          for (const item of thread.items) {
-            await deleteDoc(doc(db, 'components', item.id));
-          }
-          await loadThreads();
-        } catch (error) {
-          console.error('Error deleting thread:', error);
+  const handleDeleteThread = async () => {
+    if (!deleteThreadId) return;
+    setIsDeleting(true);
+    const thread = threads.find(t => t.id === deleteThreadId);
+    if (thread) {
+      try {
+        for (const item of thread.items) {
+          await deleteDoc(doc(db, 'components', item.id));
         }
+        await loadThreads();
+        addToast('Thread deleted successfully', 'success');
+      } catch (error) {
+        console.error('Error deleting thread:', error);
+        addToast('Failed to delete thread', 'error');
       }
     }
+    setDeleteThreadId(null);
+    setIsDeleting(false);
   };
 
   const handleClearAll = async () => {
-    if (confirm('Are you sure you want to permanently clear all history?')) {
-      try {
-        for (const thread of threads) {
-          for (const item of thread.items) {
-            await deleteDoc(doc(db, 'components', item.id));
-          }
+    setIsDeleting(true);
+    try {
+      for (const thread of threads) {
+        for (const item of thread.items) {
+          await deleteDoc(doc(db, 'components', item.id));
         }
-        await loadThreads();
-      } catch (error) {
-        console.error('Error clearing history:', error);
       }
+      await loadThreads();
+      addToast('All history cleared', 'success');
+    } catch (error) {
+      console.error('Error clearing history:', error);
+      addToast('Failed to clear history', 'error');
     }
+    setShowClearAllModal(false);
+    setIsDeleting(false);
   };
 
   const formatDate = (timestamp: number) => {
@@ -160,7 +177,7 @@ const HistoryPage: React.FC = () => {
 
         {threads.length > 0 && (
           <button
-            onClick={handleClearAll}
+            onClick={() => setShowClearAllModal(true)}
             className="px-3 sm:px-5 py-2 sm:py-2.5 bg-red-50 hover:bg-red-100 dark:bg-red-900/10 dark:hover:bg-red-900/20 border border-red-200/60 dark:border-red-800/40 text-red-600 dark:text-red-400 rounded-2xl
                      text-sm sm:text-base font-medium transition-all hover:scale-[1.02] active:scale-95 flex items-center gap-1.5 sm:gap-2 shadow-sm"
           >
@@ -173,7 +190,7 @@ const HistoryPage: React.FC = () => {
 
       {isLoading ? (
         <div className="flex-1 flex items-center justify-center min-h-[400px]">
-          <div className="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
       ) : threads.length === 0 ? (
         <div className="flex-1 flex items-center justify-center min-h-[400px]">
@@ -182,11 +199,18 @@ const HistoryPage: React.FC = () => {
               <MessageSquare className="w-8 h-8 text-orange-500 drop-shadow-[0_0_8px_rgba(249,115,22,0.4)]" />
             </div>
             <h3 className="text-2xl font-display font-semibold text-stone-900 dark:text-white mb-2">
-              No History Found
+              No History Yet
             </h3>
-            <p className="text-stone-500 dark:text-gray-400">
-              Create your first AI component to see it here
+            <p className="text-stone-500 dark:text-gray-400 mb-6 leading-relaxed">
+              Your AI-generated components will appear here once you start creating.
             </p>
+            <button
+              onClick={() => navigate('/')}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-orange-500 to-pink-500 text-white text-sm font-semibold rounded-xl hover:shadow-lg hover:shadow-orange-500/25 transition-all active:scale-95"
+            >
+              <Sparkles className="w-4 h-4" />
+              Generate Your First Component
+            </button>
           </div>
         </div>
       ) : (
@@ -222,7 +246,7 @@ const HistoryPage: React.FC = () => {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleDeleteThread(thread.id);
+                    setDeleteThreadId(thread.id);
                   }}
                   className="p-2 ml-auto -mr-2 bg-transparent hover:bg-red-50 dark:hover:bg-red-900/20 text-stone-400 hover:text-red-500 dark:text-gray-500 rounded-xl transition-all opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0"
                   title="Delete thread"
@@ -246,6 +270,110 @@ const HistoryPage: React.FC = () => {
             </div>
           ))}
         </div>
+      )}
+
+      {/* ─── Delete Thread Modal ─── */}
+      {createPortal(
+        <AnimatePresence>
+          {deleteThreadId && (
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15 }}
+                className="absolute inset-0 bg-stone-900/60 dark:bg-black/60 backdrop-blur-sm"
+                onClick={() => !isDeleting && setDeleteThreadId(null)}
+              />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                className="relative w-full max-w-md bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-stone-200/50 dark:border-white/10 rounded-3xl shadow-2xl overflow-hidden p-6"
+              >
+                <div className="w-12 h-12 rounded-2xl bg-red-50 dark:bg-red-500/10 flex items-center justify-center mb-4 border border-red-100 dark:border-red-500/20 shadow-inner">
+                  <Trash2 className="w-6 h-6 text-red-500" />
+                </div>
+                <h3 className="text-xl font-bold text-stone-900 dark:text-white mb-2">
+                  Delete Generation Thread?
+                </h3>
+                <p className="text-stone-500 dark:text-gray-400 text-sm mb-6 leading-relaxed">
+                  This will permanently remove this entire thread from the cloud and all devices. This action cannot be undone.
+                </p>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => setDeleteThreadId(null)}
+                    disabled={isDeleting}
+                    className="px-4 py-2.5 rounded-xl font-medium text-stone-600 dark:text-gray-300 bg-stone-100 dark:bg-white/5 hover:bg-stone-200 dark:hover:bg-white/10 transition-colors disabled:opacity-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleDeleteThread}
+                    disabled={isDeleting}
+                    className="px-4 py-2.5 rounded-xl font-medium text-white bg-red-500 hover:bg-red-600 transition-colors shadow-sm disabled:opacity-50 flex items-center justify-center gap-2"
+                  >
+                    {isDeleting ? <Spinner className="w-4 h-4 text-white" /> : 'Delete'}
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
+
+      {/* ─── Clear All Modal ─── */}
+      {createPortal(
+        <AnimatePresence>
+          {showClearAllModal && (
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15 }}
+                className="absolute inset-0 bg-stone-900/60 dark:bg-black/60 backdrop-blur-sm"
+                onClick={() => !isDeleting && setShowClearAllModal(false)}
+              />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                className="relative w-full max-w-md bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-stone-200/50 dark:border-white/10 rounded-3xl shadow-2xl overflow-hidden p-6"
+              >
+                <div className="w-12 h-12 rounded-2xl bg-red-50 dark:bg-red-500/10 flex items-center justify-center mb-4 border border-red-100 dark:border-red-500/20 shadow-inner">
+                  <AlertTriangle className="w-6 h-6 text-red-500" />
+                </div>
+                <h3 className="text-xl font-bold text-stone-900 dark:text-white mb-2">
+                  Clear All History?
+                </h3>
+                <p className="text-stone-500 dark:text-gray-400 text-sm mb-6 leading-relaxed">
+                  You are about to permanently delete all your generated components. This action affects all devices and cannot be undone.
+                </p>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => setShowClearAllModal(false)}
+                    disabled={isDeleting}
+                    className="px-4 py-2.5 rounded-xl font-medium text-stone-600 dark:text-gray-300 bg-stone-100 dark:bg-white/5 hover:bg-stone-200 dark:hover:bg-white/10 transition-colors disabled:opacity-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleClearAll}
+                    disabled={isDeleting}
+                    className="px-4 py-2.5 rounded-xl font-medium text-white bg-red-500 hover:bg-red-600 transition-colors shadow-sm disabled:opacity-50 flex items-center justify-center gap-2"
+                  >
+                    {isDeleting ? <Spinner className="w-4 h-4 text-white" /> : 'Clear All'}
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>,
+        document.body
       )}
     </div>
   );
