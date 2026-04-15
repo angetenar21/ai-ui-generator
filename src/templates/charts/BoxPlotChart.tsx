@@ -44,6 +44,15 @@ const BoxPlotChart: React.FC<BoxPlotChartProps> = ({
   variant = 'transparent',
   elevation = 'raised',
 }) => {
+  // Detect dark mode
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
+  const textColor = isDarkMode ? '#E5E7EB' : '#9CA3AF';
+  const tooltipBg = isDarkMode ? '#1F2937' : '#FFFFFF';
+  const tooltipBorder = isDarkMode ? '#374151' : '#E5E7EB';
+  const tooltipText = isDarkMode ? '#E5E7EB' : '#1F2937';
+  const legendColor = isDarkMode ? '#E5E7EB' : '#374151';
   // Validate
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
@@ -92,18 +101,7 @@ const BoxPlotChart: React.FC<BoxPlotChartProps> = ({
       {description && (
         <p className="text-sm text-zinc-400 mb-4 text-center">{description}</p>
       )}
-      {(() => {
-        const theme = useAppStore(state => state.theme);
-  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-        const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
-        const textColor = isDarkMode ? '#E5E7EB' : '#9CA3AF';
-        const tooltipBg = isDarkMode ? '#1F2937' : '#FFFFFF';
-        const tooltipBorder = isDarkMode ? '#374151' : '#E5E7EB';
-        const tooltipText = isDarkMode ? '#E5E7EB' : '#1F2937';
-        const legendColor = isDarkMode ? '#E5E7EB' : '#374151';
-
-        return (
-          <ResponsiveContainer width="100%" height={height}>
+      <ResponsiveContainer width="100%" height={height}>
             <ComposedChart data={chartData} margin={{ top: 20, right: 20, bottom: 20, left: 60 }}>
               <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
               <XAxis dataKey="name" tick={{ fill: textColor }} />
@@ -123,8 +121,6 @@ const BoxPlotChart: React.FC<BoxPlotChartProps> = ({
               <Line dataKey="max" stroke="#3b82f6" strokeWidth={1} strokeDasharray="3 3" name="Max" />
             </ComposedChart>
           </ResponsiveContainer>
-        );
-      })()}
       <div className="text-xs text-zinc-400 text-center mt-2">
         Box plot showing Min, Q1, Median, Q3, Max and IQR
       </div>

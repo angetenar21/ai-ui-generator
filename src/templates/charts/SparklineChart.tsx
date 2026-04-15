@@ -170,9 +170,6 @@ const SparklineChart: React.FC<SparklineChartProps> = ({
       <div className="w-full overflow-x-auto">
         {(() => {
           try {
-            const theme = useAppStore(state => state.theme);
-  const isDark = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-
             return (
               <LineChart
                 xAxis={[{
@@ -196,21 +193,21 @@ const SparklineChart: React.FC<SparklineChartProps> = ({
                 }]}
                 sx={{
                   '& .MuiChartsAxis-line': {
-                    stroke: isDark ? '#9CA3AF' : '#D1D5DB',
+                    stroke: isDarkMode ? '#9CA3AF' : '#D1D5DB',
                     strokeWidth: 1,
                   },
                   '& .MuiChartsAxis-tick': {
-                    stroke: isDark ? '#9CA3AF' : '#D1D5DB',
+                    stroke: isDarkMode ? '#9CA3AF' : '#D1D5DB',
                     strokeWidth: 1,
                   },
                   '& .MuiChartsAxis-tickLabel': {
-                    fill: isDark ? '#E5E7EB' : '#6B7280',
+                    fill: isDarkMode ? '#E5E7EB' : '#6B7280',
                       fontFamily: 'inherit',
                     fontSize: '11px',
                     fontWeight: 500,
                   },
                   '& .MuiChartsGrid-line': {
-                    stroke: isDark ? '#374151' : '#E5E7EB',
+                    stroke: isDarkMode ? '#374151' : '#E5E7EB',
                     opacity: 0.5,
                   },
                   '& .MuiAreaElement-root': {

@@ -41,6 +41,13 @@ const BubbleChart: React.FC<BubbleChartProps> = ({
   variant = 'transparent',
   elevation = 'raised',
 }) => {
+  // Detect dark mode (must be before any early returns)
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
+  const textColor = isDarkMode ? '#E5E7EB' : '#374151';
+  const axisColor = isDarkMode ? '#9CA3AF' : '#6B7280';
+  const legendColor = isDarkMode ? '#E5E7EB' : '#374151';
   // Validate
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
@@ -106,12 +113,6 @@ const BubbleChart: React.FC<BubbleChartProps> = ({
   }
 
   // Custom tooltip
-  const theme = useAppStore(state => state.theme);
-  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
-  const textColor = isDarkMode ? '#E5E7EB' : '#374151';
-  const axisColor = isDarkMode ? '#9CA3AF' : '#6B7280';
-  const legendColor = isDarkMode ? '#E5E7EB' : '#374151';
 
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length > 0) {

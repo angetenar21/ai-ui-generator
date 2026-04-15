@@ -46,6 +46,10 @@ const RadialBarChart: React.FC<RadialBarChartProps> = ({
   variant = 'transparent',
   elevation = 'raised',
 }) => {
+  // Detect dark mode (must be before any early returns)
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const legendColor = isDarkMode ? '#E5E7EB' : '#374151';
   // Validate
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
@@ -83,9 +87,6 @@ const RadialBarChart: React.FC<RadialBarChartProps> = ({
   }));
 
   // Custom tooltip
-  const theme = useAppStore(state => state.theme);
-  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  const legendColor = isDarkMode ? '#E5E7EB' : '#374151';
 
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length > 0) {

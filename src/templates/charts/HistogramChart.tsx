@@ -56,6 +56,15 @@ const HistogramChart: React.FC<HistogramChartProps> = (props) => {
     elevation = 'raised',
   } = props;
 
+  // Detect dark mode (must be before any early returns)
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
+  const textColor = isDarkMode ? '#E5E7EB' : '#9CA3AF';
+  const tooltipBg = isDarkMode ? '#1F2937' : '#FFFFFF';
+  const tooltipBorder = isDarkMode ? '#374151' : '#E5E7EB';
+  const tooltipText = isDarkMode ? '#E5E7EB' : '#1F2937';
+
   let chartData: Array<{ name: string;[key: string]: any }>;
   let description: string | undefined;
   let seriesKeys: Array<{ key: string; name: string; color?: string }> = [];
@@ -146,18 +155,7 @@ const HistogramChart: React.FC<HistogramChartProps> = (props) => {
       {description && (
         <p className="text-sm text-zinc-400 mb-4 text-center">{description}</p>
       )}
-      {(() => {
-        // Detect dark mode
-        const theme = useAppStore(state => state.theme);
-  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-        const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
-        const textColor = isDarkMode ? '#E5E7EB' : '#9CA3AF';
-        const tooltipBg = isDarkMode ? '#1F2937' : '#FFFFFF';
-        const tooltipBorder = isDarkMode ? '#374151' : '#E5E7EB';
-        const tooltipText = isDarkMode ? '#E5E7EB' : '#1F2937';
-
-        return (
-          <ResponsiveContainer width="100%" height={height}>
+      <ResponsiveContainer width="100%" height={height}>
             <BarChart
               data={chartData}
               margin={{ top: 20, right: 20, bottom: 20, left: 60 }}
@@ -198,8 +196,6 @@ const HistogramChart: React.FC<HistogramChartProps> = (props) => {
               ))}
             </BarChart>
           </ResponsiveContainer>
-        );
-      })()}
     </div>
   );
 };

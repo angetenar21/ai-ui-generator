@@ -79,6 +79,17 @@ const AreaChart: React.FC<AreaChartProps> = ({
   variant = 'transparent',
   elevation = 'raised',
 }) => {
+  // Detect dark mode (must be before any early returns)
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const chartColors = {
+    axisLine: isDarkMode ? '#6B7280' : '#9CA3AF',
+    axisTick: isDarkMode ? '#6B7280' : '#9CA3AF',
+    tickLabel: isDarkMode ? '#E5E7EB' : '#1F2937',
+    legendText: isDarkMode ? '#E5E7EB' : '#1F2937',
+    gridLine: isDarkMode ? '#374151' : '#E5E7EB',
+    areaOpacity: isDarkMode ? 0.35 : 0.28,
+  };
   const containerRef = useRef<HTMLDivElement>(null);
   const [chartSize, setChartSize] = useState({ width: propWidth || 500, height: propHeight ?? 320 });
 
@@ -195,17 +206,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
   }
   const yAxisMax = Math.ceil(maxStackedValue * 1.1); // Add 10% padding at top
 
-  // Detect dark mode for chart styling
-  const theme = useAppStore(state => state.theme);
-  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  const chartColors = {
-    axisLine: isDarkMode ? '#6B7280' : '#9CA3AF',
-    axisTick: isDarkMode ? '#6B7280' : '#9CA3AF',
-    tickLabel: isDarkMode ? '#E5E7EB' : '#1F2937',
-    legendText: isDarkMode ? '#E5E7EB' : '#1F2937',
-    gridLine: isDarkMode ? '#374151' : '#E5E7EB',
-    areaOpacity: isDarkMode ? 0.35 : 0.28,
-  };
+
 
   const resolvedMargin = {
     top: margin?.top ?? (legend ? 60 : 40),
