@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { PieChart as MuiPieChart } from '@mui/x-charts/PieChart';
-import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
 import { useAppStore } from '@/store/appStore';
 
@@ -18,9 +17,6 @@ interface PieChartProps {
       value: number;
       label?: string;
       color?: string;
-
-      children?: React.ReactNode;
-      renderChild?: (child: any) => React.ReactNode;
     }>;
     innerRadius?: number;
     outerRadius?: number;

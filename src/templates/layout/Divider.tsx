@@ -55,8 +55,8 @@ const Divider: React.FC<DividerProps> = ({
   };
 
   const colorClasses = {
-    default: 'bg-border-primary border-indigo-600',
-    primary: 'bg-indigo-600 border-indigo-600',
+    default: 'bg-border-primary border-orange-600',
+    primary: 'bg-orange-600 border-orange-600',
     secondary: 'bg-accent-from border-accent-from',
   };
 

@@ -41,6 +41,8 @@
     "react-markdown": "^10.1.0",
     "react-router-dom": "^7.9.5",
     "recharts": "^3.3.0",
+    "zod": "^4.3.6",
+    "zod-to-json-schema": "^3.25.2",
     "zustand": "^4.5.5"
   },
   "devDependencies": {

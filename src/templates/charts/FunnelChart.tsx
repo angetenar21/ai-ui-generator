@@ -6,8 +6,6 @@ interface FunnelChartProps {
   title?: string;
   description?: string;
   data: Array<{ name: string; value: number; color?: string 
-  children?: React.ReactNode;
-  renderChild?: (child: any) => React.ReactNode;
 }>;
   width?: number;
   height?: number;
@@ -19,7 +17,7 @@ interface FunnelChartProps {
 // Default color palette for funnel segments
 const DEFAULT_COLORS = [
   '#8b5cf6', // violet
-  '#6366f1', // indigo
+  '#6366f1', // orange
   '#3b82f6', // blue
   '#06b6d4', // cyan
   '#10b981', // emerald
@@ -53,11 +51,11 @@ const FunnelChart: React.FC<FunnelChartProps> = ({
 
   if (!validData.length) {
     return (
-      <div className="w-full bg-transparent dark:bg-transparent rounded-xl p-4 border border-zinc-200 dark:border-zinc-700">
+      <div className="w-full bg-transparent dark:bg-transparent rounded-2xl p-6 border border-zinc-200/60 dark:border-zinc-700/60 transition-all duration-300">
         {(title || description) && (
           <div className="mb-3 text-center">
             {title && (
-              <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">{title}</h3>
+              <h3 className="text-lg font-display font-semibold text-zinc-900 dark:text-zinc-100 tracking-tight">{title}</h3>
             )}
             {description && (
               <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">{description}</p>
@@ -104,7 +102,7 @@ const FunnelChart: React.FC<FunnelChartProps> = ({
     <div className="flex flex-wrap justify-center items-center gap-3 mt-4 px-2">
       {items.map((entry, index) => (
         <div key={`legend-${index}`} className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: entry.fill }} />
+          <div className="w-3 h-3 rounded-md" style={{ backgroundColor: entry.fill }} />
           <span className="text-sm font-medium" style={{ color: textColor }}>
             {entry.name}
           </span>
@@ -114,12 +112,12 @@ const FunnelChart: React.FC<FunnelChartProps> = ({
   );
 
   return (
-    <div className="w-full bg-transparent dark:bg-transparent rounded-xl p-4 border border-zinc-200 dark:border-zinc-700">
+    <div className="w-full bg-transparent dark:bg-transparent rounded-2xl p-6 border border-zinc-200/60 dark:border-zinc-700/60 transition-all duration-300">
       {/* Header */}
       {(title || description) && (
         <div className="mb-3 text-center">
           {title && (
-            <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+            <h3 className="text-lg font-display font-semibold text-zinc-900 dark:text-zinc-100 tracking-tight">
               {title}
             </h3>
           )}

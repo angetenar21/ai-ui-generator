@@ -1,5 +1,4 @@
 import React from 'react';
-import { getSurfaceClasses } from '@/theme/designTokens';
 import { getTextColorForBackground, getSecondaryTextColorForBackground } from '../core/colorUtils';
 import type { SurfaceVariant, ElevationLevel, EmphasisLevel } from '../core/types';
 import { useAppStore } from '@/store/appStore';
@@ -28,9 +27,6 @@ interface BulletChartProps {
     value: number;
     color?: string;
     label?: string;
-  
-  children?: React.ReactNode;
-  renderChild?: (child: any) => React.ReactNode;
 }>;
 
   /** Comparative measure (e.g., previous period) */
@@ -180,7 +176,7 @@ const BulletChart: React.FC<BulletChartProps> = ({
 
           {/* Main value bar */}
           <div
-            className="absolute top-1/2 -tranzinc-y-1/2 h-10 rounded-lg transition-all duration-300"
+            className="absolute top-1/2 -translate-y-1/2 h-10 rounded-lg transition-all duration-300"
             style={{
               width: `${valuePercent}%`,
               backgroundColor: valueColor,
@@ -191,7 +187,7 @@ const BulletChart: React.FC<BulletChartProps> = ({
           {/* Comparative marker */}
           {comparativePercent !== undefined && (
             <div
-              className="absolute top-1/2 -tranzinc-y-1/2 h-16 rounded-sm"
+              className="absolute top-1/2 -translate-y-1/2 h-16 rounded-sm"
               style={{
                 left: `${comparativePercent}%`,
                 width: '3px',
@@ -205,7 +201,7 @@ const BulletChart: React.FC<BulletChartProps> = ({
           {/* Target marker */}
           {targetPercent !== undefined && (
             <div
-              className="absolute top-1/2 -tranzinc-y-1/2 h-full rounded-sm"
+              className="absolute top-1/2 -translate-y-1/2 h-full rounded-sm"
               style={{
                 left: `${targetPercent}%`,
                 width: '3px',

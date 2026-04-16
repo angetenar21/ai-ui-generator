@@ -61,33 +61,33 @@ const Toggle: React.FC<ToggleProps> = ({
     small: {
       track: 'w-8 h-4',
       thumb: 'w-3 h-3',
-      translateX: 'tranzinc-x-4',
+      translateX: 'translate-x-4',
     },
     medium: {
       track: 'w-11 h-6',
       thumb: 'w-5 h-5',
-      translateX: 'tranzinc-x-5',
+      translateX: 'translate-x-5',
     },
     large: {
       track: 'w-14 h-7',
       thumb: 'w-6 h-6',
-      translateX: 'tranzinc-x-7',
+      translateX: 'translate-x-7',
     },
   };
 
   // Variant colors
   const variantClasses = {
-    default: 'bg-zinc-200 dark:bg-zinc-700',
-    primary: 'bg-indigo-600 dark:bg-indigo-500',
-    success: 'bg-green-600 dark:bg-green-500',
-    danger: 'bg-red-600 dark:bg-red-500',
+    default: 'bg-zinc-300 dark:bg-zinc-700',
+    primary: 'bg-orange-500 dark:bg-orange-500',
+    success: 'bg-green-500 dark:bg-green-500',
+    danger: 'bg-red-500 dark:bg-red-500',
   };
 
-  const activeClass = isChecked ? variantClasses[variant] : 'bg-zinc-200 dark:bg-zinc-700';
+  const activeClass = isChecked ? variantClasses[variant] : 'bg-zinc-300 dark:bg-zinc-700';
   const currentSize = sizeClasses[size];
 
   return (
-    <div className={`flex items-start gap-3 ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}>
+    <div className={`flex items-start gap-3 ${disabled ? 'opacity-60 cursor-not-allowed' : ''}`}>
       <button
         type="button"
         role="switch"
@@ -98,8 +98,8 @@ const Toggle: React.FC<ToggleProps> = ({
           ${currentSize.track}
           ${activeClass}
           relative inline-flex shrink-0 cursor-pointer rounded-full border-2 border-transparent
-          transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 
-          focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-zinc-900
+          transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2
+          focus:ring-orange-500/20 focus:ring-offset-2 dark:focus:ring-offset-zinc-900
           ${disabled ? 'cursor-not-allowed' : ''}
         `}
       >
@@ -107,9 +107,9 @@ const Toggle: React.FC<ToggleProps> = ({
           aria-hidden="true"
           className={`
             ${currentSize.thumb}
-            ${isChecked ? currentSize.translateX : 'tranzinc-x-0'}
-            pointer-events-none inline-block transform rounded-full bg-white shadow-lg ring-0 
-            transition duration-200 ease-in-out
+            ${isChecked ? currentSize.translateX : 'translate-x-0'}
+            pointer-events-none inline-block transform rounded-full bg-white shadow-sm ring-0
+            transition-transform duration-200 ease-in-out
           `}
         />
       </button>

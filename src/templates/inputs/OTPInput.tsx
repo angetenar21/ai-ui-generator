@@ -107,7 +107,7 @@ const OTPInput: React.FC<OTPInputProps> = ({
   };
 
   const sizeClasses = {
-    small: 'w-10 h-10 text-base',
+    small: 'w-10 h-10 text-lg',
     medium: 'w-12 h-12 text-xl',
     large: 'w-14 h-14 text-2xl',
   };
@@ -115,12 +115,12 @@ const OTPInput: React.FC<OTPInputProps> = ({
   return (
     <div className="my-4">
       {label && (
-        <label className="block text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-3">
+        <label className="block text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-3">
           {label}
           {required && <span className="text-red-400 ml-1">*</span>}
         </label>
       )}
-      <div className="flex gap-2 justify-center max-w-md">
+      <div className="flex gap-3 justify-center max-w-md">
         {Array.from({ length }).map((_, index) => (
           <input
             key={index}
@@ -138,11 +138,11 @@ const OTPInput: React.FC<OTPInputProps> = ({
             autoFocus={autoFocus && index === 0}
             className={`
               ${sizeClasses[size]}
-              ${error ? 'border-red-500' : 'border-zinc-600 focus:border-indigo-500'}
-              text-center font-mono font-bold text-white bg-transparent
-              border-2 rounded-lg
-              focus:outline-none focus:ring-2 focus:ring-indigo-500/50
-              disabled:opacity-50 disabled:cursor-not-allowed
+              ${error ? 'border-red-400 ring-2 ring-red-500/10' : 'border-zinc-200 dark:border-zinc-700 focus:border-orange-500'}
+              text-center font-mono font-bold text-zinc-900 dark:text-white bg-white dark:bg-zinc-900
+              border rounded-xl
+              focus:outline-none focus:ring-2 focus:ring-orange-500/20
+              disabled:opacity-60 disabled:cursor-not-allowed
               transition-all duration-200
             `.trim().replace(/\s+/g, ' ')}
           />

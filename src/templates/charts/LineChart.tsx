@@ -18,9 +18,6 @@ interface LineChartProps {
     data: (number | string | Date)[];
     label?: string;
     scaleType?: 'band' | 'linear' | 'log' | 'time';
-
-    children?: React.ReactNode;
-    renderChild?: (child: any) => React.ReactNode;
   }>;
 
   /** Series data for the lines */

@@ -90,8 +90,8 @@ const AvatarGroup: React.FC<AvatarGroupProps> = ({
     if (color) return color;
     
     const colors = [
-      'bg-indigo-600',
-      'bg-indigo-500',
+      'bg-orange-600',
+      'bg-orange-500',
       'bg-accent-purple',
       'bg-accent-pink',
       'bg-accent-from',

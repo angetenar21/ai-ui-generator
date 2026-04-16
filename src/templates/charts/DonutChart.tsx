@@ -15,9 +15,6 @@ interface DonutChartProps {
     value: number;
     label?: string;
     color?: string;
-
-    children?: React.ReactNode;
-    renderChild?: (child: any) => React.ReactNode;
   }>;
 
   /** Inner radius percentage (creates the donut hole) */
@@ -203,7 +200,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
           }}
         />
         {centerLabel && (
-          <div className="absolute top-1/3 left-1/2 transform -tranzinc-x-1/2 -tranzinc-y-1/2 text-center pointer-events-none">
+          <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none">
             <span className="text-sm font-bold text-zinc-900 dark:text-zinc-100">{centerLabel}</span>
           </div>
         )}

@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { LineChart as MuiLineChart } from '@mui/x-charts/LineChart';
-import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
 import { useAppStore } from '@/store/appStore';
 
@@ -18,8 +17,6 @@ interface TimeSeriesChartProps {
     color?: string;
     data: Array<[number | string, number]> | Array<{
       x: number | string; y: number
-      children?: React.ReactNode;
-      renderChild?: (child: any) => React.ReactNode;
     }> | Array<{ date: string; value: number }> | Array<{ month: string; value: number }> | number[];
   }>;
 

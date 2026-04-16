@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useAppStore } from '@/store/appStore';
 
 interface HeatMapChartProps {
   /** Chart title */
@@ -10,9 +11,6 @@ interface HeatMapChartProps {
   /** X-axis labels */
   xAxis?: {
     data: string[];
-
-    children?: React.ReactNode;
-    renderChild?: (child: any) => React.ReactNode;
   };
 
   /** Y-axis labels */
@@ -52,6 +50,10 @@ const HeatMapChart: React.FC<HeatMapChartProps> = ({
   visualMap,
   height = 300,
 }) => {
+  // Detect dark mode
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const labelColor = isDarkMode ? '#9ca3af' : '#6b7280';
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(0);
 
@@ -150,7 +152,7 @@ const HeatMapChart: React.FC<HeatMapChartProps> = ({
 
   const getTextColor = (value: number): string => {
     const normalized = maxValue === minValue ? 0.5 : (value - minValue) / (maxValue - minValue);
-    return normalized > 0.55 ? '#ffffff' : '#374151';
+    return normalized > 0.55 ? '#ffffff' : (isDarkMode ? '#e5e7eb' : '#374151');
   };
 
   // Responsive cell size
@@ -206,7 +208,7 @@ const HeatMapChart: React.FC<HeatMapChartProps> = ({
                       width: cellWidth,
                       textAlign: 'center',
                       fontSize: '10px',
-                      color: '#9ca3af',
+                      color: labelColor,
                       display: 'flex',
                       alignItems: 'flex-end',
                       justifyContent: 'center',

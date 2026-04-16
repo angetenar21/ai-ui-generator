@@ -102,11 +102,11 @@ const Gallery: React.FC<GalleryProps> = ({
 
   const roundedClasses = {
     false: '',
-    true: 'rounded-lg',
-    sm: 'rounded-sm',
-    md: 'rounded-md',
-    lg: 'rounded-lg',
-    xl: 'rounded-xl',
+    true: 'rounded-xl',
+    sm: 'rounded-md',
+    md: 'rounded-lg',
+    lg: 'rounded-xl',
+    xl: 'rounded-2xl',
   };
 
   const aspectRatioClasses = {
@@ -117,15 +117,15 @@ const Gallery: React.FC<GalleryProps> = ({
   };
 
   const hoverEffectClasses = {
-    zoom: 'hover:scale-110 transition-transform duration-300',
+    zoom: 'hover:scale-105 transition-transform duration-500 ease-out',
     fade: 'hover:opacity-75 transition-opacity duration-300',
-    lift: 'hover:-tranzinc-y-2 hover:shadow-2xl transition-all duration-300',
+    lift: 'hover:-translate-y-2 hover:shadow-2xl transition-all duration-300',
     none: '',
   };
 
   if (!images || images.length === 0) {
     return (
-      <div className="card border border-zinc-200 dark:border-zinc-700 rounded-xl p-12 text-center">
+      <div className="card border border-zinc-200/60 dark:border-zinc-700/60 rounded-2xl p-12 text-center shadow-sm">
         <svg className="w-20 h-20 mx-auto text-zinc-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
@@ -144,10 +144,10 @@ const Gallery: React.FC<GalleryProps> = ({
               key={category}
               onClick={() => setSelectedCategory(category || '')}
               className={`
-                px-4 py-2 rounded-full text-sm font-medium transition-all
+                px-4 py-2 rounded-full text-sm font-medium transition-all duration-300
                 ${selectedCategory === category
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-zinc-800/50 text-zinc-300 hover:bg-zinc-700/50'
+                  ? 'bg-orange-500 text-white shadow-md shadow-orange-500/25'
+                  : 'bg-zinc-100 dark:bg-zinc-800/50 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700/50'
                 }
               `.trim().replace(/\s+/g, ' ')}
             >
@@ -177,7 +177,7 @@ const Gallery: React.FC<GalleryProps> = ({
           >
             <div
               className={`
-                relative overflow-hidden bg-zinc-900
+                relative overflow-hidden bg-zinc-900 shadow-sm hover:shadow-lg transition-all duration-300
                 ${roundedClasses[rounded as keyof typeof roundedClasses] || roundedClasses.lg}
                 ${variant === 'grid' ? aspectRatioClasses[aspectRatio] : ''}
               `.trim().replace(/\s+/g, ' ')}
@@ -201,7 +201,7 @@ const Gallery: React.FC<GalleryProps> = ({
               />
 
               {/* Hover Overlay */}
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60 transition-colors duration-300 flex items-center justify-center">
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
                 <svg
                   className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                   fill="none"
@@ -252,7 +252,7 @@ const Gallery: React.FC<GalleryProps> = ({
                   e.stopPropagation();
                   handlePrevImage();
                 }}
-                className="absolute left-4 top-1/2 -tranzinc-y-1/2 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-colors backdrop-blur-sm"
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-colors backdrop-blur-sm"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -263,7 +263,7 @@ const Gallery: React.FC<GalleryProps> = ({
                   e.stopPropagation();
                   handleNextImage();
                 }}
-                className="absolute right-4 top-1/2 -tranzinc-y-1/2 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-colors backdrop-blur-sm"
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-colors backdrop-blur-sm"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -301,7 +301,7 @@ const Gallery: React.FC<GalleryProps> = ({
           </div>
 
           {/* Counter */}
-          <div className="absolute bottom-4 left-1/2 -tranzinc-x-1/2 bg-black/50 text-white text-sm px-4 py-2 rounded-full backdrop-blur-sm">
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white text-sm px-4 py-2 rounded-full backdrop-blur-sm">
             {selectedImage + 1} / {filteredImages.length}
           </div>
         </div>

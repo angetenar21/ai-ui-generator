@@ -1,6 +1,5 @@
 import React from 'react';
 import { ResponsiveContainer, ComposedChart, XAxis, YAxis, CartesianGrid, Tooltip, Bar, Line, Legend } from 'recharts';
-import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
 import { useAppStore } from '@/store/appStore';
 
@@ -19,9 +18,6 @@ interface BoxPlotChartProps {
     name: string;
     data: Array<[number, number, number, number, number]>; // [min, q1, median, q3, max]
     type?: string;
-  
-  children?: React.ReactNode;
-  renderChild?: (child: any) => React.ReactNode;
 }>;
 
   /** Chart width */

@@ -40,11 +40,11 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   };
 
   const colorClasses = {
-    primary: 'text-indigo-600 dark:text-indigo-400',
+    primary: 'text-orange-600 dark:text-orange-400',
     secondary: 'text-zinc-600 dark:text-zinc-300',
-    accent: 'text-indigo-500 dark:text-indigo-400',
+    accent: 'text-orange-500 dark:text-orange-400',
     success: 'text-green-600 dark:text-green-400',
-    warning: 'text-indigo-600 dark:text-indigo-400',
+    warning: 'text-orange-600 dark:text-orange-400',
     error: 'text-red-600 dark:text-red-400',
   };
 
@@ -98,7 +98,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
       case 'spin':
       default:
         return (
-          <div className={`${spinnerSize} ${spinnerColor} animate-spin`}>
+          <div className={`${spinnerSize} ${spinnerColor} animate-spin drop-shadow-sm`}>
             <Loader2 className="w-full h-full" />
           </div>
         );
@@ -108,13 +108,13 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   const content = (
     <div
       className={`
-        flex flex-col items-center gap-3
-        ${centered ? 'justify-center min-h-[200px]' : ''}
+        flex flex-col items-center justify-center gap-3
+        ${centered ? 'min-h-[200px]' : ''}
       `}
     >
       {renderSpinner()}
       {label && (
-        <div className="text-zinc-600 dark:text-zinc-300 text-sm font-medium">
+        <div className="text-zinc-500 dark:text-zinc-400 text-sm font-medium tracking-tight">
           {label}
         </div>
       )}
@@ -123,7 +123,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 
   if (fullScreen) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white dark:bg-zinc-900/80 backdrop-blur-sm">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md">
         {content}
       </div>
     );
@@ -131,7 +131,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 
   if (centered) {
     return (
-      <div className="flex items-center justify-center p-6 my-2">
+      <div className="flex items-center justify-center p-8 my-2">
         {content}
       </div>
     );

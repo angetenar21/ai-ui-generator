@@ -8,7 +8,6 @@ import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
-import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
 import { useAppStore } from '@/store/appStore';
 
@@ -27,9 +26,6 @@ interface ComposedChartProps {
     data: (number | string | Date)[];
     label?: string;
     scaleType?: 'band' | 'linear' | 'log' | 'time';
-
-    children?: React.ReactNode;
-    renderChild?: (child: any) => React.ReactNode;
   }>;
   yAxis?: Array<{
     type?: string;

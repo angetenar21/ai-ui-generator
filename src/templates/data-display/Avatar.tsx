@@ -93,11 +93,11 @@ const Avatar: React.FC<AvatarProps> = ({
         className={`
           ${sizeStyles[size].container}
           ${variantStyles[variant]}
-          bg-gradient-to-br from-indigo-600 to-purple-600
+          bg-gradient-to-br from-orange-600 to-purple-600
           flex items-center justify-center
           overflow-hidden
-          border border-zinc-700/50
-          ${onClick ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}
+          ring-2 ring-white dark:ring-zinc-800
+          ${onClick ? 'cursor-pointer hover:opacity-80 transition-all duration-200' : ''}
         `}
       >
         {src && !imageError ? (
@@ -122,8 +122,8 @@ const Avatar: React.FC<AvatarProps> = ({
             absolute bottom-0 right-0
             ${sizeStyles[size].status}
             ${statusStyles[status]}
-            ${variantStyles[variant]}
-            border-zinc-900
+            rounded-full
+            ring-2 ring-white dark:ring-zinc-800
           `}
         />
       )}
@@ -137,7 +137,7 @@ const Avatar: React.FC<AvatarProps> = ({
             rounded-full
             flex items-center justify-center
             font-semibold
-            border border-zinc-900
+            ring-2 ring-white dark:ring-zinc-800
           `}
         >
           {typeof badge === 'number' && badge > 99 ? '99+' : badge}

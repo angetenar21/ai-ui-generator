@@ -1,6 +1,5 @@
 import React from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
-import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
 import { useAppStore } from '@/store/appStore';
 
@@ -16,8 +15,6 @@ interface BubbleChartProps {
     label?: string;
     name?: string;
     data: Array<[number, number, number] | { value: [number, number, number]; name?: string; color?: string 
-  children?: React.ReactNode;
-  renderChild?: (child: any) => React.ReactNode;
 }>;
     color?: string;
   }>;

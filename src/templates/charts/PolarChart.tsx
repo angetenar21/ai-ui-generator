@@ -1,5 +1,4 @@
 import React from 'react';
-import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
 import { useAppStore } from '@/store/appStore';
 import {
@@ -23,9 +22,6 @@ interface PolarChartProps {
   /** Angle axis configuration */
   angleAxis?: {
     data: string[];
-  
-  children?: React.ReactNode;
-  renderChild?: (child: any) => React.ReactNode;
 } | string[];
 
   /** Radius axis configuration */

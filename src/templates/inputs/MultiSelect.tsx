@@ -64,16 +64,22 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
 
   const [internalValue, setInternalValue] = useState<Array<string | number>>(() => {
     // Priority: 1. Context data if name is provided, 2. defaultValue
-    if (name && data && data[name] !== undefined && Array.isArray(data[name])) {
-      return data[name];
+    if (name && data && data[name] !== undefined) {
+      return Array.isArray(data[name]) ? data[name] : [data[name]];
     }
-    return defaultValue || [];
+    if (defaultValue !== undefined) {
+      return Array.isArray(defaultValue) ? defaultValue : [defaultValue as any];
+    }
+    return [];
   });
 
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const selectedValues = value !== undefined ? value : internalValue;
+  const rawSelectedValues = value !== undefined ? value : internalValue;
+  const selectedValues = Array.isArray(rawSelectedValues) 
+    ? rawSelectedValues 
+    : (rawSelectedValues !== undefined && rawSelectedValues !== null ? [rawSelectedValues as any] : []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -117,21 +123,21 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   };
 
   const sizeClasses = {
-    small: 'px-3 py-1.5 text-sm',
-    medium: 'px-4 py-2 text-base',
+    small: 'px-3 py-2 text-sm',
+    medium: 'px-4 py-2.5 text-base',
     large: 'px-5 py-3 text-lg',
   };
 
   const variantClasses = {
-    outlined: `border-2 ${error ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-600'} bg-white dark:bg-zinc-800`,
-    filled: `border-b-2 ${error ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-600'} bg-zinc-100 dark:bg-zinc-800/50`,
-    standard: `border-b-2 ${error ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-600'} bg-transparent`,
+    outlined: `border ${error ? 'border-red-400 ring-2 ring-red-500/10' : 'border-zinc-200 dark:border-zinc-700'} bg-white dark:bg-zinc-900`,
+    filled: `border-b-2 ${error ? 'border-red-400' : 'border-zinc-200 dark:border-zinc-700'} bg-zinc-50 dark:bg-zinc-800/50`,
+    standard: `border-b-2 ${error ? 'border-red-400' : 'border-zinc-200 dark:border-zinc-700'} bg-transparent`,
   };
 
   return (
     <div className={`my-4 relative ${isOpen ? 'z-50' : 'z-10'} ${fullWidth ? 'w-full' : 'max-w-md'}`} ref={wrapperRef}>
       {label && (
-        <label className="block text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
+        <label className="block text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-2">
           {label}
           {required && <span className="text-red-500 dark:text-red-400 ml-1">*</span>}
         </label>
@@ -143,9 +149,9 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
             ${sizeClasses[size]}
             ${variantClasses[variant]}
             ${fullWidth ? 'w-full' : 'w-full'}
-            rounded-lg text-zinc-900 dark:text-white
-            focus:outline-none focus:ring-2 focus:ring-indigo-500/50
-            ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+            rounded-xl text-zinc-900 dark:text-white
+            focus:outline-none focus:ring-2 focus:ring-orange-500/20
+            ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}
             transition-all duration-200
             min-h-[2.5rem] flex items-center flex-wrap gap-1
           `.trim().replace(/\s+/g, ' ')}
@@ -156,7 +162,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
             getSelectedLabels().map((label, index) => (
               <span
                 key={index}
-                className="inline-flex items-center gap-1 px-2 py-1 bg-indigo-500 text-white text-sm rounded-md"
+                className="inline-flex items-center gap-1 px-3 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 text-sm font-medium rounded-full"
               >
                 {label}
                 <button
@@ -165,7 +171,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
                     e.stopPropagation();
                     handleRemoveValue(selectOptions.find(opt => opt.label === label)?.value || '');
                   }}
-                  className="hover:text-zinc-200"
+                  className="hover:text-orange-900 dark:hover:text-orange-200 transition-colors"
                 >
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -175,13 +181,13 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
             ))
           )}
         </div>
-        <div className="absolute right-3 top-1/2 -tranzinc-y-1/2 text-zinc-400 pointer-events-none">
+        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none">
           <svg className={`w-5 h-5 transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </div>
         {isOpen && (
-          <div className="absolute z-50 w-full mt-1 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-600 rounded-xl shadow-xl max-h-60 overflow-auto">
+          <div className="absolute z-50 w-full mt-1.5 bg-white dark:bg-zinc-800 border border-zinc-200/60 dark:border-zinc-700/60 rounded-xl shadow-xl shadow-black/8 dark:shadow-black/30 max-h-60 overflow-auto py-1">
             {selectOptions.map((option, index) => {
               const isSelected = selectedValues.includes(option.value);
               const isDisabled = disabled || option.disabled || (maxSelections !== undefined && selectedValues.length >= maxSelections && !isSelected);
@@ -191,9 +197,9 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
                   key={index}
                   onClick={() => !isDisabled && handleToggleOption(option.value)}
                   className={`
-                    px-4 py-2 flex items-center gap-2
-                    ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-indigo-50 dark:hover:bg-zinc-700'}
-                    ${isSelected ? 'bg-indigo-50 dark:bg-zinc-700' : ''}
+                    px-3 py-2.5 flex items-center gap-2 rounded-lg mx-1 text-sm
+                    ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-700/50'}
+                    ${isSelected ? 'bg-orange-50 dark:bg-orange-900/20' : ''}
                     transition-colors
                   `.trim().replace(/\s+/g, ' ')}
                 >
@@ -203,7 +209,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
                       checked={isSelected}
                       onChange={() => { }}
                       disabled={isDisabled}
-                      className="w-4 h-4 rounded border-2 border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-indigo-500 focus:ring-indigo-500 cursor-pointer"
+                      className="w-4 h-4 rounded border-2 border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-orange-500 focus:ring-orange-500 cursor-pointer"
                     />
                   )}
                   <span className="text-zinc-800 dark:text-zinc-300">{option.label}</span>
@@ -214,7 +220,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
         )}
       </div>
       {(helperText || (error && errorMessage)) && (
-        <p className={`mt-1 text-xs ${error ? 'text-red-500 dark:text-red-400' : 'text-zinc-500 dark:text-zinc-400'}`}>
+        <p className={`mt-1.5 text-xs ${error ? 'text-red-500 dark:text-red-400' : 'text-zinc-400 dark:text-zinc-500'}`}>
           {error && errorMessage ? errorMessage : helperText}
         </p>
       )}

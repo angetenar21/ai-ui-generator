@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
-import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
 import { useAppStore } from '@/store/appStore';
 
@@ -16,9 +15,6 @@ interface AreaChartProps {
     data: (number | string | Date)[];
     label?: string;
     scaleType?: 'band' | 'linear' | 'log' | 'time';
-
-    children?: React.ReactNode;
-    renderChild?: (child: any) => React.ReactNode;
   }>;
 
   /** Series data for the areas */

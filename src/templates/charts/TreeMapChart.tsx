@@ -1,6 +1,5 @@
 import React from 'react';
 import { Treemap, ResponsiveContainer, Tooltip } from 'recharts';
-import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
 import { useAppStore } from '@/store/appStore';
 
@@ -149,7 +148,7 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
             x={x + width / 2}
             y={y + height / 2 + 18}
             textAnchor="middle"
-            fill="#000000ff"
+            fill="#ffffffcc"
             fontSize={12}
             fontFamily="Inter, system-ui, -apple-system, sans-serif"
             style={{
@@ -177,7 +176,7 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
           data={chartData}
           dataKey="size"
           aspectRatio={4 / 3}
-          stroke="#000000ff"
+          stroke={strokeColor}
           content={<CustomContent />}
           style={{
             fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
@@ -186,12 +185,12 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
         >
           <Tooltip
             contentStyle={{
-              backgroundColor: '#ffffffff',
-              border: '1px solid #000000ff',
+              backgroundColor: isDarkMode ? '#1f2937' : '#ffffff',
+              border: `1px solid ${isDarkMode ? '#374151' : '#e5e7eb'}`,
               borderRadius: '8px',
-              color: '#d1d5db',
+              color: isDarkMode ? '#d1d5db' : '#374151',
             }}
-            labelStyle={{ color: '#111827' }}
+            labelStyle={{ color: isDarkMode ? '#f3f4f6' : '#111827' }}
           />
         </Treemap>
       </ResponsiveContainer>

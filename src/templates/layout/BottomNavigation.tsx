@@ -47,12 +47,12 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
   );
 
   const variantClasses = {
-    default: 'bg-zinc-50 dark:bg-zinc-700 border-t border-indigo-600',
-    elevated: 'bg-zinc-50 dark:bg-zinc-700 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]',
+    default: 'backdrop-blur-lg bg-white/80 dark:bg-zinc-900/80 border-t border-zinc-200/60 dark:border-zinc-700/50',
+    elevated: 'backdrop-blur-lg bg-white/80 dark:bg-zinc-900/80 shadow-[0_-4px_16px_-1px_rgba(0,0,0,0.08)]',
   };
 
   const activeColorClasses = {
-    primary: 'text-indigo-600',
+    primary: 'text-orange-500',
     accent: 'text-accent-from',
     secondary: 'text-zinc-900 dark:text-white',
   };
@@ -79,9 +79,9 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
             <button
               key={item.value}
               onClick={() => setSelectedValue(item.value)}
-              className={`flex flex-col items-center justify-center gap-1 min-w-[64px] h-full transition-colors ${isActive
+              className={`flex flex-col items-center justify-center gap-1 min-w-[64px] h-full transition-all duration-300 ease-out ${isActive
                   ? activeColorClasses[activeColor]
-                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-600 dark:text-zinc-300'
+                  : 'text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300'
                 }`}
             >
               <div className="relative">
@@ -94,7 +94,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
               </div>
               {showLabels && (
                 <span
-                  className={`text-xs font-medium ${isActive ? 'opacity-100' : 'opacity-70'
+                  className={`text-[10px] font-semibold tracking-wide ${isActive ? 'opacity-100' : 'opacity-60'
                     }`}
                 >
                   {item.label}

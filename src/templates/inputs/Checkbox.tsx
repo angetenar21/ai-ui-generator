@@ -50,15 +50,15 @@ const Checkbox: React.FC<CheckboxProps> = ({
   const sizeClasses = {
     small: 'w-4 h-4',
     medium: 'w-5 h-5',
-    large: 'w-6 h-6',
+    large: 'w-7 h-7',
   };
 
   const colorClasses = {
-    primary: 'text-indigo-600 focus:ring-indigo-500',
-    secondary: 'text-zinc-600 focus:ring-zinc-500',
-    success: 'text-green-600 focus:ring-green-500',
-    warning: 'text-yellow-600 focus:ring-yellow-500',
-    error: 'text-red-600 focus:ring-red-500',
+    primary: 'text-orange-500 focus:ring-orange-500/20',
+    secondary: 'text-zinc-600 focus:ring-zinc-500/20',
+    success: 'text-green-600 focus:ring-green-500/20',
+    warning: 'text-yellow-600 focus:ring-yellow-500/20',
+    error: 'text-red-600 focus:ring-red-500/20',
   };
 
   return (
@@ -74,16 +74,16 @@ const Checkbox: React.FC<CheckboxProps> = ({
           className={`
             ${sizeClasses[size]}
             ${colorClasses[color]}
-            ${error ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-600'}
-            rounded border-2 bg-white dark:bg-zinc-800
+            ${error ? 'border-red-400' : 'border-zinc-300 dark:border-zinc-600'}
+            rounded-md border-2 bg-white dark:bg-zinc-800
             focus:ring-2 focus:ring-offset-1
-            disabled:opacity-50 disabled:cursor-not-allowed
+            disabled:opacity-60 disabled:cursor-not-allowed
             transition-all duration-200
             cursor-pointer
           `.trim().replace(/\s+/g, ' ')}
         />
         {displayLabel && (
-          <label className="ml-2 text-sm font-semibold text-zinc-900 dark:text-zinc-100 cursor-pointer select-none">
+          <label className="ml-2.5 text-sm font-medium text-zinc-700 dark:text-zinc-300 cursor-pointer select-none">
             {displayLabel}
             {required && <span className="text-red-500 dark:text-red-400 ml-1">*</span>}
           </label>

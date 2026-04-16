@@ -79,10 +79,10 @@ const List: React.FC<ListProps> = ({
   const isSelected = (id: string) => selected.includes(id);
 
   return (
-    <div className="card border border-zinc-200 dark:border-zinc-700 rounded-2xl overflow-hidden my-4">
+    <div className="card border border-zinc-200/60 dark:border-zinc-700 rounded-2xl overflow-hidden my-4 shadow-sm">
       {title && (
-        <div className="px-6 py-4 border-b border-zinc-700/50">
-          <h3 className="text-xl font-display font-semibold text-zinc-900 dark:text-white">
+        <div className="px-6 py-4 border-b border-zinc-100/80 dark:border-zinc-700/50">
+          <h3 className="text-xl font-display font-bold tracking-tight text-zinc-900 dark:text-white">
             {title}
           </h3>
         </div>
@@ -99,12 +99,12 @@ const List: React.FC<ListProps> = ({
             onClick={() => handleItemClick(item.id, item.disabled)}
             className={`
               ${densityStyles[density]}
-              flex items-center gap-4
-              transition-colors
-              ${variant === 'divided' && index !== safeItems.length - 1 ? 'border-b border-zinc-700/30' : ''}
+              flex items-center gap-4 rounded-xl
+              transition-all duration-200
+              ${variant === 'divided' && index !== safeItems.length - 1 ? 'border-b border-zinc-100/80 dark:border-zinc-700/30' : ''}
               ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''}
-              ${!item.disabled && (selectable || onItemClick) ? 'cursor-pointer hover:bg-zinc-800/30' : ''}
-              ${isSelected(item.id) ? 'bg-indigo-900/20 border-l-4 border-l-indigo-500' : ''}
+              ${!item.disabled && (selectable || onItemClick) ? 'cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800/30' : ''}
+              ${isSelected(item.id) ? 'bg-orange-50 dark:bg-orange-900/20 border-l-4 border-l-orange-500' : ''}
             `}
           >
             {selectable && (
@@ -113,7 +113,7 @@ const List: React.FC<ListProps> = ({
                   type="checkbox"
                   checked={isSelected(item.id)}
                   onChange={() => { }}
-                  className="w-4 h-4 rounded border-zinc-600 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-zinc-900"
+                  className="w-4 h-4 rounded border-zinc-600 text-orange-600 focus:ring-orange-500 focus:ring-offset-zinc-900"
                   disabled={item.disabled}
                 />
               </div>
@@ -121,7 +121,7 @@ const List: React.FC<ListProps> = ({
 
             {item.avatar && (
               <div className="flex-shrink-0">
-                <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-indigo-600 to-purple-600">
+                <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-orange-600 to-purple-600">
                   <img
                     src={item.avatar}
                     alt={item.primary}

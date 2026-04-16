@@ -59,21 +59,21 @@ const Tabs: React.FC<TabsProps> = ({
   const variantClasses = {
     default: {
       container: 'border-b border-zinc-200 dark:border-zinc-700',
-      tab: 'px-4 py-2 border-b-2 transition-colors',
-      active: 'border-indigo-600 text-indigo-600 dark:text-indigo-400',
-      inactive: 'border-transparent text-zinc-700 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-300',
+      tab: 'px-4 py-2.5 border-b-2 transition-colors font-medium text-sm',
+      active: 'border-orange-500 text-orange-600 dark:text-orange-400',
+      inactive: 'border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-300 hover:border-zinc-300',
     },
     pills: {
-      container: 'bg-zinc-100 dark:bg-zinc-800/50 rounded-lg p-1',
-      tab: 'px-4 py-2 rounded-md transition-colors',
-      active: 'bg-indigo-600 text-white',
-      inactive: 'text-zinc-700 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700/50',
+      container: 'bg-zinc-100 dark:bg-zinc-800/50 rounded-xl p-1',
+      tab: 'px-4 py-2 rounded-lg transition-all font-medium text-sm',
+      active: 'bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white shadow-sm',
+      inactive: 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-300',
     },
     underline: {
       container: 'gap-4',
-      tab: 'px-2 py-2 border-b-2 transition-colors',
-      active: 'border-indigo-600 text-indigo-600 dark:text-indigo-400',
-      inactive: 'border-transparent text-zinc-700 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-300',
+      tab: 'px-2 py-2.5 border-b-2 transition-colors font-medium text-sm',
+      active: 'border-orange-500 text-orange-600 dark:text-orange-400',
+      inactive: 'border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-300',
     },
   };
 

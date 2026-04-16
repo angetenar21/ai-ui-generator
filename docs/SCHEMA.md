@@ -2,7 +2,7 @@
 
 This document provides the complete JSON schema reference for all components in the AI UI Generator.
 
-**Last Updated**: 2026-04-06
+**Last Updated**: 2026-04-13
 
 ## Table of Contents
 
@@ -4710,6 +4710,7 @@ Card component for displaying key insights, findings, and metrics with visual in
 | title | `string` | Yes | Card title |
 | description | `string` | Yes | Description or insight text |
 | variant | `'info' | 'success' | 'warning' | 'error' | 'neutral'` | No | Visual variant/type |
+| elevation | `ElevationLevel` | No | Elevation level for depth |
 | metric | `string` | No | Optional metric to display |
 | showIcon | `boolean` | No | Show icon |
 
@@ -4722,6 +4723,7 @@ Card component for displaying key insights, findings, and metrics with visual in
     "title": "example",
     "description": "example",
     "variant": null,
+    "elevation": null,
     "metric": "example",
     "showIcon": false
   }
@@ -4878,7 +4880,7 @@ Text component for displaying explanations, descriptions, and narrative content
 | Property | Type | Required | Description |
 |----------|------|----------|-------------|
 | content | `string` | Yes | Text content to display |
-| variant | `'body' | 'caption' | 'subtitle' | 'heading'` | No | Visual variant |
+| variant | `'body' | 'caption' | 'subtitle' | 'heading' | 'heading-1' | 'heading-2' | 'heading-3'` | No | Visual variant |
 | color | `'primary' | 'secondary' | 'muted' | 'accent'` | No | Color variant |
 | align | `'left' | 'center' | 'right'` | No | Text alignment |
 | markdown | `boolean` | No | Enable markdown-style formatting |

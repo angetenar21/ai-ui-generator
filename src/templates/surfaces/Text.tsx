@@ -7,7 +7,7 @@ interface TextProps {
   content: string;
 
   /** Visual variant */
-  variant?: 'body' | 'caption' | 'subtitle' | 'heading';
+  variant?: 'body' | 'caption' | 'subtitle' | 'heading' | 'heading-1' | 'heading-2' | 'heading-3';
 
   /** Color variant */
   color?: 'primary' | 'secondary' | 'muted' | 'accent';
@@ -39,10 +39,13 @@ const Text: React.FC<TextProps> = ({
 
   // console.log('[Text] Resolved content:', resolvedContent);
 
-  const variantClasses = {
+  const variantClasses: Record<string, string> = {
+    'heading-1': 'text-4xl md:text-5xl font-display font-bold leading-tight tracking-tight',
+    'heading-2': 'text-3xl md:text-4xl font-display font-bold leading-tight tracking-tight',
+    'heading-3': 'text-2xl md:text-3xl font-display font-semibold leading-snug',
     heading: 'text-2xl font-display font-semibold leading-tight',
     subtitle: 'text-lg font-semibold',
-    body: 'text-base',
+    body: 'text-base leading-relaxed',
     caption: 'text-sm',
   };
 
@@ -50,7 +53,7 @@ const Text: React.FC<TextProps> = ({
     primary: 'text-zinc-900 dark:text-zinc-100',
     secondary: 'text-zinc-600 dark:text-zinc-400',
     muted: 'text-zinc-500 dark:text-zinc-500',
-    accent: 'text-indigo-500 dark:text-indigo-400',
+    accent: 'text-orange-500 dark:text-orange-400',
   };
 
   const alignClasses = {
@@ -62,7 +65,7 @@ const Text: React.FC<TextProps> = ({
   // VISUAL DEBUGGING: Show error if variables match failed
   const showDebug = typeof resolvedContent === 'string' && resolvedContent.includes('{') && resolvedContent.includes('}');
 
-  const commonClasses = `${variantClasses[variant]} ${colorClasses[color]} ${alignClasses[align]} leading-relaxed`;
+  const commonClasses = `${variantClasses[variant] || variantClasses.body} ${colorClasses[color]} ${alignClasses[align]} leading-relaxed`;
 
   if (showDebug) {
     return (
@@ -86,12 +89,12 @@ const Text: React.FC<TextProps> = ({
             p: ({ children }) => <p className="mb-3 leading-relaxed">{children}</p>,
             strong: ({ children }) => <strong className="font-bold text-zinc-900 dark:text-zinc-100">{children}</strong>,
             em: ({ children }) => <em className="italic">{children}</em>,
-            code: ({ children }) => <code className="bg-zinc-100 dark:bg-zinc-700 px-1.5 py-0.5 rounded text-indigo-600 dark:text-indigo-400 font-mono text-sm">{children}</code>,
+            code: ({ children }) => <code className="bg-zinc-100 dark:bg-zinc-700 px-1.5 py-0.5 rounded text-orange-600 dark:text-orange-400 font-mono text-sm">{children}</code>,
             ul: ({ children }) => <ul className="list-disc list-inside mb-3 space-y-1">{children}</ul>,
             ol: ({ children }) => <ol className="list-decimal list-inside mb-3 space-y-1">{children}</ol>,
             li: ({ children }) => <li className="leading-relaxed">{children}</li>,
-            blockquote: ({ children }) => <blockquote className="border-l-4 border-indigo-500 pl-4 italic my-3">{children}</blockquote>,
-            a: ({ href, children }) => <a href={href} className="text-indigo-500 hover:text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-300 underline" target="_blank" rel="noopener noreferrer">{children}</a>,
+            blockquote: ({ children }) => <blockquote className="border-l-4 border-orange-500 pl-4 italic my-3">{children}</blockquote>,
+            a: ({ href, children }) => <a href={href} className="text-orange-500 hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300 underline" target="_blank" rel="noopener noreferrer">{children}</a>,
           }}
         >
           {resolvedContent}
@@ -118,7 +121,7 @@ export const metadata = {
   tags: ['text', 'typography', 'content', 'explanation'],
   propTypes: {
     content: 'string (required)',
-    variant: '"body" | "caption" | "subtitle" | "heading"',
+    variant: '"body" | "caption" | "subtitle" | "heading" | "heading-1" | "heading-2" | "heading-3"',
     color: '"primary" | "secondary" | "muted" | "accent"',
     align: '"left" | "center" | "right"',
     markdown: 'boolean',

@@ -152,20 +152,20 @@ const Video: React.FC<VideoProps> = ({
 
   const roundedClasses = {
     false: '',
-    true: 'rounded-lg',
-    sm: 'rounded-sm',
-    md: 'rounded-md',
-    lg: 'rounded-lg',
-    xl: 'rounded-xl',
+    true: 'rounded-2xl',
+    sm: 'rounded-md',
+    md: 'rounded-xl',
+    lg: 'rounded-2xl',
+    xl: 'rounded-3xl',
   };
 
   const shadowClasses = {
     false: '',
     true: 'shadow-lg',
     sm: 'shadow-sm',
-    md: 'shadow-md',
-    lg: 'shadow-lg',
-    xl: 'shadow-xl',
+    md: 'shadow-[0_4px_12px_rgba(0,0,0,0.08),0_12px_32px_rgba(0,0,0,0.12)]',
+    lg: 'shadow-[0_8px_24px_rgba(0,0,0,0.12),0_16px_48px_rgba(0,0,0,0.16)]',
+    xl: 'shadow-[0_12px_32px_rgba(0,0,0,0.15),0_24px_64px_rgba(0,0,0,0.2)]',
   };
 
   const aspectRatioClasses = {
@@ -194,7 +194,7 @@ const Video: React.FC<VideoProps> = ({
         <div className="absolute inset-0 bg-zinc-900/90 flex items-center justify-center z-10">
           <div className="text-center">
             <svg
-              className="w-16 h-16 text-indigo-500 animate-spin mx-auto mb-2"
+              className="w-16 h-16 text-orange-500 animate-spin mx-auto mb-2"
               fill="none"
               viewBox="0 0 24 24"
             >
@@ -237,7 +237,7 @@ const Video: React.FC<VideoProps> = ({
       {controls && controlsVariant !== 'default' && (
         <div
           className={`
-            absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4
+            absolute bottom-0 left-0 right-0 backdrop-blur-lg bg-black/40 p-4 rounded-b-2xl
             transition-opacity duration-300
             ${showControls ? 'opacity-100' : 'opacity-0'}
           `.trim().replace(/\s+/g, ' ')}
@@ -250,9 +250,9 @@ const Video: React.FC<VideoProps> = ({
               max={duration || 0}
               value={currentTime}
               onChange={handleSeek}
-              className="w-full h-1 bg-zinc-600 rounded-lg appearance-none cursor-pointer slider"
+              className="w-full h-1.5 bg-zinc-600/60 rounded-full appearance-none cursor-pointer slider"
               style={{
-                background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${(currentTime / duration) * 100}%, #4b5563 ${(currentTime / duration) * 100}%, #4b5563 100%)`,
+                background: `linear-gradient(to right, #fb923c 0%, #f97316 ${(currentTime / duration) * 100}%, rgba(75,85,99,0.5) ${(currentTime / duration) * 100}%, rgba(75,85,99,0.5) 100%)`,
               }}
             />
           </div>
@@ -262,14 +262,14 @@ const Video: React.FC<VideoProps> = ({
               {/* Play/Pause Button */}
               <button
                 onClick={togglePlay}
-                className="text-white hover:text-indigo-400 transition-colors"
+                className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-all duration-300 hover:scale-105"
               >
                 {isPlaying ? (
-                  <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
                   </svg>
                 ) : (
-                  <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-7 h-7 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M8 5v14l11-7z" />
                   </svg>
                 )}
@@ -277,7 +277,7 @@ const Video: React.FC<VideoProps> = ({
 
               {/* Volume Control */}
               <div className="flex items-center gap-2">
-                <button onClick={toggleMute} className="text-white hover:text-indigo-400 transition-colors">
+                <button onClick={toggleMute} className="text-white hover:text-orange-400 transition-all duration-300">
                   {isMuted || volume === 0 ? (
                     <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
@@ -296,7 +296,7 @@ const Video: React.FC<VideoProps> = ({
                     step="0.1"
                     value={volume}
                     onChange={handleVolumeChange}
-                    className="w-20 h-1 bg-zinc-600 rounded-lg appearance-none cursor-pointer"
+                    className="w-20 h-1 bg-zinc-600/60 rounded-full appearance-none cursor-pointer"
                   />
                 )}
               </div>
@@ -310,7 +310,7 @@ const Video: React.FC<VideoProps> = ({
             {/* Fullscreen Button */}
             <button
               onClick={toggleFullscreen}
-              className="text-white hover:text-indigo-400 transition-colors"
+              className="text-white hover:text-orange-400 transition-all duration-300 p-2 rounded-lg hover:bg-white/10"
             >
               {isFullscreen ? (
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -330,9 +330,9 @@ const Video: React.FC<VideoProps> = ({
       {!isPlaying && !controls && (
         <button
           onClick={togglePlay}
-          className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/50 transition-colors group"
+          className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/50 transition-all duration-300 group"
         >
-          <svg className="w-20 h-20 text-white group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+          <svg className="w-20 h-20 text-white group-hover:scale-110 transition-transform duration-300 drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
             <path d="M8 5v14l11-7z" />
           </svg>
         </button>

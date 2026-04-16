@@ -14309,6 +14309,12 @@ const components = {
         "required": false,
         "tsType": "'info' | 'success' | 'warning' | 'error' | 'neutral'"
       },
+      "elevation": {
+        "type": "ElevationLevel",
+        "description": "Elevation level for depth",
+        "required": false,
+        "tsType": "ElevationLevel"
+      },
       "metric": {
         "type": "string",
         "description": "Optional metric to display",
@@ -14337,6 +14343,11 @@ const components = {
         "variant": {
           "type": "'info' | 'success' | 'warning' | 'error' | 'neutral'",
           "description": "Visual variant/type",
+          "optional": true
+        },
+        "elevation": {
+          "type": "ElevationLevel",
+          "description": "Elevation level for depth",
           "optional": true
         },
         "metric": {
@@ -14760,10 +14771,10 @@ const components = {
         "tsType": "string"
       },
       "variant": {
-        "type": "'body' | 'caption' | 'subtitle' | 'heading'",
+        "type": "'body' | 'caption' | 'subtitle' | 'heading' | 'heading-1' | 'heading-2' | 'heading-3'",
         "description": "Visual variant",
         "required": false,
-        "tsType": "'body' | 'caption' | 'subtitle' | 'heading'"
+        "tsType": "'body' | 'caption' | 'subtitle' | 'heading' | 'heading-1' | 'heading-2' | 'heading-3'"
       },
       "color": {
         "type": "'primary' | 'secondary' | 'muted' | 'accent'",
@@ -14804,7 +14815,7 @@ const components = {
           "optional": false
         },
         "variant": {
-          "type": "'body' | 'caption' | 'subtitle' | 'heading'",
+          "type": "'body' | 'caption' | 'subtitle' | 'heading' | 'heading-1' | 'heading-2' | 'heading-3'",
           "description": "Visual variant",
           "optional": true
         },

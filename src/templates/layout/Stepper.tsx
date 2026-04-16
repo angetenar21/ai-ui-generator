@@ -48,18 +48,18 @@ const Stepper: React.FC<StepperProps> = ({
   const sizeClasses = {
     small: {
       text: 'text-xs',
-      icon: 'w-6 h-6 text-xs',
+      icon: 'w-7 h-7 text-xs',
       connector: orientation === 'horizontal' ? 'h-0.5' : 'w-0.5',
     },
     medium: {
       text: 'text-sm',
-      icon: 'w-8 h-8 text-sm',
+      icon: 'w-10 h-10 text-sm',
       connector: orientation === 'horizontal' ? 'h-0.5' : 'w-0.5',
     },
     large: {
       text: 'text-base',
-      icon: 'w-10 h-10 text-base',
-      connector: orientation === 'horizontal' ? 'h-1' : 'w-1',
+      icon: 'w-12 h-12 text-base',
+      connector: orientation === 'horizontal' ? 'h-0.5' : 'w-0.5',
     },
   };
 
@@ -83,20 +83,20 @@ const Stepper: React.FC<StepperProps> = ({
   const getStepColor = (status: string) => {
     switch (status) {
       case 'completed':
-        return 'bg-indigo-600 text-white border-indigo-600';
+        return 'bg-orange-500 text-white border-orange-500 shadow-sm';
       case 'active':
-        return 'bg-accent-from text-white border-accent-from';
+        return 'bg-orange-500 text-white border-orange-500 ring-4 ring-orange-500/20';
       case 'error':
-        return 'bg-red-500 text-white border-red-500';
+        return 'bg-red-500 text-white border-red-500 ring-4 ring-red-500/20';
       default:
-        return 'bg-zinc-50 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-400 border-indigo-600';
+        return 'bg-zinc-100 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-400 border-zinc-200 dark:border-zinc-600';
     }
   };
 
   const getConnectorColor = (index: number) => {
     return index < activeStep
-      ? 'bg-indigo-600'
-      : 'bg-border-primary';
+      ? 'bg-orange-500'
+      : 'bg-zinc-200 dark:bg-zinc-700';
   };
 
   if (orientation === 'vertical') {
@@ -110,19 +110,20 @@ const Stepper: React.FC<StepperProps> = ({
             <div key={index} className="flex gap-4">
               <div className="flex flex-col items-center">
                 <div
-                  className={`${sizeClasses[size].icon} rounded-full border-2 flex items-center justify-center font-semibold ${getStepColor(status)}`}
+                  className={`${sizeClasses[size].icon} rounded-full border-2 flex items-center justify-center font-bold transition-all duration-300 ease-out ${getStepColor(status)}`}
                 >
-                  {step.icon || (showNumbers && index + 1)}
-                  {status === 'completed' && !step.icon && '✓'}
+                  {status === 'completed' && !step.icon ? (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>
+                  ) : (step.icon || (showNumbers && index + 1))}
                 </div>
                 {!isLast && (
                   <div
-                    className={`flex-1 ${sizeClasses[size].connector} min-h-8 ${getConnectorColor(index)}`}
+                    className={`flex-1 ${sizeClasses[size].connector} min-h-8 ${getConnectorColor(index)} transition-colors duration-300`}
                   />
                 )}
               </div>
               <div className="flex-1 pb-4">
-                <div className="font-semibold text-zinc-900 dark:text-white">{step.label}</div>
+                <div className="font-display font-bold tracking-tight text-zinc-900 dark:text-white">{step.label}</div>
                 {step.description && (
                   <div className="text-zinc-600 dark:text-zinc-300 mt-1">{step.description}</div>
                 )}
@@ -145,13 +146,14 @@ const Stepper: React.FC<StepperProps> = ({
           <React.Fragment key={index}>
             <div className="flex flex-col items-center gap-2">
               <div
-                className={`${sizeClasses[size].icon} rounded-full border-2 flex items-center justify-center font-semibold ${getStepColor(status)}`}
+                className={`${sizeClasses[size].icon} rounded-full border-2 flex items-center justify-center font-bold transition-all duration-300 ease-out ${getStepColor(status)}`}
               >
-                {step.icon || (showNumbers && index + 1)}
-                {status === 'completed' && !step.icon && '✓'}
+                {status === 'completed' && !step.icon ? (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>
+                ) : (step.icon || (showNumbers && index + 1))}
               </div>
               <div className="text-center max-w-24">
-                <div className="font-semibold text-zinc-900 dark:text-white truncate">
+                <div className="font-display font-bold tracking-tight text-zinc-900 dark:text-white truncate">
                   {step.label}
                 </div>
                 {step.description && variant !== 'simple' && (
@@ -163,7 +165,7 @@ const Stepper: React.FC<StepperProps> = ({
             </div>
             {!isLast && (
               <div
-                className={`flex-1 ${sizeClasses[size].connector} min-w-8 mx-2 ${getConnectorColor(index)}`}
+                className={`flex-1 h-0.5 min-w-8 mx-2 ${getConnectorColor(index)} transition-colors duration-300`}
               />
             )}
           </React.Fragment>

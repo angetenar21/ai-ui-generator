@@ -60,11 +60,12 @@ const OrgChart: React.FC<OrgChartProps> = ({
           onMouseEnter={() => setHoveredNode(node.id)}
           onMouseLeave={() => setHoveredNode(null)}
           className={`
-            relative bg-zinc-800/50 border-2 border-zinc-700/50
-            rounded-xl p-4 min-w-[240px] max-w-[280px]
-            cursor-pointer transition-all duration-200
-            ${isHovered ? 'border-indigo-500 shadow-lg shadow-indigo-500/20 scale-105' : ''}
-            ${level === 0 ? 'bg-gradient-to-br from-indigo-900/50 to-purple-900/50 border-indigo-600' : ''}
+            relative bg-white dark:bg-zinc-800/50 border border-zinc-200/60 dark:border-zinc-700/50
+            rounded-2xl p-4 min-w-[240px] max-w-[280px]
+            cursor-pointer transition-all duration-300
+            shadow-md hover:shadow-lg
+            ${isHovered ? 'border-orange-500 shadow-lg shadow-orange-500/20 -translate-y-0.5' : ''}
+            ${level === 0 ? 'bg-gradient-to-br from-orange-50 to-purple-50 dark:from-orange-900/50 dark:to-purple-900/50 border-orange-300 dark:border-orange-600' : ''}
           `}
         >
           <div className="flex items-start gap-3">
@@ -77,7 +78,7 @@ const OrgChart: React.FC<OrgChartProps> = ({
                   className="w-12 h-12 rounded-full object-cover"
                 />
               ) : (
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-600 to-purple-600 flex items-center justify-center">
                   <span className="text-white text-lg font-bold">
                     {node.name
                       .split(' ')
@@ -92,7 +93,7 @@ const OrgChart: React.FC<OrgChartProps> = ({
 
             {/* Info */}
             <div className="flex-1 min-w-0">
-              <h4 className="text-white font-semibold text-sm truncate">
+              <h4 className="text-zinc-900 dark:text-white font-semibold text-sm truncate">
                 {node.name}
               </h4>
               <p className="text-zinc-400 text-xs truncate mt-0.5">
@@ -151,7 +152,7 @@ const OrgChart: React.FC<OrgChartProps> = ({
 
           {/* Reports count badge */}
           {hasChildren && (
-            <div className="absolute -bottom-2 right-4 bg-indigo-600 text-white text-xs font-semibold px-2 py-0.5 rounded-full border-2 border-zinc-900">
+            <div className="absolute -bottom-2 right-4 bg-orange-600 text-white text-xs font-semibold px-2 py-0.5 rounded-full ring-2 ring-white dark:ring-zinc-900 shadow-sm">
               {node.children!.length}
             </div>
           )}
@@ -161,13 +162,13 @@ const OrgChart: React.FC<OrgChartProps> = ({
         {hasChildren && isExpanded && (
           <>
             {/* Vertical connector */}
-            <div className="w-0.5 h-8 bg-zinc-600" />
+            <div className="w-0.5 h-8 bg-gradient-to-b from-zinc-300 to-zinc-200 dark:from-zinc-600 dark:to-zinc-700" />
 
             {/* Horizontal line */}
             <div className="relative w-full">
               {node.children!.length > 1 && (
                 <div
-                  className="absolute top-0 h-0.5 bg-zinc-600"
+                  className="absolute top-0 h-0.5 bg-gradient-to-r from-zinc-300 to-zinc-200 dark:from-zinc-600 dark:to-zinc-700"
                   style={{
                     left: '50%',
                     right: '50%',
@@ -182,7 +183,7 @@ const OrgChart: React.FC<OrgChartProps> = ({
                 {node.children!.map((child) => (
                   <div key={child.id} className="relative">
                     {/* Vertical connector to child */}
-                    <div className="absolute -top-8 left-1/2 w-0.5 h-8 bg-zinc-600 -tranzinc-x-1/2" />
+                    <div className="absolute -top-8 left-1/2 w-0.5 h-8 bg-gradient-to-b from-zinc-300 to-zinc-200 dark:from-zinc-600 dark:to-zinc-700 -translate-x-1/2" />
                     {renderNode(child, level + 1)}
                   </div>
                 ))}
@@ -195,10 +196,10 @@ const OrgChart: React.FC<OrgChartProps> = ({
   };
 
   return (
-    <div className="card border border-zinc-200 dark:border-zinc-700 rounded-2xl p-6 my-4 overflow-x-auto">
+    <div className="card border border-zinc-200/60 dark:border-zinc-700 rounded-2xl p-6 my-4 overflow-x-auto shadow-sm">
       {title && (
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xl font-display font-semibold text-white">
+          <h3 className="text-xl font-display font-bold tracking-tight text-zinc-900 dark:text-white">
             {title}
           </h3>
           <div className="flex gap-2">

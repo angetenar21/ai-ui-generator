@@ -59,8 +59,8 @@ const AppBar: React.FC<AppBarProps> = ({
   };
 
   const variantClasses = {
-    default: 'bg-zinc-50 dark:bg-zinc-700 border-b border-indigo-600',
-    elevated: 'bg-zinc-50 dark:bg-zinc-700 shadow-lg',
+    default: 'backdrop-blur-lg bg-white/80 dark:bg-zinc-900/80 border-b border-zinc-200/60 dark:border-zinc-700/50 shadow-[0_1px_3px_rgba(0,0,0,0.04)]',
+    elevated: 'backdrop-blur-lg bg-white/80 dark:bg-zinc-900/80 shadow-lg shadow-zinc-900/5',
     transparent: 'bg-transparent',
   };
 
@@ -77,7 +77,7 @@ const AppBar: React.FC<AppBarProps> = ({
       <div className="flex items-center gap-4">
         {logo && <span className="text-2xl">{logo}</span>}
         <div>
-          <h1 className="text-zinc-900 dark:text-white font-semibold text-lg">{title}</h1>
+          <h1 className="text-zinc-900 dark:text-white font-display font-bold text-lg tracking-tight">{title}</h1>
           {subtitle && (
             <p className="text-zinc-600 dark:text-zinc-400 text-sm">{subtitle}</p>
           )}
@@ -96,7 +96,7 @@ const AppBar: React.FC<AppBarProps> = ({
             <button
               key={index}
               onClick={action.onClick}
-              className="px-4 py-2 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white flex items-center gap-2"
+              className="px-4 py-2 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all duration-300 ease-out text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white flex items-center gap-2 font-medium"
             >
               {action.icon && <span>{action.icon}</span>}
               <span>{action.label}</span>

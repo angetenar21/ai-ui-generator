@@ -53,16 +53,16 @@ const Widget: React.FC<WidgetProps> = ({
 
   if (!title) {
     return (
-      <div className="card border border-zinc-200 dark:border-zinc-700 rounded-lg p-4 my-2">
+      <div className="card border border-zinc-200/60 dark:border-zinc-700/60 rounded-2xl p-4 my-2 shadow-sm">
         <div className="text-zinc-600 dark:text-zinc-400 text-sm">Widget requires a title</div>
       </div>
     );
   }
 
   const variantClasses = {
-    default: 'card border border-zinc-200 dark:border-zinc-700',
-    compact: 'bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700',
-    highlighted: 'bg-gradient-to-br from-indigo-100 dark:from-indigo-900/20 to-indigo-100 dark:to-indigo-900/20 border border-indigo-300 dark:border-indigo-700',
+    default: 'card border border-zinc-200/60 dark:border-zinc-700/60 shadow-md hover:shadow-lg transition-all duration-300',
+    compact: 'bg-zinc-50 dark:bg-zinc-800 border border-zinc-200/60 dark:border-zinc-700/60 shadow-sm hover:shadow-md transition-all duration-300',
+    highlighted: 'bg-gradient-to-br from-orange-50 dark:from-orange-900/20 to-orange-100 dark:to-orange-900/20 border border-orange-200/60 dark:border-orange-700/60 shadow-md hover:shadow-lg transition-all duration-300',
   };
 
   const variantPadding = {
@@ -72,16 +72,16 @@ const Widget: React.FC<WidgetProps> = ({
   };
 
   return (
-    <div className={`${variantClasses[variant]} border rounded-lg my-2`}>
+    <div className={`${variantClasses[variant]} rounded-2xl my-2`}>
       {/* Header */}
       <div className={`
         flex items-center justify-between
         ${variantPadding[variant]}
-        ${content || children ? 'border-b border-zinc-200 dark:border-zinc-700' : ''}
-        rounded-t-lg
-        ${isCollapsed && !footer ? 'rounded-b-lg border-b-0' : ''}
+        ${content || children ? 'border-b border-zinc-200/60 dark:border-zinc-700/60' : ''}
+        rounded-t-2xl
+        ${isCollapsed && !footer ? 'rounded-b-2xl border-b-0' : ''}
       `}>
-        <h3 className="text-zinc-900 dark:text-white font-semibold text-lg flex-1">
+        <h3 className="text-zinc-900 dark:text-white font-display font-semibold text-lg flex-1 tracking-tight">
           {title}
         </h3>
 
@@ -91,7 +91,7 @@ const Widget: React.FC<WidgetProps> = ({
             {collapsible && (
               <button
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className="p-1 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:text-white transition-colors rounded hover:bg-zinc-100 dark:bg-zinc-800"
+                className="p-1.5 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-all duration-300 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800"
                 title={isCollapsed ? 'Expand' : 'Collapse'}
               >
                 {isCollapsed ? (
@@ -112,7 +112,7 @@ const Widget: React.FC<WidgetProps> = ({
             {closeable && (
               <button
                 onClick={() => setIsClosed(true)}
-                className="p-1 text-zinc-600 dark:text-zinc-400 hover:text-red-500 transition-colors rounded hover:bg-zinc-100 dark:bg-zinc-800"
+                className="p-1.5 text-zinc-600 dark:text-zinc-400 hover:text-red-500 transition-all duration-300 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800"
                 title="Close"
               >
                 <X className="w-4 h-4" />
@@ -150,9 +150,9 @@ const Widget: React.FC<WidgetProps> = ({
           {/* Footer */}
           {footer && (
             <div className={`
-              ${variant === 'compact' ? 'px-4 py-2' : 'px-6 py-3'}
-              border-t border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800/30
-              rounded-b-lg
+              ${variant === 'compact' ? 'px-4 py-2.5' : 'px-6 py-3'}
+              border-t border-zinc-200/60 dark:border-zinc-700/60 bg-zinc-50/80 dark:bg-zinc-800/30
+              rounded-b-2xl
             `}>
               <div className="text-zinc-600 dark:text-zinc-400 text-sm">
                 {footer}

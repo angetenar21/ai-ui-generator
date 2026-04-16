@@ -59,8 +59,8 @@ const Frame: React.FC<FrameProps> = ({
 
   const backgroundClasses = {
     transparent: 'bg-transparent border-zinc-700/50',
-    dark: 'card border border-zinc-200 dark:border-zinc-700',
-    light: 'bg-zinc-100 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700',
+    dark: 'card border border-zinc-200/60 dark:border-zinc-700',
+    light: 'bg-zinc-100 dark:bg-zinc-800 border-zinc-200/60 dark:border-zinc-700',
     gradient: 'bg-gradient-to-br from-bg-main to-bg-sub border-zinc-700/50',
   };
 
@@ -71,8 +71,9 @@ const Frame: React.FC<FrameProps> = ({
         ${borderStyleClasses[borderStyle]}
         ${borderWidthClasses[borderWidth]}
         ${paddingClasses[padding]}
-        rounded-lg
-        transition-all
+        rounded-2xl
+        shadow-[0_1px_3px_rgba(0,0,0,0.04),0_6px_24px_rgba(0,0,0,0.06)]
+        transition-all duration-300 ease-out
       `}
     >
       {title && (

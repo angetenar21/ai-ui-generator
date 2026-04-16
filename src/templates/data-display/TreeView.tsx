@@ -123,9 +123,9 @@ const TreeView: React.FC<TreeViewProps> = ({
       <div>
         <div
           className={`
-            flex items-center py-1.5 px-2 rounded-lg
-            transition-colors cursor-pointer
-            ${isSelected ? 'bg-indigo-900/30 border-l-2 border-l-indigo-500' : 'hover:bg-zinc-800/30'}
+            flex items-center py-1.5 px-2 rounded-xl
+            transition-all duration-200 cursor-pointer
+            ${isSelected ? 'bg-orange-50 dark:bg-orange-900/30 border-l-2 border-l-orange-500' : 'hover:bg-zinc-50 dark:hover:bg-zinc-800/30'}
           `}
           style={{ paddingLeft: `${level * 24 + 8}px` }}
         >
@@ -138,14 +138,14 @@ const TreeView: React.FC<TreeViewProps> = ({
                   style={{ marginLeft: `${idx * 24}px` }}
                 >
                   {showLine && (
-                    <div className="h-full w-px bg-zinc-700/50 ml-3" />
+                    <div className="h-full w-px bg-zinc-200 dark:bg-zinc-700/50 ml-3" />
                   )}
                 </div>
               ))}
               <div className="relative" style={{ width: '24px' }}>
-                <div className="absolute h-px w-3 bg-zinc-700/50 top-1/2 left-3" />
+                <div className="absolute h-px w-3 bg-zinc-200 dark:bg-zinc-700/50 top-1/2 left-3" />
                 {!isLast && (
-                  <div className="absolute w-px bg-zinc-700/50 top-1/2 left-3 h-full" />
+                  <div className="absolute w-px bg-zinc-200 dark:bg-zinc-700/50 top-1/2 left-3 h-full" />
                 )}
               </div>
             </div>
@@ -184,7 +184,7 @@ const TreeView: React.FC<TreeViewProps> = ({
                 type="checkbox"
                 checked={isSelected}
                 onChange={() => handleNodeClick(node)}
-                className="w-4 h-4 rounded border-zinc-600 text-indigo-600 focus:ring-indigo-500"
+                className="w-4 h-4 rounded border-zinc-600 text-orange-600 focus:ring-orange-500"
               />
             )}
 
@@ -195,7 +195,7 @@ const TreeView: React.FC<TreeViewProps> = ({
               {node.icon && (
                 <span className="text-zinc-400 text-lg">{node.icon}</span>
               )}
-              <span className="text-white text-sm">{safeStr(node.label)}</span>
+              <span className="text-zinc-900 dark:text-white text-sm font-medium">{safeStr(node.label)}</span>
               {node.metadata?.count !== undefined && (
                 <span className="text-xs text-zinc-500">
                   ({node.metadata.count})
@@ -223,10 +223,10 @@ const TreeView: React.FC<TreeViewProps> = ({
   };
 
   return (
-    <div className="card border border-zinc-200 dark:border-zinc-700 rounded-2xl p-6 my-4">
+    <div className="card border border-zinc-200/60 dark:border-zinc-700 rounded-2xl p-6 my-4 shadow-sm">
       {title && (
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-xl font-display font-semibold text-white">
+          <h3 className="text-xl font-display font-bold tracking-tight text-zinc-900 dark:text-white">
             {title}
           </h3>
           <div className="flex gap-2">

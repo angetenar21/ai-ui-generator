@@ -31,6 +31,7 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
   const progressValue = value ?? percentage ?? progress ?? 0;
   const clampedValue = Math.min(100, Math.max(0, progressValue));
   const progressColor = color || variant || 'primary';
+  const strokeWidth = thickness < 5 ? 6 : thickness;
 
   const sizeClasses = {
     small: { circle: 'w-16 h-16', text: 'text-xs' },
@@ -39,10 +40,10 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
   };
 
   const colorClasses = {
-    primary: 'text-indigo-600 dark:text-indigo-500',
+    primary: 'text-orange-600 dark:text-orange-500',
     secondary: 'text-zinc-500 dark:text-zinc-500',
     success: 'text-green-600 dark:text-green-500',
-    warning: 'text-indigo-600 dark:text-indigo-500',
+    warning: 'text-orange-600 dark:text-orange-500',
     error: 'text-red-600 dark:text-red-500',
   };
 
@@ -54,7 +55,7 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
 
   return (
     <div
-      className="card rounded-card p-6 my-4"
+      className="card rounded-2xl p-6 my-4"
       role="progressbar"
       aria-valuenow={indeterminate ? undefined : Math.round(clampedValue)}
       aria-valuemin={0}
@@ -69,9 +70,9 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
               cy="50"
               r={radius}
               stroke="currentColor"
-              strokeWidth={thickness}
+              strokeWidth={strokeWidth}
               fill="none"
-              className="text-zinc-700/60 dark:text-zinc-700"
+              className="text-zinc-200 dark:text-zinc-700"
             />
             {/* Progress circle */}
             {!indeterminate ? (
@@ -80,12 +81,12 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
                 cy="50"
                 r={radius}
                 stroke="currentColor"
-                strokeWidth={thickness}
+                strokeWidth={strokeWidth}
                 fill="none"
                 strokeDasharray={circumference}
                 strokeDashoffset={offset}
                 strokeLinecap="round"
-                className={`${colorClasses[progressColor]} transition-all duration-300`}
+                className={`${colorClasses[progressColor]} transition-all duration-500 ease-out`}
               />
             ) : (
               <circle
@@ -93,7 +94,7 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
                 cy="50"
                 r={radius}
                 stroke="currentColor"
-                strokeWidth={thickness}
+                strokeWidth={strokeWidth}
                 fill="none"
                 strokeDasharray={circumference}
                 strokeLinecap="round"
@@ -105,14 +106,14 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
           {/* Center text */}
           {showValue && !indeterminate && (
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className={`font-semibold text-zinc-100 ${sizeConfig.text}`}>
+              <span className={`font-display font-bold text-zinc-900 dark:text-zinc-100 ${sizeConfig.text}`}>
                 {Math.round(clampedValue)}%
               </span>
             </div>
           )}
         </div>
         {label && (
-          <div className="text-sm text-zinc-300 text-center">{label}</div>
+          <div className="text-sm text-zinc-600 dark:text-zinc-300 text-center font-medium">{label}</div>
         )}
       </div>
     </div>

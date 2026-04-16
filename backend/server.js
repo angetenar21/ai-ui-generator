@@ -27,10 +27,6 @@ const API_KEYS_POOL = rawApiKeys.split(',').map(k => k.trim()).filter(Boolean);
 
 let currentKeyIndex = 0; // State variable to track the current active key in the pool
 
-const GEMINI_ACCESS_TOKEN = process.env.GEMINI_ACCESS_TOKEN;
-const GEMINI_PROJECT_ID = process.env.GEMINI_PROJECT_ID;
-const GEMINI_LOCATION = process.env.GEMINI_LOCATION || 'us-central1';
-const GEMINI_USE_VERTEX = (process.env.GEMINI_USE_VERTEX || '').toLowerCase() === 'true';
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const schemaPath = path.join(__dirname, 'docs', 'component-library-schema.json');
 
@@ -566,41 +562,19 @@ function executeToolCall(toolCall) {
   }
 }
 
-function buildGeminiRequestConfig(forceApiKey = false) {
-  const hasAccessToken = Boolean(GEMINI_ACCESS_TOKEN) && !forceApiKey;
+function buildGeminiRequestConfig() {
   const currentKey = API_KEYS_POOL[currentKeyIndex];
   const hasApiKey = Boolean(currentKey);
-  const useVertex = (GEMINI_USE_VERTEX || Boolean(GEMINI_PROJECT_ID)) && !forceApiKey;
 
-  if (!hasAccessToken && API_KEYS_POOL.length === 0) {
-    Logger.error('No Gemini credentials provided');
-    throw new Error('Gemini credentials are required. Set GEMINI_API_KEYS (comma separated) or GEMINI_ACCESS_TOKEN in .env.');
+  if (!hasApiKey) {
+    Logger.error('No Gemini API key provided');
+    throw new Error('Gemini API key is required. Set GEMINI_API_KEY (or comma-separated GEMINI_API_KEYS) in .env.');
   }
 
-  if (useVertex && !GEMINI_PROJECT_ID) {
-    Logger.error('GEMINI_PROJECT_ID is not set for Vertex usage');
-    throw new Error('GEMINI_PROJECT_ID is required when using Vertex AI.');
-  }
+  const headers = { 'Content-Type': 'application/json' };
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${currentKey}`;
 
-  const headers = {
-    'Content-Type': 'application/json',
-  };
-
-  if (hasAccessToken) {
-    headers.Authorization = `Bearer ${GEMINI_ACCESS_TOKEN}`;
-  }
-
-  let endpoint;
-  if (useVertex) {
-    endpoint = `https://${GEMINI_LOCATION}-aiplatform.googleapis.com/v1/projects/${GEMINI_PROJECT_ID}/locations/${GEMINI_LOCATION}/publishers/google/models/${GEMINI_MODEL}:generateContent`;
-  } else {
-    endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
-    if (!hasAccessToken && hasApiKey) {
-      endpoint += `?key=${currentKey}`;
-    }
-  }
-
-  return { endpoint, headers, useVertex, hasAccessToken, hasApiKey, currentKey };
+  return { endpoint, headers, hasApiKey, currentKey };
 }
 
 // ─── IMPROVEMENT 3: Output Quality Scorer ────────────────────────────────────
@@ -651,15 +625,10 @@ function scoreOutputSpec(rawText) {
   return issues;
 }
 
-async function callGemini(userMessage, context = '', retryWithApiKey = false, signal) {
-  let config;
-  try {
-    config = buildGeminiRequestConfig(retryWithApiKey);
-  } catch (err) {
-    throw err;
-  }
+async function callGemini(userMessage, context = '', signal) {
+  const config = buildGeminiRequestConfig();
 
-  const { endpoint, headers, useVertex, hasAccessToken, hasApiKey } = config;
+  let { endpoint, headers } = config;
 
   // Track the last validated spec as a fallback
   let lastValidatedSpec = null;
@@ -751,6 +720,8 @@ async function callGemini(userMessage, context = '', retryWithApiKey = false, si
   let maxIterations = 16; // Increased for complex layouts with sidebars and nested components
   let iterations = 0;
   let delay = 1000;
+  let emptyResponseRetries = 0;
+  const MAX_EMPTY_RESPONSE_RETRIES = 2;
 
   Logger.info(`Starting Gemini tool-calling loop (maxIterations: ${maxIterations})`);
 
@@ -762,10 +733,10 @@ async function callGemini(userMessage, context = '', retryWithApiKey = false, si
       tools,
       toolConfig,
       generationConfig: {
-        temperature: 0.3, // Optimized for speed while maintaining quality
-        maxOutputTokens: 16384, // Increased to prevent JSON truncation for complex layouts
-        topP: 0.85, // Optimized for faster sampling
-        topK: 20, // Reduced for faster token selection
+        temperature: 0.3,
+        maxOutputTokens: 16384,
+        topP: 0.85,
+        topK: 20,
       },
     };
 
@@ -815,11 +786,12 @@ async function callGemini(userMessage, context = '', retryWithApiKey = false, si
           
           // Re-build config so the endpoint picks up the new currentKeyIndex
           const oldRotations = config.keyRotationsThisRequest;
-          config = buildGeminiRequestConfig(retryWithApiKey);
-          config.keyRotationsThisRequest = oldRotations + 1;
-          endpoint = config.endpoint; // update local endpoint variable for the next loop
-          headers = config.headers;
-          
+          const nextConfig = buildGeminiRequestConfig();
+          nextConfig.keyRotationsThisRequest = oldRotations + 1;
+          endpoint = nextConfig.endpoint;
+          headers = nextConfig.headers;
+          Object.assign(config, nextConfig);
+
           // Reset delay so we don't punish UX for back-end rotation
           delay = 1000;
           continue;
@@ -828,37 +800,9 @@ async function callGemini(userMessage, context = '', retryWithApiKey = false, si
         }
       }
 
-      // Check for OAuth/authentication failures that could benefit from fallback
-      const isOAuthError = (
-        (response.status === 401 || response.status === 403) ||
-        (response.status === 400 && (
-          errorMessage.includes('invalid authentication') ||
-          errorMessage.includes('authentication') ||
-          errorMessage.includes('token') ||
-          errorMessage.includes('credentials')
-        ))
-      );
-
-      // If OAuth failed and we have an API key and haven't tried it yet, retry with API key
-      if (isOAuthError && !retryWithApiKey && hasAccessToken && API_KEYS_POOL.length > 0) {
-        Logger.warn('OAuth authentication failed, attempting fallback to API key', {
-          status: response.status,
-          error: errorMessage
-        });
-        return callGemini(userMessage, context, true, signal);
-      }
-
       // Check for API key issues
       if (response.status === 400 && errorMessage.includes('API key')) {
         throw new Error(`Gemini API key error: ${errorMessage}. Please check your GEMINI_API_KEY in .env file.`);
-      }
-
-      // API key not supported by this API
-      if (response.status === 400 && errorMessage.includes('API keys are not supported')) {
-        const hint = useVertex
-          ? 'Use an OAuth access token (GEMINI_ACCESS_TOKEN) for Vertex AI.'
-          : 'Use an OAuth access token (GEMINI_ACCESS_TOKEN) or switch to a model that supports API keys.';
-        throw new Error(`Gemini API error: ${errorMessage}. ${hint}`);
       }
 
       // Check for quota/rate limit issues
@@ -954,10 +898,37 @@ RESTART and use the correct format for function calls.`
     const isCompletelyEmptyText = parts.length === 1 && parts[0].text && !parts[0].text.trim();
 
     if (parts.length === 0 || isCompletelyEmptyText) {
+      emptyResponseRetries++;
       Logger.warn('Gemini returned an empty response. Prompting for retry.', {
         iterationCount: iterations,
-        isCompletelyEmptyText
+        isCompletelyEmptyText,
+        emptyResponseRetries,
+        finishReason: candidate.finishReason,
+        finishMessage: candidate.finishMessage,
+        usageMetadata: data?.usageMetadata,
       });
+
+      // If thinking/output exhausted the token budget, retrying won't help — abort fast.
+      if (candidate.finishReason === 'MAX_TOKENS') {
+        if (lastValidatedSpec) return JSON.stringify(lastValidatedSpec, null, 2);
+        throw new Error(
+          `Gemini hit MAX_TOKENS with no usable output. ` +
+          `Thinking tokens: ${data?.usageMetadata?.thoughtsTokenCount ?? 'n/a'}, ` +
+          `candidates tokens: ${data?.usageMetadata?.candidatesTokenCount ?? 'n/a'}. ` +
+          `Either increase maxOutputTokens or lower thinkingBudget.`
+        );
+      }
+
+      if (emptyResponseRetries > MAX_EMPTY_RESPONSE_RETRIES) {
+        if (lastValidatedSpec) {
+          Logger.warn('Too many empty responses, returning last validated spec', {
+            emptyResponseRetries,
+          });
+          return JSON.stringify(lastValidatedSpec, null, 2);
+        }
+        throw new Error(`Gemini returned empty responses ${emptyResponseRetries} times in a row. Aborting to avoid burning API quota.`);
+      }
+
       // CRITICAL: Do NOT push candidate.content to contents if it's completely empty.
       // Doing so breaks Gemini's chat history constraints and locks it in an empty-response loop.
       contents.push({
@@ -1136,7 +1107,7 @@ function repairTruncatedJson(str) {
 async function callGeminiWithRetry(userMessage, context = '', maxRetries = 3, signal) {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      return await callGemini(userMessage, context, false, signal);
+      return await callGemini(userMessage, context, signal);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       if (signal?.aborted) {

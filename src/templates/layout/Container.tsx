@@ -52,15 +52,15 @@ const Container: React.FC<ContainerProps> = ({
 
   const paddingClasses = {
     none: 'p-0',
-    small: 'p-4',
-    medium: 'p-6',
-    large: 'p-8',
+    small: 'px-4 py-4 sm:px-6',
+    medium: 'px-6 py-6 sm:px-8',
+    large: 'px-8 py-8 sm:px-10',
   };
 
   const centerClass = center ? 'mx-auto' : '';
-  const backgroundClass = background ? 'bg-zinc-50 dark:bg-zinc-700' : '';
-  const borderClass = border ? 'border border-indigo-600 rounded-card' : '';
-  const shadowClass = shadow ? 'shadow-lg' : '';
+  const backgroundClass = background ? 'bg-white dark:bg-zinc-900' : '';
+  const borderClass = border ? 'border border-zinc-200/60 dark:border-zinc-700/50 rounded-2xl' : '';
+  const shadowClass = shadow ? 'shadow-lg shadow-zinc-900/5' : '';
 
   return (
     <div

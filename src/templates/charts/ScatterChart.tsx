@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ScatterChart as MuiScatterChart } from '@mui/x-charts/ScatterChart';
-import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
 import { useAppStore } from '@/store/appStore';
 
@@ -16,9 +15,6 @@ interface ScatterChartProps {
     min?: number;
     max?: number;
     label?: string;
-
-    children?: React.ReactNode;
-    renderChild?: (child: any) => React.ReactNode;
   }>;
 
   /** Y-axis configuration */

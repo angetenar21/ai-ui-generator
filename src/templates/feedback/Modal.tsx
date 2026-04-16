@@ -69,7 +69,7 @@ const Modal: React.FC<ModalProps> = ({
       {triggerText && (
         <button
           onClick={() => setIsVisible(true)}
-          className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors border border-transparent"
+          className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition-colors border border-transparent"
         >
           {triggerText}
         </button>
@@ -79,21 +79,21 @@ const Modal: React.FC<ModalProps> = ({
         <>
           {/* Backdrop - Fixed positioning for proper overlay */}
           <div
-            className="fixed inset-0 bg-zinc-900/60 dark:bg-black/70 backdrop-blur-sm z-[9998] transition-opacity duration-200"
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[9998] transition-opacity duration-300 ease-out"
             onClick={closable ? handleClose : undefined}
           />
 
           {/* Modal Container */}
           <div className={`fixed inset-0 flex items-center justify-center ${size === 'fullscreen' ? 'p-2' : 'p-4'} z-[9999] pointer-events-none`}>
             {/* Modal */}
-            <div className={`relative ${sizeClasses[size]} w-full pointer-events-auto bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-700/50 ${size === 'fullscreen' ? 'rounded-xl' : 'rounded-2xl'} shadow-2xl dark:shadow-[0_32px_64px_-12px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden transition-all duration-200`}>
+            <div className={`relative ${sizeClasses[size]} w-full pointer-events-auto bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-700/50 ${size === 'fullscreen' ? 'rounded-xl' : 'rounded-3xl'} shadow-2xl dark:shadow-[0_32px_64px_-12px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden transition-all duration-300 ease-out`}>
               {/* Header */}
               {(title || description || showCloseButton) && (
-                <div className="flex-shrink-0 px-6 py-5 border-b border-zinc-100 dark:border-zinc-800/60 bg-transparent">
+                <div className="flex-shrink-0 p-6 border-b border-zinc-100 dark:border-zinc-800/60 bg-transparent">
                   <div className="flex items-start justify-between">
                     <div className="flex-1 pr-4">
                       {title && (
-                        <h3 className="text-xl font-display font-semibold tracking-tight text-zinc-900 dark:text-white">{title}</h3>
+                        <h3 className="text-xl font-display font-bold tracking-tight text-zinc-900 dark:text-white">{title}</h3>
                       )}
                       {description && (
                         <p className="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">{description}</p>
@@ -102,7 +102,7 @@ const Modal: React.FC<ModalProps> = ({
                     {showCloseButton && closable && (
                       <button
                         onClick={handleClose}
-                        className="text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white transition-colors p-1 flex-shrink-0"
+                        className="text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white transition-all duration-300 ease-out rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 p-2 flex-shrink-0"
                         aria-label="Close modal"
                       >
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -122,7 +122,7 @@ const Modal: React.FC<ModalProps> = ({
 
               {/* Footer */}
               {(footer || actions) && (
-                <div className="flex-shrink-0 flex items-center justify-end gap-3 px-6 py-4 border-t border-zinc-100 dark:border-zinc-800/60 bg-zinc-50/50 dark:bg-zinc-800/20">
+                <div className="flex-shrink-0 flex items-center justify-end gap-3 p-6 border-t border-zinc-100 dark:border-zinc-800/60 bg-zinc-50/50 dark:bg-zinc-800/20">
                   {footer && <div className="text-zinc-500 dark:text-zinc-400 flex-1 text-sm font-medium">{footer}</div>}
                   {actions && actions.map((action, index) => {
                     const variantClasses = {
@@ -134,7 +134,7 @@ const Modal: React.FC<ModalProps> = ({
                       <button
                         key={index}
                         onClick={action.onClick || handleClose}
-                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${variantClasses[action.variant || 'secondary']}`}
+                        className={`px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ease-out ${variantClasses[action.variant || 'secondary']}`}
                       >
                         {action.label}
                       </button>

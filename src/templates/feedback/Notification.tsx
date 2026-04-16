@@ -62,9 +62,9 @@ const Notification: React.FC<NotificationProps> = ({
   const typeConfig = {
     info: {
       icon: icon || 'info',
-      container: 'border border-indigo-200/60 dark:border-indigo-500/30 bg-indigo-50/80 dark:bg-indigo-900/20',
-      chip: 'bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400',
-      badge: 'bg-indigo-600 text-white',
+      container: 'border border-orange-200/60 dark:border-orange-500/30 bg-orange-50/80 dark:bg-orange-900/20',
+      chip: 'bg-orange-100 dark:bg-orange-500/20 text-orange-600 dark:text-orange-400',
+      badge: 'bg-orange-600 text-white',
       text: 'text-zinc-900 dark:text-white',
       label: 'INFO',
     },
@@ -101,7 +101,7 @@ const Notification: React.FC<NotificationProps> = ({
   return (
     <div className="w-full my-2">
       <div
-        className={`backdrop-blur-sm ${config.container} rounded-2xl shadow-md overflow-hidden w-full transition-all duration-300 ease-out`}
+        className={`backdrop-blur-sm ${config.container} rounded-2xl shadow-xl overflow-hidden w-full transition-all duration-300 ease-out`}
         style={{ animation: 'slideDown 0.3s ease-out' }}
       >
         {/* Top accent bar */}
@@ -135,7 +135,7 @@ const Notification: React.FC<NotificationProps> = ({
             {closable && (
               <button
                 onClick={handleClose}
-                className="flex-shrink-0 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors p-1"
+                className="flex-shrink-0 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-all duration-300 ease-out p-1.5 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800"
                 aria-label="Close notification"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

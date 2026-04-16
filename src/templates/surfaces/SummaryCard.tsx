@@ -118,23 +118,23 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
             key={index}
             className={`
               ${layout === 'horizontal' ? 'flex-1 min-w-[180px]' : ''}
-              ${layout === 'grid' ? 'p-4 rounded-xl bg-zinc-50/60 dark:bg-zinc-800/40 border border-zinc-100 dark:border-zinc-700/50' : 'py-3'}
+              ${layout === 'grid' ? 'p-4 rounded-xl bg-zinc-50/60 dark:bg-zinc-800/40 border border-zinc-100 dark:border-zinc-700/50 hover:scale-[1.02] transition-transform duration-200' : 'py-3'}
               group relative
             `}
           >
             {/* Subtle left accent bar for vertical/horizontal layouts */}
             {layout !== 'grid' && (
-              <div className="absolute left-0 top-3 bottom-3 w-0.5 bg-gradient-to-b from-indigo-400/60 to-indigo-300/20 rounded-full" />
+              <div className="absolute left-0 top-3 bottom-3 w-[3px] bg-gradient-to-b from-orange-400/60 to-pink-300/20 rounded-full" />
             )}
             <div className={`flex items-start justify-between ${layout !== 'grid' ? 'pl-3' : ''}`}>
               <div className="flex-1 min-w-0">
-                <div className={`text-[10px] uppercase tracking-widest font-semibold mb-1.5 ${isDarkSurface ? 'text-white/50' : 'text-zinc-400 dark:text-zinc-500'}`}>
+                <div className={`text-[10px] uppercase tracking-[0.15em] font-semibold mb-1.5 ${isDarkSurface ? 'text-white/50' : 'text-zinc-400 dark:text-zinc-500'}`}>
                   <span className="truncate block">{safeStr(item.label)}</span>
                 </div>
-                <div className={`font-black tracking-tight leading-none mb-1 transition-colors break-words min-w-0 ${
+                <div className={`font-display font-black tracking-tight leading-none mb-1 transition-colors break-words min-w-0 ${
                   isDarkSurface
                     ? 'text-white'
-                    : 'text-zinc-900 dark:text-white group-hover:text-indigo-500'
+                    : 'text-zinc-900 dark:text-white group-hover:text-orange-500'
                   } ${
                   // Semantic sizing: If the value looks like a KPI metric (mostly numbers/symbols like $1.2M, +12%, 1,400)
                   // make it large (3xl). If it's normal text (Role, URL, Name), make it readable (base/lg).
@@ -154,7 +154,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
               {item.change && (
                 <div className={`
                   flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ml-2 flex-shrink-0
-                  ${item.changeType === 'positive' ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400' : ''}
+                  ${item.changeType === 'positive' ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400' : ''}
                   ${item.changeType === 'negative' ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400' : ''}
                   ${item.changeType === 'neutral' || !item.changeType ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400' : ''}
                 `}>

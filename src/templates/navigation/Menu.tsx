@@ -57,9 +57,9 @@ const Menu: React.FC<MenuProps> = ({
   }
 
   const variantClasses = {
-    default: 'card rounded-card p-2',
-    compact: 'card rounded-card p-1',
-    bordered: 'card rounded-card p-2 border-2 border-zinc-700',
+    default: 'bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-700/50 rounded-2xl p-1.5',
+    compact: 'bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-700/50 rounded-2xl p-1',
+    bordered: 'bg-white dark:bg-zinc-900 border-2 border-zinc-200 dark:border-zinc-700 rounded-2xl p-1.5',
   };
 
   const positionClasses = {
@@ -70,7 +70,7 @@ const Menu: React.FC<MenuProps> = ({
   };
 
   const triggerVariantClasses = {
-    primary: 'bg-indigo-600 hover:bg-indigo-700 text-white',
+    primary: 'bg-orange-600 hover:bg-orange-700 text-white',
     secondary: 'bg-zinc-700 hover:bg-zinc-600 text-white dark:bg-zinc-700 dark:hover:bg-zinc-600',
     ghost: 'bg-transparent hover:bg-zinc-200 dark:hover:bg-zinc-700/50 text-zinc-700 dark:text-zinc-300',
   };
@@ -99,16 +99,16 @@ const Menu: React.FC<MenuProps> = ({
           />
 
           {/* Menu */}
-          <div className={`absolute ${positionClasses[position]} z-[9999] min-w-[200px] shadow-xl`}>
+          <div className={`absolute ${positionClasses[position]} z-[9999] min-w-[200px] shadow-xl shadow-zinc-900/10 dark:shadow-zinc-900/30`}>
             <div className={variantClasses[variant]}>
               {title && trigger && (
-                <div className="px-3 py-2 text-sm font-semibold text-zinc-400 uppercase tracking-wide border-b border-zinc-700">
+                <div className="px-3 py-2 text-[11px] font-semibold text-zinc-400 uppercase tracking-widest border-b border-zinc-200/60 dark:border-zinc-700/50 mb-1">
                   {title}
                 </div>
               )}
               <div className="space-y-1 py-1">{menuItemsList.map((item, index) => {
                 if (item.divider) {
-                  return <div key={index} className="border-t border-zinc-700 my-1" />;
+                  return <div key={index} className="border-t border-zinc-200/60 dark:border-zinc-700/50 my-1" />;
                 }
 
                 return (
@@ -117,12 +117,12 @@ const Menu: React.FC<MenuProps> = ({
                     className={`
                         w-full text-left px-3 py-2 rounded-lg
                         flex items-center gap-3
-                        transition-colors
+                        transition-all duration-200
                         ${item.disabled
-                        ? 'text-zinc-600 cursor-not-allowed'
+                        ? 'text-zinc-400 dark:text-zinc-600 cursor-not-allowed'
                         : item.variant === 'danger'
-                          ? 'text-red-400 hover:bg-red-500/10 hover:text-red-300'
-                          : 'text-zinc-300 hover:bg-zinc-700/50 hover:text-white cursor-pointer'
+                          ? 'text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 hover:text-red-600 dark:hover:text-red-300'
+                          : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white cursor-pointer'
                       }
                       `.trim().replace(/\s+/g, ' ')}
                     onClick={() => handleItemClick(item)}

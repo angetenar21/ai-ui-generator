@@ -64,15 +64,15 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
   };
 
   const sizeClasses = {
-    small: 'px-3 py-1.5 text-sm',
-    medium: 'px-4 py-2 text-base',
+    small: 'px-3 py-2 text-sm',
+    medium: 'px-4 py-2.5 text-base',
     large: 'px-5 py-3 text-lg',
   };
 
   const variantClasses = {
-    outlined: `border-2 ${error ? 'border-red-500' : 'border-zinc-600'} focus:border-indigo-500 bg-transparent`,
-    filled: `border-b-2 ${error ? 'border-red-500' : 'border-zinc-600'} focus:border-indigo-500 bg-zinc-800/50`,
-    standard: `border-b-2 ${error ? 'border-red-500' : 'border-zinc-600'} focus:border-indigo-500 bg-transparent`,
+    outlined: `border ${error ? 'border-red-400 ring-2 ring-red-500/10' : 'border-zinc-200 dark:border-zinc-700'} focus:border-orange-500 bg-white dark:bg-zinc-900`,
+    filled: `border-b-2 ${error ? 'border-red-400' : 'border-zinc-200 dark:border-zinc-700'} focus:border-orange-500 bg-zinc-50 dark:bg-zinc-800/50`,
+    standard: `border-b-2 ${error ? 'border-red-400' : 'border-zinc-200 dark:border-zinc-700'} focus:border-orange-500 bg-transparent`,
   };
 
   const previewSizeClasses = {
@@ -84,7 +84,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
   return (
     <div className={`my-4 ${fullWidth ? 'w-full' : 'max-w-md'}`}>
       {label && (
-        <label className="block text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
+        <label className="block text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-2">
           {label}
           {required && <span className="text-red-400 ml-1">*</span>}
         </label>
@@ -102,8 +102,8 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
               required={required}
               className={`
                 ${previewSizeClasses[size]}
-                rounded-lg border-2 border-zinc-600
-                cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed
+                rounded-xl border border-zinc-200 dark:border-zinc-700
+                cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed
                 transition-all duration-200
               `.trim().replace(/\s+/g, ' ')}
               style={{ background: displayValue }}
@@ -126,9 +126,9 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
                 ${sizeClasses[size]}
                 ${variantClasses[variant]}
                 ${fullWidth ? 'w-full' : 'w-full'}
-                rounded-lg text-white placeholder-zinc-400 font-mono uppercase
-                focus:outline-none focus:ring-2 focus:ring-indigo-500/50
-                disabled:opacity-50 disabled:cursor-not-allowed
+                rounded-xl text-zinc-900 dark:text-white placeholder:text-zinc-400 font-mono uppercase
+                focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500
+                disabled:opacity-60 disabled:cursor-not-allowed
                 transition-all duration-200
               `.trim().replace(/\s+/g, ' ')}
             />
@@ -144,11 +144,11 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
               onClick={() => !disabled && handleChange(color)}
               disabled={disabled}
               className={`
-                w-8 h-8 rounded border-2
-                ${displayValue.toLowerCase() === color.toLowerCase() ? 'border-white' : 'border-zinc-600'}
+                w-8 h-8 rounded-xl
+                ${displayValue.toLowerCase() === color.toLowerCase() ? 'ring-2 ring-orange-500 ring-offset-2 dark:ring-offset-zinc-900' : 'border border-zinc-200 dark:border-zinc-600'}
                 hover:scale-110 transition-transform duration-150
-                disabled:opacity-50 disabled:cursor-not-allowed
-                focus:outline-none focus:ring-2 focus:ring-indigo-500/50
+                disabled:opacity-60 disabled:cursor-not-allowed
+                focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2
               `.trim().replace(/\s+/g, ' ')}
               style={{ backgroundColor: color }}
               title={color}

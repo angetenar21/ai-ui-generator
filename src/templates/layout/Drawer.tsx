@@ -77,17 +77,24 @@ const Drawer: React.FC<DrawerProps> = ({
     bottom: 'bottom-0 left-0 right-0',
   };
 
+  const roundedClasses = {
+    left: 'rounded-r-2xl',
+    right: 'rounded-l-2xl',
+    top: 'rounded-b-2xl',
+    bottom: 'rounded-t-2xl',
+  };
+
   const transformClasses = {
-    left: isOpen ? 'tranzinc-x-0' : '-tranzinc-x-full',
-    right: isOpen ? 'tranzinc-x-0' : 'tranzinc-x-full',
-    top: isOpen ? 'tranzinc-y-0' : '-tranzinc-y-full',
-    bottom: isOpen ? 'tranzinc-y-0' : 'tranzinc-y-full',
+    left: isOpen ? 'translate-x-0' : '-translate-x-full',
+    right: isOpen ? 'translate-x-0' : 'translate-x-full',
+    top: isOpen ? 'translate-y-0' : '-translate-y-full',
+    bottom: isOpen ? 'translate-y-0' : 'translate-y-full',
   };
 
   const variantClasses = {
-    default: 'bg-zinc-50 dark:bg-zinc-700 border-indigo-600',
-    elevated: 'bg-zinc-50 dark:bg-zinc-700 shadow-2xl',
-    overlay: 'bg-zinc-50 dark:bg-zinc-700/95 backdrop-blur-sm',
+    default: 'bg-white dark:bg-zinc-900 border-zinc-200/60 dark:border-zinc-700/50',
+    elevated: 'bg-white dark:bg-zinc-900 shadow-2xl',
+    overlay: 'bg-white/95 dark:bg-zinc-900/95 backdrop-blur-lg',
   };
 
   const borderClasses = {
@@ -103,7 +110,7 @@ const Drawer: React.FC<DrawerProps> = ({
       {triggerText && (
         <button
           onClick={() => setIsOpen(true)}
-          className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium border border-transparent shadow-[0_2px_4px_rgba(234,88,12,0.15)]"
+          className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors font-medium border border-transparent shadow-[0_2px_4px_rgba(234,88,12,0.15)]"
         >
           {triggerText}
         </button>
@@ -122,20 +129,20 @@ const Drawer: React.FC<DrawerProps> = ({
       {/* Backdrop */}
       {backdrop && isOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-[9998] transition-opacity backdrop-blur-sm"
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[9998] transition-opacity duration-300 ease-out"
           onClick={() => setIsOpen(false)}
         />
       )}
 
       {/* Drawer */}
       <aside
-        className={`fixed ${positionClasses[position]} ${sizeClasses[position][size]} ${variantClasses[variant]} ${borderClasses[position]} ${transformClasses[position]} transition-transform duration-300 z-[9999] overflow-y-auto`}
+        className={`fixed ${positionClasses[position]} ${sizeClasses[position][size]} ${variantClasses[variant]} ${borderClasses[position]} ${roundedClasses[position]} ${transformClasses[position]} shadow-2xl transition-transform duration-300 ease-out z-[9999] overflow-y-auto`}
       >
-        <div className="flex items-center justify-between p-4 border-b border-indigo-600">
-          <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">{title}</h2>
+        <div className="flex items-center justify-between p-5 border-b border-zinc-200/60 dark:border-zinc-700/50">
+          <h2 className="text-lg font-display font-bold tracking-tight text-zinc-900 dark:text-white">{title}</h2>
           <button
             onClick={() => setIsOpen(false)}
-            className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:text-white transition-colors p-1"
+            className="text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-all duration-300 ease-out rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 p-2"
           >
             <svg
               className="w-6 h-6"

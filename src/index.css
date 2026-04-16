@@ -541,4 +541,37 @@
       font-size: 0.8rem !important;
     }
   }
+
+  /* ─── Inspector Syntax Highlighting ─── */
+  /* JSX tokens – Light mode */
+  .jsx-tag { color: #4F46E5; }
+  .jsx-attr { color: #7C3AED; }
+  .jsx-string { color: #0D9488; }
+  .jsx-bracket { color: #818CF8; }
+  .jsx-literal { color: #6366F1; }
+
+  /* JSX tokens – Dark mode */
+  .dark .jsx-tag { color: #7DD3FC; }
+  .dark .jsx-attr { color: #C4B5FD; }
+  .dark .jsx-string { color: #6EE7B7; }
+  .dark .jsx-bracket { color: #93C5FD; }
+  .dark .jsx-literal { color: #FCD34D; }
+
+  /* JSON tokens – Light mode */
+  .json-key { color: #7C3AED; font-weight: 500; }
+  .json-string { color: #0D9488; }
+  .json-number { color: #4F46E5; }
+  .json-boolean { color: #6366F1; }
+  .json-null { color: #EF4444; }
+  .json-bracket { color: #78716C; }
+  .json-punctuation { color: #A8A29E; }
+
+  /* JSON tokens – Dark mode */
+  .dark .json-key { color: #C4B5FD; font-weight: 500; }
+  .dark .json-string { color: #6EE7B7; }
+  .dark .json-number { color: #7DD3FC; }
+  .dark .json-boolean { color: #FCD34D; }
+  .dark .json-null { color: #FCA5A5; }
+  .dark .json-bracket { color: #9CA3AF; }
+  .dark .json-punctuation { color: #6B7280; }
 }

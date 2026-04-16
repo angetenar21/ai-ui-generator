@@ -13,9 +13,6 @@ interface SankeyChartProps {
   /** Node definitions */
   nodes: Array<{
     name: string;
-
-    children?: React.ReactNode;
-    renderChild?: (child: any) => React.ReactNode;
   }>;
 
   /** Link/flow definitions */
@@ -66,7 +63,7 @@ const SankeyChart: React.FC<SankeyChartProps> = ({
   // Validate data
   if (!nodes || !Array.isArray(nodes) || nodes.length === 0) {
     return (
-      <div className="w-full bg-transparent dark:bg-transparent border border-zinc-200 dark:border-zinc-700 rounded-lg p-6">
+      <div className="w-full bg-transparent dark:bg-transparent border border-zinc-200/60 dark:border-zinc-700/60 rounded-2xl p-6">
         {title && (
           <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-2">
             {title}
@@ -81,7 +78,7 @@ const SankeyChart: React.FC<SankeyChartProps> = ({
 
   if (!links || !Array.isArray(links) || links.length === 0) {
     return (
-      <div className="w-full bg-transparent dark:bg-transparent border border-zinc-200 dark:border-zinc-700 rounded-lg p-6">
+      <div className="w-full bg-transparent dark:bg-transparent border border-zinc-200/60 dark:border-zinc-700/60 rounded-2xl p-6">
         {title && (
           <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-2">
             {title}
@@ -122,7 +119,7 @@ const SankeyChart: React.FC<SankeyChartProps> = ({
     '#14b8a6', // teal
     '#10B981', // emerald
     '#06b6d4', // cyan
-    '#6366f1', // indigo
+    '#6366f1', // orange
   ];
 
   // Create node data with colors
@@ -168,13 +165,13 @@ const SankeyChart: React.FC<SankeyChartProps> = ({
   return (
     <div
       ref={containerRef}
-      className="w-full bg-transparent dark:bg-transparent border border-zinc-200 dark:border-zinc-700 rounded-lg p-6 hover:shadow-none dark:hover:shadow-lg transition-shadow duration-200"
+      className="w-full bg-transparent dark:bg-transparent border border-zinc-200/60 dark:border-zinc-700/60 rounded-2xl p-6 transition-all duration-300"
     >
       {/* Header */}
       {(title || description) && (
         <div className="mb-6">
           {title && (
-            <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-2">
+            <h3 className="text-xl font-display font-semibold text-zinc-900 dark:text-white mb-2 tracking-tight">
               {title}
             </h3>
           )}
@@ -225,11 +222,11 @@ const SankeyChart: React.FC<SankeyChartProps> = ({
       </div>
 
       {/* Flow Summary */}
-      <div className="mt-6 pt-6 border-t border-zinc-200 dark:border-zinc-700">
+      <div className="mt-6 pt-6 border-t border-zinc-200/60 dark:border-zinc-700/60">
         <h4 className="text-sm font-semibold text-zinc-900 dark:text-white mb-4">Flow Summary</h4>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
           {normalizedLinks.map((link, index) => (
-            <div key={index} className="p-3 bg-zinc-50 dark:bg-zinc-700 rounded-lg">
+            <div key={index} className="p-3 bg-zinc-50 dark:bg-zinc-700/50 rounded-xl border border-zinc-200/40 dark:border-zinc-600/40">
               <div className="text-xs text-zinc-600 dark:text-zinc-400 mb-1">
                 <span className="font-medium">{sankyNodes[link.source].name}</span>
                 <span className="mx-1">→</span>

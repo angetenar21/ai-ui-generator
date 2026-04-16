@@ -65,17 +65,17 @@ const Radio: React.FC<RadioProps> = ({
   };
 
   const colorClasses = {
-    primary: 'text-indigo-600 focus:ring-indigo-500',
-    secondary: 'text-zinc-600 focus:ring-zinc-500',
-    success: 'text-green-600 focus:ring-green-500',
-    warning: 'text-yellow-600 focus:ring-yellow-500',
-    error: 'text-red-600 focus:ring-red-500',
+    primary: 'text-orange-500 focus:ring-orange-500/20',
+    secondary: 'text-zinc-600 focus:ring-zinc-500/20',
+    success: 'text-green-600 focus:ring-green-500/20',
+    warning: 'text-yellow-600 focus:ring-yellow-500/20',
+    error: 'text-red-600 focus:ring-red-500/20',
   };
 
   return (
     <div className="my-4">
       {label && (
-        <label className="block text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-3">
+        <label className="block text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-3">
           {label}
           {required && <span className="text-red-400 ml-1">*</span>}
         </label>
@@ -99,17 +99,17 @@ const Radio: React.FC<RadioProps> = ({
                 className={`
                   ${sizeClasses[size]}
                   ${colorClasses[color]}
-                  ${error ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-600'}
+                  ${error ? 'border-red-400' : 'border-zinc-300 dark:border-zinc-600'}
                   border-2 bg-white dark:bg-zinc-800
                   focus:ring-2 focus:ring-offset-1
-                  disabled:opacity-50 disabled:cursor-not-allowed
+                  disabled:opacity-60 disabled:cursor-not-allowed
                   transition-all duration-200
                   cursor-pointer
                 `.trim().replace(/\s+/g, ' ')}
               />
               <label
                 htmlFor={`${name}-${index}`}
-                className={`ml-2 text-sm text-zinc-700 dark:text-zinc-300 cursor-pointer select-none ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`ml-2.5 text-sm font-medium text-zinc-700 dark:text-zinc-300 cursor-pointer select-none ${isDisabled ? 'opacity-60 cursor-not-allowed' : ''}`}
               >
                 {option.label}
               </label>

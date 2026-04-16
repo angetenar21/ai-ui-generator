@@ -69,19 +69,19 @@ const Pagination: React.FC<PaginationProps> = ({
 
   const variantClasses = {
     default: {
-      button: 'px-3 py-2 border border-zinc-300 dark:border-zinc-700',
-      active: 'bg-indigo-600 text-white border-indigo-600',
-      inactive: 'bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700',
+      button: 'min-w-[40px] h-10 flex items-center justify-center rounded-xl text-sm font-medium transition-all duration-300 ease-out',
+      active: 'bg-orange-500 text-white shadow-md shadow-orange-500/25',
+      inactive: 'bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700 border border-zinc-200/60 dark:border-zinc-700/50',
     },
     outlined: {
-      button: 'px-3 py-2 border-2',
-      active: 'border-indigo-600 text-white bg-indigo-600',
-      inactive: 'border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:border-indigo-300',
+      button: 'min-w-[40px] h-10 flex items-center justify-center rounded-xl text-sm font-medium transition-all duration-300 ease-out border-2',
+      active: 'border-orange-500 text-white bg-orange-500 shadow-md shadow-orange-500/25',
+      inactive: 'border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:border-orange-300',
     },
     rounded: {
-      button: 'px-3 py-2 rounded-full border border-zinc-300 dark:border-zinc-700',
-      active: 'bg-indigo-600 text-white border-indigo-600',
-      inactive: 'bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700',
+      button: 'min-w-[40px] h-10 flex items-center justify-center rounded-full text-sm font-medium transition-all duration-300 ease-out',
+      active: 'bg-orange-500 text-white shadow-md shadow-orange-500/25',
+      inactive: 'bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700 border border-zinc-200/60 dark:border-zinc-700/50',
     },
   };
 
@@ -89,8 +89,8 @@ const Pagination: React.FC<PaginationProps> = ({
   const pages = getPageNumbers();
 
   return (
-    <div className="card rounded-card p-4 my-4">
-      <div className="flex items-center justify-center gap-1">
+    <div className="card rounded-2xl p-4 my-4">
+      <div className="flex items-center justify-center gap-1.5">
         {showFirstLast && (
           <button
             className={`${classes.button} ${classes.inactive}`}

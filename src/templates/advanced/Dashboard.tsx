@@ -52,7 +52,7 @@ const Dashboard: React.FC<DashboardProps> = ({
 }) => {
   if (!Array.isArray(widgets) || widgets.length === 0) {
     return (
-      <div className="card border border-zinc-200 dark:border-zinc-700 rounded-lg p-6 my-2">
+      <div className="card border border-zinc-200/60 dark:border-zinc-700/60 rounded-2xl p-6 my-2 shadow-sm">
         <div className="text-zinc-600 dark:text-zinc-400 text-sm">No widgets to display</div>
       </div>
     );
@@ -92,7 +92,7 @@ const Dashboard: React.FC<DashboardProps> = ({
   };
 
   return (
-    <div className="my-2">
+    <div className="my-3">
       {/* Dashboard Header */}
       {title && (
         <div className="mb-6">
@@ -101,7 +101,7 @@ const Dashboard: React.FC<DashboardProps> = ({
       )}
 
       {/* Widgets Grid */}
-      <div className={`grid ${getGridColumns()} ${compact ? 'gap-3' : 'gap-5'}`}>
+      <div className={`grid ${getGridColumns()} ${compact ? 'gap-3' : 'gap-5 lg:gap-6'}`}>
         {widgets.map((widget) => {
           const IconComponent = widget.icon ? iconMap[widget.icon] : Activity;
 
@@ -131,8 +131,8 @@ const Dashboard: React.FC<DashboardProps> = ({
                   </div>
                 </div>
 
-                <div className="flex-shrink-0 p-2.5 rounded-xl bg-indigo-50 dark:bg-indigo-900/20 ring-1 ring-indigo-200/60 dark:ring-indigo-800/40">
-                  <IconComponent className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
+                <div className="flex-shrink-0 p-2.5 rounded-xl bg-orange-50 dark:bg-orange-900/20 ring-1 ring-orange-200/60 dark:ring-orange-800/40">
+                  <IconComponent className="w-5 h-5 text-orange-500 dark:text-orange-400" />
                 </div>
               </div>
 
@@ -146,7 +146,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                 {widget.change && (
                   <div className={`
                     flex items-center gap-0.5 px-2 py-0.5 rounded-full text-xs font-semibold flex-shrink-0
-                    ${widget.changeType === 'positive' ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400' : ''}
+                    ${widget.changeType === 'positive' ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400' : ''}
                     ${widget.changeType === 'negative' ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400' : ''}
                     ${widget.changeType === 'neutral' || !widget.changeType ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400' : ''}
                   `}>

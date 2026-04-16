@@ -84,12 +84,12 @@ const Panel: React.FC<PanelProps> = ({
   const secondaryTextClass = 'text-zinc-600 dark:text-zinc-300';
 
   return (
-    <div className={`${surfaceClasses} rounded-2xl transition-all duration-300 ${className || 'w-full'} max-w-full ${textColorClass} flex flex-col animate-slide-up`}>
+    <div className={`${surfaceClasses} rounded-2xl transition-all duration-300 hover:-translate-y-0.5 ${className || 'w-full'} max-w-full ${textColorClass} flex flex-col animate-slide-up`}>
       {/* Header */}
       <div
         className={`
           px-6 py-5
-          ${headerVariant === 'default' && variant !== 'gradient' && variant !== 'accent' ? 'border-b border-zinc-100 dark:border-zinc-800' : ''}
+          ${headerVariant === 'default' && variant !== 'gradient' && variant !== 'accent' ? 'border-b border-zinc-100/80 dark:border-zinc-800/80' : ''}
           ${collapsible && variant !== 'gradient' && variant !== 'accent' ? 'cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors' : ''}
           ${collapsible && (variant === 'gradient' || variant === 'accent') ? 'cursor-pointer transition-colors' : ''}
           rounded-t-2xl ${isCollapsed && !footer ? 'rounded-b-2xl' : ''}
@@ -104,7 +104,7 @@ const Panel: React.FC<PanelProps> = ({
 
           {collapsible && (
             <button
-              className="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors flex-shrink-0 ml-2"
+              className="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-transform duration-300 flex-shrink-0 ml-2"
               aria-label={isCollapsed ? 'Expand' : 'Collapse'}
             >
               {isCollapsed ? (

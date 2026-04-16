@@ -1,6 +1,5 @@
 import React from 'react';
 import { ResponsiveContainer, AreaChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Area } from 'recharts';
-import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
 import { useAppStore } from '@/store/appStore';
 
@@ -11,8 +10,6 @@ interface StackedAreaChartProps {
   width?: number;
   height?: number;
   xAxis?: Array<{ dataKey?: string; label?: string 
-  children?: React.ReactNode;
-  renderChild?: (child: any) => React.ReactNode;
 }>;
   series?: Array<{ dataKey: string; name?: string; color?: string; stackId?: string }>;
 

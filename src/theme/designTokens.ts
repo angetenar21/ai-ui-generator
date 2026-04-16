@@ -20,17 +20,16 @@ export const surfaces: Record<SurfaceVariant, string> = {
   default: 'bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-800 ring-1 ring-black/[0.04] dark:ring-white/[0.04]',
 
   // Gradient: Rich warm gradient background for dashboard hero panels
-  gradient: 'bg-gradient-to-br from-orange-100 via-rose-50 to-pink-50/30 dark:from-emerald-950/40 dark:via-gray-900 dark:to-gray-900 border border-orange-200/60 dark:border-emerald-500/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]',
-
+  gradient: 'bg-gradient-to-br from-orange-100 via-rose-50 to-pink-50/40 dark:from-emerald-950/40 dark:via-gray-900 dark:to-gray-900 border border-orange-200/50 dark:border-emerald-500/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] ring-1 ring-orange-200/20 dark:ring-emerald-500/10',
 
   // Accent: Vibrant orange border glow for primary KPI emphasis
   accent: 'bg-white dark:bg-gray-900 border-2 border-orange-500 dark:border-emerald-400 shadow-[0_0_0_4px_rgba(249,115,22,0.08),0_4px_16px_rgba(249,115,22,0.15)] dark:shadow-[0_0_0_4px_rgba(16,185,129,0.15),0_4px_20px_rgba(16,185,129,0.4)]',
 
   // Glass: Semi-transparent glassmorphism with warm inner glow
-  glass: 'bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl border border-white/40 dark:border-gray-800/40 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]',
+  glass: 'bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl border border-white/40 dark:border-gray-800/40 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)] ring-1 ring-white/20 dark:ring-white/5',
 
   // Elevated: Tinted background for section-level depth
-  elevated: 'bg-gray-50/80 dark:bg-gray-800 border border-gray-200 dark:border-gray-700',
+  elevated: 'bg-gray-50/80 dark:bg-gray-800/80 border border-gray-200/80 dark:border-gray-700 ring-1 ring-black/[0.02] dark:ring-white/[0.02]',
 
   // Subtle: Minimal visual weight
   subtle: 'bg-transparent border border-gray-100 dark:border-gray-800',
@@ -269,10 +268,10 @@ export const spacing: Record<SpacingScale, string> = {
   none: 'p-0',
   xs: 'p-2',
   sm: 'p-3',
-  md: 'p-4',
-  lg: 'p-6',
-  xl: 'p-8',
-  '2xl': 'p-10',
+  md: 'p-5',
+  lg: 'p-7',
+  xl: 'p-9',
+  '2xl': 'p-12',
 };
 
 // ============================================================================

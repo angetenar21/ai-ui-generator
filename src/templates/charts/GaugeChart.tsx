@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Gauge } from '@mui/x-charts/Gauge';
-import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
 import { useAppStore } from '@/store/appStore';
 
@@ -63,9 +62,6 @@ interface GaugeChartProps {
 
   /** Color of the gauge arc */
   color?: string;
-
-  children?: React.ReactNode;
-  renderChild?: (child: any) => React.ReactNode;
 
   variant?: SurfaceVariant;
   elevation?: ElevationLevel;

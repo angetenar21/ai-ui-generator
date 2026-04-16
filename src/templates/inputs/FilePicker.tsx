@@ -142,7 +142,7 @@ const FilePicker: React.FC<FilePickerProps> = ({
   return (
     <div className="my-4 max-w-md">
       {label && (
-        <label className="block text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
+        <label className="block text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-2">
           {label}
           {required && <span className="text-red-400 ml-1">*</span>}
         </label>
@@ -164,18 +164,18 @@ const FilePicker: React.FC<FilePickerProps> = ({
           onDrop={handleDrop}
           onClick={handleButtonClick}
           className={`
-            border-2 border-dashed rounded-lg p-8
-            ${isDragging ? 'border-indigo-500 bg-indigo-500/10' : error || localError ? 'border-red-500' : 'border-zinc-600'}
-            ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-indigo-500 hover:bg-zinc-800/50'}
+            border-2 border-dashed rounded-2xl p-8
+            ${isDragging ? 'border-orange-400 bg-orange-50 dark:bg-orange-500/10' : error || localError ? 'border-red-400' : 'border-zinc-300 dark:border-zinc-600'}
+            ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer hover:border-orange-400 hover:bg-orange-50/50 dark:hover:bg-zinc-800/50'}
             transition-all duration-200
             flex flex-col items-center justify-center gap-3
           `.trim().replace(/\s+/g, ' ')}
         >
-          <svg className="w-12 h-12 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-12 h-12 text-zinc-300 dark:text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
           </svg>
           <div className="text-center">
-            <p className="text-zinc-300 font-medium">
+            <p className="text-zinc-600 dark:text-zinc-300 font-medium">
               {dragAndDrop ? 'Drop files here or click to browse' : 'Click to browse files'}
             </p>
             <p className="text-xs text-zinc-400 mt-1">
@@ -191,10 +191,10 @@ const FilePicker: React.FC<FilePickerProps> = ({
           onClick={handleButtonClick}
           disabled={disabled}
           className={`
-            px-4 py-2 rounded-lg border-2
-            ${error || localError ? 'border-red-500' : 'border-zinc-600'}
-            text-white font-medium
-            ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-zinc-800 hover:border-indigo-500'}
+            px-4 py-2.5 rounded-xl border
+            ${error || localError ? 'border-red-400' : 'border-zinc-200 dark:border-zinc-700'}
+            text-zinc-900 dark:text-white font-medium
+            ${disabled ? 'opacity-60 cursor-not-allowed' : 'hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:border-orange-500'}
             transition-all duration-200
             flex items-center gap-2
           `.trim().replace(/\s+/g, ' ')}
@@ -210,14 +210,14 @@ const FilePicker: React.FC<FilePickerProps> = ({
           {selectedFiles.map((file, index) => (
             <div
               key={index}
-              className="flex items-center justify-between p-3 bg-zinc-800 rounded-lg border border-zinc-700"
+              className="flex items-center justify-between p-3 bg-zinc-50 dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700"
             >
               <div className="flex items-center gap-3 flex-1 min-w-0">
                 <div className="text-zinc-400">
                   {getFileIcon(file)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-zinc-300 truncate">{file.name}</p>
+                  <p className="text-sm text-zinc-700 dark:text-zinc-300 truncate">{file.name}</p>
                   <p className="text-xs text-zinc-400">{formatFileSize(file.size)}</p>
                 </div>
               </div>

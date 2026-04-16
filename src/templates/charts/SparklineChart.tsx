@@ -43,9 +43,6 @@ interface SparklineChartProps {
   /** Trend is positive (green) or negative (red) */
   trendPositive?: boolean;
 
-  children?: React.ReactNode;
-  renderChild?: (child: any) => React.ReactNode;
-
   variant?: SurfaceVariant;
   elevation?: ElevationLevel;
 }

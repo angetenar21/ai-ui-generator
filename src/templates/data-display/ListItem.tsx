@@ -65,8 +65,8 @@ const ListItem: React.FC<ListItemProps> = ({
 
   const variantStyles: Record<ListItemVariant, string> = {
     default: 'bg-transparent',
-    highlighted: 'bg-zinc-800/30 border-l-4 border-l-indigo-500',
-    minimal: 'bg-transparent border-b border-zinc-800/30',
+    highlighted: 'bg-zinc-800/30 border-l-4 border-l-orange-500',
+    minimal: 'bg-transparent border-b border-zinc-100/80 dark:border-zinc-800/30',
   };
 
   return (
@@ -75,18 +75,18 @@ const ListItem: React.FC<ListItemProps> = ({
       className={`
         ${sizeStyles[size].container}
         ${variantStyles[variant]}
-        flex items-center
+        flex items-center rounded-xl
         transition-all duration-200
         ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
-        ${onClick && !disabled ? 'cursor-pointer hover:bg-zinc-800/30' : ''}
-        ${selected ? 'bg-indigo-900/20 border-l-4 border-l-indigo-500' : ''}
+        ${onClick && !disabled ? 'cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800/30 hover:-translate-y-0.5' : ''}
+        ${selected ? 'bg-orange-50 dark:bg-orange-900/20 border-l-4 border-l-orange-500' : ''}
       `}
     >
       {leftContent}
 
       {avatar && (
         <div className="flex-shrink-0">
-          <div className={`${sizeStyles[size].avatar} rounded-full overflow-hidden bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center`}>
+          <div className={`${sizeStyles[size].avatar} rounded-full overflow-hidden bg-gradient-to-br from-orange-600 to-purple-600 flex items-center justify-center ring-2 ring-white dark:ring-zinc-800`}>
             {avatar.startsWith('http') ? (
               <img
                 src={avatar}
@@ -110,7 +110,7 @@ const ListItem: React.FC<ListItemProps> = ({
         <div className={`${sizeStyles[size].primary} text-white font-medium truncate flex items-center gap-2`}>
           {primary}
           {badge !== undefined && (
-            <span className="px-2 py-0.5 bg-indigo-600 text-white text-xs rounded-full font-semibold">
+            <span className="px-2 py-0.5 bg-orange-600 text-white text-xs rounded-full font-semibold">
               {typeof badge === 'number' && badge > 99 ? '99+' : badge}
             </span>
           )}

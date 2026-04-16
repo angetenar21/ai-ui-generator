@@ -64,11 +64,10 @@ const MindMap: React.FC<MindMapProps> = ({
             onMouseLeave={() => setHoveredNode(null)}
             className={`
               relative
-              ${isRoot ? 'px-6 py-4 rounded-xl' : 'px-4 py-3 rounded-lg'}
-              ${node.color || 'bg-indigo-600'}
-              ${isHovered ? 'ring-4 ring-indigo-400/50 scale-105' : ''}
-              transition-all duration-200 cursor-pointer
-              shadow-lg
+              ${isRoot ? 'px-6 py-4 rounded-2xl' : 'px-4 py-3 rounded-xl'}
+              ${node.color || 'bg-gradient-to-br from-orange-500 to-orange-600'}
+              ${isHovered ? 'ring-4 ring-orange-400/50 scale-105 shadow-xl shadow-orange-500/20' : 'shadow-md'}
+              transition-all duration-300 cursor-pointer
             `}
           >
             <div className="flex items-center gap-2">
@@ -103,8 +102,8 @@ const MindMap: React.FC<MindMapProps> = ({
 
             {isHovered && node.description && (
               <div className="absolute top-full left-0 mt-2 z-50 w-64">
-                <div className="bg-zinc-900 border border-zinc-700 rounded-lg p-3 shadow-xl">
-                  <p className="text-sm text-zinc-300">{node.description}</p>
+                <div className="bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-700 rounded-xl p-3 shadow-xl">
+                  <p className="text-sm text-zinc-500 dark:text-zinc-300">{node.description}</p>
                 </div>
               </div>
             )}
@@ -112,7 +111,7 @@ const MindMap: React.FC<MindMapProps> = ({
 
           {/* Connector line */}
           {hasChildren && isExpanded && (
-            <div className="w-0.5 h-8 bg-zinc-600" />
+            <div className="w-0.5 h-8 bg-gradient-to-b from-zinc-300 to-zinc-200 dark:from-zinc-600 dark:to-zinc-700" />
           )}
         </div>
 
@@ -122,7 +121,7 @@ const MindMap: React.FC<MindMapProps> = ({
             {node.children!.map((child) => (
               <div key={child.id} className="relative">
                 {/* Horizontal connector */}
-                <div className="absolute left-0 top-1/2 w-4 h-0.5 bg-zinc-600 -tranzinc-x-4" />
+                <div className="absolute left-0 top-1/2 w-4 h-0.5 bg-gradient-to-r from-zinc-300 to-zinc-200 dark:from-zinc-600 dark:to-zinc-700 -translate-x-4" />
                 {renderTreeLayout(child, level + 1, false)}
               </div>
             ))}
@@ -155,11 +154,11 @@ const MindMap: React.FC<MindMapProps> = ({
             onMouseEnter={() => setHoveredNode(node.id)}
             onMouseLeave={() => setHoveredNode(null)}
             className={`
-              px-8 py-6 rounded-xl
-              ${node.color || 'bg-gradient-to-br from-indigo-600 to-purple-600'}
-              ${isHovered ? 'ring-4 ring-indigo-400/50 scale-110' : ''}
-              transition-all duration-200 cursor-pointer
-              shadow-2xl z-10
+              px-8 py-6 rounded-2xl
+              ${node.color || 'bg-gradient-to-br from-orange-500 to-purple-600'}
+              ${isHovered ? 'ring-4 ring-orange-400/50 scale-110 shadow-2xl shadow-orange-500/20' : 'shadow-xl'}
+              transition-all duration-300 cursor-pointer
+              z-10
             `}
           >
             <div className="flex items-center gap-3">
@@ -217,18 +216,18 @@ const MindMap: React.FC<MindMapProps> = ({
                       onMouseEnter={() => setHoveredNode(child.id)}
                       onMouseLeave={() => setHoveredNode(null)}
                       className={`
-                        px-4 py-3 rounded-lg
-                        ${child.color || 'bg-zinc-700'}
-                        ${hoveredNode === child.id ? 'ring-2 ring-indigo-400 scale-105' : ''}
-                        transition-all duration-200 cursor-pointer
-                        shadow-lg whitespace-nowrap
+                        px-4 py-3 rounded-xl
+                        ${child.color || 'bg-white dark:bg-zinc-700 border border-zinc-200/60 dark:border-zinc-600'}
+                        ${hoveredNode === child.id ? 'ring-2 ring-orange-400/60 scale-105 shadow-xl' : 'shadow-md'}
+                        transition-all duration-300 cursor-pointer
+                        whitespace-nowrap
                       `}
                     >
                       <div className="flex items-center gap-2">
                         {child.icon && (
                           <span className="text-white">{child.icon}</span>
                         )}
-                        <span className="text-white font-medium text-sm">
+                        <span className="text-zinc-900 dark:text-white font-medium text-sm">
                           {child.label}
                         </span>
                       </div>
@@ -246,10 +245,10 @@ const MindMap: React.FC<MindMapProps> = ({
   };
 
   return (
-    <div className="card border border-zinc-200 dark:border-zinc-700 rounded-2xl p-6 my-4">
+    <div className="card border border-zinc-200/60 dark:border-zinc-700 rounded-2xl p-6 my-4 shadow-sm">
       {title && (
         <div className="mb-6">
-          <h3 className="text-xl font-display font-semibold text-white">
+          <h3 className="text-xl font-display font-bold tracking-tight text-zinc-900 dark:text-white">
             {title}
           </h3>
         </div>

@@ -109,27 +109,27 @@ const TagInput: React.FC<TagInputProps> = ({
   };
 
   const sizeClasses = {
-    small: 'px-3 py-1.5 text-sm',
-    medium: 'px-4 py-2 text-base',
+    small: 'px-3 py-2 text-sm',
+    medium: 'px-4 py-2.5 text-base',
     large: 'px-5 py-3 text-lg',
   };
 
   const variantClasses = {
-    outlined: `border-2 ${error ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-600'} focus-within:border-indigo-500 bg-white dark:bg-zinc-800`,
-    filled: `border-b-2 ${error ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-600'} focus-within:border-indigo-500 bg-zinc-100 dark:bg-zinc-800/50`,
-    standard: `border-b-2 ${error ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-600'} focus-within:border-indigo-500 bg-transparent`,
+    outlined: `border ${error ? 'border-red-400 ring-2 ring-red-500/10' : 'border-zinc-200 dark:border-zinc-700'} focus-within:border-orange-500 bg-white dark:bg-zinc-900`,
+    filled: `border-b-2 ${error ? 'border-red-400' : 'border-zinc-200 dark:border-zinc-700'} focus-within:border-orange-500 bg-zinc-50 dark:bg-zinc-800/50`,
+    standard: `border-b-2 ${error ? 'border-red-400' : 'border-zinc-200 dark:border-zinc-700'} focus-within:border-orange-500 bg-transparent`,
   };
 
   const tagSizeClasses = {
-    small: 'px-2 py-0.5 text-xs',
-    medium: 'px-2 py-1 text-sm',
-    large: 'px-3 py-1.5 text-base',
+    small: 'px-2.5 py-0.5 text-xs',
+    medium: 'px-3 py-1 text-sm',
+    large: 'px-4 py-1.5 text-base',
   };
 
   return (
     <div className={`my-4 ${fullWidth ? 'w-full' : 'max-w-md'}`}>
       {label && (
-        <label className="block text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
+        <label className="block text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-2">
           {label}
           {required && <span className="text-red-400 ml-1">*</span>}
         </label>
@@ -140,9 +140,9 @@ const TagInput: React.FC<TagInputProps> = ({
           ${sizeClasses[size]}
           ${variantClasses[variant]}
           ${fullWidth ? 'w-full' : 'w-full'}
-          rounded-lg text-zinc-900 dark:text-white
-          focus-within:ring-2 focus-within:ring-indigo-500/50
-          ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-text'}
+          rounded-xl text-zinc-900 dark:text-white
+          focus-within:ring-2 focus-within:ring-orange-500/20
+          ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text'}
           transition-all duration-200
           flex flex-wrap gap-2 items-center min-h-[2.5rem]
         `.trim().replace(/\s+/g, ' ')}
@@ -152,7 +152,7 @@ const TagInput: React.FC<TagInputProps> = ({
             key={index}
             className={`
               ${tagSizeClasses[size]}
-              inline-flex items-center gap-1 bg-indigo-500 dark:bg-indigo-600 text-white rounded
+              inline-flex items-center gap-1 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 font-medium rounded-full
               transition-all duration-150
             `.trim().replace(/\s+/g, ' ')}
           >
@@ -164,7 +164,7 @@ const TagInput: React.FC<TagInputProps> = ({
                   e.stopPropagation();
                   removeTag(index);
                 }}
-                className="hover:text-zinc-200 focus:outline-none"
+                className="hover:text-orange-900 dark:hover:text-orange-200 focus:outline-none transition-colors"
                 aria-label={`Remove ${tag}`}
               >
                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -182,7 +182,7 @@ const TagInput: React.FC<TagInputProps> = ({
           onKeyDown={handleKeyDown}
           placeholder={currentTags.length === 0 ? placeholder : ''}
           disabled={disabled || (maxTags !== undefined && currentTags.length >= maxTags)}
-          className="flex-1 min-w-[120px] bg-transparent outline-none placeholder-zinc-400 disabled:cursor-not-allowed"
+          className="flex-1 min-w-[120px] bg-transparent outline-none placeholder:text-zinc-400 disabled:cursor-not-allowed"
         />
       </div>
       {(helperText || (error && errorMessage) || maxTags) && (

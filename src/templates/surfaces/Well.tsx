@@ -30,7 +30,7 @@ const Well: React.FC<WellProps> = ({
   renderChild,
 }) => {
   const sizeClasses = {
-    small: 'p-4 text-sm',
+    small: 'p-5 text-sm',
     medium: 'p-6 text-base',
     large: 'p-8 text-lg',
   };
@@ -54,7 +54,7 @@ const Well: React.FC<WellProps> = ({
       className={`
         ${variantClasses[variant]}
         ${sizeClasses[size]}
-        border rounded-lg
+        border border-zinc-200/60 dark:border-zinc-700/60 rounded-2xl
         shadow-inner
       `}
     >

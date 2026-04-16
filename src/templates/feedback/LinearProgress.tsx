@@ -44,11 +44,11 @@ const LinearProgress: React.FC<LinearProgressProps> = ({
   } as const;
 
   const colorClasses = {
-    primary: 'bg-indigo-600 dark:bg-indigo-500',
-    secondary: 'bg-zinc-500 dark:bg-zinc-500',
-    success: 'bg-green-600 dark:bg-green-500',
-    warning: 'bg-indigo-600 dark:bg-indigo-500',
-    error: 'bg-red-600 dark:bg-red-500',
+    primary: 'bg-gradient-to-r from-orange-400 to-orange-500',
+    secondary: 'bg-gradient-to-r from-zinc-400 to-zinc-500',
+    success: 'bg-gradient-to-r from-green-400 to-green-500',
+    warning: 'bg-gradient-to-r from-amber-400 to-amber-500',
+    error: 'bg-gradient-to-r from-red-400 to-red-500',
   } as const;
 
   const animationClass = indeterminate
@@ -65,7 +65,7 @@ const LinearProgress: React.FC<LinearProgressProps> = ({
 
   return (
     <div
-      className="card rounded-card p-6 my-4"
+      className="card rounded-2xl p-6 my-4"
       role="progressbar"
       aria-valuenow={indeterminate ? undefined : Math.round(clampedValue)}
       aria-valuemin={0}
@@ -74,14 +74,14 @@ const LinearProgress: React.FC<LinearProgressProps> = ({
       <div className="w-full">
         {(label || valueLabel) && (
           <div className="flex justify-between items-center mb-2">
-            {label ? <span className="text-sm text-zinc-700 dark:text-zinc-300">{label}</span> : <span />}
-            {valueLabel && <span className="text-sm text-zinc-600 dark:text-zinc-400">{valueLabel}</span>}
+            {label ? <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300 tracking-tight">{label}</span> : <span />}
+            {valueLabel && <span className="text-sm font-display font-bold text-zinc-900 dark:text-zinc-200 tabular-nums">{valueLabel}</span>}
           </div>
         )}
-        <div className={`w-full ${sizeClasses[size]} bg-zinc-200 dark:bg-zinc-700 rounded-full overflow-hidden`}>
+        <div className={`w-full h-2.5 bg-zinc-100 dark:bg-zinc-700 rounded-full overflow-hidden`}>
           <div
             className={`
-              ${sizeClasses[size]}
+              h-2.5
               ${colorClasses[progressColor]}
               ${indeterminate ? 'w-1/3' : ''}
               ${stripedClass}

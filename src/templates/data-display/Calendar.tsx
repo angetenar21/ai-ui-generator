@@ -112,7 +112,7 @@ const Calendar: React.FC<CalendarProps> = ({
         {daysOfWeek.map((day) => (
           <div
             key={day}
-            className="text-center text-sm font-semibold text-zinc-400 py-2"
+            className="text-center text-[11px] uppercase tracking-widest font-semibold text-zinc-400 py-2"
           >
             {day}
           </div>
@@ -134,8 +134,8 @@ const Calendar: React.FC<CalendarProps> = ({
               className={`
                 aspect-square p-1 rounded-xl
                 transition-all duration-300 transform hover:scale-[1.02]
-                ${isDisabled ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800/80'}
-                ${isSelected ? 'bg-indigo-500 shadow-lg shadow-indigo-500/25 ring-2 ring-indigo-500 ring-offset-2 ring-offset-white dark:ring-offset-zinc-900' : ''}
+                ${isDisabled ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer hover:bg-orange-50 dark:hover:bg-zinc-800/80'}
+                ${isSelected ? 'bg-orange-500 text-white shadow-md shadow-orange-500/25 ring-2 ring-orange-500 ring-offset-2 ring-offset-white dark:ring-offset-zinc-900' : ''}
                 ${isCurrentDay && !isSelected ? 'ring-1 ring-inset ring-zinc-200 dark:ring-zinc-700 bg-zinc-50 dark:bg-zinc-800/30' : ''}
               `}
             >
@@ -153,7 +153,7 @@ const Calendar: React.FC<CalendarProps> = ({
                           onEventClick?.(event);
                         }}
                         className={`w-1.5 h-1.5 rounded-full ${
-                          event.color || 'bg-indigo-400'
+                          event.color || 'bg-orange-400'
                         }`}
                         title={event.title}
                       />
@@ -169,18 +169,18 @@ const Calendar: React.FC<CalendarProps> = ({
   };
 
   return (
-    <div className="card border border-zinc-200 dark:border-zinc-700 rounded-2xl p-6 my-4">
+    <div className="card border border-zinc-200/60 dark:border-zinc-700 rounded-2xl p-6 my-4 shadow-sm">
       <div className="flex items-center justify-between mb-8">
-        <h3 className="text-xl font-display font-semibold text-zinc-900 dark:text-white">
+        <h3 className="text-xl font-display font-bold tracking-tight text-zinc-900 dark:text-white">
           {title}
         </h3>
         <div className="flex items-center gap-4">
           <button
             onClick={handlePrevMonth}
-            className="p-2 hover:bg-zinc-800/50 rounded-lg transition-colors"
+            className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800/50 rounded-xl transition-all duration-200"
           >
             <svg
-              className="w-5 h-5 text-zinc-300"
+              className="w-5 h-5 text-zinc-400 dark:text-zinc-300"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -193,15 +193,15 @@ const Calendar: React.FC<CalendarProps> = ({
               />
             </svg>
           </button>
-          <div className="text-lg font-semibold text-white min-w-[180px] text-center">
+          <div className="text-lg font-display font-bold tracking-tight text-zinc-900 dark:text-white min-w-[180px] text-center">
             {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
           </div>
           <button
             onClick={handleNextMonth}
-            className="p-2 hover:bg-zinc-800/50 rounded-lg transition-colors"
+            className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800/50 rounded-xl transition-all duration-200"
           >
             <svg
-              className="w-5 h-5 text-zinc-300"
+              className="w-5 h-5 text-zinc-400 dark:text-zinc-300"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -220,8 +220,8 @@ const Calendar: React.FC<CalendarProps> = ({
       {renderMonthView()}
 
       {selected && (
-        <div className="mt-6 pt-6 border-t border-zinc-700/50">
-          <div className="text-sm text-zinc-400 mb-2">
+        <div className="mt-6 pt-6 border-t border-zinc-200/60 dark:border-zinc-700/50">
+          <div className="text-[11px] uppercase tracking-widest font-semibold text-zinc-400 mb-2">
             Selected: {selected.toLocaleDateString()}
           </div>
           {getEventsForDate(selected).length > 0 && (
@@ -230,10 +230,10 @@ const Calendar: React.FC<CalendarProps> = ({
                 <div
                   key={event.id}
                   onClick={() => onEventClick?.(event)}
-                  className="p-3 bg-zinc-800/30 rounded-lg cursor-pointer hover:bg-zinc-800/50 transition-colors"
+                  className="p-3 bg-zinc-50 dark:bg-zinc-800/30 rounded-xl cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800/50 transition-all duration-200 border border-zinc-100/80 dark:border-zinc-700/30"
                 >
                   <div className="flex items-center gap-2">
-                    <div className={`w-2 h-2 rounded-full ${event.color || 'bg-indigo-400'}`} />
+                    <div className={`w-2 h-2 rounded-full ${event.color || 'bg-orange-400'}`} />
                     <span className="text-white text-sm">{event.title}</span>
                   </div>
                 </div>

@@ -32,10 +32,10 @@ const Alert: React.FC<AlertProps> = ({
   const severityConfig = {
     info: {
       icon: 'info',
-      bg: 'bg-indigo-50/80 dark:bg-indigo-900/20',
-      border: 'border-indigo-200/50 dark:border-indigo-500/30',
-      text: 'text-indigo-800 dark:text-indigo-300',
-      filled: 'bg-indigo-600 dark:bg-indigo-500 text-white',
+      bg: 'bg-orange-50/80 dark:bg-orange-900/20',
+      border: 'border-orange-200/50 dark:border-orange-500/30',
+      text: 'text-orange-800 dark:text-orange-300',
+      filled: 'bg-orange-600 dark:bg-orange-500 text-white',
     },
     success: {
       icon: 'check-circle',
@@ -46,10 +46,10 @@ const Alert: React.FC<AlertProps> = ({
     },
     warning: {
       icon: 'alert-triangle',
-      bg: 'bg-indigo-50/80 dark:bg-indigo-900/20',
-      border: 'border-indigo-200/50 dark:border-indigo-500/30',
-      text: 'text-indigo-800 dark:text-indigo-300',
-      filled: 'bg-indigo-500 dark:bg-indigo-500 text-white',
+      bg: 'bg-orange-50/80 dark:bg-orange-900/20',
+      border: 'border-orange-200/50 dark:border-orange-500/30',
+      text: 'text-orange-800 dark:text-orange-300',
+      filled: 'bg-orange-500 dark:bg-orange-500 text-white',
     },
     error: {
       icon: 'x-circle',
@@ -70,16 +70,16 @@ const Alert: React.FC<AlertProps> = ({
   };
 
   return (
-    <div className={`rounded-xl p-4 my-2 flex items-start gap-4 ${variantClasses[variant]} transition-all duration-200`}>
+    <div className={`rounded-2xl p-5 my-2 flex items-start gap-4 border-l-4 ${variantClasses[variant]} transition-all duration-300 ease-out`}>
       {displayIcon && (
-        <div className={`flex-shrink-0 w-6 h-6 flex items-center justify-center mt-0.5 ${variant === 'filled' ? 'text-white' : config.text}`}>
+        <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${variant === 'filled' ? 'bg-white/15 text-white' : `${config.bg} ${config.text}`}`}>
           <DynamicIcon name={displayIcon} size={20} />
         </div>
       )}
 
       <div className="flex-1 min-w-0">
         {title && (
-          <div className="font-semibold tracking-tight mb-1">{title}</div>
+          <div className="font-display font-bold tracking-tight mb-1">{title}</div>
         )}
         <div className={`text-sm ${variant === 'filled' ? 'text-white/90' : 'opacity-90'} leading-relaxed`}>{content}</div>
       </div>
@@ -87,7 +87,7 @@ const Alert: React.FC<AlertProps> = ({
       {closable && (
         <button
           onClick={() => { setDismissed(true); if (onClose) onClose(); }}
-          className={`flex-shrink-0 p-1 -mt-1 -mr-1 rounded-lg flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/10 transition-colors ${variant === 'filled' ? 'text-white/80 hover:text-white' : 'opacity-70 hover:opacity-100'}`}
+          className={`flex-shrink-0 p-2 -mt-1 -mr-1 rounded-full flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/10 transition-all duration-300 ease-out ${variant === 'filled' ? 'text-white/80 hover:text-white' : 'opacity-70 hover:opacity-100'}`}
           aria-label="Close alert"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -77,7 +77,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const variantClasses = {
     default: 'bg-white dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800',
     elevated: 'bg-white dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 shadow-xl',
-    bordered: 'bg-white dark:bg-zinc-900 border-r-2 border-indigo-600',
+    bordered: 'bg-white dark:bg-zinc-900 border-r-2 border-orange-600',
   };
 
   const positionClasses = {
@@ -106,8 +106,8 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div key={index}>
         <button
           onClick={() => hasChildren && toggleExpanded(index)}
-          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 ${item.active
-            ? 'bg-indigo-600 text-white shadow-sm font-medium'
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors duration-200 ${item.active
+            ? 'bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 font-semibold'
             : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white'
             } ${depth > 0 ? 'pl-8' : ''}`}
         >
@@ -158,11 +158,11 @@ const Sidebar: React.FC<SidebarProps> = ({
     <aside
       className={`${positionClasses[position]} ${widthClasses[width]} ${variantClasses[variant]} transition-all duration-300 overflow-y-auto min-h-screen flex-shrink-0`}
     >
-      <div className="flex items-center justify-between p-5 border-b border-zinc-200 dark:border-zinc-800">
+      <div className="flex items-center justify-between p-5 border-b border-zinc-200/60 dark:border-zinc-800">
         {!isCollapsed && (
           <div className="flex items-center gap-3">
             {logo && <span className="text-2xl">{logo}</span>}
-            <h2 className="text-xl font-display font-bold text-zinc-900 dark:text-white">{title}</h2>
+            <h2 className="text-xl font-display font-bold tracking-tight text-zinc-900 dark:text-white">{title}</h2>
           </div>
         )}
         {logo && isCollapsed && <span className="text-2xl mx-auto">{logo}</span>}
@@ -189,7 +189,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         )}
       </div>
 
-      <nav className="p-4 space-y-1">
+      <nav className="p-3 space-y-0.5">
         {items.map((item, index) => renderNavItem(item, index))}
       </nav>
 

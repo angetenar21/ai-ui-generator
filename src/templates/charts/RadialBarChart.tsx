@@ -1,5 +1,4 @@
 import React from 'react';
-import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
 import { useAppStore } from '@/store/appStore';
 import {
@@ -22,9 +21,6 @@ interface RadialBarChartProps {
     name: string;
     value: number;
     color?: string;
-  
-  children?: React.ReactNode;
-  renderChild?: (child: any) => React.ReactNode;
 }>;
 
   /** Chart width */

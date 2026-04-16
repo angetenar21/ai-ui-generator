@@ -39,9 +39,9 @@ const Chip: React.FC<ChipProps> = ({
       soft: 'bg-zinc-800/50 text-zinc-200 border-zinc-700/50',
     },
     primary: {
-      filled: 'bg-indigo-600 text-white border-indigo-600',
-      outlined: 'bg-transparent text-indigo-400 border-indigo-500',
-      soft: 'bg-indigo-900/30 text-indigo-300 border-indigo-700/50',
+      filled: 'bg-orange-600 text-white border-orange-600',
+      outlined: 'bg-transparent text-orange-400 border-orange-500',
+      soft: 'bg-orange-900/30 text-orange-300 border-orange-700/50',
     },
     success: {
       filled: 'bg-green-600 text-white border-green-600',
@@ -59,9 +59,9 @@ const Chip: React.FC<ChipProps> = ({
       soft: 'bg-red-900/30 text-red-300 border-red-700/50',
     },
     info: {
-      filled: 'bg-indigo-600 text-white border-indigo-600',
-      outlined: 'bg-transparent text-indigo-400 border-indigo-500',
-      soft: 'bg-indigo-900/30 text-indigo-300 border-indigo-700/50',
+      filled: 'bg-orange-600 text-white border-orange-600',
+      outlined: 'bg-transparent text-orange-400 border-orange-500',
+      soft: 'bg-orange-900/30 text-orange-300 border-orange-700/50',
     },
   };
 
@@ -103,7 +103,7 @@ const Chip: React.FC<ChipProps> = ({
             transition-all duration-200
             ${colorStyles[color][variant]}
             ${sizeStyles[size].chip}
-            ${onClick ? 'cursor-pointer hover:opacity-80' : ''}
+            ${onClick ? 'cursor-pointer hover:opacity-80 hover:shadow-sm' : 'hover:shadow-sm'}
           `}
         >
           {chip.icon && (
@@ -113,7 +113,7 @@ const Chip: React.FC<ChipProps> = ({
           {deletable && (
             <button
               onClick={(e) => handleDelete(e, chip.id)}
-              className="ml-1 hover:opacity-70 transition-opacity"
+              className="ml-1 hover:bg-black/10 rounded-full p-0.5 transition-all duration-200"
               aria-label={`Remove ${chip.label}`}
             >
               <svg

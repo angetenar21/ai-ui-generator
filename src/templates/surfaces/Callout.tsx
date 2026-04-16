@@ -42,37 +42,49 @@ const Callout: React.FC<CalloutProps> = ({
 
   const variantConfig = {
     info: {
-      bgClass: 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800',
-      textClass: 'text-indigo-700 dark:text-indigo-300',
-      iconClass: 'text-indigo-600 dark:text-indigo-400',
+      bgClass: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800',
+      accentBorder: 'border-l-blue-500 dark:border-l-blue-400',
+      iconBg: 'bg-blue-100 dark:bg-blue-900/30',
+      textClass: 'text-blue-700 dark:text-blue-300',
+      iconClass: 'text-blue-600 dark:text-blue-400',
       Icon: Info,
     },
     warning: {
       bgClass: 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800',
+      accentBorder: 'border-l-yellow-500 dark:border-l-yellow-400',
+      iconBg: 'bg-yellow-100 dark:bg-yellow-900/30',
       textClass: 'text-yellow-700 dark:text-yellow-300',
       iconClass: 'text-yellow-600 dark:text-yellow-400',
       Icon: AlertTriangle,
     },
     success: {
       bgClass: 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800',
+      accentBorder: 'border-l-green-500 dark:border-l-green-400',
+      iconBg: 'bg-green-100 dark:bg-green-900/30',
       textClass: 'text-green-700 dark:text-green-300',
       iconClass: 'text-green-600 dark:text-green-400',
       Icon: CheckCircle,
     },
     error: {
       bgClass: 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800',
+      accentBorder: 'border-l-red-500 dark:border-l-red-400',
+      iconBg: 'bg-red-100 dark:bg-red-900/30',
       textClass: 'text-red-700 dark:text-red-300',
       iconClass: 'text-red-600 dark:text-red-400',
       Icon: XCircle,
     },
     tip: {
-      bgClass: 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800',
-      textClass: 'text-indigo-700 dark:text-indigo-300',
-      iconClass: 'text-indigo-600 dark:text-indigo-400',
+      bgClass: 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800',
+      accentBorder: 'border-l-amber-500 dark:border-l-amber-400',
+      iconBg: 'bg-amber-100 dark:bg-amber-900/30',
+      textClass: 'text-amber-700 dark:text-amber-300',
+      iconClass: 'text-amber-600 dark:text-amber-400',
       Icon: Lightbulb,
     },
     note: {
       bgClass: 'bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800',
+      accentBorder: 'border-l-purple-500 dark:border-l-purple-400',
+      iconBg: 'bg-purple-100 dark:bg-purple-900/30',
       textClass: 'text-purple-700 dark:text-purple-300',
       iconClass: 'text-purple-600 dark:text-purple-400',
       Icon: AlertCircle,
@@ -85,15 +97,15 @@ const Callout: React.FC<CalloutProps> = ({
   return (
     <div
       className={`
-        ${config.bgClass}
-        border rounded-lg p-4
-        transition-all duration-200
+        ${config.bgClass} ${config.accentBorder}
+        border border-l-4 rounded-2xl p-5
+        transition-all duration-300 ease-out
       `}
     >
       <div className="flex gap-3">
         {showIcon && (
-          <div className={`flex-shrink-0 ${config.iconClass}`}>
-            <IconComponent className="w-5 h-5" />
+          <div className={`flex-shrink-0 w-10 h-10 rounded-full ${config.iconBg} flex items-center justify-center`}>
+            <IconComponent className={`w-6 h-6 ${config.iconClass}`} />
           </div>
         )}
 

@@ -62,13 +62,13 @@ const Rating: React.FC<RatingProps> = ({
   };
 
   const sizeClasses = {
-    small: 'w-5 h-5',
-    medium: 'w-7 h-7',
-    large: 'w-9 h-9',
+    small: 'w-6 h-6',
+    medium: 'w-8 h-8',
+    large: 'w-10 h-10',
   };
 
   const colorClasses = {
-    primary: 'text-indigo-500',
+    primary: 'text-orange-500',
     secondary: 'text-zinc-500',
     warning: 'text-yellow-500',
     error: 'text-red-500',
@@ -181,10 +181,10 @@ const Rating: React.FC<RatingProps> = ({
         onMouseLeave={handleMouseLeave}
         disabled={disabled || readOnly}
         className={`
-          ${fillType !== 'empty' ? colorClasses[color] : 'text-zinc-600'}
-          ${disabled || readOnly ? 'cursor-default' : 'cursor-pointer hover:scale-110'}
+          ${fillType !== 'empty' ? `${colorClasses[color]} drop-shadow-sm` : 'text-zinc-300 dark:text-zinc-600'}
+          ${disabled || readOnly ? 'cursor-default' : 'cursor-pointer hover:scale-125'}
           transition-transform duration-150
-          focus:outline-none focus:ring-2 focus:ring-indigo-500/50 rounded
+          focus:outline-none focus:ring-2 focus:ring-orange-500/20 rounded
         `.trim().replace(/\s+/g, ' ')}
       >
         {getIcon(fillType, i)}
@@ -195,7 +195,7 @@ const Rating: React.FC<RatingProps> = ({
   return (
     <div className="my-4">
       {label && (
-        <label className="block text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
+        <label className="block text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-2">
           {label}
           {required && <span className="text-red-400 ml-1">*</span>}
         </label>

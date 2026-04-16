@@ -56,11 +56,11 @@ const Feature: React.FC<FeatureProps> = ({
   };
 
   const iconColorClasses = {
-    primary: 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400',
-    cyan: 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400',
+    primary: 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400',
+    cyan: 'bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400',
     purple: 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400',
     pink: 'bg-pink-100 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400',
-    success: 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400',
+    success: 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400',
   };
 
   const IconComponent = iconMap[icon] || Star;
@@ -68,7 +68,7 @@ const Feature: React.FC<FeatureProps> = ({
   const isVertical = orientation === 'vertical';
 
   return (
-    <div className="bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-6 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all group">
+    <div className="bg-white dark:bg-zinc-800 border border-zinc-200/60 dark:border-zinc-700 rounded-2xl p-6 hover:border-zinc-300 dark:hover:border-zinc-600 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_6px_24px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08),0_16px_48px_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-300 ease-out group">
       <div className={`flex ${isVertical ? 'flex-col' : 'flex-row'} gap-4`}>
         {/* Icon */}
         <div className={`
@@ -76,7 +76,7 @@ const Feature: React.FC<FeatureProps> = ({
           ${isVertical ? 'mb-2' : ''}
         `}>
           <div className={`
-            w-12 h-12 rounded-lg
+            w-14 h-14 rounded-2xl
             flex items-center justify-center
             ${iconColorClasses[iconColor]}
             group-hover:scale-110 transition-transform
@@ -87,7 +87,7 @@ const Feature: React.FC<FeatureProps> = ({
 
         {/* Content */}
         <div className="flex-1 min-w-0">
-          <h3 className="text-zinc-900 dark:text-zinc-100 font-semibold text-lg mb-2">
+          <h3 className="text-zinc-900 dark:text-zinc-100 font-display font-bold text-lg mb-2">
             {title}
           </h3>
 
@@ -98,10 +98,10 @@ const Feature: React.FC<FeatureProps> = ({
           {link && (
             <a
               href={link}
-              className="text-indigo-500 hover:text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium inline-flex items-center gap-1 transition-colors"
+              className="text-orange-500 hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300 text-sm font-medium inline-flex items-center gap-1 transition-colors"
             >
               {linkText}
-              <span className="group-hover:tranzinc-x-1 transition-transform">→</span>
+              <span className="group-hover:translate-x-1 transition-transform duration-200">→</span>
             </a>
           )}
         </div>

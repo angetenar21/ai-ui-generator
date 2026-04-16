@@ -1,6 +1,6 @@
 import React from 'react';
-import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
+import { useAppStore } from '@/store/appStore';
 
 interface ChordChartProps {
   /** Chart title */
@@ -12,9 +12,6 @@ interface ChordChartProps {
   /** Node definitions */
   nodes: Array<{
     name: string;
-  
-  children?: React.ReactNode;
-  renderChild?: (child: any) => React.ReactNode;
 }>;
 
   /** Relationship matrix */
@@ -40,6 +37,9 @@ const ChordChart: React.FC<ChordChartProps> = ({
   variant = 'transparent',
   elevation = 'raised',
 }) => {
+  // Detect dark mode
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
   // Validate
   if (!nodes || !Array.isArray(nodes) || nodes.length === 0) {
     return (
@@ -65,10 +65,11 @@ const ChordChart: React.FC<ChordChartProps> = ({
 
   // Display as a relationship table/matrix
   const getColor = (value: number, maxValue: number): string => {
-    if (value === 0) return '#1f2937';
+    if (value === 0) return isDarkMode ? '#1f2937' : '#f3f4f6';
     const intensity = maxValue === 0 ? 0.5 : value / maxValue;
     const hue = 250; // Purple hue
-    return `hsla(${hue}, 70%, ${50 + intensity * 30}%, ${0.3 + intensity * 0.7})`;
+    const lightness = isDarkMode ? 50 + intensity * 30 : 85 - intensity * 40;
+    return `hsla(${hue}, 70%, ${lightness}%, ${0.3 + intensity * 0.7})`;
   };
 
   const maxValue = Math.max(...matrix.flat());
@@ -84,11 +85,11 @@ const ChordChart: React.FC<ChordChartProps> = ({
         <table className="w-full border-collapse text-sm">
           <thead>
             <tr>
-              <th className="border border-zinc-600 bg-zinc-800 p-2 text-zinc-300 font-semibold sticky left-0"></th>
+              <th className={`border p-2 font-semibold sticky left-0 ${isDarkMode ? 'border-zinc-600 bg-zinc-800 text-zinc-300' : 'border-zinc-200 bg-zinc-100 text-zinc-700'}`}></th>
               {nodes.map((node, i) => (
                 <th
                   key={i}
-                  className="border border-zinc-600 bg-zinc-800 p-2 text-zinc-300 font-semibold"
+                  className={`border p-2 font-semibold ${isDarkMode ? 'border-zinc-600 bg-zinc-800 text-zinc-300' : 'border-zinc-200 bg-zinc-100 text-zinc-700'}`}
                   style={{ minWidth: 80 }}
                 >
                   {node.name}
@@ -99,13 +100,13 @@ const ChordChart: React.FC<ChordChartProps> = ({
           <tbody>
             {matrix.map((row, i) => (
               <tr key={i}>
-                <td className="border border-zinc-600 bg-zinc-800 p-2 text-zinc-300 font-semibold sticky left-0">
+                <td className={`border p-2 font-semibold sticky left-0 ${isDarkMode ? 'border-zinc-600 bg-zinc-800 text-zinc-300' : 'border-zinc-200 bg-zinc-100 text-zinc-700'}`}>
                   {nodes[i]?.name || `Node ${i}`}
                 </td>
                 {row.map((value, j) => (
                   <td
                     key={j}
-                    className="border border-zinc-600 p-2 text-center text-white font-medium"
+                    className={`border p-2 text-center font-medium ${isDarkMode ? 'border-zinc-600 text-white' : 'border-zinc-200 text-zinc-800'}`}
                     style={{
                       backgroundColor: getColor(value, maxValue),
                       cursor: 'pointer',

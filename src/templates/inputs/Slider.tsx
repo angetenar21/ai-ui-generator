@@ -64,10 +64,10 @@ const Slider: React.FC<SliderProps> = ({
     if (error) return '#EF4444'; // red-500
 
     const colorMap: Record<string, string> = {
-      primary: '#10B981',   // indigo-600
+      primary: '#f97316',   // orange-500
       secondary: '#6B7280', // zinc-500
       success: '#10B981',   // green-500
-      warning: '#F59E0B',   // indigo-500
+      warning: '#F59E0B',   // amber-500
       error: '#EF4444',     // red-500
     };
 
@@ -81,16 +81,16 @@ const Slider: React.FC<SliderProps> = ({
   // };
 
   const thumbSizeCss = {
-    small: '12px',
-    medium: '16px',
-    large: '24px',
+    small: '14px',
+    medium: '20px',
+    large: '26px',
   };
 
   return (
     <div className="my-4 max-w-md">
       {label && (
         <div className="flex justify-between items-center mb-2">
-          <label className="block text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+          <label className="block text-sm font-semibold text-zinc-700 dark:text-zinc-300">
             {label}
             {required && <span className="text-red-600 dark:text-red-400 ml-1">*</span>}
           </label>
@@ -114,9 +114,10 @@ const Slider: React.FC<SliderProps> = ({
             onTouchEnd={handleChangeCommitted}
             disabled={disabled}
             required={required}
-            className="w-full h-2 bg-transparent appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full h-2 rounded-full bg-transparent appearance-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
             style={{
-              background: `linear-gradient(to right, ${getColorValue(color)} 0%, ${getColorValue(color)} ${percentage}%, #374151 ${percentage}%, #374151 100%)`,
+              background: `linear-gradient(to right, ${getColorValue(color)} 0%, ${getColorValue(color)} ${percentage}%, #e4e4e7 ${percentage}%, #e4e4e7 100%)`,
+              borderRadius: '9999px',
             }}
           />
           <style>{`
@@ -128,12 +129,12 @@ const Slider: React.FC<SliderProps> = ({
               border-radius: 50%;
               cursor: pointer;
               border: 2px solid ${getColorValue(color)};
-              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.06);
               transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             }
             input[type="range"]::-webkit-slider-thumb:hover {
-              box-shadow: 0 0 0 4px ${getColorValue(color)}33;
-              transform: scale(1.1);
+              box-shadow: 0 0 0 6px ${getColorValue(color)}20;
+              transform: scale(1.15);
             }
             input[type="range"]::-moz-range-thumb {
               width: ${thumbSizeCss[size]};
@@ -142,12 +143,12 @@ const Slider: React.FC<SliderProps> = ({
               border-radius: 50%;
               cursor: pointer;
               border: 2px solid ${getColorValue(color)};
-              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.06);
               transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             }
             input[type="range"]::-moz-range-thumb:hover {
-              box-shadow: 0 0 0 4px ${getColorValue(color)}33;
-              transform: scale(1.1);
+              box-shadow: 0 0 0 6px ${getColorValue(color)}20;
+              transform: scale(1.15);
             }
           `}</style>
         </div>
@@ -158,7 +159,7 @@ const Slider: React.FC<SliderProps> = ({
               return (
                 <div
                   key={index}
-                  className="absolute transform -tranzinc-x-1/2"
+                  className="absolute transform -translate-x-1/2"
                   style={{ left: `${markPercentage}%` }}
                 >
                   <div className="w-0.5 h-2 bg-zinc-500 mx-auto"></div>

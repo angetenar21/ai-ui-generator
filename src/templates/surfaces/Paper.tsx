@@ -35,8 +35,8 @@ const Paper: React.FC<PaperProps> = ({
 }) => {
   const elevationClasses = {
     0: 'shadow-none',
-    1: 'shadow-sm',
-    2: 'shadow-md',
+    1: 'shadow-[0_1px_3px_rgba(0,0,0,0.04),0_6px_24px_rgba(0,0,0,0.06)]',
+    2: 'shadow-[0_2px_6px_rgba(0,0,0,0.05),0_8px_32px_rgba(0,0,0,0.08)]',
     3: 'shadow-lg',
     4: 'shadow-xl',
   };
@@ -51,15 +51,15 @@ const Paper: React.FC<PaperProps> = ({
   const roundedClasses = {
     none: 'rounded-none',
     small: 'rounded',
-    medium: 'rounded-lg',
-    large: 'rounded-xl',
+    medium: 'rounded-2xl',
+    large: 'rounded-2xl',
     full: 'rounded-full',
   };
 
   const variantClasses = {
-    default: 'card border-0',
-    outlined: 'bg-transparent border-2 border-zinc-300 dark:border-zinc-600',
-    filled: 'bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700',
+    default: 'card border border-zinc-200/60 dark:border-zinc-700/60',
+    outlined: 'bg-transparent border-2 border-zinc-300/80 dark:border-zinc-600',
+    filled: 'bg-zinc-50 dark:bg-zinc-800 border border-zinc-200/60 dark:border-zinc-700',
   };
 
   return (
@@ -70,8 +70,8 @@ const Paper: React.FC<PaperProps> = ({
         ${paddingClasses[padding]}
         ${roundedClasses[rounded]}
        
-        transition-all duration-200
-        hover:shadow-2xl
+        transition-all duration-300 ease-out
+        hover:shadow-[0_8px_24px_rgba(0,0,0,0.08),0_24px_64px_rgba(0,0,0,0.12)]
       `}
     >
       {content && (

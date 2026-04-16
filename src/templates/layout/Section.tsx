@@ -58,16 +58,16 @@ const Section: React.FC<SectionProps> = ({
 
   const variantClasses = {
     default: '',
-    bordered: 'border border-indigo-600 rounded-card',
-    elevated: 'shadow-lg rounded-card',
-    filled: 'rounded-card',
+    bordered: 'border border-zinc-200/60 dark:border-zinc-700/50 rounded-2xl',
+    elevated: 'shadow-lg shadow-zinc-900/5 rounded-2xl',
+    filled: 'rounded-2xl',
   };
 
   const backgroundClasses = {
     default: '',
     surface: 'bg-white dark:bg-zinc-800',
     elevated: 'bg-zinc-50 dark:bg-zinc-800',
-    accent: 'bg-indigo-50 dark:bg-indigo-900/10',
+    accent: 'bg-orange-50 dark:bg-orange-900/10',
   };
 
   const widthClass = fullWidth ? 'w-full' : '';
@@ -81,11 +81,11 @@ const Section: React.FC<SectionProps> = ({
           <header className={padding !== 'none' ? 'mb-6' : ''}>
             <div className="flex items-center gap-3">
               {icon && (
-                <span className="text-2xl text-indigo-600">{icon}</span>
+                <span className="text-2xl text-orange-600">{icon}</span>
               )}
               <div className="flex-1">
                 {title && (
-                  <h2 className="text-2xl font-display font-bold text-zinc-900 dark:text-white">
+                  <h2 className="text-2xl font-display font-bold tracking-tight text-zinc-900 dark:text-white">
                     {title}
                   </h2>
                 )}

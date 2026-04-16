@@ -40,7 +40,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
 
   if (!code || code.trim() === '') {
     return (
-      <div className="card border border-zinc-200 dark:border-zinc-700 rounded-lg p-6 my-2">
+      <div className="card border border-zinc-200/60 dark:border-zinc-700/60 rounded-2xl p-6 my-2 shadow-sm">
         <div className="text-zinc-600 dark:text-zinc-400 text-sm">No code provided</div>
       </div>
     );
@@ -60,12 +60,12 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
 
   const languageColors: Record<string, string> = {
     javascript: 'text-yellow-600 dark:text-yellow-400',
-    typescript: 'text-indigo-600 dark:text-indigo-400',
+    typescript: 'text-orange-600 dark:text-orange-400',
     python: 'text-green-600 dark:text-green-400',
-    java: 'text-indigo-600 dark:text-indigo-400',
+    java: 'text-orange-600 dark:text-orange-400',
     html: 'text-pink-600 dark:text-pink-400',
     css: 'text-purple-600 dark:text-purple-400',
-    json: 'text-indigo-600 dark:text-indigo-400',
+    json: 'text-orange-600 dark:text-orange-400',
     bash: 'text-zinc-600 dark:text-zinc-400',
     sql: 'text-red-600 dark:text-red-400',
     other: 'text-zinc-600 dark:text-zinc-400',
@@ -82,10 +82,16 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
   };
 
   return (
-    <div className={`${themeClasses[theme]} border rounded-lg my-2 overflow-hidden`}>
+    <div className={`${themeClasses[theme]} border rounded-2xl my-2 overflow-hidden shadow-md`}>
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-2 border-b border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800/50">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-200/60 dark:border-zinc-700/60 bg-zinc-100 dark:bg-zinc-800">
         <div className="flex items-center gap-3">
+          {/* Traffic light dots */}
+          <div className="flex items-center gap-1.5 mr-2">
+            <div className="w-3 h-3 rounded-full bg-red-500/80" />
+            <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
+            <div className="w-3 h-3 rounded-full bg-green-500/80" />
+          </div>
           {title && (
             <span className="text-zinc-900 dark:text-white text-sm font-medium">{title}</span>
           )}
@@ -98,9 +104,9 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
           <button
             onClick={handleCopy}
             className="
-              flex items-center gap-1 px-2 py-1 rounded
-              text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:text-white
-              hover:bg-white dark:bg-zinc-900 transition-colors
+              flex items-center gap-1 px-2.5 py-1.5 rounded-lg
+              text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white
+              hover:bg-white/80 dark:hover:bg-zinc-700 transition-all duration-300
               text-sm
             "
             title="Copy code"
@@ -125,8 +131,8 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
         className="overflow-x-auto overflow-y-auto"
         style={{ maxHeight: `${maxHeight}px` }}
       >
-        <pre className="p-4">
-          <code className={`font-mono text-sm ${themeTextClasses[theme]}`}>
+        <pre className="p-5">
+          <code className={`font-mono text-sm leading-relaxed ${themeTextClasses[theme]}`}>
             {lines.map((line, index) => (
               <div key={index} className="flex">
                 {showLineNumbers && (
@@ -142,7 +148,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
       </div>
 
       {/* Footer with line count */}
-      <div className="px-4 py-1 border-t border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800/30">
+      <div className="px-4 py-1.5 border-t border-zinc-200/60 dark:border-zinc-700/60 bg-zinc-100 dark:bg-zinc-800/30">
         <div className="text-zinc-600 dark:text-zinc-400 text-xs">
           {lines.length} {lines.length === 1 ? 'line' : 'lines'}
         </div>

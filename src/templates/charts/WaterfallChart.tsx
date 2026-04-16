@@ -1,6 +1,5 @@
 import React from 'react';
 import { ResponsiveContainer, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar, Cell } from 'recharts';
-import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
 import { useAppStore } from '@/store/appStore';
 
@@ -14,9 +13,6 @@ interface WaterfallChartProps {
   /** X-axis categories */
   xAxis?: {
     data: string[];
-  
-  children?: React.ReactNode;
-  renderChild?: (child: any) => React.ReactNode;
 };
 
   /** Series data with waterfall values */
@@ -58,7 +54,7 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
   // Validate
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
-      <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+      <div className="bg-transparent border border-zinc-200/60 dark:border-zinc-700/60 rounded-2xl p-6 transition-all duration-300">
         {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
         <div className="text-center text-zinc-600 dark:text-zinc-400">
           <p className="text-sm">No series data for waterfall chart</p>
@@ -72,7 +68,7 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
   // Validate that we have data
   if (!firstSeries || !firstSeries.data || firstSeries.data.length === 0) {
     return (
-      <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+      <div className="bg-transparent border border-zinc-200/60 dark:border-zinc-700/60 rounded-2xl p-6 transition-all duration-300">
         {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
         <div className="text-center text-zinc-600 dark:text-zinc-400">
           <p className="text-sm">No data values in series</p>
@@ -212,8 +208,8 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
   ];
 
   return (
-    <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
-      {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4 text-center">{title}</h3>}
+    <div className="bg-transparent border border-zinc-200/60 dark:border-zinc-700/60 rounded-2xl p-6 transition-all duration-300">
+      {title && <h3 className="text-xl font-display font-semibold text-zinc-900 dark:text-white mb-4 text-center tracking-tight">{title}</h3>}
       {description && (
         <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4 text-center">{description}</p>
       )}
@@ -301,21 +297,21 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
           {/* Legend */}
           <div className="flex items-center justify-center gap-6 mt-4 text-xs">
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-green-500 rounded" />
+              <div className="w-4 h-4 bg-green-500 rounded-md" />
               <span className="text-zinc-700 dark:text-zinc-300 font-medium">Increase</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-red-500 rounded" />
+              <div className="w-4 h-4 bg-red-500 rounded-md" />
               <span className="text-zinc-700 dark:text-zinc-300 font-medium">Decrease</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-indigo-600 rounded" />
+              <div className="w-4 h-4 bg-orange-600 rounded-md" />
               <span className="text-zinc-700 dark:text-zinc-300 font-medium">Total</span>
             </div>
           </div>
 
           {/* Summary */}
-          <div className="mt-4 pt-4 border-t border-zinc-200 dark:border-zinc-700">
+          <div className="mt-4 pt-4 border-t border-zinc-200/60 dark:border-zinc-700/60">
             <div className="flex justify-between items-center text-sm">
               <span className="text-zinc-600 dark:text-zinc-400">Starting Value:</span>
               <span className="font-semibold text-zinc-900 dark:text-white">

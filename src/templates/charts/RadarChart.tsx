@@ -1,5 +1,4 @@
 import React from 'react';
-import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
 import { useAppStore } from '@/store/appStore';
 import {
@@ -336,12 +335,12 @@ const RadarChart: React.FC<RadarChartProps> = (props) => {
 
           <Tooltip
             contentStyle={{
-              backgroundColor: '#1f2937',
-              border: '1px solid #374151',
+              backgroundColor: isDarkMode ? '#1f2937' : '#ffffff',
+              border: `1px solid ${isDarkMode ? '#374151' : '#e5e7eb'}`,
               borderRadius: '8px',
-              color: '#d1d5db',
+              color: isDarkMode ? '#d1d5db' : '#374151',
             }}
-            labelStyle={{ color: '#111827' }}
+            labelStyle={{ color: isDarkMode ? '#f3f4f6' : '#111827' }}
           />
         </RechartsRadarChart>
       </ResponsiveContainer>

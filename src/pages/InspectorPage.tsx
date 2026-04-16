@@ -112,17 +112,17 @@ const JsxHighlight: React.FC<{ code: string }> = ({ code }) => {
   const highlighted = escaped
     // tags
     .replace(/(&lt;\/?)([A-Za-z][\w.]*)/g, (_, slash, name) =>
-      `<span class="text-indigo-600">${slash}${name}</span>`)
+      `<span class="jsx-tag">${slash}${name}</span>`)
     // prop names (word before =)
     .replace(/(\s)([a-zA-Z][\w]*)(?==)/g, (_, sp, k) =>
-      `${sp}<span class="text-violet-600">${k}</span>`)
+      `${sp}<span class="jsx-attr">${k}</span>`)
     // string values in quotes
-    .replace(/"([^"]*)"/g, `<span class="text-indigo-600">"$1"</span>`)
+    .replace(/"([^"]*)"/g, `<span class="jsx-string">"$1"</span>`)
     // self-close />
-    .replace(/(\/&gt;)/g, '<span class="text-indigo-400">$1</span>')
+    .replace(/(\/&gt;)/g, '<span class="jsx-bracket">$1</span>')
     // standalone booleans / numbers inside {}
     .replace(/\{(true|false|\d[\d.]*)?\}/g, (m) =>
-      `<span class="text-indigo-500">${m}</span>`);
+      `<span class="jsx-literal">${m}</span>`);
 
   return (
     <code
@@ -138,17 +138,17 @@ const JsonHighlight: React.FC<{ json: string }> = ({ json }) => {
   const highlighted = json.replace(
     /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?|[{}[\],:])/g,
     (match) => {
-      let cls = 'text-indigo-600'; // number
+      let cls = 'json-number'; // number
       if (/^"/.test(match)) {
-        cls = /:$/.test(match) ? 'text-violet-600 font-medium' : 'text-indigo-700';
+        cls = /:$/.test(match) ? 'json-key' : 'json-string';
       } else if (/true|false/.test(match)) {
-        cls = 'text-indigo-600';
+        cls = 'json-boolean';
       } else if (/null/.test(match)) {
-        cls = 'text-red-500';
+        cls = 'json-null';
       } else if (/[{}[\]]/.test(match)) {
-        cls = 'text-zinc-500';
+        cls = 'json-bracket';
       } else if (match === ':' || match === ',') {
-        cls = 'text-zinc-400';
+        cls = 'json-punctuation';
       }
       return `<span class="${cls}">${match}</span>`;
     },
@@ -205,9 +205,16 @@ const InspectorPage: React.FC = () => {
       timestamp: Date.now(),
     }));
 
-    const combined = [...sessionComponents, ...historyComponents].sort(
-      (a, b) => b.timestamp - a.timestamp,
-    );
+    const uniqueIds = new Set();
+    const combined = [...sessionComponents, ...historyComponents]
+      .filter((item) => {
+        const id = item.component?.metadata?.componentId;
+        if (!id) return true;
+        if (uniqueIds.has(id)) return false;
+        uniqueIds.add(id);
+        return true;
+      })
+      .sort((a, b) => b.timestamp - a.timestamp);
 
     setAllComponents(combined);
 
@@ -449,7 +456,7 @@ const InspectorPage: React.FC = () => {
                 </div>
 
                 {/* Content area */}
-                <div className="flex-1 flex gap-2 overflow-hidden min-h-[200px] sm:min-h-[360px] pl-1 pb-1 pr-1">
+                <div className="flex-1 flex gap-4 overflow-hidden min-h-[200px] sm:min-h-[360px] pl-1 pb-1 pr-1">
                   {/* Code / JSON pane */}
                   {(viewMode === 'split' || viewMode === 'code') && (() => {
                     const jsxCode = specToJSX(selectedComponent);
@@ -464,8 +471,8 @@ const InspectorPage: React.FC = () => {
                       <CodePaneErrorBoundary>
                         <div
                           className={[
-                            'flex flex-col relative',
-                            viewMode === 'split' ? 'basis-1/2' : 'flex-1',
+                            'flex flex-col relative min-w-0 overflow-hidden',
+                            viewMode === 'split' ? 'w-1/2 flex-shrink-0' : 'flex-1',
                           ].join(' ')}
                         >
                           {/* Toolbar */}
@@ -502,7 +509,7 @@ const InspectorPage: React.FC = () => {
                             </div>
                           </div>
                           {/* Code body */}
-                          <pre className="p-5 overflow-auto flex-1 scrollbar-thin">
+                          <pre className="p-5 overflow-auto flex-1 scrollbar-thin overflow-x-auto">
                             {codeTab === 'jsx'
                               ? <JsxHighlight code={jsxCode} />
                               : <JsonHighlight json={jsonString} />}
@@ -516,8 +523,8 @@ const InspectorPage: React.FC = () => {
                   {(viewMode === 'split' || viewMode === 'preview') && (
                     <div
                       className={[
-                        'flex flex-col relative',
-                        viewMode === 'split' ? 'basis-1/2' : 'flex-1',
+                        'flex flex-col relative min-w-0 overflow-hidden',
+                        viewMode === 'split' ? 'w-1/2 flex-shrink-0' : 'flex-1',
                       ].join(' ')}
                     >
                       {/* Decorative header inner */}

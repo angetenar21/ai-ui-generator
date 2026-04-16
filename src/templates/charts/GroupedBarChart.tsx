@@ -1,6 +1,5 @@
 import React from 'react';
 import { ResponsiveContainer, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar } from 'recharts';
-import { getSurfaceClasses } from '@/theme/designTokens';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
 import { useAppStore } from '@/store/appStore';
 
@@ -10,9 +9,6 @@ interface GroupedBarChartProps {
   data: any[];
   width?: number;
   height?: number;
-
-  children?: React.ReactNode;
-  renderChild?: (child: any) => React.ReactNode;
 
   variant?: SurfaceVariant;
   elevation?: ElevationLevel;

@@ -18,9 +18,6 @@ interface BarChartProps {
     data: (number | string)[];
     label?: string;
     scaleType?: 'band' | 'linear';
-
-    children?: React.ReactNode;
-    renderChild?: (child: any) => React.ReactNode;
   }>;
 
   /** Series data for the bars */

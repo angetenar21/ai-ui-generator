@@ -70,16 +70,16 @@ const Hero: React.FC<HeroProps> = ({
       return 'bg-cover bg-center';
     }
     if (backgroundStyle === 'gradient') {
-      return 'bg-gradient-to-br from-indigo-50 via-indigo-50 to-yellow-50 dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900';
+      return 'bg-gradient-to-br from-orange-50 via-rose-50/80 to-pink-50/60 dark:from-zinc-900 dark:via-zinc-800/90 dark:to-zinc-900';
     }
     return 'bg-white dark:bg-zinc-800';
   };
 
   const getButtonVariantClass = (variant: string = 'primary') => {
     const variants = {
-      primary: 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-md hover:shadow-lg',
-      secondary: 'bg-zinc-600 hover:bg-zinc-700 text-white shadow-md hover:shadow-lg',
-      outline: 'border-2 border-indigo-600 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-600/10',
+      primary: 'bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white shadow-lg shadow-orange-500/25 hover:shadow-xl hover:shadow-orange-500/30',
+      secondary: 'bg-zinc-800 hover:bg-zinc-700 text-white shadow-md hover:shadow-lg dark:bg-zinc-700 dark:hover:bg-zinc-600',
+      outline: 'border-2 border-orange-500 text-orange-600 dark:text-orange-400 hover:bg-orange-500/10',
     };
     return variants[variant as keyof typeof variants] || variants.primary;
   };
@@ -94,8 +94,8 @@ const Hero: React.FC<HeroProps> = ({
     <div
       className={`
         ${getBackgroundClass()}
-        border border-zinc-200 dark:border-zinc-700 rounded-2xl overflow-hidden
-        relative shadow-sm hover:shadow-md transition-shadow duration-300
+        border border-zinc-200/60 dark:border-zinc-700 rounded-2xl overflow-hidden
+        relative shadow-[0_4px_16px_rgba(0,0,0,0.06),0_16px_48px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08),0_24px_64px_rgba(0,0,0,0.12)] transition-shadow duration-300
       `}
       style={
         backgroundStyle === 'image' && backgroundImage
@@ -103,16 +103,24 @@ const Hero: React.FC<HeroProps> = ({
           : undefined
       }
     >
+      {/* Decorative gradient orbs */}
+      {backgroundStyle === 'gradient' && (
+        <>
+          <div className="absolute top-0 right-0 w-72 h-72 bg-gradient-to-bl from-orange-200/40 to-transparent rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-pink-200/30 to-transparent rounded-full blur-3xl pointer-events-none" />
+        </>
+      )}
+
       {/* Overlay for better text readability on images */}
       {backgroundStyle === 'image' && (
         <div className="absolute inset-0 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm" />
       )}
 
-      <div className="relative z-10 px-6 py-16 md:py-24 lg:py-32">
+      <div className="relative z-10 px-8 py-20 md:py-28 lg:py-36">
         <div className={`max-w-4xl mx-auto flex flex-col gap-6 ${alignClasses[align]}`}>
           {/* Subtitle/Eyebrow */}
           {subtitle && (
-            <div className="text-indigo-600 dark:text-indigo-400 font-semibold text-sm md:text-base uppercase tracking-wider">
+            <div className="text-orange-600 dark:text-orange-400 font-semibold text-sm md:text-base uppercase tracking-wider">
               {subtitle}
             </div>
           )}
@@ -120,7 +128,8 @@ const Hero: React.FC<HeroProps> = ({
           {/* Main Title */}
           <h1 className={`
             ${titleSizeClasses[size]}
-            font-display font-bold text-zinc-900 dark:text-white
+            font-display font-bold tracking-tight
+            bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-700 dark:from-white dark:via-zinc-100 dark:to-zinc-300 bg-clip-text text-transparent
             leading-tight
           `}>
             {title}
@@ -141,10 +150,10 @@ const Hero: React.FC<HeroProps> = ({
                   key={index}
                   className={`
                     ${getButtonVariantClass(button.variant)}
-                    px-6 py-3 rounded-lg font-semibold
+                    px-6 py-3 rounded-xl font-semibold
                     flex items-center gap-2
-                    transition-all duration-200 transform hover:-tranzinc-y-0.5
-                    focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900
+                    transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0
+                    focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900
                   `}
                 >
                   {button.label}

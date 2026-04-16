@@ -63,21 +63,21 @@ const TextField: React.FC<TextFieldProps> = ({
   };
 
   const sizeClasses = {
-    small: 'px-3 py-1.5 text-sm',
-    medium: 'px-4 py-2 text-base',
+    small: 'px-3 py-2 text-sm',
+    medium: 'px-4 py-2.5 text-base',
     large: 'px-5 py-3 text-lg',
   };
 
   const variantClasses = {
-    outlined: `border-2 ${error ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-600'} bg-white dark:bg-zinc-800`,
-    filled: `border-b-2 ${error ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-600'} bg-zinc-100 dark:bg-zinc-800/50`,
-    standard: `border-b-2 ${error ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-600'} bg-transparent`,
+    outlined: `border ${error ? 'border-red-400 ring-2 ring-red-500/10' : 'border-zinc-200 dark:border-zinc-700'} bg-white dark:bg-zinc-900`,
+    filled: `border-b-2 ${error ? 'border-red-400 ring-2 ring-red-500/10' : 'border-zinc-200 dark:border-zinc-700'} bg-zinc-50 dark:bg-zinc-800/50`,
+    standard: `border-b-2 ${error ? 'border-red-400' : 'border-zinc-200 dark:border-zinc-700'} bg-transparent`,
   };
 
   return (
     <div className={`my-4 ${fullWidth ? 'w-full' : 'max-w-md'}`}>
       {label && (
-        <label className="block text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
+        <label className="block text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-2">
           {label}
           {required && <span className="text-red-500 dark:text-red-400 ml-1">*</span>}
         </label>
@@ -85,9 +85,9 @@ const TextField: React.FC<TextFieldProps> = ({
       <div className={`
         flex items-center
         ${variantClasses[variant]}
-        rounded-lg transition-all duration-200
-        focus-within:ring-2 focus-within:ring-indigo-500/50
-        ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+        rounded-xl transition-all duration-200
+        focus-within:ring-2 focus-within:ring-orange-500/20 focus-within:border-orange-500
+        ${disabled ? 'opacity-60 cursor-not-allowed' : ''}
       `.trim().replace(/\s+/g, ' ')}>
         {(prefix || icon) && (
           <div className="pl-3 pr-2 text-zinc-400 flex-shrink-0">
@@ -109,7 +109,7 @@ const TextField: React.FC<TextFieldProps> = ({
             flex-1 bg-transparent
             ${!(prefix || icon) ? 'pl-4' : 'pl-0'}
             ${!suffix ? 'pr-4' : 'pr-0'}
-            text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500
+            text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-500
             focus:outline-none 
             disabled:cursor-not-allowed
           `.trim().replace(/\s+/g, ' ')}
@@ -121,7 +121,7 @@ const TextField: React.FC<TextFieldProps> = ({
         )}
       </div>
       {(helperText || (error && errorMessage)) && (
-        <p className={`mt-1 text-xs ${error ? 'text-red-500 dark:text-red-400' : 'text-zinc-500 dark:text-zinc-400'}`}>
+        <p className={`mt-1.5 text-xs ${error ? 'text-red-500 dark:text-red-400' : 'text-zinc-400 dark:text-zinc-500'}`}>
           {error && errorMessage ? errorMessage : helperText}
         </p>
       )}

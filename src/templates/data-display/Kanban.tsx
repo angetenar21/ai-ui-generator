@@ -71,9 +71,9 @@ const Kanban: React.FC<KanbanProps> = ({
   };
 
   return (
-    <div className="card border border-zinc-200 dark:border-zinc-700 rounded-2xl p-6 my-4">
+    <div className="card border border-zinc-200/60 dark:border-zinc-700 rounded-2xl p-6 my-4 shadow-sm">
       <div className="mb-6">
-        <h3 className="text-xl font-display font-semibold text-white">
+        <h3 className="text-xl font-display font-bold tracking-tight text-zinc-900 dark:text-white">
           {title}
         </h3>
       </div>
@@ -87,7 +87,7 @@ const Kanban: React.FC<KanbanProps> = ({
             onDrop={() => handleDrop(column.id)}
           >
             {/* Column Header */}
-            <div className="bg-zinc-800/50 rounded-lg p-4 mb-3">
+            <div className="bg-zinc-50/80 dark:bg-zinc-800/50 rounded-xl p-4 mb-3 border border-zinc-100/80 dark:border-zinc-700/30">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                   {column.color && (
@@ -95,7 +95,7 @@ const Kanban: React.FC<KanbanProps> = ({
                       className={`w-3 h-3 rounded-full ${column.color}`}
                     />
                   )}
-                  <h4 className="font-semibold text-white">{column.title}</h4>
+                  <h4 className="font-display font-bold text-sm text-zinc-900 dark:text-white">{column.title}</h4>
                   <span className="text-sm text-zinc-400">
                     ({(column.cards || []).length}
                     {column.limit ? `/${column.limit}` : ''})
@@ -117,10 +117,10 @@ const Kanban: React.FC<KanbanProps> = ({
                   draggable
                   onDragStart={() => handleDragStart(card, column.id)}
                   onClick={() => onCardClick?.(card)}
-                  className="bg-zinc-800/30 border border-zinc-700/50 rounded-lg p-4
-                           hover:bg-zinc-800/50 hover:border-zinc-600/50
+                  className="bg-white dark:bg-zinc-800/30 border border-zinc-200/60 dark:border-zinc-700/50 rounded-xl p-4
+                           hover:bg-zinc-50 dark:hover:bg-zinc-800/50 hover:border-zinc-300/60 dark:hover:border-zinc-600/50
                            cursor-pointer transition-all duration-200
-                           hover:shadow-lg hover:scale-[1.02]"
+                           shadow-sm hover:shadow-md hover:-translate-y-0.5"
                 >
                   {/* Card Header */}
                   <div className="flex items-start justify-between mb-2">
@@ -151,8 +151,8 @@ const Kanban: React.FC<KanbanProps> = ({
                       {card.tags.map((tag, index) => (
                         <span
                           key={index}
-                          className="px-2 py-0.5 bg-indigo-900/30 text-indigo-300
-                                   border border-indigo-700/50 rounded text-xs"
+                          className="px-2 py-0.5 bg-orange-50 dark:bg-orange-900/30 text-orange-600 dark:text-orange-300
+                                   border border-orange-200/60 dark:border-orange-700/50 rounded-full text-[10px] font-bold"
                         >
                           {safeStr(tag)}
                         </span>
@@ -171,7 +171,7 @@ const Kanban: React.FC<KanbanProps> = ({
                             className="w-6 h-6 rounded-full"
                           />
                         ) : (
-                          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
+                          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-orange-600 to-purple-600 flex items-center justify-center">
                             <span className="text-white text-xs font-semibold">
                               {card.assignee.charAt(0).toUpperCase()}
                             </span>

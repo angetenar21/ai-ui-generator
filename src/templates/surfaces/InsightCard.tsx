@@ -1,5 +1,7 @@
 import React from 'react';
 import { TrendingUp, TrendingDown, Minus, Info, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
+import { elevation as elevationTokens } from '@/theme/designTokens';
+import type { ElevationLevel } from '../core/types';
 
 interface InsightCardProps {
   /** Card title */
@@ -10,6 +12,9 @@ interface InsightCardProps {
 
   /** Visual variant/type */
   variant?: 'info' | 'success' | 'warning' | 'error' | 'neutral';
+
+  /** Elevation level for depth */
+  elevation?: ElevationLevel;
 
   /** Optional metric to display */
   metric?: {
@@ -30,14 +35,16 @@ const InsightCard: React.FC<InsightCardProps> = ({
   title,
   description,
   variant = 'neutral',
+  elevation = 'raised',
   metric,
   showIcon = true,
 }) => {
+  const elevationClass = elevationTokens[elevation] || elevationTokens.raised;
   const variantConfig = {
     info: {
-      bgClass: 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800',
-      textClass: 'text-indigo-700 dark:text-indigo-300',
-      iconClass: 'text-indigo-600 dark:text-indigo-400',
+      bgClass: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800',
+      textClass: 'text-blue-700 dark:text-blue-300',
+      iconClass: 'text-blue-600 dark:text-blue-400',
       Icon: Info,
     },
     success: {
@@ -61,7 +68,7 @@ const InsightCard: React.FC<InsightCardProps> = ({
     neutral: {
       bgClass: 'bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700',
       textClass: 'text-zinc-900 dark:text-zinc-100',
-      iconClass: 'text-indigo-500 dark:text-indigo-400',
+      iconClass: 'text-orange-500 dark:text-orange-400',
       Icon: Info,
     },
   };
@@ -85,12 +92,12 @@ const InsightCard: React.FC<InsightCardProps> = ({
   };
 
   return (
-    <div className={`h-full flex flex-col bg-white dark:bg-zinc-800 rounded-xl p-6 border ${config.bgClass} hover:shadow-lg transition-all duration-200 text-zinc-900 dark:text-white`}>
+    <div className={`h-full flex flex-col bg-white dark:bg-zinc-800 rounded-2xl p-6 border ${config.bgClass} ${elevationClass} transition-all duration-300 ease-out hover:-translate-y-0.5 text-zinc-900 dark:text-white`}>
       <div className="flex-1 flex flex-col items-start gap-4">
         {/* Icon */}
         {showIcon && (
-          <div className={`flex-shrink-0 w-12 h-12 rounded-xl ${config.bgClass} flex items-center justify-center mb-2`}>
-            <Icon className={`w-6 h-6 ${config.iconClass}`} />
+          <div className={`flex-shrink-0 w-14 h-14 rounded-2xl ${config.bgClass} flex items-center justify-center mb-2`}>
+            <Icon className={`w-7 h-7 ${config.iconClass}`} />
           </div>
         )}
 
@@ -110,13 +117,13 @@ const InsightCard: React.FC<InsightCardProps> = ({
                 <div className="text-xs text-zinc-500 dark:text-zinc-400 font-semibold tracking-wider mb-1">
                   {metric.label}
                 </div>
-                <div className="text-3xl font-display font-bold text-zinc-900 dark:text-white">
+                <div className="text-3xl font-display font-bold tracking-tight text-zinc-900 dark:text-white">
                   {metric.value}
                 </div>
               </div>
 
               {metric.trend && metric.trendValue && (
-                <div className="flex items-center gap-1.5 pb-1 block">
+                <div className="flex items-center gap-1.5 rounded-full px-3 py-1 bg-zinc-50 dark:bg-zinc-700/50">
                   {getTrendIcon()}
                   <span className={`text-sm font-semibold ${metric.trend === 'up' ? 'text-green-600 dark:text-green-400' :
                     metric.trend === 'down' ? 'text-red-600 dark:text-red-400' :
@@ -147,6 +154,7 @@ export const metadata = {
     title: 'string (required)',
     description: 'string (required)',
     variant: '"info" | "success" | "warning" | "error" | "neutral"',
+    elevation: 'ElevationLevel - Depth level: flat | raised | floating | overlay (default: raised)',
     metric: '{ value, label, trend?, trendValue? }',
     showIcon: 'boolean',
   },
