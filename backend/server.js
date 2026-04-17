@@ -737,6 +737,10 @@ async function callGemini(userMessage, context = '', signal) {
         maxOutputTokens: 16384,
         topP: 0.85,
         topK: 20,
+        // gemini-2.5-* models spend output budget on hidden "thinking" tokens by default,
+        // which can return `parts: []` with finishReason=MAX_TOKENS. Disable thinking so the
+        // full budget goes to actual output / tool calls.
+        thinkingConfig: { thinkingBudget: 0 },
       },
     };
 
@@ -772,18 +776,18 @@ async function callGemini(userMessage, context = '', signal) {
 
       // Handle key exhaustion/rotation
       if (
-        errorObj.code === 429 && 
+        errorObj.code === 429 &&
         errorObj.status === 'RESOURCE_EXHAUSTED' &&
         API_KEYS_POOL.length > 1 &&
         config.hasApiKey
       ) {
         if (!config.keyRotationsThisRequest) config.keyRotationsThisRequest = 0;
-        
+
         if (config.keyRotationsThisRequest < API_KEYS_POOL.length) {
           // Depletion happens across keys when pooling, quickly swap to next!
           currentKeyIndex = (currentKeyIndex + 1) % API_KEYS_POOL.length;
           Logger.warn(`API Key depleted/rate limited! Rotating to key index ${currentKeyIndex}/${API_KEYS_POOL.length - 1} and retrying...`);
-          
+
           // Re-build config so the endpoint picks up the new currentKeyIndex
           const oldRotations = config.keyRotationsThisRequest;
           const nextConfig = buildGeminiRequestConfig();
