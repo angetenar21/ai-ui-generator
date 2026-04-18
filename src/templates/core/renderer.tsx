@@ -108,6 +108,15 @@ export const RenderNode: React.FC<{ spec: ComponentSpec, localData?: Record<stri
     if (mapped) Component = registry.get(mapped);
   }
 
+  // Recursive renderer for children
+  const renderedChildren = Array.isArray(children) && children.length > 0
+    ? children.map((child, index) => {
+      if (child && typeof child === 'object' && '$$typeof' in child) return child;
+      const key = child?.metadata?.componentId || `child-${index}`;
+      return <RenderNode key={key} spec={child} localData={localData} />;
+    })
+    : undefined;
+
   if (!Component) {
     const originalName = String(componentName || 'div');
     const tag = originalName.toLowerCase();
@@ -142,15 +151,6 @@ export const RenderNode: React.FC<{ spec: ComponentSpec, localData?: Record<stri
     // Completely invalid names shouldn't break the layout, just hide them
     return null;
   }
-
-  // Recursive renderer for children
-  const renderedChildren = Array.isArray(children) && children.length > 0
-    ? children.map((child, index) => {
-      if (child && typeof child === 'object' && '$$typeof' in child) return child;
-      const key = child?.metadata?.componentId || `child-${index}`;
-      return <RenderNode key={key} spec={child} localData={localData} />;
-    })
-    : undefined;
 
   return (
     <ReactiveComponent

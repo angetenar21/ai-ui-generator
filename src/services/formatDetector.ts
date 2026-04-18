@@ -63,7 +63,7 @@ export function parseJsonResponse(text: string): Record<string, unknown> | null 
   const trimmed = text.trim();
 
   // Strip markdown code fences
-  let jsonStr = trimmed
+  const jsonStr = trimmed
     .replace(/```(?:json)?\s*([\s\S]*?)\s*```/g, (_, inner) => inner)
     .replace(/```(?:json)?\s*|```/g, '')
     .trim();

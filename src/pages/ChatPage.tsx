@@ -62,7 +62,7 @@ function tryParsePartialJson(text: string): ComponentSpec | null {
       // Continue to partial repair
     }
 
-    let depth = 0;
+    const depth = 0;
     let inStr = false;
     let esc = false;
     let openBraces = 0;

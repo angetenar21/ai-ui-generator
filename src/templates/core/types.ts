@@ -202,4 +202,4 @@ export interface TemplateItem {
 /**
  * Template categories
  */
-export type TemplateCategory = 'form' | 'dashboard' | 'list' | 'card' | 'chart' | 'layout' | 'other';
+export type TemplateCategory = 'form' | 'dashboard' | 'list' | 'card' | 'chart' | 'layout' | 'other' | 'stats' | 'navigation';
