@@ -416,6 +416,15 @@ Subtle Details Section (variant: default, elevation: flat)
 - Grid gaps: `gap: "large"` or `gap: "medium"`
 - Stack spacing: `spacing: "large"`
 
+### 5. Custom Visual Effects & Styling (CRITICAL FOR SPECIFIC REQUESTS)
+
+**RULES for specific design aesthetics (e.g. "Glassmorphism", "3D Hover", "Neon"):**
+- ✅ **ALWAYS use the `className` prop** strategically to apply standard Tailwind utility classes to achieve requested effects that go beyond native variants.
+- ✅ **For Glassmorphism**: Use `backdrop-blur-md bg-white/10 dark:bg-black/10 border border-white/20 shadow-lg` on the `className` of panels or badges. Set `variant: "glass"` if available.
+- ✅ **For 3D / Hover Effects**: Use classes like `hover:scale-105 hover:shadow-2xl transition-all duration-300 transform group-hover:rotate-x-12` on `image`, `button`, or `panel` components to create engaging interactive visual depth.
+- ✅ **For Gradients/Neon**: Use text gradients (`bg-clip-text text-transparent bg-gradient-to-r...`) or glow effects (`shadow-[0_0_15px_rgba(...)]`).
+- ❌ **NEVER ignore specific stylistic keywords in the user prompt.** If they ask for a "premium 3D card", apply the Tailwind styles to fake it perfectly using `image` + `stack` + `className`.
+
 ---
 
 ## 📦 COMPONENT DESIGN RULES
@@ -707,6 +716,15 @@ Whenever displaying supporting data points (e.g., Prep Time & Cook Time, Total C
   { "name": "stack", "templateProps": { "direction": "vertical", ... } }
 ]
 ```
+
+### Images (CRITICAL FOR VISUALS)
+
+**When user requests images, products, avatars, or visual elements:**
+- ✅ **ALWAYS generate dynamic images on the fly** using LoremFlickr placeholders.
+- ✅ **MANDATORY `src` format**: `https://loremflickr.com/800/800/{comma,separated,keywords}?lock={random_number_1_to_100}`
+- ✅ Make the keywords highly specific. E.g., for a premium watch, use `https://loremflickr.com/800/800/premium,luxury,watch?lock=42`
+- ❌ **NEVER** use static Unsplash URLs, Pollinations AI, or dummy placeholders like `via.placeholder.com`.
+- ❌ **NEVER** use generic descriptions or spaces in the URL.
 
 ### Charts (CRITICAL FOR DATA VIZ)
 

@@ -1,0 +1,168 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * OpenUI Design Tokens — oklch-based color system
+ *
+ * Ported from openui/packages/react-ui/src/openui-defaults.scss
+ * These tokens enable the OpenUI component library's visual language
+ * within the ai-ui-generator project.
+ *
+ * Usage:
+ *   - Direct: color: var(--openui-text-neutral-primary);
+ *   - Tailwind: text-oui-neutral-primary (via tailwind.config.js extension)
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Light Mode (Default) ─────────────────────────────────────────────── */
+
+:root {
+  /* Surface / Background */
+  --oui-bg: oklch(0.97 0 89.876 / 1);
+  --oui-fg: oklch(0.994 0 89.876 / 1);
+  --oui-popover: oklch(0.994 0 89.876 / 1);
+  --oui-sunk: oklch(0.097 0 0 / 0.04);
+  --oui-sunk-deep: oklch(0.097 0 0 / 0.08);
+  --oui-elevated: oklch(0.097 0 0 / 0.08);
+  --oui-elevated-strong: oklch(0.097 0 0 / 0.16);
+  --oui-overlay: oklch(0 0 0 / 0.4);
+  --oui-inverted-bg: oklch(0.097 0 0 / 1);
+
+  /* Semantic Backgrounds */
+  --oui-info-bg: oklch(0.623 0.188 259.815 / 0.12);
+  --oui-success-bg: oklch(0.627 0.17 149.214 / 0.12);
+  --oui-alert-bg: oklch(0.795 0.162 86.047 / 0.16);
+  --oui-danger-bg: oklch(0.577 0.215 27.325 / 0.12);
+  --oui-purple-bg: oklch(0.627 0.233 303.9 / 0.12);
+  --oui-pink-bg: oklch(0.592 0.218 0.584 / 0.12);
+
+  /* Text */
+  --oui-text-primary: oklch(0.097 0 0 / 1);
+  --oui-text-secondary: oklch(0.097 0 0 / 0.5);
+  --oui-text-tertiary: oklch(0.097 0 0 / 0.2);
+  --oui-text-link: oklch(0.097 0 0 / 1);
+  --oui-text-white: oklch(1 0 89.876 / 1);
+  --oui-text-black: oklch(0 0 0 / 1);
+  --oui-text-accent: oklch(0.994 0 89.876 / 1);
+  --oui-text-success: oklch(0.448 0.108 151.328 / 1);
+  --oui-text-alert: oklch(0.476 0.103 61.907 / 1);
+  --oui-text-danger: oklch(0.505 0.19 27.518 / 1);
+  --oui-text-info: oklch(0.424 0.181 265.638 / 1);
+  --oui-text-pink: oklch(0.459 0.17 3.815 / 1);
+  --oui-text-purple: oklch(0.438 0.198 303.724 / 1);
+
+  /* Interactive */
+  --oui-interactive-default: oklch(0.097 0 0 / 1);
+  --oui-interactive-hover: oklch(0.097 0 0 / 0.8);
+  --oui-interactive-disabled: oklch(0.097 0 0 / 0.4);
+  --oui-interactive-destructive: oklch(0.577 0.215 27.325 / 1);
+  --oui-interactive-destructive-hover: oklch(0.637 0.208 25.331 / 1);
+
+  /* Chat */
+  --oui-chat-user-bg: oklch(0.097 0 0 / 1);
+  --oui-chat-user-text: oklch(0.994 0 89.876 / 1);
+
+  /* Border */
+  --oui-border: oklch(0.097 0 0 / 0.06);
+  --oui-border-interactive: oklch(0.097 0 0 / 0.12);
+  --oui-border-emphasis: oklch(0.097 0 0 / 0.3);
+  --oui-border-selected: oklch(0.097 0 0 / 1);
+  --oui-border-info: oklch(0.623 0.188 259.815 / 0.08);
+  --oui-border-success: oklch(0.627 0.17 149.214 / 0.08);
+  --oui-border-alert: oklch(0.861 0.173 91.936 / 0.08);
+  --oui-border-danger: oklch(0.577 0.215 27.325 / 0.08);
+
+  /* Spacing */
+  --oui-space-3xs: 2px;
+  --oui-space-2xs: 4px;
+  --oui-space-xs: 6px;
+  --oui-space-s: 8px;
+  --oui-space-m: 12px;
+  --oui-space-l: 18px;
+  --oui-space-xl: 24px;
+  --oui-space-2xl: 36px;
+  --oui-space-3xl: 48px;
+
+  /* Border Radius */
+  --oui-radius-xs: 4px;
+  --oui-radius-s: 6px;
+  --oui-radius-m: 8px;
+  --oui-radius-l: 10px;
+  --oui-radius-xl: 12px;
+  --oui-radius-2xl: 14px;
+  --oui-radius-3xl: 16px;
+  --oui-radius-4xl: 20px;
+  --oui-radius-full: 9999px;
+
+  /* Typography */
+  --oui-font-body: "Inter", sans-serif;
+  --oui-font-code: "SFMono-Regular", Menlo, monospace;
+  --oui-font-heading: "Inter", sans-serif;
+
+  /* Shadows (oklch-based for consistent dark mode) */
+  --oui-shadow-s: 0 1px 3px -2px oklch(0 0 0 / 0.02), 0 2px 5px -2px oklch(0 0 0 / 0.04);
+  --oui-shadow-m: 0 4px 6px -2px oklch(0 0 0 / 0.025), 0 2px 2px -2px oklch(0 0 0 / 0.05);
+  --oui-shadow-l: 0 4px 4px -2px oklch(0 0 0 / 0.05), 0 4px 8px -2px oklch(0 0 0 / 0.04);
+  --oui-shadow-xl: 0 8px 16px -4px oklch(0 0 0 / 0.08), 0 16px 32px -6px oklch(0 0 0 / 0.12);
+  --oui-shadow-2xl: 0 12px 24px -6px oklch(0 0 0 / 0.12), 0 24px 48px -8px oklch(0 0 0 / 0.16);
+}
+
+/* ─── Dark Mode ────────────────────────────────────────────────────────── */
+
+.dark {
+  /* Surface / Background */
+  --oui-bg: oklch(0.145 0 0 / 1);
+  --oui-fg: oklch(0.205 0 0 / 1);
+  --oui-popover: oklch(0.205 0 0 / 1);
+  --oui-sunk: oklch(0.994 0 89.876 / 0.04);
+  --oui-sunk-deep: oklch(0.994 0 89.876 / 0.08);
+  --oui-elevated: oklch(0.994 0 89.876 / 0.08);
+  --oui-elevated-strong: oklch(0.994 0 89.876 / 0.16);
+  --oui-overlay: oklch(0 0 0 / 0.6);
+  --oui-inverted-bg: oklch(0.994 0 89.876 / 1);
+
+  /* Semantic Backgrounds */
+  --oui-info-bg: oklch(0.623 0.188 259.815 / 0.12);
+  --oui-success-bg: oklch(0.627 0.17 149.214 / 0.12);
+  --oui-alert-bg: oklch(0.795 0.162 86.047 / 0.16);
+  --oui-danger-bg: oklch(0.577 0.215 27.325 / 0.12);
+  --oui-purple-bg: oklch(0.627 0.233 303.9 / 0.12);
+  --oui-pink-bg: oklch(0.592 0.218 0.584 / 0.12);
+
+  /* Text */
+  --oui-text-primary: oklch(0.985 0 89.876 / 1);
+  --oui-text-secondary: oklch(0.985 0 89.876 / 0.5);
+  --oui-text-tertiary: oklch(0.985 0 89.876 / 0.2);
+  --oui-text-link: oklch(0.985 0 89.876 / 1);
+  --oui-text-accent: oklch(0.097 0 0 / 1);
+  --oui-text-success: oklch(0.871 0.136 154.449 / 1);
+  --oui-text-alert: oklch(0.905 0.166 98.111 / 1);
+  --oui-text-danger: oklch(0.808 0.103 19.571 / 1);
+  --oui-text-info: oklch(0.809 0.096 251.813 / 1);
+  --oui-text-pink: oklch(0.823 0.11 346.018 / 1);
+  --oui-text-purple: oklch(0.827 0.108 306.383 / 1);
+
+  /* Interactive */
+  --oui-interactive-default: oklch(0.994 0 89.876 / 1);
+  --oui-interactive-hover: oklch(0.994 0 89.876 / 0.8);
+  --oui-interactive-disabled: oklch(0.994 0 89.876 / 0.4);
+  --oui-interactive-destructive: oklch(0.577 0.215 27.325 / 1);
+  --oui-interactive-destructive-hover: oklch(0.637 0.208 25.331 / 1);
+
+  /* Chat */
+  --oui-chat-user-bg: oklch(0.994 0 89.876 / 1);
+  --oui-chat-user-text: oklch(0.097 0 0 / 1);
+
+  /* Border */
+  --oui-border: oklch(0.994 0 89.876 / 0.12);
+  --oui-border-interactive: oklch(0.994 0 89.876 / 0.2);
+  --oui-border-emphasis: oklch(0.994 0 89.876 / 0.4);
+  --oui-border-selected: oklch(0.985 0 89.876 / 1);
+  --oui-border-info: oklch(0.623 0.188 259.815 / 0.08);
+  --oui-border-success: oklch(0.627 0.17 149.214 / 0.08);
+  --oui-border-alert: oklch(0.861 0.173 91.936 / 0.08);
+  --oui-border-danger: oklch(0.577 0.215 27.325 / 0.08);
+
+  /* Shadows (stronger for dark mode) */
+  --oui-shadow-s: 0 1px 3px -2px oklch(0 0 0 / 0.06), 0 2px 5px -2px oklch(0 0 0 / 0.10);
+  --oui-shadow-m: 0 4px 6px -2px oklch(0 0 0 / 0.08), 0 2px 2px -2px oklch(0 0 0 / 0.12);
+  --oui-shadow-l: 0 4px 4px -2px oklch(0 0 0 / 0.12), 0 4px 8px -2px oklch(0 0 0 / 0.10);
+  --oui-shadow-xl: 0 8px 16px -4px oklch(0 0 0 / 0.16), 0 16px 32px -6px oklch(0 0 0 / 0.20);
+  --oui-shadow-2xl: 0 12px 24px -6px oklch(0 0 0 / 0.20), 0 24px 48px -8px oklch(0 0 0 / 0.24);
+}

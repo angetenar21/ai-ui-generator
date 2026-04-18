@@ -1762,6 +1762,343 @@ app.delete('/api/agent/:jobId', (req, res) => {
   return res.json({ message: 'Job cancelled successfully' });
 });
 
+// ════════════════════════════════════════════════════════════════════════════
+// POST /api/agent/stream — Real-time SSE streaming endpoint
+//
+// Instead of the polling flow (POST /api/agent → GET /api/agent/:jobId),
+// this endpoint opens a single long-lived SSE connection. Gemini's
+// streamGenerateContent API sends token chunks incrementally, and we pipe
+// each chunk to the client in real-time.
+//
+// Protocol:
+//   data: {"text":"...","done":false}    — partial text chunk
+//   data: {"text":"...","done":true}     — final chunk (stream complete)
+//   data: {"error":"..."}               — error event
+//   data: [DONE]                        — SSE termination sentinel
+// ════════════════════════════════════════════════════════════════════════════
+app.post('/api/agent/stream', requireAuth, async (req, res) => {
+  const { sessionId, message, threadId, context } = req.body ?? {};
+
+  // Validate required fields
+  if (!message || typeof message !== 'string' || !message.trim()) {
+    return res.status(400).json({ error: 'message is required' });
+  }
+  if (!sessionId || typeof sessionId !== 'string') {
+    return res.status(400).json({ error: 'sessionId is required' });
+  }
+
+  // Set SSE headers — keep connection alive and prevent buffering
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache, no-transform',
+    'Connection': 'keep-alive',
+    'X-Accel-Buffering': 'no', // Disable Nginx buffering if behind reverse proxy
+  });
+
+  // Heartbeat to keep connection alive through proxies
+  const heartbeatTimer = setInterval(() => {
+    try { res.write(': heartbeat\n\n'); } catch { /* connection closed */ }
+  }, 15000);
+
+  // SSE helper: write a data frame
+  const sendSSE = (payload) => {
+    try {
+      if (typeof payload === 'string') {
+        res.write(`data: ${payload}\n\n`);
+      } else {
+        res.write(`data: ${JSON.stringify(payload)}\n\n`);
+      }
+    } catch {
+      // Connection already closed by client
+    }
+  };
+
+  // Abort controller for client disconnect
+  const controller = new AbortController();
+  req.on('close', () => {
+    controller.abort();
+    clearInterval(heartbeatTimer);
+  });
+
+  try {
+    // Build the API key and endpoint for streaming
+    const currentKey = API_KEYS_POOL[currentKeyIndex];
+    if (!currentKey) {
+      sendSSE({ error: 'No Gemini API key configured' });
+      sendSSE('[DONE]');
+      clearInterval(heartbeatTimer);
+      return res.end();
+    }
+
+    const streamEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:streamGenerateContent?alt=sse&key=${currentKey}`;
+
+    // Build conversation contents
+    // For streaming, we use a simplified prompt without function-calling tools.
+    // The system prompt instructs Gemini to output directly.
+    const streamingSystemPrompt = SYSTEM_PROMPT + `\n\n## STREAMING MODE ACTIVE\nYou are in streaming mode. Return your complete JSON component specification directly.\nDo NOT call any functions. Do NOT use markdown code blocks.\nReturn ONLY the raw JSON object starting with { and ending with }.\nThe response will be streamed to the client in real-time.`;
+
+    const contents = [
+      {
+        role: 'user',
+        parts: [{ text: streamingSystemPrompt }],
+      },
+      {
+        role: 'model',
+        parts: [{ text: 'I understand. I will output the component JSON directly without function calls, formatted as a raw JSON object.' }],
+      },
+    ];
+
+    // Add context if provided
+    if (context) {
+      contents.push({
+        role: 'user',
+        parts: [{ text: `Context: ${typeof context === 'string' ? context : JSON.stringify(context)}` }],
+      });
+    }
+
+    // Inject few-shot examples for quality (reuse existing infrastructure)
+    const config = buildGeminiRequestConfig();
+    const fewShotPrompt = await getFewShotForMessage(message, config);
+    if (fewShotPrompt) {
+      contents.push({
+        role: 'user',
+        parts: [{ text: fewShotPrompt }],
+      });
+      contents.push({
+        role: 'model',
+        parts: [{ text: 'Understood. I will follow the design quality of this example.' }],
+      });
+    }
+
+    // Pre-load relevant component schemas
+    const relevantComponentNames = getRelevantComponents(message);
+    if (relevantComponentNames && relevantComponentNames.length > 0) {
+      const scopedSchemas = {};
+      for (const name of relevantComponentNames) {
+        if (components[name]) scopedSchemas[name] = components[name];
+      }
+      if (Object.keys(scopedSchemas).length > 0) {
+        contents.push({
+          role: 'user',
+          parts: [{ text: `## PRE-LOADED COMPONENT SCHEMAS\n\n${JSON.stringify(scopedSchemas, null, 2)}` }],
+        });
+        contents.push({
+          role: 'model',
+          parts: [{ text: 'I have the component schemas ready.' }],
+        });
+      }
+    }
+
+    // Add the user's message
+    contents.push({
+      role: 'user',
+      parts: [{ text: message }],
+    });
+
+    const requestBody = {
+      contents,
+      generationConfig: {
+        temperature: 0.3,
+        maxOutputTokens: 16384,
+        topP: 0.85,
+        topK: 20,
+        // Disable thinking so the full output budget goes to actual text tokens.
+        // Without this, Gemini 2.5 spends 5-10s on silent reasoning before
+        // emitting any text, causing an unnecessarily long skeleton phase.
+        thinkingConfig: { thinkingBudget: 0 },
+      },
+    };
+
+    Logger.info('[Stream] Starting SSE stream', {
+      sessionId,
+      threadId,
+      messagePreview: message.substring(0, 80),
+      model: GEMINI_MODEL,
+    });
+
+    // Call Gemini's streaming endpoint
+    const geminiResponse = await fetch(streamEndpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestBody),
+      signal: controller.signal,
+    });
+
+    if (!geminiResponse.ok) {
+      const errorBody = await geminiResponse.text();
+      Logger.error('[Stream] Gemini API error', {
+        status: geminiResponse.status,
+        body: errorBody.substring(0, 500),
+      });
+
+      // Rotate API key on 429 rate limit
+      if (geminiResponse.status === 429 && API_KEYS_POOL.length > 1) {
+        currentKeyIndex = (currentKeyIndex + 1) % API_KEYS_POOL.length;
+        Logger.warn('[Stream] Rotated to next API key', { newIndex: currentKeyIndex });
+      }
+
+      sendSSE({ error: `Gemini API error (${geminiResponse.status}): ${errorBody.substring(0, 200)}` });
+      sendSSE('[DONE]');
+      clearInterval(heartbeatTimer);
+      return res.end();
+    }
+
+    // Parse the SSE stream from Gemini
+    // Note: Node.js fetch returns a Web ReadableStream — must use getReader()
+    const reader = geminiResponse.body.getReader();
+    const decoder = new TextDecoder();
+    let accumulatedText = '';
+    let sseBuffer = '';
+    let chunkCount = 0;
+
+    while (true) {
+      if (controller.signal.aborted) break;
+
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      const chunkStr = decoder.decode(value, { stream: true });
+      sseBuffer += chunkStr;
+      chunkCount++;
+
+      // Debug: log first few raw chunks
+      if (chunkCount <= 3) {
+        Logger.info(`[Stream] Raw chunk #${chunkCount}`, { 
+          length: chunkStr.length,
+          preview: chunkStr.substring(0, 300),
+        });
+      }
+
+      // Process complete SSE frames
+      // Gemini uses \r\n line endings — normalize to \n before splitting
+      sseBuffer = sseBuffer.replace(/\r\n/g, '\n');
+      const frames = sseBuffer.split('\n\n');
+      sseBuffer = frames.pop() || ''; // Keep incomplete last frame in buffer
+
+      for (const frame of frames) {
+        if (!frame.trim()) continue;
+
+        // Extract the data line from the SSE frame
+        const dataLine = frame.split('\n').find(line => line.startsWith('data: '));
+        if (!dataLine) continue;
+
+        const jsonStr = dataLine.slice(6).trim(); // Remove "data: " prefix
+        if (!jsonStr || jsonStr === '[DONE]') continue;
+
+        try {
+          const geminiChunk = JSON.parse(jsonStr);
+          const candidate = geminiChunk?.candidates?.[0];
+
+          if (!candidate) continue;
+
+          // Check for safety blocks
+          if (candidate.finishReason === 'SAFETY' || candidate.finishReason === 'RECITATION') {
+            sendSSE({ error: `Content blocked: ${candidate.finishReason}` });
+            continue;
+          }
+
+          // Extract text from parts
+          const parts = candidate.content?.parts || [];
+
+          // Debug: log first candidate structure
+          if (chunkCount <= 2) {
+            Logger.info('[Stream] Candidate structure', {
+              partsCount: parts.length,
+              partTypes: parts.map(p => ({
+                hasText: !!p.text,
+                textLen: p.text?.length || 0,
+                thought: p.thought || false,
+              })),
+              finishReason: candidate.finishReason,
+            });
+          }
+
+          for (const part of parts) {
+            // Skip thinking parts (gemini-2.5-flash internal reasoning)
+            if (part.thought) continue;
+
+            if (part.text) {
+              accumulatedText += part.text;
+              sendSSE({
+                text: part.text,
+                accumulated: accumulatedText.length,
+                done: false,
+              });
+            }
+          }
+
+          // Check if this is the final chunk
+          if (candidate.finishReason === 'STOP') {
+            sendSSE({
+              text: '',
+              accumulated: accumulatedText.length,
+              done: true,
+              finishReason: 'STOP',
+            });
+          }
+        } catch (parseErr) {
+          Logger.warn('[Stream] Failed to parse Gemini SSE chunk', {
+            error: parseErr.message,
+            raw: jsonStr.substring(0, 200),
+          });
+          // Non-fatal — keep processing remaining frames
+        }
+      }
+    }
+
+    reader.releaseLock();
+
+    // Stream finished
+    Logger.info('[Stream] Stream completed', {
+      sessionId,
+      totalChars: accumulatedText.length,
+    });
+
+    if (db && req.user && req.user.uid && accumulatedText) {
+      try {
+        const spec = extractJsonObject(accumulatedText);
+        let normalizedSpec = spec;
+        if (typeof normalizeSpec === 'function') {
+           normalizedSpec = normalizeSpec(spec);
+        }
+        
+        const saveJobId = randomUUID();
+        await db.collection('components').add({
+          jobId: saveJobId,
+          userId: req.user.uid,
+          prompt: message,
+          code: typeof serializeSpec === 'function' ? serializeSpec(normalizedSpec) : '',
+          spec: JSON.stringify(normalizedSpec),
+          threadId: threadId || saveJobId,
+          status: 'completed',
+          timestamp: Date.now(),
+          isPublic: false,
+          createdAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+        Logger.info(`[Stream] Saved generation to Firestore for user ${req.user.uid}`);
+      } catch (dbErr) {
+        Logger.error(`[Stream] Failed to save generation to Firestore: ${dbErr.message}`);
+      }
+    }
+
+    sendSSE('[DONE]');
+  } catch (error) {
+    if (error.name === 'AbortError') {
+      Logger.info('[Stream] Client disconnected', { sessionId });
+    } else {
+      Logger.error('[Stream] Unexpected error', {
+        error: error.message,
+        stack: error.stack,
+      });
+      sendSSE({ error: error.message || 'Streaming failed' });
+      sendSSE('[DONE]');
+    }
+  } finally {
+    clearInterval(heartbeatTimer);
+    res.end();
+  }
+});
+
 // GET /api/health - Surface backend + queue health metadata
 app.get('/api/health', (_, res) => {
   try {
@@ -1788,7 +2125,8 @@ if (!process.env.VERCEL) {
     Logger.info(`Backend server running on http://localhost:${APP_PORT}`);
     Logger.info('API Endpoints:', {
       endpoints: [
-        'POST /api/agent - Enqueue new job',
+        'POST /api/agent - Enqueue new job (polling)',
+        'POST /api/agent/stream - Real-time SSE streaming',
         'GET /api/agent/:jobId - Get job status',
         'GET /api/queue/status - Queue statistics',
       ]
@@ -1796,7 +2134,8 @@ if (!process.env.VERCEL) {
 
     console.log(`Backend server running on http://localhost:${APP_PORT}`);
     console.log(`API Endpoints:`);
-    console.log(`  POST /api/agent - Enqueue new job`);
+    console.log(`  POST /api/agent        - Enqueue new job (polling)`);
+    console.log(`  POST /api/agent/stream - Real-time SSE streaming ✨`);
     console.log(`  GET  /api/agent/:jobId - Get job status`);
     console.log(`  GET  /api/queue/status - Queue statistics`);
     console.log(`\nLogs are being written to: logs/backend.log`);

@@ -20,7 +20,8 @@ const INTENT_KEYWORDS = {
   landing: ['landing', 'hero', 'homepage', 'marketing', 'product page', 'feature', 'pricing', 'cta', 'call to action'],
   music: ['music', 'player', 'audio', 'song', 'spotify', 'track', 'playlist', 'album', 'now playing'],
   kanban: ['kanban', 'board', 'jira', 'trello', 'drag', 'column'],
-  chat: ['chat', 'message', 'conversation', 'social', 'feed', 'wizard']
+  chat: ['chat', 'message', 'conversation', 'social', 'feed', 'wizard'],
+  ecommerce: ['ecommerce', 'product', 'product card', 'showcase', 'cart', 'shop', 'store', 'checkout', 'buy']
 };
 
 export const INTENT_COMPONENTS = {
@@ -33,7 +34,8 @@ export const INTENT_COMPONENTS = {
   landing: ['panel', 'grid', 'stack', 'text', 'button', 'image', 'summary-card', 'badge'],
   music: ['panel', 'image', 'text', 'slider', 'button', 'flexbox', 'stack'],
   kanban: ['kanban', 'panel', 'stack', 'badge', 'button', 'flexbox', 'avatar'],
-  chat: ['panel', 'avatar', 'text', 'text-field', 'button', 'stack', 'flexbox']
+  chat: ['panel', 'avatar', 'text', 'text-field', 'button', 'stack', 'flexbox'],
+  ecommerce: ['panel', 'image', 'stack', 'button', 'badge', 'select', 'grid', 'text']
 };
 
 export function detectIntent(userMessage) {

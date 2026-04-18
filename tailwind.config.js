@@ -69,24 +69,92 @@ export default {
           accent3: '#F472B6',   // pink-400
           neutral: '#78716C',   // stone-500
         },
+
+        // ─── OpenUI Design Tokens (oklch) ───
+        oui: {
+          bg: 'var(--oui-bg)',
+          fg: 'var(--oui-fg)',
+          popover: 'var(--oui-popover)',
+          sunk: 'var(--oui-sunk)',
+          'sunk-deep': 'var(--oui-sunk-deep)',
+          elevated: 'var(--oui-elevated)',
+          'elevated-strong': 'var(--oui-elevated-strong)',
+          overlay: 'var(--oui-overlay)',
+          'inverted-bg': 'var(--oui-inverted-bg)',
+          'info-bg': 'var(--oui-info-bg)',
+          'success-bg': 'var(--oui-success-bg)',
+          'alert-bg': 'var(--oui-alert-bg)',
+          'danger-bg': 'var(--oui-danger-bg)',
+          'purple-bg': 'var(--oui-purple-bg)',
+          'pink-bg': 'var(--oui-pink-bg)',
+          'text-primary': 'var(--oui-text-primary)',
+          'text-secondary': 'var(--oui-text-secondary)',
+          'text-tertiary': 'var(--oui-text-tertiary)',
+          'text-link': 'var(--oui-text-link)',
+          'text-success': 'var(--oui-text-success)',
+          'text-alert': 'var(--oui-text-alert)',
+          'text-danger': 'var(--oui-text-danger)',
+          'text-info': 'var(--oui-text-info)',
+          'text-pink': 'var(--oui-text-pink)',
+          'text-purple': 'var(--oui-text-purple)',
+          'interactive': 'var(--oui-interactive-default)',
+          'interactive-hover': 'var(--oui-interactive-hover)',
+          'interactive-disabled': 'var(--oui-interactive-disabled)',
+          'border': 'var(--oui-border)',
+          'border-interactive': 'var(--oui-border-interactive)',
+          'border-emphasis': 'var(--oui-border-emphasis)',
+          'border-selected': 'var(--oui-border-selected)',
+        },
       },
 
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
         display: ['Outfit', 'Inter', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+        'oui-body': ['var(--oui-font-body)'],
+        'oui-heading': ['var(--oui-font-heading)'],
+        'oui-code': ['var(--oui-font-code)'],
       },
 
       borderRadius: {
         card: '18px',
         btn: '12px',
         pill: '999px',
+        // OpenUI radius tokens
+        'oui-xs': 'var(--oui-radius-xs)',
+        'oui-s': 'var(--oui-radius-s)',
+        'oui-m': 'var(--oui-radius-m)',
+        'oui-l': 'var(--oui-radius-l)',
+        'oui-xl': 'var(--oui-radius-xl)',
+        'oui-2xl': 'var(--oui-radius-2xl)',
+        'oui-3xl': 'var(--oui-radius-3xl)',
+        'oui-4xl': 'var(--oui-radius-4xl)',
+        'oui-full': 'var(--oui-radius-full)',
       },
 
       boxShadow: {
         card: '0 16px 40px rgba(0, 0, 0, 0.05)',
         prompt: '0 18px 45px rgba(0, 0, 0, 0.12)',
         hover: '0 20px 50px rgba(0, 0, 0, 0.08)',
+        // OpenUI shadow tokens
+        'oui-s': 'var(--oui-shadow-s)',
+        'oui-m': 'var(--oui-shadow-m)',
+        'oui-l': 'var(--oui-shadow-l)',
+        'oui-xl': 'var(--oui-shadow-xl)',
+        'oui-2xl': 'var(--oui-shadow-2xl)',
+      },
+
+      spacing: {
+        // OpenUI spacing tokens
+        'oui-3xs': 'var(--oui-space-3xs)',
+        'oui-2xs': 'var(--oui-space-2xs)',
+        'oui-xs': 'var(--oui-space-xs)',
+        'oui-s': 'var(--oui-space-s)',
+        'oui-m': 'var(--oui-space-m)',
+        'oui-l': 'var(--oui-space-l)',
+        'oui-xl': 'var(--oui-space-xl)',
+        'oui-2xl': 'var(--oui-space-2xl)',
+        'oui-3xl': 'var(--oui-space-3xl)',
       },
 
       maxWidth: {

@@ -56,67 +56,10 @@ const Image: React.FC<ImageProps> = ({
     src?.toLowerCase().includes('map') ||
     caption?.toLowerCase().includes('map');
 
-  // Fast, curated beautiful Unsplash fallbacks mapped by category
+  // Dynamic imagery fallbacks using reliable placeholder service
   const getFallbackImage = (query: string) => {
-    const q = (query || '').toLowerCase();
-    
-    // Dictionary of pre-selected highly relevant images
-    const placeholders: Record<string, string[]> = {
-      food: [
-        'https://images.unsplash.com/photo-1546069901-ba9599a7e63c',
-        'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38',
-        'https://images.unsplash.com/photo-1473093295043-cdd812d0e601',
-        'https://images.unsplash.com/photo-1499028344343-cd173ffc68a9'
-      ],
-      portrait: [
-        'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde', // man
-        'https://images.unsplash.com/photo-1580489944761-15a19d654956', // woman
-        'https://images.unsplash.com/photo-1527980965255-d3b416303d12', // man
-      ],
-      product: [
-        'https://images.unsplash.com/photo-1505740420928-5e560c06d30e', // headphones
-        'https://images.unsplash.com/photo-1523275335684-37898b6baf30', // watch
-        'https://images.unsplash.com/photo-1542291026-7eec264c27ff', // shoes
-      ],
-      nature: [
-        'https://images.unsplash.com/photo-1441974231531-c6227db76b6e',
-        'https://images.unsplash.com/photo-1472214103451-9374bd1c798e',
-      ],
-      technology: [
-        'https://images.unsplash.com/photo-1498050108023-c5249f4df085', // code/laptop
-        'https://images.unsplash.com/photo-1550751827-4bd374c3f58b', // setup
-      ],
-      city: [
-        'https://images.unsplash.com/photo-1449824913935-59a10b8d2000',
-        'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df',
-      ],
-      map: [
-        'https://images.unsplash.com/photo-1524661135-423995f22d0b', // map graphic
-        'https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83', // map pin
-      ],
-      abstract: [
-        'https://images.unsplash.com/photo-1550684848-fac1c5b4e853',
-        'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d',
-        'https://images.unsplash.com/photo-1574169208507-84376144848b'
-      ]
-    };
-    
-    let category = 'abstract';
-    
-    // Smart keyword matching for apt results
-    if (q.match(/recipe|food|dinner|lunch|breakfast|spagheti|spaghetti|carbonara|eat|meal|restaurant|pizza|burger|salad/)) category = 'food';
-    else if (q.match(/user|profile|avatar|person|man|woman|people/)) category = 'portrait';
-    else if (q.match(/product|shoe|watch|headphone|item|cart|shop/)) category = 'product';
-    else if (q.match(/map|location|geo|route/)) category = 'map';
-    else if (q.match(/city|street|building|urban/)) category = 'city';
-    else if (q.match(/tech|computer|laptop|code|software|app/)) category = 'technology';
-    else if (q.match(/nature|mountain|tree|forest|ocean|water|landscape/)) category = 'nature';
-    
-    const possibleImages = placeholders[category];
-    // Deterministic selection based on query length so the same component gets the same image consistently
-    const index = q.length % possibleImages.length;
-    
-    return `${possibleImages[index]}?auto=format&fit=crop&w=800&q=80`;
+    const q = (query || 'abstract,minimal').trim().replace(/\s+/g, ',');
+    return `https://loremflickr.com/800/800/${encodeURIComponent(q)}?lock=${Math.floor(Math.random() * 100)}`;
   };
 
   // Assign the optimized default fallback based on alt/caption text

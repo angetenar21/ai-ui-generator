@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Send, Sparkles, RotateCcw, StopCircle, LayoutDashboard, FormInput, BarChart3, PanelTop, Grid, Wand2, AlertTriangle } from 'lucide-react';
 import ApiService from '../services/apiService';
@@ -13,6 +13,7 @@ import type { Variants } from 'framer-motion';
 import { getDynamicSkeleton } from '../components/Skeleton';
 import type { ComponentSpec } from '../templates/core/types';
 import ErrorBoundary from '../components/ErrorBoundary';
+import StreamingErrorBoundary from '../components/StreamingErrorBoundary';
 import { generateUUID } from '../utils/uuid';
 
 const heroContainerVariants: Variants = {
@@ -37,6 +38,134 @@ interface ChatMessage {
   role: 'user' | 'assistant';
   content: string | ComponentSpec;
   timestamp: number;
+}
+
+/**
+ * Try to parse partial/incomplete JSON from a streaming response.
+ * Intelligently repairs trailing values or strings to allow character-by-character render.
+ */
+function tryParsePartialJson(text: string): ComponentSpec | null {
+  try {
+    let str = text.trim();
+    str = str.replace(/^```(?:json)?\s*/m, '').replace(/\s*```$/m, '').trim();
+
+    const start = str.indexOf('{');
+    if (start === -1) return null;
+    str = str.substring(start);
+
+    try {
+      const parsed = JSON.parse(str);
+      if (parsed && typeof parsed === 'object' && (parsed.name || parsed.type)) {
+        return sanitizeSpec(parsed);
+      }
+    } catch {
+      // Continue to partial repair
+    }
+
+    let depth = 0;
+    let inStr = false;
+    let esc = false;
+    let openBraces = 0;
+    let openBrackets = 0;
+
+    for (let i = 0; i < str.length; i++) {
+      const ch = str[i];
+      if (esc) { esc = false; continue; }
+      if (ch === '\\') { esc = true; continue; }
+      if (ch === '"') { inStr = !inStr; continue; }
+      if (inStr) continue;
+
+      if (ch === '{') openBraces++;
+      else if (ch === '}') openBraces--;
+      else if (ch === '[') openBrackets++;
+      else if (ch === ']') openBrackets--;
+    }
+
+    let repaired = str;
+    
+    if (inStr) {
+      // Close open string
+      repaired += '"';
+    } else {
+      // Not in string. Strip trailing partial unquoted words (tru, fal, 123, null)
+      repaired = repaired.replace(/[a-zA-Z0-9.\-+$_]+$/, '').trim();
+      
+      // If we stripped back to a comma, remove the comma since there is no next value
+      if (repaired.endsWith(',')) {
+        repaired = repaired.slice(0, -1).trim();
+      }
+      
+      // If we stripped back to a colon, the key has no value. Provide null.
+      if (repaired.endsWith(':')) {
+        repaired += 'null';
+      }
+    }
+
+    repaired += ']'.repeat(Math.max(0, openBrackets));
+    repaired += '}'.repeat(Math.max(0, openBraces));
+
+    const parsed = JSON.parse(repaired);
+    if (parsed && typeof parsed === 'object' && (parsed.name || parsed.type)) {
+      return sanitizeSpec(parsed);
+    }
+    return null;
+  } catch (err) {
+    return null;
+  }
+}
+
+/**
+ * Sanitize a partially-parsed spec to prevent rendering errors.
+ * Replaces undefined/null array fields with empty arrays,
+ * ensures required fields exist.
+ * Uses a structurally deterministic `path` to ensure stable component keys during streaming.
+ */
+function sanitizeSpec(spec: Record<string, unknown>, path: string = 'root'): ComponentSpec {
+  const props = (spec.templateProps || spec.props || {}) as Record<string, unknown>;
+
+  // Common array fields that components try to .map() on
+  const arrayFields = ['data', 'items', 'rows', 'columns', 'options', 'series', 'sections', 'tabs', 'steps', 'categories', 'links', 'buttons', 'fields', 'headers'];
+  for (const field of arrayFields) {
+    if (field in props && !Array.isArray(props[field])) {
+      // If it exists but isn't an array, replace with empty array
+      if (props[field] === null || props[field] === undefined || typeof props[field] !== 'object') {
+        props[field] = [];
+      }
+    }
+  }
+
+  // Recursively sanitize children (whether they are at top level or in spec.templateProps)
+  const rawTopChildren = Array.isArray(spec.children) ? spec.children : [];
+  const rawPropsChildren = Array.isArray(props.children) ? props.children : [];
+  const allChildren = [...rawTopChildren, ...rawPropsChildren];
+
+  const sanitizedChildren: ComponentSpec[] = [];
+  let childIndex = 0;
+  for (const child of allChildren) {
+    if (child && typeof child === 'object') {
+      sanitizedChildren.push(sanitizeSpec(child as Record<string, unknown>, `${path}.child[${childIndex}]`));
+      childIndex++;
+    }
+  }
+
+  // Ensure children property is clean
+  if ('children' in props) {
+    props.children = sanitizedChildren.length > 0 ? sanitizedChildren : undefined;
+  }
+
+  return {
+    name: spec.name as string,
+    type: spec.type as string || spec.name as string,
+    templateProps: props,
+    props: props,
+    metadata: (spec.metadata as ComponentSpec['metadata']) || {
+      // Stable ID based on the tree path! Crucial for React to preserve DOM during streaming
+      componentId: `streaming-${path}`,
+      generatedAt: new Date().toISOString(),
+    },
+    // Place them cleanly at the top level too
+    children: sanitizedChildren.length > 0 ? sanitizedChildren : undefined,
+  } as ComponentSpec;
 }
 
 const ChatPage: React.FC = () => {
@@ -64,11 +193,23 @@ const ChatPage: React.FC = () => {
   } = useAppStore();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Progressive streaming state — holds the in-progress component as it builds up
+  const [streamingSpec, setStreamingSpec] = useState<ComponentSpec | null>(null);
+
   // Computed state for current thread
   const currentThreadState = currentThreadId ? activeThreads[currentThreadId] : null;
   const isLoading = currentThreadState?.isLoading || false;
   const jobStatus = currentThreadState?.jobStatus || null;
   const queueStatus = currentThreadState?.queueStatus || null;
+
+  // Auto-resize textarea when input value changes
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.style.height = 'auto';
+      const newHeight = Math.min(inputRef.current.scrollHeight, 400); // Cap max height at 400px
+      inputRef.current.style.height = newHeight + 'px';
+    }
+  }, [input]);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -247,29 +388,72 @@ const ChatPage: React.FC = () => {
         status: 'pending',
       });
 
-      try {
-        const stats = await ApiService.getQueueStatus();
-        setThreadState(threadId, { queueStatus: stats });
-      } catch (error) {
-        console.error('Failed to fetch queue status:', error);
+      // Use streaming with progressive rendering
+      setThreadState(threadId, { jobStatus: 'streaming' as any });
+      setStreamingSpec(null);
+
+      let accumulated = '';
+      let lastParsedSpec: ComponentSpec | null = null;
+
+      // requestAnimationFrame debouncing (from OpenUI's processStreamedMessage)
+      // Batches React state updates to the browser's paint cycle.
+      // Without this, every chunk triggers a synchronous React re-render,
+      // causing jank and layout thrashing.
+      let rafId: number | null = null;
+      let pendingSpec: ComponentSpec | null = null;
+      const debouncedUpdate = (spec: ComponentSpec) => {
+        pendingSpec = spec;
+        if (rafId !== null) return; // Already scheduled
+        rafId = requestAnimationFrame(() => {
+          rafId = null;
+          if (pendingSpec) {
+            setStreamingSpec(pendingSpec);
+          }
+        });
+      };
+
+      // Stream chunks and try incremental parsing
+      for await (const chunk of ApiService.streamGeneration(
+        promptText,
+        {
+          threadId,
+          context: {
+            previousComponents: overrideContext || messages
+              .filter((m) => m.role === 'assistant' && typeof m.content === 'object')
+              .map((m) => m.content as ComponentSpec),
+          },
+          signal: abortController.signal,
+          onStreamStart: () => {
+            setThreadState(threadId, { jobStatus: 'streaming' as any });
+          },
+        }
+      )) {
+        accumulated += chunk;
+
+        // Try parsing on every chunk — rAF handles batching
+        const spec = tryParsePartialJson(accumulated);
+        if (spec) {
+          lastParsedSpec = spec;
+          debouncedUpdate(spec);
+        }
       }
 
-      const response = await ApiService.sendMessage(
-        promptText,
-        threadId,
-        {
-          previousComponents: overrideContext || messages
-            .filter((m) => m.role === 'assistant' && typeof m.content === 'object')
-            .map((m) => m.content as ComponentSpec),
-        },
-        {
-          onStatusUpdate: (status) => {
-            setThreadState(threadId, { jobStatus: status });
-          },
-          onJobId: (jobId) => setThreadState(threadId, { jobId }),
-          signal: abortController.signal,
-        }
-      );
+      // Flush any pending rAF update
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        if (pendingSpec) setStreamingSpec(pendingSpec);
+      }
+
+      // Final parse with full text
+      const { parseResponse } = await import('../services/formatDetector');
+      const result = parseResponse(accumulated);
+      const response: ComponentSpec = result.spec || lastParsedSpec || {
+        type: 'text',
+        props: { content: `Streaming completed but failed to parse. Raw: ${accumulated.length} chars.`, variant: 'body' },
+        metadata: { componentId: `stream-error-${Date.now()}`, generatedAt: new Date().toISOString() },
+      };
+
+      setStreamingSpec(null);
 
       // Verify we are still looking for THIS response
       const latestLock = useAppStore.getState().activeThreads[threadId]?.historyItemId;
@@ -366,11 +550,11 @@ const ChatPage: React.FC = () => {
   };
 
   const quickStarts = [
-    { icon: LayoutDashboard, label: 'Dashboard', prompt: 'Create a modern analytics dashboard with KPIs and charts' },
-    { icon: FormInput,       label: 'Form',      prompt: 'Create a user registration form' },
-    { icon: BarChart3,       label: 'Chart',     prompt: 'Create a sales performance chart' },
-    { icon: PanelTop,        label: 'Card',      prompt: 'Create a product showcase card' },
-    { icon: Grid,            label: 'Layout',    prompt: 'Create a responsive grid layout' },
+    { icon: LayoutDashboard, label: 'Dashboard', prompt: 'Create a modern analytics dashboard layout featuring a summary stat bar, a complex spline chart for weekly engagement, and a side panel with a recent activity feed and user avatars.' },
+    { icon: FormInput,       label: 'Form',      prompt: 'Build an elegant, multi-step user onboarding form mapping personal details and account preferences, along with a complex animated progress bar and a sleek dark mode toggle switch.' },
+    { icon: BarChart3,       label: 'Chart',     prompt: 'Design a highly interactive bar chart visualization for monthly revenue, overlaying a gradient growth trend line, hover tooltips, and a segmented control to switch timeframes.' },
+    { icon: PanelTop,        label: 'Card',      prompt: 'Create a premium eCommerce product showcase card with a hovering 3D image effect, an expandable sizing selector, a glassmorphic price tag, and an animated "Add to Cart" button.' },
+    { icon: Grid,            label: 'Layout',    prompt: 'Construct a staggered masonry gallery grid with asymmetric image placements optimized for a portfolio. Overlay translucent text content that fades in smoothly on image hover.' },
   ];
 
   // Scroll to bottom of the container — used only for non-message triggers if needed
@@ -428,8 +612,8 @@ const ChatPage: React.FC = () => {
                   key={item.label}
                   onClick={() => {
                     setInput(item.prompt);
-                    // Auto-submit so users get results in one click
-                    setTimeout(() => handleSend(item.prompt), 50);
+                    // Focus the input, allowing the user to review before sending
+                    setTimeout(() => inputRef.current?.focus(), 50);
                   }}
                   className={`
                     hero-card group relative px-3 sm:px-4 py-2.5 sm:py-3.5 rounded-2xl transition-all duration-300
@@ -588,7 +772,7 @@ const ChatPage: React.FC = () => {
                   )}
                 </div>
               ))}
-              {/* Loading Skeleton */}
+              {/* Progressive Streaming Preview */}
               <AnimatePresence>
                 {isLoading && (
                   <motion.div
@@ -598,10 +782,28 @@ const ChatPage: React.FC = () => {
                     transition={{ type: "spring", stiffness: 350, damping: 20 }}
                     className="flex flex-col items-start gap-4 w-full pb-8"
                   >
-                    {/* Modern Skeleton UI */}
-                    <div className="w-full max-w-3xl overflow-hidden mt-2">
-                      {getDynamicSkeleton(messages.filter(m => m.role === 'user').pop()?.content as string || '')}
-                    </div>
+                    {streamingSpec ? (
+                      /* Live progressive rendering — component grows as stream arrives */
+                      <div className="w-full relative mt-2 streaming-live rounded-2xl">
+                        <div className="absolute -top-2 right-2 z-10 flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 dark:bg-orange-500/20 backdrop-blur-sm border border-orange-300/30 dark:border-orange-700/30">
+                          <div className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
+                          <span className="text-[10px] font-semibold text-orange-600 dark:text-orange-400 tracking-wide uppercase">Streaming</span>
+                        </div>
+                        <div className="w-full min-w-0 flex items-start justify-start transition-all duration-300">
+                          <StreamingErrorBoundary>
+                            <ResponsiveComponentWrapper alignLeft={true}>
+                              <ComponentRenderer spec={streamingSpec} />
+                            </ResponsiveComponentWrapper>
+                          </StreamingErrorBoundary>
+                        </div>
+                      </div>
+                    ) : (
+                      /* Minimal indicator before first meaningful UI element parses */
+                      <div className="flex items-center gap-2 px-3 py-1 mt-2.5 rounded-full border border-gray-200 dark:border-gray-700/50 bg-white/50 dark:bg-[#1E1E1E]/50">
+                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+                        <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Initializing layout...</span>
+                      </div>
+                    )}
 
                     {/* Stop button during generation */}
                     <div className="flex items-center gap-2 ml-2">
@@ -637,16 +839,11 @@ const ChatPage: React.FC = () => {
                 ref={inputRef}
                 value={input}
                 rows={1}
-                onChange={(e) => {
-                  setInput(e.target.value);
-                  e.target.style.height = 'auto';
-                  const newHeight = Math.min(e.target.scrollHeight, 200); // cap max height
-                  e.target.style.height = newHeight + 'px';
-                }}
+                onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
                     e.preventDefault();
-                    handleSend();
+                    if (!isLoading) handleSend(); // Prevent sending during loading
                   }
                 }}
                 onFocus={() => {
@@ -656,8 +853,8 @@ const ChatPage: React.FC = () => {
                   }
                 }}
                 placeholder={document.activeElement === inputRef.current ? "Describe your perfect UI..." : "Describe your perfect UI... (Cmd+Enter to send)"}
-                disabled={isLoading}
-                className="flex-1 bg-transparent border-0 outline-none text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 px-4 py-3 text-base font-medium resize-none overflow-y-auto min-h-[48px] max-h-[200px]"
+                disabled={false}
+                className="flex-1 bg-transparent border-0 outline-none text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 px-4 py-3 text-base font-medium resize-none overflow-y-auto min-h-[48px] max-h-[400px]"
               />
 
               {/* Mic button removed — voice recording not yet implemented */}

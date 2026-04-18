@@ -90,15 +90,57 @@ export const RenderNode: React.FC<{ spec: ComponentSpec, localData?: Record<stri
   const children = rawChildren || (spec as any).children || [];
 
   // Get component from registry
-  const Component = registry.get(componentName);
+  let Component = registry.get(componentName);
+
+  // Fallback alias map for common AI hallucinations
+  if (!Component && typeof componentName === 'string') {
+    const aliases: Record<string, string> = {
+      'textarea': 'text-area',
+      'textfield': 'text-field',
+      'text_area': 'text-area',
+      'text_field': 'text-field',
+      'dropdown': 'select',
+      'datepicker': 'date-picker',
+      'datetimepicker': 'date-time-picker',
+      'box': 'container',
+    };
+    const mapped = aliases[componentName.toLowerCase()];
+    if (mapped) Component = registry.get(mapped);
+  }
 
   if (!Component) {
-    const componentNameStr = String(componentName || 'undefined');
-    return (
-      <div key={metadata?.componentId} className="p-4 border border-red-200 bg-red-50 rounded-xl my-2">
-        <p className="text-red-600 font-bold">Unknown Component: {componentNameStr}</p>
-      </div>
-    );
+    const originalName = String(componentName || 'div');
+    const tag = originalName.toLowerCase();
+    
+    // If it's a valid HTML tag format, render as native HTML element
+    if (/^[a-z0-9]+$/.test(tag)) {
+      const NativeFallback = (props: any) => {
+        // Strip props that shouldn't go to DOM elements to avoid React warnings
+        const { 
+          renderChild, children, staticProps, componentKey, localData, 
+          variant, size, fullWidth, label, helperText, errorMessage, maxRows, minRows, error,
+          ...validDomProps 
+        } = props;
+        
+        return React.createElement(tag, validDomProps, children);
+      };
+
+      return (
+        <ReactiveComponent
+          Component={NativeFallback}
+          staticProps={propsWithoutChildren}
+          renderedChildren={renderedChildren}
+          renderChild={(child, childLocalData) => (
+            <RenderNode spec={child} localData={{ ...localData, ...childLocalData }} />
+          )}
+          componentKey={metadata?.componentId}
+          localData={localData}
+        />
+      );
+    }
+
+    // Completely invalid names shouldn't break the layout, just hide them
+    return null;
   }
 
   // Recursive renderer for children

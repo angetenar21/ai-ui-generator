@@ -507,6 +507,232 @@ class ApiService {
 
     return componentSpec as ComponentSpec;
   }
+
+  // ════════════════════════════════════════════════════════════════════════════
+  // STREAMING API — Real-time SSE Generation
+  // ════════════════════════════════════════════════════════════════════════════
+
+  /**
+   * Stream a generation request via SSE.
+   *
+   * Opens a long-lived connection to POST /api/agent/stream and yields
+   * text chunks as they arrive. The caller accumulates the full text
+   * and can attempt incremental parsing at each chunk.
+   *
+   * @example
+   * ```ts
+   * let fullText = '';
+   * for await (const chunk of ApiService.streamGeneration('Create a dashboard')) {
+   *   fullText += chunk;
+   *   tryParseAndRender(fullText);
+   * }
+   * // Stream done — fullText is the complete response
+   * ```
+   */
+  static async *streamGeneration(
+    message: string,
+    options?: {
+      threadId?: string;
+      context?: {
+        previousComponents?: ComponentSpec[];
+        userPreferences?: Record<string, unknown>;
+      };
+      signal?: AbortSignal;
+      onStreamStart?: () => void;
+      onStreamEnd?: (totalChars: number) => void;
+      onError?: (error: string) => void;
+    }
+  ): AsyncGenerator<string, void, undefined> {
+    const sessionId = SessionManager.getSessionId();
+
+    let headers = await this.getHeaders(false);
+    let response = await fetch(`${API_BASE_URL}/api/agent/stream`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        sessionId,
+        message,
+        threadId: options?.threadId,
+        context: options?.context,
+      }),
+      signal: options?.signal,
+    });
+
+    // Retry on 401 with fresh token
+    if (response.status === 401) {
+      console.warn('[ApiService] Streaming: 401 received, refreshing token...');
+      headers = await this.getHeaders(true);
+      response = await fetch(`${API_BASE_URL}/api/agent/stream`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          sessionId,
+          message,
+          threadId: options?.threadId,
+          context: options?.context,
+        }),
+        signal: options?.signal,
+      });
+    }
+
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => response.statusText);
+      throw new Error(`Stream request failed (${response.status}): ${errorText}`);
+    }
+
+    if (!response.body) {
+      throw new Error('Response body is null — streaming not supported');
+    }
+
+    options?.onStreamStart?.();
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let totalChars = 0;
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+
+        // Process complete SSE frames (each ends with \n\n)
+        const frames = buffer.split('\n\n');
+        buffer = frames.pop() || ''; // Keep incomplete frame in buffer
+
+        for (const frame of frames) {
+          if (!frame.trim()) continue;
+
+          // Find the data line
+          const dataLine = frame.split('\n').find(line => line.startsWith('data: '));
+          if (!dataLine) continue;
+
+          const payload = dataLine.slice(6); // Remove "data: " prefix
+
+          // SSE termination sentinel
+          if (payload === '[DONE]') {
+            options?.onStreamEnd?.(totalChars);
+            return;
+          }
+
+          try {
+            const data = JSON.parse(payload);
+
+            // Handle error events from backend
+            if (data.error) {
+              options?.onError?.(data.error);
+              console.error('[ApiService] Stream error from backend:', data.error);
+              continue;
+            }
+
+            // Yield the text chunk
+            if (data.text) {
+              totalChars += data.text.length;
+              yield data.text;
+            }
+          } catch {
+            // Non-fatal: skip unparseable frames (e.g. heartbeat comments)
+          }
+        }
+      }
+
+      // If we exit the read loop without [DONE], stream ended normally
+      options?.onStreamEnd?.(totalChars);
+    } finally {
+      reader.releaseLock();
+    }
+  }
+
+  /**
+   * Stream generation and return the complete accumulated text.
+   * A simpler wrapper when you don't need chunk-by-chunk access.
+   */
+  static async streamGenerationFull(
+    message: string,
+    options?: {
+      threadId?: string;
+      context?: {
+        previousComponents?: ComponentSpec[];
+        userPreferences?: Record<string, unknown>;
+      };
+      signal?: AbortSignal;
+      onChunk?: (chunk: string, accumulated: string) => void;
+    }
+  ): Promise<string> {
+    let accumulated = '';
+
+    for await (const chunk of this.streamGeneration(message, {
+      threadId: options?.threadId,
+      context: options?.context,
+      signal: options?.signal,
+    })) {
+      accumulated += chunk;
+      options?.onChunk?.(chunk, accumulated);
+    }
+
+    return accumulated;
+  }
+
+  /**
+   * Stream generation, accumulate text, try to parse as JSON ComponentSpec
+   * at the end, and return it. This bridges streaming with the existing
+   * ComponentSpec-based rendering system.
+   */
+  static async streamAndParse(
+    message: string,
+    options?: {
+      threadId?: string;
+      context?: {
+        previousComponents?: ComponentSpec[];
+        userPreferences?: Record<string, unknown>;
+      };
+      signal?: AbortSignal;
+      onChunk?: (chunk: string, accumulated: string) => void;
+      onStreamStart?: () => void;
+      onStreamEnd?: (totalChars: number) => void;
+    }
+  ): Promise<ComponentSpec> {
+    let accumulated = '';
+
+    for await (const chunk of this.streamGeneration(message, {
+      threadId: options?.threadId,
+      context: options?.context,
+      signal: options?.signal,
+      onStreamStart: options?.onStreamStart,
+      onStreamEnd: options?.onStreamEnd,
+    })) {
+      accumulated += chunk;
+      options?.onChunk?.(chunk, accumulated);
+    }
+
+    // Use format detector to auto-parse JSON or OpenUI Lang
+    const { parseResponse } = await import('./formatDetector');
+    const result = parseResponse(accumulated);
+
+    if (result.spec) {
+      if (result.errors?.length) {
+        console.warn('[ApiService] Parse warnings:', result.errors);
+      }
+      console.log(`[ApiService] Parsed as ${result.format}`, result.spec);
+      return result.spec;
+    }
+
+    // All parsers failed — return error component
+    console.error('[ApiService] All parsers failed:', result.errors);
+    return {
+      type: 'text',
+      props: {
+        content: `Streaming completed but failed to parse response (${result.format}). Raw length: ${accumulated.length} chars.`,
+        variant: 'body',
+      },
+      metadata: {
+        componentId: `stream-error-${Date.now()}`,
+        generatedAt: new Date().toISOString(),
+      },
+    };
+  }
 }
 
 export default ApiService;

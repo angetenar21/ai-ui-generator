@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
 
+@import './styles/openui-tokens.css';
 @import "tailwindcss";
 
 /* Tailwind 4 dark mode configuration - use class strategy */
@@ -574,4 +575,54 @@
   .dark .json-null { color: #FCA5A5; }
   .dark .json-bracket { color: #9CA3AF; }
   .dark .json-punctuation { color: #6B7280; }
+
+  /* ─── Streaming Live Animations ─── */
+  /* Applied via .streaming-live wrapper during progressive rendering. */
+
+  .streaming-live {
+    /* All direct and nested elements get smooth transitions */
+    --stream-duration: 0.4s;
+    --stream-easing: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Smooth height transitions on the wrapper itself so the chat bubble expands smoothly */
+  .streaming-live > * {
+    transition:
+      height var(--stream-duration) var(--stream-easing),
+      max-height var(--stream-duration) var(--stream-easing);
+  }
+
+  /* Subtle shimmer border on the streaming wrapper to indicate active generation */
+  .streaming-live::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(249, 115, 22, 0.3) 25%,
+      rgba(236, 72, 153, 0.3) 50%,
+      rgba(249, 115, 22, 0.3) 75%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: streamShimmer 2s linear infinite;
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  @keyframes streamShimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
 }

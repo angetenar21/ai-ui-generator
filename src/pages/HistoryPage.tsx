@@ -46,13 +46,9 @@ const HistoryPage: React.FC = () => {
     if (!user) return;
 
     try {
-      // PERFORMANCE FIX: We strictly limit query results to 100 heavily-sorted components max 
-      // preventing infinite loops, massive memory overhead, and uncontrolled database billing
       const q = query(
         collection(db, 'components'), 
-        where('userId', '==', user.uid),
-        orderBy('timestamp', 'desc'),
-        limit(100)
+        where('userId', '==', user.uid)
       );
       const querySnapshot = await getDocs(q);
       
@@ -97,7 +93,7 @@ const HistoryPage: React.FC = () => {
 
       // Sort threads by last activity
       threadList.sort((a, b) => b.lastTimestamp - a.lastTimestamp);
-      setThreads(threadList);
+      setThreads(threadList.slice(0, 50));
     } catch (error) {
       console.error('Failed to load history from Firestore:', error);
     } finally {
