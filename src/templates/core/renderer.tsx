@@ -121,8 +121,9 @@ export const RenderNode: React.FC<{ spec: ComponentSpec, localData?: Record<stri
     const originalName = String(componentName || 'div');
     const tag = originalName.toLowerCase();
     
-    // If it's a valid HTML tag format, render as native HTML element
-    if (/^[a-z0-9]+$/.test(tag)) {
+    // If it's a valid HTML tag format (starts with letter), render as native HTML element.
+    // Prevents DOMException InvalidCharacterError on things like '123'
+    if (/^[a-z][a-z0-9-]*$/.test(tag)) {
       const NativeFallback = (props: any) => {
         // Strip props that shouldn't go to DOM elements to avoid React warnings
         const { 
