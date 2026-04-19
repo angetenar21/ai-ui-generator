@@ -14,3 +14,4 @@ export { default as Sidebar } from './Sidebar';
 export { default as Spacer } from './Spacer';
 export { default as Stack } from './Stack';
 export { default as Stepper } from './Stepper';
+export { default as ThemeToggle } from './ThemeToggle';

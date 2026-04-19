@@ -1,5 +1,44 @@
 import React, { useState, useRef, useEffect } from 'react';
 
+// ─── Video Source Resolution (@vid: format) ──────────────────────────────────
+
+const API_BASE_URL = (import.meta as any).env?.VITE_API_BASE_URL || 'http://localhost:4000';
+const resolvedVideoCache = new Map<string, { url: string; poster: string | null }>();
+
+/**
+ * Resolves `@vid:keyword1,keyword2` format to a real video URL via the backend
+ * video-proxy (which calls Pexels Video API — same key as image proxy).
+ */
+async function resolveVideoSrc(src: string): Promise<{ url: string; poster: string | null }> {
+  if (!src.startsWith('@vid:')) return { url: src, poster: null };
+
+  const keywords = src.slice(5).trim();
+  if (!keywords) return { url: src, poster: null };
+
+  const cacheKey = keywords.toLowerCase();
+  const cached = resolvedVideoCache.get(cacheKey);
+  if (cached) return cached;
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/video-proxy?q=${encodeURIComponent(keywords)}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.url) {
+        const result = { url: data.url, poster: data.poster || null };
+        resolvedVideoCache.set(cacheKey, result);
+        return result;
+      }
+    }
+  } catch (err) {
+    console.warn('[Video] Failed to resolve @vid: src', err);
+  }
+
+  // Fallback: return empty so the error state is shown
+  return { url: '', poster: null };
+}
+
+// ─── Types ───────────────────────────────────────────────────────────────────
+
 interface VideoProps {
   src: string;
   poster?: string;
@@ -18,7 +57,6 @@ interface VideoProps {
   onPause?: () => void;
   onEnded?: () => void;
   onTimeUpdate?: (currentTime: number) => void;
-
   children?: React.ReactNode;
   renderChild?: (child: any) => React.ReactNode;
 }
@@ -51,6 +89,30 @@ const Video: React.FC<VideoProps> = ({
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+
+  // @vid: resolution state
+  const [currentSrc, setCurrentSrc] = useState<string>(src?.startsWith('@vid:') ? '' : src);
+  const [resolvedPoster, setResolvedPoster] = useState<string | null>(poster || null);
+  const [isResolving, setIsResolving] = useState(src?.startsWith('@vid:'));
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    if (src?.startsWith('@vid:')) {
+      setIsResolving(true);
+      setCurrentSrc('');
+      resolveVideoSrc(src).then(({ url, poster: p }) => {
+        if (!mountedRef.current) return;
+        setCurrentSrc(url);
+        if (p) setResolvedPoster(p);
+        setIsResolving(false);
+      });
+    } else {
+      setCurrentSrc(src);
+      setIsResolving(false);
+    }
+    return () => { mountedRef.current = false; };
+  }, [src]);
 
   const hideControlsTimer = useRef<ReturnType<typeof setTimeout>>();
 
@@ -189,8 +251,8 @@ const Video: React.FC<VideoProps> = ({
       onMouseMove={handleMouseMove}
       onMouseLeave={() => isPlaying && setShowControls(false)}
     >
-      {/* Loading State */}
-      {isLoading && (
+      {/* Loading / Resolving State */}
+      {(isLoading || isResolving) && (
         <div className="absolute inset-0 bg-zinc-900/90 flex items-center justify-center z-10">
           <div className="text-center">
             <svg
@@ -198,40 +260,31 @@ const Video: React.FC<VideoProps> = ({
               fill="none"
               viewBox="0 0 24 24"
             >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              />
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              />
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
             </svg>
-            <p className="text-white text-sm">Loading video...</p>
+            <p className="text-white text-sm">{isResolving ? 'Fetching video…' : 'Loading video...'}</p>
           </div>
         </div>
       )}
 
       {/* Video Element */}
-      <video
-        ref={videoRef}
-        src={src}
-        poster={poster}
-        autoPlay={autoPlay}
-        loop={loop}
-        muted={muted}
-        controls={controls && controlsVariant === 'default'}
-        className="w-full h-full object-contain"
-        onEnded={() => {
-          setIsPlaying(false);
-          if (onEnded) onEnded();
-        }}
-      />
+      {currentSrc && (
+        <video
+          ref={videoRef}
+          src={currentSrc}
+          poster={resolvedPoster || poster}
+          autoPlay={autoPlay}
+          loop={loop}
+          muted={muted}
+          controls={controls && controlsVariant === 'default'}
+          className="w-full h-full object-contain"
+          onEnded={() => {
+            setIsPlaying(false);
+            if (onEnded) onEnded();
+          }}
+        />
+      )}
 
       {/* Custom Controls */}
       {controls && controlsVariant !== 'default' && (

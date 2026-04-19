@@ -39,6 +39,13 @@ const ListItem: React.FC<ListItemProps> = ({
   leftContent,
   rightContent,
 }) => {
+  // Normalize common AI size aliases to valid ListItemSize keys
+  const sizeAliases: Record<string, ListItemSize> = {
+    sm: 'small', md: 'medium', lg: 'large',
+    s: 'small', m: 'medium', l: 'large',
+  };
+  const normalizedSize: ListItemSize =
+    sizeAliases[size as string] ?? ((['small', 'medium', 'large'].includes(size as string) ? size : 'medium') as ListItemSize);
   const sizeStyles: Record<ListItemSize, { container: string; primary: string; secondary: string; icon: string; avatar: string }> = {
     small: {
       container: 'py-2 px-3 gap-2',
@@ -73,7 +80,7 @@ const ListItem: React.FC<ListItemProps> = ({
     <div
       onClick={disabled ? undefined : onClick}
       className={`
-        ${sizeStyles[size].container}
+        ${sizeStyles[normalizedSize].container}
         ${variantStyles[variant]}
         flex items-center rounded-xl
         transition-all duration-200
@@ -86,7 +93,7 @@ const ListItem: React.FC<ListItemProps> = ({
 
       {avatar && (
         <div className="flex-shrink-0">
-          <div className={`${sizeStyles[size].avatar} rounded-full overflow-hidden bg-gradient-to-br from-orange-600 to-purple-600 flex items-center justify-center ring-2 ring-white dark:ring-zinc-800`}>
+          <div className={`${sizeStyles[normalizedSize].avatar} rounded-full overflow-hidden bg-gradient-to-br from-orange-600 to-purple-600 flex items-center justify-center ring-2 ring-white dark:ring-zinc-800`}>
             {avatar.startsWith('http') ? (
               <img
                 src={avatar}
@@ -101,13 +108,13 @@ const ListItem: React.FC<ListItemProps> = ({
       )}
 
       {icon && !avatar && (
-        <div className={`flex-shrink-0 ${sizeStyles[size].icon} text-zinc-400`}>
+        <div className={`flex-shrink-0 ${sizeStyles[normalizedSize].icon} text-zinc-400`}>
           {icon}
         </div>
       )}
 
       <div className="flex-1 min-w-0">
-        <div className={`${sizeStyles[size].primary} text-white font-medium truncate flex items-center gap-2`}>
+        <div className={`${sizeStyles[normalizedSize].primary} text-white font-medium truncate flex items-center gap-2`}>
           {primary}
           {badge !== undefined && (
             <span className="px-2 py-0.5 bg-orange-600 text-white text-xs rounded-full font-semibold">
@@ -116,7 +123,7 @@ const ListItem: React.FC<ListItemProps> = ({
           )}
         </div>
         {secondary && (
-          <div className={`${sizeStyles[size].secondary} text-zinc-400 truncate mt-0.5`}>
+          <div className={`${sizeStyles[normalizedSize].secondary} text-zinc-400 truncate mt-0.5`}>
             {secondary}
           </div>
         )}

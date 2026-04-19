@@ -13,7 +13,7 @@ import Logger from './logger.js';
 const INTENT_KEYWORDS = {
   form: ['form', 'input', 'contact', 'signup', 'sign up', 'register', 'registration', 'login', 'log in', 'feedback', 'survey', 'questionnaire', 'submit'],
   dashboard: ['dashboard', 'overview', 'analytics', 'metrics', 'kpi', 'stats', 'statistics', 'admin', 'monitor', 'report'],
-  chart: ['chart', 'graph', 'line chart', 'bar chart', 'pie chart', 'area chart', 'histogram', 'trend', 'visualization', 'plot'],
+  chart: ['chart', 'graph', 'line chart', 'bar chart', 'pie chart', 'area chart', 'histogram', 'trend', 'visualization', 'plot', 'scatter', 'funnel', 'radar'],
   table: ['table', 'data table', 'grid', 'list', 'records', 'rows', 'columns', 'spreadsheet', 'inventory', 'catalogue'],
   modal: ['modal', 'dialog', 'popup', 'confirmation', 'alert dialog', 'drawer', 'overlay'],
   team: ['team', 'member', 'people', 'our team', 'about us', 'staff', 'employee', 'profile card', 'bio', 'person card'],
@@ -21,13 +21,21 @@ const INTENT_KEYWORDS = {
   music: ['music', 'player', 'audio', 'song', 'spotify', 'track', 'playlist', 'album', 'now playing'],
   kanban: ['kanban', 'board', 'jira', 'trello', 'drag', 'column'],
   chat: ['chat', 'message', 'conversation', 'social', 'feed', 'wizard'],
-  ecommerce: ['ecommerce', 'product', 'product card', 'showcase', 'cart', 'shop', 'store', 'checkout', 'buy']
+  ecommerce: ['ecommerce', 'product', 'product card', 'showcase', 'cart', 'shop', 'store', 'checkout', 'buy'],
+  navigation: ['navigation', 'tab', 'stepper', 'breadcrumb', 'menu', 'sidebar', 'appbar', 'topbar', 'bottom bar', 'tab bar'],
+  stats: ['stats', 'metrics', 'widget', 'sparkline', 'gauge', 'progress', 'KPI', 'number'],
+  // ─── New rich intent categories ───────────────────────────────────────────
+  gaming: ['game', 'gaming', 'leaderboard', 'ranking', 'player', 'score', 'rank', 'top players', 'high score', 'esports', 'points', 'win rate', 'match', 'season', 'tournament', 'arena', 'guild'],
+  finance: ['finance', 'financial', 'revenue', 'sales', 'pipeline', 'deals', 'quota', 'forecast', 'profit', 'loss', 'margin', 'conversion', 'crm', 'rep performance', 'b2b', 'enterprise sales'],
+  crypto: ['crypto', 'bitcoin', 'ethereum', 'blockchain', 'defi', 'wallet', 'portfolio', 'token', 'coin', 'trading', 'price', 'market cap', 'btc', 'eth', 'solana', 'exchange', 'hodl'],
+  devops: ['devops', 'infrastructure', 'api', 'server', 'uptime', 'latency', 'error rate', 'incident', 'alert', 'monitoring', 'health check', 'deployment', 'sre', 'ops', 'observability', 'logs'],
+  fitness: ['fitness', 'health', 'workout', 'steps', 'calories', 'heart rate', 'sleep', 'exercise', 'run', 'gym', 'bpm', 'activity', 'tracker', 'wellness', 'nutrition', 'weight']
 };
 
 export const INTENT_COMPONENTS = {
   form: ['text-field', 'textarea', 'button', 'panel', 'select', 'checkbox', 'switch', 'stack', 'grid', 'callout'],
-  dashboard: ['panel', 'summary-card', 'bar-chart', 'line-chart', 'data-table', 'grid', 'stack', 'badge'],
-  chart: ['line-chart', 'bar-chart', 'area-chart', 'pie-chart', 'time-series-chart', 'panel', 'grid', 'summary-card'],
+  dashboard: ['panel', 'summary-card', 'bar-chart', 'line-chart', 'sparkline-chart', 'gauge-chart', 'data-table', 'grid', 'stack', 'badge'],
+  chart: ['line-chart', 'bar-chart', 'area-chart', 'pie-chart', 'time-series-chart', 'funnel-chart', 'radar-chart', 'scatter-chart', 'sparkline-chart', 'panel', 'grid', 'summary-card'],
   table: ['data-table', 'panel', 'grid', 'badge', 'chip', 'summary-card', 'select', 'stack'],
   modal: ['modal', 'button', 'text', 'stack', 'callout', 'badge'],
   team: ['summary-card', 'grid', 'stack', 'avatar', 'text', 'badge', 'panel'],
@@ -35,7 +43,15 @@ export const INTENT_COMPONENTS = {
   music: ['panel', 'image', 'text', 'slider', 'button', 'flexbox', 'stack'],
   kanban: ['kanban', 'panel', 'stack', 'badge', 'button', 'flexbox', 'avatar'],
   chat: ['panel', 'avatar', 'text', 'text-field', 'button', 'stack', 'flexbox'],
-  ecommerce: ['panel', 'image', 'stack', 'button', 'badge', 'select', 'grid', 'text']
+  ecommerce: ['panel', 'image', 'stack', 'button', 'badge', 'select', 'grid', 'text'],
+  navigation: ['bottom-navigation', 'stepper', 'breadcrumbs', 'tabs', 'app-bar', 'sidebar', 'panel', 'stack', 'button'],
+  stats: ['sparkline-chart', 'gauge-chart', 'summary-card', 'linear-progress', 'circular-progress', 'panel', 'grid', 'stack', 'badge'],
+  // ─── New rich intent categories ───────────────────────────────────────────
+  gaming:  ['panel', 'summary-card', 'line-chart', 'bar-chart', 'data-table', 'badge', 'grid', 'stack', 'sparkline-chart'],
+  finance: ['panel', 'summary-card', 'area-chart', 'donut-chart', 'bar-chart', 'data-table', 'badge', 'grid', 'stack', 'sparkline-chart'],
+  crypto:  ['panel', 'summary-card', 'area-chart', 'donut-chart', 'line-chart', 'data-table', 'badge', 'grid', 'stack', 'sparkline-chart'],
+  devops:  ['panel', 'summary-card', 'area-chart', 'bar-chart', 'gauge-chart', 'data-table', 'badge', 'grid', 'stack', 'sparkline-chart'],
+  fitness: ['panel', 'summary-card', 'bar-chart', 'area-chart', 'donut-chart', 'gauge-chart', 'grid', 'stack', 'sparkline-chart', 'badge']
 };
 
 export function detectIntent(userMessage) {

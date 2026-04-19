@@ -1,7 +1,8 @@
 import React from 'react';
 import { ResponsiveContainer, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar, Cell } from 'recharts';
-import type { SurfaceVariant, ElevationLevel } from '../core/types';
+import type { SurfaceVariant, ElevationLevel , ChartPaletteType} from '../core/types';
 import { useAppStore } from '@/store/appStore';
+import { getSurfaceClasses , getChartColors} from '@/theme/designTokens';
 
 interface WaterfallChartProps {
   /** Chart title */
@@ -30,6 +31,8 @@ interface WaterfallChartProps {
 
   variant?: SurfaceVariant;
   elevation?: ElevationLevel;
+
+  palette?: ChartPaletteType;
 }
 
 const WaterfallChart: React.FC<WaterfallChartProps> = ({
@@ -41,7 +44,7 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
   height = 400,
   variant = 'transparent',
   elevation = 'raised',
-}) => {
+  palette = 'default'}) => {
   // Dark mode detection
   const theme = useAppStore(state => state.theme);
   const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
@@ -237,11 +240,13 @@ const WaterfallChart: React.FC<WaterfallChartProps> = ({
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: tooltipBg,
-                  border: `1px solid ${tooltipBorder}`,
-                  borderRadius: '8px',
-                  color: tooltipText,
-                }}
+              backgroundColor: isDarkMode ? 'rgba(31, 41, 55, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(8px)',
+              border: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`,
+              borderRadius: '12px',
+              color: isDarkMode ? '#E5E7EB' : '#111827',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)'
+            }}
                 formatter={(_value: any, _name: string, props: any) => {
                   const { payload } = props;
                   if (!payload) return ['', ''];

@@ -28,8 +28,11 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
   label,
   indeterminate = false,
 }) => {
-  const progressValue = value ?? percentage ?? progress ?? 0;
-  const clampedValue = Math.min(100, Math.max(0, progressValue));
+  const rawValue = value ?? percentage ?? progress ?? 0;
+  const numericValue = typeof rawValue === 'number' 
+    ? rawValue 
+    : parseFloat(String(rawValue).replace(/[^0-9.-]+/g, "")) || 0;
+  const clampedValue = Math.min(100, Math.max(0, numericValue));
   const progressColor = color || variant || 'primary';
   const strokeWidth = thickness < 5 ? 6 : thickness;
 

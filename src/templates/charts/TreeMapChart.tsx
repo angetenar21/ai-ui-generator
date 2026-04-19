@@ -1,7 +1,8 @@
 import React from 'react';
 import { Treemap, ResponsiveContainer, Tooltip } from 'recharts';
-import type { SurfaceVariant, ElevationLevel } from '../core/types';
+import type { SurfaceVariant, ElevationLevel , ChartPaletteType} from '../core/types';
 import { useAppStore } from '@/store/appStore';
+import { getSurfaceClasses , getChartColors} from '@/theme/designTokens';
 
 interface TreeMapChartProps {
   /** Chart title */
@@ -43,16 +44,11 @@ interface TreeMapChartProps {
 
   variant?: SurfaceVariant;
   elevation?: ElevationLevel;
+
+  palette?: ChartPaletteType;
 }
 
-const COLORS = [
-  '#e9833bff', // Emerald - good contrast with white text
-  '#1E40AF', // Darker blue - better contrast than #3B82F6
-  '#059669', // Darker green - better contrast than #10b981
-  '#D97706', // Darker teal - better contrast than #f59e0b
-  '#DC2626', // Darker red - better contrast than #ef4444
-  '#BE185D', // Darker pink - better contrast than #ec4899
-];
+
 
 const TreeMapChart: React.FC<TreeMapChartProps> = ({
   title,
@@ -60,15 +56,16 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
   series,
   width: _width,
   height = 400,
-  colors = COLORS,
+  
   showLabels = true,
   variant = 'transparent',
   elevation = 'raised',
-}) => {
+  palette = 'default'}) => {
 
   // Detect dark mode
   const theme = useAppStore(state => state.theme);
   const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const colors = getChartColors(palette);
   const textColor = isDarkMode ? '#FFFFFF' : '#000000';
   const strokeColor = isDarkMode ? '#1F2937' : '#FFFFFF';
 
@@ -99,7 +96,7 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
   // Don't render if no data
   if (!chartData || chartData.length === 0) {
     return (
-      <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && (
           <h3 className="text-xl font-display font-semibold text-zinc-900 dark:text-white mb-4">
             {title}
@@ -164,7 +161,7 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
   };
 
   return (
-    <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
       {title && (
         <h3 className="text-xl font-display font-semibold text-zinc-900 dark:text-white mb-4">
           {title}
@@ -185,10 +182,12 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
         >
           <Tooltip
             contentStyle={{
-              backgroundColor: isDarkMode ? '#1f2937' : '#ffffff',
-              border: `1px solid ${isDarkMode ? '#374151' : '#e5e7eb'}`,
-              borderRadius: '8px',
-              color: isDarkMode ? '#d1d5db' : '#374151',
+              backgroundColor: isDarkMode ? 'rgba(31, 41, 55, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(8px)',
+              border: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`,
+              borderRadius: '12px',
+              color: isDarkMode ? '#E5E7EB' : '#111827',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)'
             }}
             labelStyle={{ color: isDarkMode ? '#f3f4f6' : '#111827' }}
           />

@@ -87,16 +87,25 @@ const Sidebar: React.FC = () => {
           {/* New Chat Button */}
           <button
             onClick={handleNewChat}
-            className={`font-medium rounded-xl flex items-center justify-center shadow-sm group relative transition-all duration-300 flex-shrink-0
-                        ${isNewChatActive ? 'bg-gradient-to-r from-orange-500 to-pink-600' : 'bg-gradient-to-r from-orange-400 to-pink-500 hover:from-orange-500 hover:to-pink-600'} text-white 
+            className={`font-medium rounded-xl flex items-center justify-center group relative
+                        transition-all duration-200 flex-shrink-0
+                        border border-stone-200 dark:border-gray-700
+                        text-stone-500 dark:text-gray-400
+                        hover:text-orange-500 dark:hover:text-orange-400
+                        hover:border-orange-300 dark:hover:border-orange-700/60
+                        hover:bg-orange-50/50 dark:hover:bg-orange-900/10
+                        active:scale-95
+                        ${isNewChatActive
+                          ? 'border-orange-300 dark:border-orange-700/60 text-orange-500 dark:text-orange-400 bg-orange-50/50 dark:bg-orange-900/10'
+                          : ''
+                        }
                         ${effectiveCollapsed ? 'w-12 h-12 p-0 mx-auto mb-4 lg:mb-8' : 'w-full py-2.5 lg:py-3 px-4 mb-4 lg:mb-8'}`}
             title={effectiveCollapsed ? 'New Chat' : undefined}
           >
-            <Plus className="w-5 h-5 flex-shrink-0" />
+            <Plus className="w-4 h-4 flex-shrink-0 transition-transform duration-200 group-hover:rotate-90" />
 
-            {/* Smooth CSS Transition for Label */}
             <span
-              className={`transition-all duration-300 overflow-hidden whitespace-nowrap
+              className={`transition-all duration-300 overflow-hidden whitespace-nowrap text-sm
                 ${effectiveCollapsed ? 'max-w-0 opacity-0 ml-0' : 'max-w-[200px] opacity-100 ml-2'}
               `}
             >
@@ -104,67 +113,64 @@ const Sidebar: React.FC = () => {
             </span>
           </button>
 
+
           {/* Navigation */}
           <nav className="flex-1 space-y-2">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                className={({ isActive }) => {
-                  const actualIsActive = item.to === '/' ? (isActive && currentThreadId !== null) : isActive;
-                  return `flex items-center rounded-xl transition-all duration-200
-                   hover:translate-x-1 group relative flex-shrink-0
-                   ${effectiveCollapsed ? 'justify-center p-0 w-12 h-12 mx-auto' : 'gap-3 px-4 py-3 w-full'}
-                   ${actualIsActive
-                      ? 'bg-gradient-to-r from-orange-500 to-pink-600 text-white shadow-md'
-                      : 'text-stone-600 dark:text-gray-400 hover:text-stone-900 dark:hover:text-white hover:bg-stone-100 dark:hover:bg-gray-800'
-                    }`;
-                }}
-                onClick={(e) => {
-                  // If clicking Chat while on New Chat screen, attempt to restore last active chat
-                  if (item.label === 'Chat' && currentThreadId === null && lastActiveThreadId) {
-                    e.preventDefault(); // Prevent standard router nav that might overwrite state inappropriately before our effect
-                    setCurrentThreadId(lastActiveThreadId);
-                    navigate('/');
-                  }
+            {navItems.map((item) => {
+              const actualIsActive = item.to === '/'
+                ? (location.pathname === '/' && currentThreadId !== null)
+                : location.pathname.startsWith(item.to);
 
-                  // Close sidebar on mobile after navigation
-                  if (window.innerWidth < 1024) {
-                    setSidebarOpen(false);
-                  }
-                }}
-                title={effectiveCollapsed ? item.label : undefined}
-              >
-                {({ isActive }) => {
-                  const actualIsActive = item.to === '/' ? (isActive && currentThreadId !== null) : isActive;
-                  return (
-                    <>
-                      <item.icon className={`w-5 h-5 flex-shrink-0 transition-all duration-300 ${actualIsActive ? 'text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]' : ''}`} />
+              return (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  className={`flex items-center rounded-xl transition-all duration-200
+                    group relative flex-shrink-0 overflow-hidden
+                    ${effectiveCollapsed ? 'justify-center p-0 w-12 h-12 mx-auto' : 'gap-3 px-4 py-3 w-full'}
+                    ${actualIsActive
+                      ? 'text-orange-500 dark:text-orange-400'
+                      : 'text-stone-500 dark:text-gray-400 hover:text-stone-900 dark:hover:text-white hover:bg-stone-100/60 dark:hover:bg-gray-800/50'
+                    }`}
+                  onClick={(e) => {
+                    if (item.label === 'Chat' && currentThreadId === null && lastActiveThreadId) {
+                      e.preventDefault();
+                      setCurrentThreadId(lastActiveThreadId);
+                      navigate('/');
+                    }
+                    if (window.innerWidth < 1024) setSidebarOpen(false);
+                  }}
+                  title={effectiveCollapsed ? item.label : undefined}
+                >
+                  {/* Icon */}
+                  <item.icon
+                    className={`w-5 h-5 flex-shrink-0 transition-colors duration-200 ${
+                      actualIsActive ? 'text-orange-500 dark:text-orange-400' : ''
+                    }`}
+                  />
 
-                      {/* Smooth CSS Transition for Label */}
-                      <span
-                        className={`font-medium transition-all duration-300 overflow-hidden whitespace-nowrap
-                        ${effectiveCollapsed ? 'max-w-0 opacity-0 ml-0' : 'max-w-[200px] opacity-100 flex-1'}
-                      `}
-                      >
-                        {item.label}
-                      </span>
+                  {/* Label */}
+                  <span
+                    className={`font-medium transition-all duration-300 overflow-hidden whitespace-nowrap
+                      ${effectiveCollapsed ? 'max-w-0 opacity-0 ml-0' : 'max-w-[200px] opacity-100 flex-1'}`}
+                  >
+                    {item.label}
+                  </span>
 
-                      {/* Active Job Badge */}
-                      {item.label === 'Chat' && activeJobCount > 0 && (
-                        <div className={`
-                      flex items-center justify-center bg-white/20 backdrop-blur-md border border-white/30 text-white text-[10px] font-bold rounded-full
+                  {/* Active Job Badge */}
+                  {item.label === 'Chat' && activeJobCount > 0 && (
+                    <div className={`
+                      flex items-center justify-center bg-orange-500/10 border border-orange-400/30
+                      text-orange-500 text-[10px] font-bold rounded-full animate-pulse shadow-sm
                       ${effectiveCollapsed ? 'absolute -top-1 -right-1 w-4 h-4' : 'px-2 py-0.5 ml-auto'}
-                      animate-pulse shadow-sm
                     `}>
-                          {effectiveCollapsed ? '' : `${activeJobCount} running`}
-                        </div>
-                      )}
-                    </>
-                  );
-                }}
-              </NavLink>
-            ))}
+                      {effectiveCollapsed ? '' : `${activeJobCount} running`}
+                    </div>
+                  )}
+                </NavLink>
+              );
+            })}
+
           </nav>
         </div>
 

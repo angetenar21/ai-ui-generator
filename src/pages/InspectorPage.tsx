@@ -6,7 +6,7 @@ import { ComponentRenderer } from '../templates';
 import type { ComponentSpec } from '../templates/core/types';
 import ErrorBoundary from '../components/ErrorBoundary';
 
-type ViewMode = 'split' | 'code' | 'preview';
+type ViewMode = 'code' | 'preview';
 type CodeTab = 'jsx' | 'json';
 
 // ─── Code Pane Error Boundary ──────────────────────────────────────────────
@@ -267,10 +267,10 @@ const InspectorPage: React.FC = () => {
       {/* Header */}
       <div className="mb-6 pl-2">
         <div>
-          <h2 className="text-2xl sm:text-3xl md:text-5xl font-display font-bold text-stone-900 dark:text-white mb-1 sm:mb-2 tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-stone-900 dark:text-white mb-2 tracking-tight">
             Component Inspector
           </h2>
-          <p className="text-stone-500 dark:text-gray-400 text-sm md:text-base max-w-2xl">
+          <p className="text-stone-500 dark:text-gray-400 text-sm sm:text-base md:text-lg max-w-2xl">
             View, edit, and preview generated component specifications. Check real-time outputs from the chat generation engine.
           </p>
         </div>
@@ -395,14 +395,6 @@ const InspectorPage: React.FC = () => {
                     <div className="flex items-center gap-0.5 sm:gap-1 bg-stone-100/50 dark:bg-gray-900/50 rounded-xl p-0.5 sm:p-1 border border-stone-200/50 dark:border-gray-700 shadow-inner">
                       <button
                         type="button"
-                        onClick={() => setViewMode('split')}
-                        className={modeButtonClasses('split')}
-                      >
-                        <Columns2 className="w-3.5 h-3.5" />
-                        <span className="hidden sm:inline">Split</span>
-                      </button>
-                      <button
-                        type="button"
                         onClick={() => setViewMode('code')}
                         className={modeButtonClasses('code')}
                       >
@@ -458,7 +450,7 @@ const InspectorPage: React.FC = () => {
                 {/* Content area */}
                 <div className="flex-1 flex gap-4 overflow-hidden min-h-[200px] sm:min-h-[360px] pl-1 pb-1 pr-1">
                   {/* Code / JSON pane */}
-                  {(viewMode === 'split' || viewMode === 'code') && (() => {
+                  {(viewMode === 'code') && (() => {
                     const jsxCode = specToJSX(selectedComponent);
                     const displayCode = codeTab === 'jsx' ? jsxCode : jsonString;
                     const lineCount = displayCode.split('\n').length;
@@ -470,10 +462,7 @@ const InspectorPage: React.FC = () => {
                     return (
                       <CodePaneErrorBoundary>
                         <div
-                          className={[
-                            'flex flex-col relative min-w-0 overflow-hidden',
-                            viewMode === 'split' ? 'w-1/2 flex-shrink-0' : 'flex-1',
-                          ].join(' ')}
+                          className="flex flex-col relative min-w-0 overflow-hidden flex-1"
                         >
                           {/* Toolbar */}
                           <div className="sticky top-0 z-10 flex items-center justify-between px-4 py-2 bg-stone-50/90 dark:bg-gray-800/90 backdrop-blur-md border-b border-stone-200/80 dark:border-gray-700/80">
@@ -520,12 +509,9 @@ const InspectorPage: React.FC = () => {
                   })()}
 
                   {/* Preview */}
-                  {(viewMode === 'split' || viewMode === 'preview') && (
+                  {(viewMode === 'preview') && (
                     <div
-                      className={[
-                        'flex flex-col relative min-w-0 overflow-hidden',
-                        viewMode === 'split' ? 'w-1/2 flex-shrink-0' : 'flex-1',
-                      ].join(' ')}
+                      className="flex flex-col relative min-w-0 overflow-hidden flex-1"
                     >
                       {/* Decorative header inner */}
                       <div className="absolute top-0 inset-x-0 h-10 bg-gradient-to-b from-stone-50/80 to-transparent dark:from-gray-800/50 pointer-events-none z-10" />

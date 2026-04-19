@@ -23,7 +23,7 @@
                   {
                     "name": "avatar",
                     "templateProps": {
-                      "src": "https://i.pravatar.cc/150?u=a042581f4e29026024d",
+                      "src": "@img:avatar,portrait,woman,smiling",
                       "name": "Support Agent",
                       "size": "sm"
                     }

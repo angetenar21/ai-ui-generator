@@ -1,7 +1,8 @@
 import React from 'react';
 import { ResponsiveContainer, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar } from 'recharts';
-import type { SurfaceVariant, ElevationLevel } from '../core/types';
+import type { SurfaceVariant, ElevationLevel , ChartPaletteType} from '../core/types';
 import { useAppStore } from '@/store/appStore';
+import { getSurfaceClasses , getChartColors} from '@/theme/designTokens';
 
 interface HistogramChartPropsOld {
   /** Chart title */
@@ -77,7 +78,7 @@ const HistogramChart: React.FC<HistogramChartProps> = (props) => {
     // Validate
     if (!series || !Array.isArray(series) || series.length === 0) {
       return (
-        <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+        <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
           {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
           <div className="text-center text-zinc-400">
             <p className="text-sm">No series data for histogram</p>
@@ -126,7 +127,7 @@ const HistogramChart: React.FC<HistogramChartProps> = (props) => {
     // Validate
     if (!chartData || !Array.isArray(chartData) || chartData.length === 0) {
       return (
-        <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+        <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
           {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
           <div className="text-center text-zinc-400">
             <p className="text-sm">No data available for histogram</p>
@@ -139,7 +140,7 @@ const HistogramChart: React.FC<HistogramChartProps> = (props) => {
   } else {
     // Invalid format
     return (
-      <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
         <div className="text-center text-zinc-400">
           <p className="text-sm">Invalid histogram configuration</p>
@@ -149,7 +150,7 @@ const HistogramChart: React.FC<HistogramChartProps> = (props) => {
   }
 
   return (
-    <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
       {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4 text-center">{title}</h3>}
       {description && (
         <p className="text-sm text-zinc-400 mb-4 text-center">{description}</p>
@@ -174,11 +175,13 @@ const HistogramChart: React.FC<HistogramChartProps> = (props) => {
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: tooltipBg,
-                  border: `1px solid ${tooltipBorder}`,
-                  borderRadius: '8px',
-                  color: tooltipText,
-                }}
+              backgroundColor: isDarkMode ? 'rgba(31, 41, 55, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(8px)',
+              border: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`,
+              borderRadius: '12px',
+              color: isDarkMode ? '#E5E7EB' : '#111827',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)'
+            }}
                 labelStyle={{ color: tooltipText, fontWeight: 600 }}
                 formatter={(value: any) => [`Frequency: ${value}`, '']}
               />

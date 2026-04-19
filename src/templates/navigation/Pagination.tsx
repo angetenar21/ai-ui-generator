@@ -85,7 +85,7 @@ const Pagination: React.FC<PaginationProps> = ({
     },
   };
 
-  const classes = variantClasses[variant];
+  const classes = variantClasses[variant] || variantClasses['default'];
   const pages = getPageNumbers();
 
   return (

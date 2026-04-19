@@ -337,7 +337,7 @@ function normalizeSpec(spec) {
         templateProps: {
           alt: 'Map visualization',
           caption: 'Interactive map view placeholder',
-          src: 'https://via.placeholder.com/800x600/1F2937/9CA3AF?text=Map+Visualization',
+          src: '@img:map,visualization,geographic,data',
         },
       };
     }
@@ -2097,6 +2097,195 @@ app.post('/api/agent/stream', requireAuth, async (req, res) => {
     clearInterval(heartbeatTimer);
     res.end();
   }
+});
+
+// ==========================================
+// Image Proxy — Pexels API with LRU Cache
+// ==========================================
+
+const PEXELS_API_KEY = process.env.PEXELS_API_KEY || '';
+const IMAGE_CACHE = new Map(); // Simple LRU cache for resolved image URLs
+const IMAGE_CACHE_MAX = 500;
+const IMAGE_CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+function getImageCacheKey(query) {
+  return query.toLowerCase().trim().split(/[\s,]+/).sort().join(',');
+}
+
+function hashCode(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash |= 0; // Convert to 32-bit integer
+  }
+  return Math.abs(hash);
+}
+
+// GET /api/image-proxy?q=keywords - Resolve contextually relevant image URLs
+app.get('/api/image-proxy', async (req, res) => {
+  const query = (req.query.q || '').toString().trim();
+
+  if (!query) {
+    return res.status(400).json({ error: 'Missing query parameter "q"' });
+  }
+
+  const cacheKey = getImageCacheKey(query);
+
+  // Check cache first
+  const cached = IMAGE_CACHE.get(cacheKey);
+  if (cached && (Date.now() - cached.timestamp < IMAGE_CACHE_TTL_MS)) {
+    return res.json({ url: cached.url, source: 'cache' });
+  }
+
+  // Try Pexels API if key is configured
+  if (PEXELS_API_KEY) {
+    try {
+      const searchUrl = `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=5&orientation=landscape`;
+      const pexelsRes = await fetch(searchUrl, {
+        headers: { 'Authorization': PEXELS_API_KEY },
+        signal: AbortSignal.timeout(5000),
+      });
+
+      if (pexelsRes.ok) {
+        const data = await pexelsRes.json();
+        if (data.photos && data.photos.length > 0) {
+          // Pick the best photo (first result is most relevant)
+          const photo = data.photos[0];
+          const imageUrl = photo.src?.large2x || photo.src?.large || photo.src?.original;
+
+          if (imageUrl) {
+            // Cache the result
+            if (IMAGE_CACHE.size >= IMAGE_CACHE_MAX) {
+              // Evict oldest entry
+              const oldestKey = IMAGE_CACHE.keys().next().value;
+              IMAGE_CACHE.delete(oldestKey);
+            }
+            IMAGE_CACHE.set(cacheKey, { url: imageUrl, timestamp: Date.now() });
+
+            return res.json({ url: imageUrl, source: 'pexels' });
+          }
+        }
+        Logger.info(`[ImageProxy] No Pexels results for "${query}", falling back to picsum`);
+      } else {
+        Logger.warn(`[ImageProxy] Pexels API error: ${pexelsRes.status}`);
+      }
+    } catch (err) {
+      Logger.warn(`[ImageProxy] Pexels fetch failed: ${err.message}`);
+    }
+  }
+
+  // Fallback: picsum.photos with deterministic seed based on query
+  const seed = hashCode(cacheKey);
+  const fallbackUrl = `https://picsum.photos/seed/${seed}/800/600`;
+
+  // Cache the fallback too
+  if (IMAGE_CACHE.size >= IMAGE_CACHE_MAX) {
+    const oldestKey = IMAGE_CACHE.keys().next().value;
+    IMAGE_CACHE.delete(oldestKey);
+  }
+  IMAGE_CACHE.set(cacheKey, { url: fallbackUrl, timestamp: Date.now() });
+
+  return res.json({ url: fallbackUrl, source: 'picsum' });
+});
+
+// ==========================================
+// Video Proxy — Pexels Video API with LRU Cache
+// (Uses the same PEXELS_API_KEY as the image proxy — no extra key needed)
+// ==========================================
+
+const VIDEO_CACHE = new Map(); // Simple LRU cache for resolved video URLs
+const VIDEO_CACHE_MAX = 200;
+const VIDEO_CACHE_TTL_MS = 6 * 60 * 60 * 1000; // 6 hours
+
+// Curated free royalty-free fallback videos by topic (from Pexels CDN, free to use)
+const VIDEO_FALLBACKS = [
+  'https://videos.pexels.com/video-files/3129957/3129957-sd_640_360_25fps.mp4',  // cityscape
+  'https://videos.pexels.com/video-files/1409899/1409899-sd_640_360_25fps.mp4',  // tech/data
+  'https://videos.pexels.com/video-files/3571264/3571264-sd_640_360_25fps.mp4',  // nature
+  'https://videos.pexels.com/video-files/2278095/2278095-sd_640_360_24fps.mp4',  // business
+  'https://videos.pexels.com/video-files/2394733/2394733-sd_640_360_25fps.mp4',  // abstract
+];
+
+function getVideoCacheKey(query) {
+  return query.toLowerCase().trim().split(/[\s,]+/).sort().join(',');
+}
+
+function getDeterministicFallbackVideo(query) {
+  const hash = hashCode(getVideoCacheKey(query));
+  return VIDEO_FALLBACKS[Math.abs(hash) % VIDEO_FALLBACKS.length];
+}
+
+// GET /api/video-proxy?q=keywords - Resolve contextually relevant video URLs
+app.get('/api/video-proxy', async (req, res) => {
+  const query = (req.query.q || '').toString().trim();
+
+  if (!query) {
+    return res.status(400).json({ error: 'Missing query parameter "q"' });
+  }
+
+  const cacheKey = getVideoCacheKey(query);
+
+  // Check cache first
+  const cached = VIDEO_CACHE.get(cacheKey);
+  if (cached && (Date.now() - cached.timestamp < VIDEO_CACHE_TTL_MS)) {
+    Logger.info(`[VideoProxy] Cache hit for "${query}"`);
+    return res.json({ url: cached.url, poster: cached.poster, source: 'cache' });
+  }
+
+  // Try Pexels Video API if key is configured
+  if (PEXELS_API_KEY) {
+    try {
+      const searchUrl = `https://api.pexels.com/videos/search?query=${encodeURIComponent(query)}&per_page=5&orientation=landscape&size=medium`;
+      const pexelsRes = await fetch(searchUrl, {
+        headers: { 'Authorization': PEXELS_API_KEY },
+        signal: AbortSignal.timeout(6000),
+      });
+
+      if (pexelsRes.ok) {
+        const data = await pexelsRes.json();
+        if (data.videos && data.videos.length > 0) {
+          const video = data.videos[0];
+
+          // Pick the best quality video file (prefer SD/HD over 4K to keep load fast)
+          const files = video.video_files || [];
+          const preferred = files.find(f => f.quality === 'sd' && f.width >= 640)
+            || files.find(f => f.quality === 'hd')
+            || files[0];
+
+          if (preferred?.link) {
+            const poster = video.image || null; // Pexels provides a thumbnail
+
+            // Cache the result
+            if (VIDEO_CACHE.size >= VIDEO_CACHE_MAX) {
+              const oldestKey = VIDEO_CACHE.keys().next().value;
+              VIDEO_CACHE.delete(oldestKey);
+            }
+            VIDEO_CACHE.set(cacheKey, { url: preferred.link, poster, timestamp: Date.now() });
+
+            Logger.info(`[VideoProxy] Pexels hit for "${query}": ${preferred.link}`);
+            return res.json({ url: preferred.link, poster, source: 'pexels' });
+          }
+        }
+        Logger.info(`[VideoProxy] No Pexels video results for "${query}", using fallback`);
+      } else {
+        Logger.warn(`[VideoProxy] Pexels Video API error: ${pexelsRes.status}`);
+      }
+    } catch (err) {
+      Logger.warn(`[VideoProxy] Pexels video fetch failed: ${err.message}`);
+    }
+  }
+
+  // Fallback: deterministic curated free video
+  const fallbackUrl = getDeterministicFallbackVideo(query);
+  if (VIDEO_CACHE.size >= VIDEO_CACHE_MAX) {
+    const oldestKey = VIDEO_CACHE.keys().next().value;
+    VIDEO_CACHE.delete(oldestKey);
+  }
+  VIDEO_CACHE.set(cacheKey, { url: fallbackUrl, poster: null, timestamp: Date.now() });
+
+  Logger.info(`[VideoProxy] Using fallback video for "${query}": ${fallbackUrl}`);
+  return res.json({ url: fallbackUrl, poster: null, source: 'fallback' });
 });
 
 // GET /api/health - Surface backend + queue health metadata

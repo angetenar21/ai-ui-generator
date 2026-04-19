@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Send, Sparkles, RotateCcw, StopCircle, LayoutDashboard, FormInput, BarChart3, PanelTop, Grid, Wand2, AlertTriangle } from 'lucide-react';
+import { Send, Sparkles, RotateCcw, StopCircle, LayoutDashboard, FormInput, BarChart3, PanelTop, Grid, Wand2, AlertTriangle, Mic, MicOff } from 'lucide-react';
 import ApiService from '../services/apiService';
 import StorageService from '../services/storageService';
 import { ComponentRenderer } from '../templates';
 import { useAppStore } from '../store/appStore';
-// Used for auto-closing sidebar on mobile when input is focused
-const MOBILE_BREAKPOINT = 1024;
+import GeneratingOverlay from '../components/GeneratingOverlay';
 import ResponsiveComponentWrapper from '../components/ResponsiveComponentWrapper';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Variants } from 'framer-motion';
@@ -15,6 +14,9 @@ import type { ComponentSpec } from '../templates/core/types';
 import ErrorBoundary from '../components/ErrorBoundary';
 import StreamingErrorBoundary from '../components/StreamingErrorBoundary';
 import { generateUUID } from '../utils/uuid';
+
+// Used for auto-closing sidebar on mobile when input is focused
+const MOBILE_BREAKPOINT = 1024;
 
 const heroContainerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -195,6 +197,71 @@ const ChatPage: React.FC = () => {
 
   // Progressive streaming state — holds the in-progress component as it builds up
   const [streamingSpec, setStreamingSpec] = useState<ComponentSpec | null>(null);
+  // Track the active prompt text for the overlay label
+  const currentPromptRef = useRef<string>('');
+
+  // Voice recording state
+  const [isRecording, setIsRecording] = useState(false);
+  const recognitionRef = useRef<any>(null);
+
+  useEffect(() => {
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, []);
+
+  const toggleRecording = useCallback(() => {
+    if (isRecording) {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+      setIsRecording(false);
+      return;
+    }
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert('Speech recognition is not supported in this browser.');
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+
+    recognition.onstart = () => {
+      setIsRecording(true);
+    };
+
+    recognition.onresult = (event: any) => {
+      let finalTranscript = '';
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          finalTranscript += event.results[i][0].transcript;
+        }
+      }
+
+      if (finalTranscript) {
+        const currentInput = useAppStore.getState().currentChatInput;
+        const space = currentInput.length > 0 && !currentInput.endsWith(' ') ? ' ' : '';
+        useAppStore.getState().setCurrentChatInput(currentInput + space + finalTranscript.trim());
+      }
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error('Speech recognition error:', event.error);
+      setIsRecording(false);
+    };
+
+    recognition.onend = () => {
+      setIsRecording(false);
+    };
+
+    recognitionRef.current = recognition;
+    recognition.start();
+  }, [isRecording]);
 
   // Computed state for current thread
   const currentThreadState = currentThreadId ? activeThreads[currentThreadId] : null;
@@ -211,15 +278,26 @@ const ChatPage: React.FC = () => {
     }
   }, [input]);
 
-  // Auto-scroll to bottom when new messages arrive
+  // Ref for manual scroll checks
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to bottom with intelligent tracking
   useEffect(() => {
-    if (messagesEndRef.current) {
-      const container = messagesEndRef.current.parentElement?.parentElement;
-      if (container) {
-        container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
-      }
+    if (!messagesEndRef.current || !scrollContainerRef.current) return;
+    
+    // Always scroll down fully when a new generation starts or a message is added
+    if (isLoading || messages.length > 0 || streamingSpec) {
+      // Use requestAnimationFrame to ensure the DOM has painted the newly expanding components
+      requestAnimationFrame(() => {
+        if (scrollContainerRef.current) {
+          scrollContainerRef.current.scrollTo({
+            top: scrollContainerRef.current.scrollHeight,
+            behavior: 'smooth'
+          });
+        }
+      });
     }
-  }, [messages]);
+  }, [messages.length, isLoading, streamingSpec !== null]);
 
   // Handle initial prompt from template gallery
   useEffect(() => {
@@ -357,6 +435,8 @@ const ChatPage: React.FC = () => {
     if (!retryPrompt) {
       setInput('');
     }
+    // Store the prompt for GeneratingOverlay label
+    currentPromptRef.current = promptText;
 
     // 2. Thread initialization
     if (!currentThreadId) {
@@ -389,7 +469,7 @@ const ChatPage: React.FC = () => {
       });
 
       // Use streaming with progressive rendering
-      setThreadState(threadId, { jobStatus: 'streaming' as any });
+      setThreadState(threadId, { jobStatus: 'generating' as any });
       setStreamingSpec(null);
 
       let accumulated = '';
@@ -424,7 +504,7 @@ const ChatPage: React.FC = () => {
           },
           signal: abortController.signal,
           onStreamStart: () => {
-            setThreadState(threadId, { jobStatus: 'streaming' as any });
+            setThreadState(threadId, { jobStatus: 'generating' as any });
           },
         }
       )) {
@@ -559,9 +639,11 @@ const ChatPage: React.FC = () => {
 
   // Scroll to bottom of the container — used only for non-message triggers if needed
   const scrollToBottom = () => {
-    if (messagesEndRef.current) {
-      const container = messagesEndRef.current.parentElement?.parentElement;
-      if (container) { container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' }); }
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({
+        top: scrollContainerRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
     }
   };
   void scrollToBottom; // suppress unused-var lint warning — kept for future imperative use
@@ -569,7 +651,10 @@ const ChatPage: React.FC = () => {
   return (
     <div className="relative h-full flex flex-col bg-transparent overflow-hidden">
       {/* Unified Scroll Container */}
-      <div className="flex-1 overflow-y-auto scrollbar-thin pb-40 relative z-10">
+      <div 
+        ref={scrollContainerRef}
+        className="flex-1 overflow-y-auto scrollbar-thin pb-40 relative z-10 scroll-smooth"
+      >
         {!currentThreadId ? (
           /* Hero Section - Centered */
           <motion.div 
@@ -580,8 +665,7 @@ const ChatPage: React.FC = () => {
           >
             {/* Badge */}
             <motion.div variants={heroItemVariants} className="hero-badge glass-light px-4 sm:px-6 py-2 sm:py-3 rounded-full mb-4 sm:mb-8 shadow-sm border border-orange-200/40 dark:border-orange-800/40 backdrop-blur-xl">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-orange-500" />
+              <div className="flex items-center justify-center">
                 <span className="text-sm font-medium text-stone-600 dark:text-gray-300">
                   Modern • Beautiful • AI-Powered
                 </span>
@@ -660,10 +744,12 @@ const ChatPage: React.FC = () => {
 
               {/* Messages */}
               {messages.map((message, index) => (
-                <div
+                <motion.div
                   key={message.id}
-                  className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} animate-slide-up`}
-                  style={{ animationDelay: `${index * 0.05}s` }}
+                  initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 30, delay: index * 0.05 }}
+                  className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   {message.role === 'user' ? (
                     // User Message
@@ -721,8 +807,8 @@ const ChatPage: React.FC = () => {
                             </div>
                           </motion.div>
                         ) : typeof message.content === 'string' ? (
-                          <div className="glass-light rounded-3xl rounded-tl-md px-6 py-4 shadow-lg border border-gray-200/50 dark:border-gray-700/50">
-                            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                          <div className="glass-light rounded-3xl rounded-tl-md px-6 py-4">
+                            <p className="text-gray-700 dark:text-gray-300 leading-relaxed break-words whitespace-pre-wrap">
                               {message.content}
                             </p>
                           </div>
@@ -733,13 +819,11 @@ const ChatPage: React.FC = () => {
                             transition={{ type: "spring", stiffness: 400, damping: 25 }}
                             className="w-full relative mt-2"
                           >
-                            <div className="w-full min-w-0 flex items-start justify-start">
-                              <ErrorBoundary fallbackTitle="AI Component Error">
-                                <ResponsiveComponentWrapper alignLeft={true}>
-                                  <ComponentRenderer spec={message.content as ComponentSpec} />
-                                </ResponsiveComponentWrapper>
-                              </ErrorBoundary>
-                            </div>
+                            <ErrorBoundary fallbackTitle="AI Component Error">
+                              <ResponsiveComponentWrapper alignLeft={true} spec={message.content as ComponentSpec}>
+                                <ComponentRenderer spec={message.content as ComponentSpec} />
+                              </ResponsiveComponentWrapper>
+                            </ErrorBoundary>
                           </motion.div>
                         )}
                       </div>
@@ -760,7 +844,7 @@ const ChatPage: React.FC = () => {
                                 handleRetry(previousUserMessage.content as string, relevantComponents);
                               }
                             }}
-                            className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800/50 rounded-lg transition-all duration-200"
+                            className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800/50 rounded-lg transition-all duration-200 active:scale-95 hover:-translate-y-0.5"
                             title="Regenerate this specific response"
                           >
                             <RotateCcw className="w-3.5 h-3.5" />
@@ -770,46 +854,48 @@ const ChatPage: React.FC = () => {
                       )}
                     </div>
                   )}
-                </div>
+                </motion.div>
               ))}
               {/* Progressive Streaming Preview */}
               <AnimatePresence>
                 {isLoading && (
                   <motion.div
-                    initial={{ opacity: 0, y: 15 }}
+                    initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.98, transition: { duration: 0.15 } }}
-                    transition={{ type: "spring", stiffness: 350, damping: 20 }}
-                    className="flex flex-col items-start gap-4 w-full pb-8"
+                    exit={{ opacity: 0, y: -6, scale: 0.98, transition: { duration: 0.2 } }}
+                    transition={{ type: 'spring', stiffness: 340, damping: 24 }}
+                    className="flex flex-col items-start gap-3 w-full pb-8"
                   >
-                    {streamingSpec ? (
-                      /* Live progressive rendering — component grows as stream arrives */
-                      <div className="w-full relative mt-2 streaming-live rounded-2xl">
-                        <div className="absolute -top-2 right-2 z-10 flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 dark:bg-orange-500/20 backdrop-blur-sm border border-orange-300/30 dark:border-orange-700/30">
-                          <div className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
-                          <span className="text-[10px] font-semibold text-orange-600 dark:text-orange-400 tracking-wide uppercase">Streaming</span>
-                        </div>
-                        <div className="w-full min-w-0 flex items-start justify-start transition-all duration-300">
+                    {/* Overlay: thinking (no spec yet) vs streaming (spec arriving) */}
+                    <GeneratingOverlay
+                      isInitializing={!streamingSpec}
+                      prompt={currentPromptRef.current}
+                    />
+
+                    {/* Live component preview — appears as soon as first parseable chunk arrives */}
+                    <AnimatePresence>
+                      {streamingSpec && (
+                        <motion.div
+                          key="streaming-preview"
+                          initial={{ opacity: 0, y: 10, scale: 0.99 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          transition={{ type: 'spring', stiffness: 380, damping: 26 }}
+                          className="w-full relative mt-1"
+                        >
                           <StreamingErrorBoundary>
-                            <ResponsiveComponentWrapper alignLeft={true}>
+                            <ResponsiveComponentWrapper alignLeft={true} spec={streamingSpec}>
                               <ComponentRenderer spec={streamingSpec} />
                             </ResponsiveComponentWrapper>
                           </StreamingErrorBoundary>
-                        </div>
-                      </div>
-                    ) : (
-                      /* Minimal indicator before first meaningful UI element parses */
-                      <div className="flex items-center gap-2 px-3 py-1 mt-2.5 rounded-full border border-gray-200 dark:border-gray-700/50 bg-white/50 dark:bg-[#1E1E1E]/50">
-                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-                        <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Initializing layout...</span>
-                      </div>
-                    )}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
 
-                    {/* Stop button during generation */}
-                    <div className="flex items-center gap-2 ml-2">
+                    {/* Stop button */}
+                    <div className="flex items-center gap-2 ml-1">
                       <button
                         onClick={handleStopGeneration}
-                        className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200"
+                        className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg border border-red-200/60 dark:border-red-800/40 transition-all duration-200 active:scale-95"
                         title="Stop generation"
                       >
                         <StopCircle className="w-3.5 h-3.5" />
@@ -827,7 +913,12 @@ const ChatPage: React.FC = () => {
       </div>
 
       {/* Floating Input Bar - Absolutely Positioned */}
-      <div className="absolute bottom-3 sm:bottom-6 left-0 right-0 px-2 sm:px-4 z-[15] pointer-events-none">
+      <motion.div 
+        initial={{ y: 50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 400, damping: 30, delay: 0.2 }}
+        className="absolute bottom-3 sm:bottom-6 left-0 right-0 px-2 sm:px-4 z-[15] pointer-events-none"
+      >
         <div className="max-w-4xl mx-auto pointer-events-auto">
           <div className="relative">
             {/* Subtle glow effect */}
@@ -857,7 +948,19 @@ const ChatPage: React.FC = () => {
                 className="flex-1 bg-transparent border-0 outline-none text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 px-4 py-3 text-base font-medium resize-none overflow-y-auto min-h-[48px] max-h-[400px]"
               />
 
-              {/* Mic button removed — voice recording not yet implemented */}
+              <button
+                type="button"
+                onClick={toggleRecording}
+                disabled={isLoading}
+                className={`flex flex-shrink-0 items-center justify-center p-3 rounded-xl transition-all shadow-sm active:scale-95 border ${
+                  isRecording 
+                    ? 'bg-red-50 dark:bg-red-900/20 text-red-500 border-red-200 dark:border-red-800/50 hover:bg-red-100 dark:hover:bg-red-900/40' 
+                    : 'bg-gray-50 dark:bg-gray-800/50 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-200'
+                }`}
+                title={isRecording ? "Stop recording" : "Start voice input"}
+              >
+                {isRecording ? <MicOff className="w-5 h-5 animate-pulse" /> : <Mic className="w-5 h-5" />}
+              </button>
 
               <button
                 onClick={() => handleSend()}
@@ -869,7 +972,7 @@ const ChatPage: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div >
   );
 };

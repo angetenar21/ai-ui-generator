@@ -38,7 +38,7 @@ const Feature: React.FC<FeatureProps> = ({
 }) => {
   if (!title || !description) {
     return (
-      <div className="bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-4">
+      <div className="bg-white/30 dark:bg-white/[0.06] border border-white/30 dark:border-white/[0.08] rounded-lg p-4">
         <div className="text-zinc-500 dark:text-zinc-400 text-sm">Feature card requires title and description</div>
       </div>
     );
@@ -68,7 +68,7 @@ const Feature: React.FC<FeatureProps> = ({
   const isVertical = orientation === 'vertical';
 
   return (
-    <div className="bg-white dark:bg-zinc-800 border border-zinc-200/60 dark:border-zinc-700 rounded-2xl p-6 hover:border-zinc-300 dark:hover:border-zinc-600 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_6px_24px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08),0_16px_48px_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-300 ease-out group">
+    <div className="bg-transparent border border-white/30 dark:border-white/[0.09] rounded-2xl p-6 hover:border-white/50 dark:hover:border-white/[0.15] shadow-[0_1px_3px_rgba(0,0,0,0.04),0_6px_24px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08),0_16px_48px_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-300 ease-out group">
       <div className={`flex ${isVertical ? 'flex-col' : 'flex-row'} gap-4`}>
         {/* Icon */}
         <div className={`

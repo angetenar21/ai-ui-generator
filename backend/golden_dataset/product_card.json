@@ -8,7 +8,7 @@
       {
         "name": "image",
         "templateProps": {
-          "src": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+          "src": "@img:premium,wireless,headphones,sony",
           "alt": "Premium Wireless Headphones",
           "aspectRatio": "4:3",
           "rounded": "xl",

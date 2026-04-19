@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Gauge } from '@mui/x-charts/Gauge';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
 import { useAppStore } from '@/store/appStore';
+import { getSurfaceClasses } from '@/theme/designTokens';
 
 interface ColorLevel {
   value: number;

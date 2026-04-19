@@ -1,6 +1,7 @@
 import React from 'react';
-import type { SurfaceVariant, ElevationLevel } from '../core/types';
+import type { SurfaceVariant, ElevationLevel , ChartPaletteType} from '../core/types';
 import { useAppStore } from '@/store/appStore';
+import { getSurfaceClasses , getChartColors} from '@/theme/designTokens';
 import {
   RadialBarChart as RechartsRadialBarChart,
   RadialBar,
@@ -31,6 +32,8 @@ interface RadialBarChartProps {
 
   variant?: SurfaceVariant;
   elevation?: ElevationLevel;
+
+  palette?: ChartPaletteType;
 }
 
 const RadialBarChart: React.FC<RadialBarChartProps> = ({
@@ -41,7 +44,7 @@ const RadialBarChart: React.FC<RadialBarChartProps> = ({
   height = 400,
   variant = 'transparent',
   elevation = 'raised',
-}) => {
+  palette = 'default'}) => {
   // Detect dark mode (must be before any early returns)
   const theme = useAppStore(state => state.theme);
   const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
@@ -49,7 +52,7 @@ const RadialBarChart: React.FC<RadialBarChartProps> = ({
   // Validate
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
-      <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && (
           <h3 className="text-2xl font-display font-semibold text-zinc-900 dark:text-white mb-2">
             {title}
@@ -100,7 +103,7 @@ const RadialBarChart: React.FC<RadialBarChartProps> = ({
   };
 
   return (
-    <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
       {/* Header */}
       {(title || description) && (
         <div className="mb-6">

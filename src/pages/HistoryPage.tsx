@@ -4,6 +4,7 @@ import { Trash2, MessageSquare, Sparkles, AlertTriangle, Search } from 'lucide-r
 import { useAppStore } from '../store/appStore';
 import { useAuthStore } from '../store/authStore';
 import { useNavigate } from 'react-router-dom';
+import StorageService from '../services/storageService';
 import { collection, query, where, orderBy, limit, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import type { GenerationHistory } from '../templates/core/types';
@@ -105,6 +106,18 @@ const HistoryPage: React.FC = () => {
     clearGeneratedComponents();
     clearCurrentChatMessages();
     setCurrentChatInput('');
+
+    // Hydrate local storage with the Firestore data so ChatPage can render it
+    const thread = threads.find(t => t.id === threadId);
+    if (thread) {
+      // Re-seed the local history cache with this thread's items
+      thread.items.forEach(item => {
+        if (!StorageService.getHistoryItem(item.id)) {
+          StorageService.updateHistoryItem(item.id, item);
+        }
+      });
+    }
+
     setCurrentThreadId(threadId);
     navigate('/');
   };
@@ -171,10 +184,10 @@ const HistoryPage: React.FC = () => {
       {/* Header */}
       <div className="mb-4 sm:mb-6 md:mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4 pl-2">
         <div className="flex-1">
-          <h2 className="text-2xl sm:text-3xl md:text-5xl font-display font-bold text-stone-900 dark:text-white mb-1 sm:mb-2 tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-stone-900 dark:text-white mb-2 tracking-tight">
             Chat History
           </h2>
-          <p className="text-stone-500 dark:text-gray-400 text-sm md:text-base max-w-2xl">
+          <p className="text-stone-500 dark:text-gray-400 text-sm sm:text-base md:text-lg max-w-2xl">
             Browse through your previous AI generations
           </p>
         </div>

@@ -69,7 +69,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
 
   return (
     <nav
-      className={`${variantClasses[variant]} fixed bottom-0 left-0 right-0 z-40 h-16`}
+      className={`${variantClasses[variant]} relative w-full rounded-2xl z-40 h-16 border`}
     >
       <div className="flex items-center justify-around h-full max-w-screen-xl mx-auto px-4">
         {safeItems.map((item) => {

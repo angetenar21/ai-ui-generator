@@ -1,6 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { useAppStore } from '@/store/appStore';
+import { getSurfaceClasses } from '@/theme/designTokens';
+import { getChartTheme } from '../core/colorUtils';
+
+import type { SurfaceVariant, ElevationLevel } from '../core/types';
 
 interface DonutChartProps {
   /** Chart title */
@@ -49,6 +53,9 @@ interface DonutChartProps {
     left?: number;
   };
 
+
+  variant?: SurfaceVariant;
+  elevation?: ElevationLevel;
 }
 
 const DonutChart: React.FC<DonutChartProps> = ({
@@ -64,7 +71,8 @@ const DonutChart: React.FC<DonutChartProps> = ({
   legend = true,
   centerLabel,
   margin = { top: 10, right: 10, bottom: legend ? 80 : 10, left: 60 },
-}) => {
+  variant = 'transparent',
+  elevation = 'raised'}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [chartSize, setChartSize] = useState({ width: propWidth || 400, height: propHeight });
 
@@ -99,7 +107,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
   // Detect dark mode for chart styling
   const theme = useAppStore(state => state.theme);
   const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  const legendTextColor = isDarkMode ? '#E5E7EB' : '#374151';
+  const ct = getChartTheme(isDarkMode);
 
   // Validation
   // Ensure we have at least one numeric value that isn't 0
@@ -187,15 +195,25 @@ const DonutChart: React.FC<DonutChartProps> = ({
               gap: '6px',
             },
             '& .MuiChartsLegend-series text': {
-              fill: `${legendTextColor} !important`,
-                      fontFamily: 'inherit',
+              fill: `${ct.legendText} !important`,
+              fontFamily: 'inherit',
               fontSize: '12px',
               fontWeight: 500,
             },
             '& .MuiChartsLegend-mark': {
-              rx: 2,
-              width: '12px',
-              height: '12px',
+              rx: 3,
+              width: '10px',
+              height: '10px',
+            },
+            '& .MuiChartsTooltip-root': {
+              backgroundColor: `${ct.tooltipBg} !important`,
+              border: `1px solid ${ct.tooltipBorder} !important`,
+              borderRadius: '10px !important',
+            },
+            '& .MuiChartsTooltip-labelCell, & .MuiChartsTooltip-valueCell': {
+              color: `${ct.tooltipText} !important`,
+              fontFamily: 'inherit',
+              fontSize: '12px',
             },
           }}
         />

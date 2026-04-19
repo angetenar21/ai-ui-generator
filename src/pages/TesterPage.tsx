@@ -179,10 +179,10 @@ const TesterPage: React.FC = () => {
   return (
     <div className="h-full w-full max-w-[1600px] mx-auto px-4 md:px-8 pt-8 pb-10 flex flex-col gap-6 bg-transparent relative z-10 overflow-y-auto scrollbar-thin">
       <header className="pl-2">
-        <h1 className="text-3xl md:text-5xl font-display font-bold text-stone-900 dark:text-white mb-2 tracking-tight">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-stone-900 dark:text-white mb-2 tracking-tight">
           JSON Component Tester
         </h1>
-        <p className="text-stone-500 dark:text-gray-400 text-sm md:text-base max-w-2xl">
+        <p className="text-stone-500 dark:text-gray-400 text-sm sm:text-base md:text-lg max-w-2xl">
           Paste the raw JSON returned by your generic payload to preview the rendered components instantly.
           No background API calls are made on this isolated pane.
         </p>

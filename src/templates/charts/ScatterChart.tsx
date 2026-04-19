@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ScatterChart as MuiScatterChart } from '@mui/x-charts/ScatterChart';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
 import { useAppStore } from '@/store/appStore';
+import { getSurfaceClasses } from '@/theme/designTokens';
 
 interface ScatterChartProps {
   /** Chart title */
@@ -119,7 +120,7 @@ const ScatterChart: React.FC<ScatterChartProps> = ({
   if (!hasValidData) {
     console.warn('[ScatterChart] No valid series data provided:', { series });
     return (
-      <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {(title || description) && (
           <div className="mb-6">
             {title && (
@@ -202,7 +203,7 @@ const ScatterChart: React.FC<ScatterChartProps> = ({
   });
 
   return (
-    <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
       {/* Header */}
       {(title || description) && (
         <div className="mb-6">

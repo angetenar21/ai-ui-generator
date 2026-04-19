@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { BarChart as MuiBarChart } from '@mui/x-charts/BarChart';
 import { processSeriesColors } from '../core/utils';
 import { getSurfaceClasses, getChartColors } from '@/theme/designTokens';
-import { getTextColorForBackground, getSecondaryTextColorForBackground } from '../core/colorUtils';
+import { getTextColorForBackground, getSecondaryTextColorForBackground, getChartTheme, buildChartSx } from '../core/colorUtils';
 import type { SurfaceVariant, ElevationLevel, EmphasisLevel, ChartPaletteType } from '../core/types';
 import { useAppStore } from '@/store/appStore';
 
@@ -81,13 +81,32 @@ interface BarChartProps {
   /** Optional CSS class names */
   className?: string;
 
+  // ── Object-array grouped format (alternative to xAxis + series) ──────────
+  /**
+   * Data as an array of record objects, e.g.
+   * [{quarter: "Q1", productA: 4200, productB: 3800}, ...]
+   * Use together with `xKey` to identify the category column.
+   * All other numeric columns become individual bar series.
+   */
+  data?: Record<string, string | number>[];
+
+  /** The key in each data object that provides x-axis category labels.
+   *  Required when using the object-array `data` format. */
+  xKey?: string;
+
+  /** Explicit series keys to extract from `data` objects.
+   *  If omitted, all numeric keys (excluding xKey) are used. */
+  seriesKeys?: string[];
 }
 
 const BarChart: React.FC<BarChartProps> = ({
   title,
   description,
-  xAxis,
-  series,
+  xAxis: xAxisProp,
+  series: seriesProp,
+  data: rawData,
+  xKey,
+  seriesKeys,
   width: propWidth,
   height = 360,
   backgroundColor,
@@ -104,6 +123,29 @@ const BarChart: React.FC<BarChartProps> = ({
   scaleType = 'linear',
   className = '',
 }) => {
+  // ── Object-array → MUI format transformer ─────────────────────────────────
+  // When data is passed as [{quarter: "Q1", productA: 4200, productB: 3800}, ...]
+  // extract xAxis categories from data[i][xKey] and build one series per
+  // remaining numeric column. This supports the grouped-bar-chart AI pattern.
+  let xAxis = xAxisProp;
+  let series = seriesProp;
+
+  if (rawData && Array.isArray(rawData) && rawData.length > 0 && xKey) {
+    // Extract x-axis category labels
+    const categories = rawData.map(row => String(row[xKey] ?? ''));
+
+    // Determine which keys become series (all numeric keys except xKey)
+    const numericKeys = seriesKeys
+      ? seriesKeys
+      : Object.keys(rawData[0]).filter(k => k !== xKey && typeof rawData[0][k] === 'number');
+
+    xAxis = [{ data: categories, scaleType: 'band' as const }];
+    series = numericKeys.map(key => ({
+      label: key,
+      data: rawData.map(row => (typeof row[key] === 'number' ? (row[key] as number) : 0)),
+    }));
+  }
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [chartWidth, setChartWidth] = useState(propWidth || 500);
 
@@ -191,17 +233,10 @@ const BarChart: React.FC<BarChartProps> = ({
   // Detect dark mode for chart styling
   const theme = useAppStore(state => state.theme);
   const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  const chartColors = {
-    axisLine: isDarkMode ? '#9CA3AF' : '#6B7280',
-    axisTick: isDarkMode ? '#9CA3AF' : '#6B7280',
-    tickLabel: isDarkMode ? '#E5E7EB' : '#374151',
-    legendText: isDarkMode ? '#E5E7EB' : '#374151',
-    gridLine: isDarkMode ? '#374151' : '#E5E7EB',
-    background: backgroundColor || 'transparent',
-  };
+  const ct = getChartTheme(isDarkMode);
 
   // Build classes using design tokens
-  const surfaceClasses = 'bg-transparent border-transparent';
+  const surfaceClasses = getSurfaceClasses(variant, elevation);
 
   // Determine text colors based on card background
   const titleTextColor = getTextColorForBackground(cardBackgroundColor);
@@ -280,8 +315,8 @@ const BarChart: React.FC<BarChartProps> = ({
             layout={layout}
             grid={grid}
             margin={effectiveMargin}
+            borderRadius={6}
             slotProps={{
-              bar: { rx: 6, ry: 6 },
               legend: legend
                 ? {
                   direction: 'horizontal' as const,
@@ -289,58 +324,9 @@ const BarChart: React.FC<BarChartProps> = ({
                 }
                 : undefined,
             }}
-            sx={{
-              backgroundColor: chartColors.background,
-              borderRadius: '8px',
-              '& .MuiChartsAxis-line': {
-                stroke: 'currentColor', 
-                opacity: 0.2,
-                strokeWidth: 1.5,
-              },
-              '& .MuiChartsAxis-tick': {
-                stroke: 'currentColor', 
-                opacity: 0.2,
-                strokeWidth: 1,
-              },
-              '& .MuiChartsAxis-tickLabel': {
-                fill: 'currentColor',
-                      fontFamily: 'inherit',
-                fontSize: '13px',
-                fontWeight: 500,
-                ...(labelRotation !== 0 ? {
-                  transform: `rotate(${labelRotation}deg)`,
-                  textAnchor: 'end',
-                } : {}),
-              },
-              '& .MuiChartsLegend-root': {
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                flexWrap: 'wrap',
-                gap: '12px',
-              },
-              '& .MuiChartsLegend-series': {
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-              },
-              '& .MuiChartsLegend-series text': {
-                fill: `${chartColors.legendText} !important`,
-                      fontFamily: 'inherit',
-                fontSize: '12px',
-                fontWeight: 500,
-              },
-              '& .MuiChartsLegend-mark': {
-                rx: 2,
-                width: '12px',
-                height: '12px',
-              },
-              '& .MuiChartsGrid-line': {
-                stroke: 'currentColor',
-                strokeDasharray: '4 4',
-                opacity: 0.8,
-              },
-            }}
+            sx={buildChartSx(ct, labelRotation, {
+              backgroundColor: backgroundColor || 'transparent',
+            })}
           />
         </div>
       </div>

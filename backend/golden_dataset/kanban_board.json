@@ -71,7 +71,7 @@
               "title": "Implement OAuth2 Authentication",
               "description": "Design and integrate Google and GitHub OAuth providers for seamless login.",
               "tags": [{ "label": "Backend", "color": "purple" }, { "label": "Security", "color": "red" }],
-              "assignee": { "name": "Alex", "avatar": "https://i.pravatar.cc/150?u=1" }
+              "assignee": { "name": "Alex", "avatar": "@img:avatar,portrait,man,professional" }
             },
             {
               "id": "TKS-149",
@@ -79,7 +79,7 @@
               "title": "Refactor DataGrid Component",
               "description": "Rewrite the rendering engine for the DataGrid to fix virtual scrolling bugs.",
               "tags": [{ "label": "Frontend", "color": "blue" }],
-              "assignee": { "name": "Sarah", "avatar": "https://i.pravatar.cc/150?u=2" },
+              "assignee": { "name": "Sarah", "avatar": "@img:avatar,portrait,woman,professional" },
               "highPriority": true
             },
             {
@@ -88,7 +88,7 @@
               "title": "Optimize Vector Search Algorithm",
               "description": "Improve cosine similarity processing times by implementing HNSW index.",
               "tags": [{ "label": "AI/ML", "color": "emerald" }, { "label": "Performance", "color": "orange" }],
-              "assignee": { "name": "David", "avatar": "https://i.pravatar.cc/150?u=3" }
+              "assignee": { "name": "David", "avatar": "@img:avatar,portrait,man,tech" }
             },
             {
               "id": "TKS-132",
@@ -96,7 +96,7 @@
               "title": "Setup CI/CD Pipeline",
               "description": "Configure GitHub Actions to deploy to GCP on merge to main.",
               "tags": [{ "label": "DevOps", "color": "gray" }],
-              "assignee": { "name": "Maya", "avatar": "https://i.pravatar.cc/150?u=4" }
+              "assignee": { "name": "Maya", "avatar": "@img:avatar,portrait,woman,smiling" }
             }
           ]
         }

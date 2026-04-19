@@ -1,0 +1,159 @@
+{
+  "name": "stack",
+  "templateProps": {
+    "spacing": "large",
+    "children": [
+      {
+        "name": "panel",
+        "templateProps": {
+          "title": "🏆 Top Players — Season 12",
+          "variant": "gradient",
+          "elevation": "floating",
+          "emphasis": "high",
+          "children": [
+            {
+              "name": "grid",
+              "templateProps": {
+                "columns": { "xs": 1, "sm": 2, "md": 4 },
+                "gap": "medium",
+                "children": [
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Season Leader",
+                      "variant": "accent",
+                      "elevation": "floating",
+                      "items": [
+                        { "label": "Player", "value": "ShadowHunter", "change": "+3 ranks", "changeType": "positive", "subtext": "Score: 12,500 pts" }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Avg Win Rate",
+                      "variant": "glass",
+                      "elevation": "raised",
+                      "items": [
+                        { "label": "Top 8 Players", "value": "73%", "change": "+4.2%", "changeType": "positive", "subtext": "vs last season" }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Matches Played",
+                      "variant": "elevated",
+                      "elevation": "raised",
+                      "items": [
+                        { "label": "This Season", "value": "3,840", "change": "+18%", "changeType": "positive", "subtext": "Across all modes" }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Rising Star",
+                      "variant": "elevated",
+                      "elevation": "raised",
+                      "items": [
+                        { "label": "Fastest Climber", "value": "IronGuard", "change": "+12 ranks", "changeType": "positive", "subtext": "in 7 days" }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "grid",
+        "templateProps": {
+          "columns": { "xs": 1, "md": 2 },
+          "gap": "large",
+          "children": [
+            {
+              "name": "panel",
+              "templateProps": {
+                "title": "Score Progression — Top 4 Players",
+                "variant": "default",
+                "elevation": "raised",
+                "headerVariant": "minimal",
+                "children": [
+                  {
+                    "name": "line-chart",
+                    "templateProps": {
+                      "palette": "vibrant",
+                      "height": 300,
+                      "legend": true,
+                      "xAxis": [{ "data": ["Wk 1", "Wk 2", "Wk 3", "Wk 4", "Wk 5", "Wk 6"], "scaleType": "point" }],
+                      "series": [
+                        { "label": "ShadowHunter", "data": [8200, 9500, 10100, 11400, 11900, 12500] },
+                        { "label": "NightBlade",   "data": [7800, 9000, 9900, 10800, 11300, 11800] },
+                        { "label": "MysticArcher", "data": [7200, 8400, 9200, 9900, 10500, 10900] },
+                        { "label": "DarkPhoenix",  "data": [6900, 7800, 8500, 9000, 9400, 9800] }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "panel",
+              "templateProps": {
+                "title": "Win Rate Distribution",
+                "variant": "default",
+                "elevation": "raised",
+                "headerVariant": "minimal",
+                "children": [
+                  {
+                    "name": "bar-chart",
+                    "templateProps": {
+                      "palette": "gradient",
+                      "height": 300,
+                      "legend": false,
+                      "xAxis": [{ "data": ["Shadow", "NightBlade", "Mystic", "Dark", "IronGuard", "Storm", "FireMage", "IceSorc"], "scaleType": "band" }],
+                      "series": [
+                        { "label": "Win Rate %", "data": [85, 82, 78, 75, 70, 68, 65, 62] }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "panel",
+        "templateProps": {
+          "title": "Full Leaderboard",
+          "variant": "default",
+          "elevation": "raised",
+          "headerVariant": "minimal",
+          "children": [
+            {
+              "name": "data-table",
+              "templateProps": {
+                "searchable": true,
+                "sortable": true,
+                "columns": ["Rank", "Player", "Score", "Win Rate", "Matches", "Trend"],
+                "rows": [
+                  ["🥇 1", "ShadowHunter", "12,500", "85%", "142", { "type": "badge", "label": "+3", "color": "green" }],
+                  ["🥈 2", "NightBlade",   "11,800", "82%", "138", { "type": "badge", "label": "+2", "color": "green" }],
+                  ["🥉 3", "MysticArcher", "10,900", "78%", "130", { "type": "badge", "label": "+1", "color": "green" }],
+                  ["4",  "DarkPhoenix",  "9,800",  "75%", "125", { "type": "badge", "label": "-1", "color": "red" }],
+                  ["5",  "IronGuard",    "9,200",  "70%", "118", { "type": "badge", "label": "+1", "color": "green" }],
+                  ["6",  "StormBreaker", "8,500",  "68%", "112", { "type": "badge", "label": "-2", "color": "red" }],
+                  ["7",  "FireMage",     "7,900",  "65%", "104", { "type": "badge", "label": "+1", "color": "green" }],
+                  ["8",  "IceSorcerer", "7,200",  "62%", "98",  { "type": "badge", "label": "-1", "color": "red" }]
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

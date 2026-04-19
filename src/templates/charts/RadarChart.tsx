@@ -1,6 +1,7 @@
 import React from 'react';
-import type { SurfaceVariant, ElevationLevel } from '../core/types';
+import type { SurfaceVariant, ElevationLevel , ChartPaletteType} from '../core/types';
 import { useAppStore } from '@/store/appStore';
+import { getSurfaceClasses , getChartColors} from '@/theme/designTokens';
 import {
   Radar,
   RadarChart as RechartsRadarChart,
@@ -148,7 +149,7 @@ const RadarChart: React.FC<RadarChartProps> = (props) => {
     // Validate indicator format
     if (!indicator || !Array.isArray(indicator) || indicator.length === 0) {
       return (
-        <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+        <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
           <div className="text-center text-zinc-400">
             <p className="text-sm">No indicators defined for radar chart</p>
           </div>
@@ -158,7 +159,7 @@ const RadarChart: React.FC<RadarChartProps> = (props) => {
 
     if (!series || !Array.isArray(series) || series.length === 0) {
       return (
-        <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+        <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
           <div className="text-center text-zinc-400">
             <p className="text-sm">No series data for radar chart</p>
           </div>
@@ -195,7 +196,7 @@ const RadarChart: React.FC<RadarChartProps> = (props) => {
     // Validate new format
     if (!axes || !Array.isArray(axes) || axes.length === 0) {
       return (
-        <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+        <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
           <div className="text-center text-zinc-400">
             <p className="text-sm">No axes defined for radar chart</p>
           </div>
@@ -205,7 +206,7 @@ const RadarChart: React.FC<RadarChartProps> = (props) => {
 
     if (!series || !Array.isArray(series) || series.length === 0) {
       return (
-        <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+        <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
           <div className="text-center text-zinc-400">
             <p className="text-sm">No series data for radar chart</p>
           </div>
@@ -241,7 +242,7 @@ const RadarChart: React.FC<RadarChartProps> = (props) => {
     // Validate old format
     if (!data || !Array.isArray(data) || data.length === 0) {
       return (
-        <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+        <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
           <div className="text-center text-zinc-400">
             <p className="text-sm">No data available for radar chart</p>
           </div>
@@ -251,7 +252,7 @@ const RadarChart: React.FC<RadarChartProps> = (props) => {
 
     if (!dataKeys || !Array.isArray(dataKeys) || dataKeys.length === 0) {
       return (
-        <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+        <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
           <div className="text-center text-zinc-400">
             <p className="text-sm">No data keys specified for radar chart</p>
           </div>
@@ -261,7 +262,7 @@ const RadarChart: React.FC<RadarChartProps> = (props) => {
   } else {
     // Invalid format
     return (
-      <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         <div className="text-center text-zinc-400">
           <p className="text-sm">Invalid radar chart configuration</p>
           <p className="text-xs mt-2">Expected either (data + dataKeys), (axes + series), or (indicator + series)</p>
@@ -271,7 +272,7 @@ const RadarChart: React.FC<RadarChartProps> = (props) => {
   }
 
   return (
-    <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
       {title && (
         <h3 className="text-xl font-display font-semibold text-zinc-900 dark:text-white mb-4 text-center">
           {title}
@@ -335,10 +336,12 @@ const RadarChart: React.FC<RadarChartProps> = (props) => {
 
           <Tooltip
             contentStyle={{
-              backgroundColor: isDarkMode ? '#1f2937' : '#ffffff',
-              border: `1px solid ${isDarkMode ? '#374151' : '#e5e7eb'}`,
-              borderRadius: '8px',
-              color: isDarkMode ? '#d1d5db' : '#374151',
+              backgroundColor: isDarkMode ? 'rgba(31, 41, 55, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(8px)',
+              border: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`,
+              borderRadius: '12px',
+              color: isDarkMode ? '#E5E7EB' : '#111827',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)'
             }}
             labelStyle={{ color: isDarkMode ? '#f3f4f6' : '#111827' }}
           />

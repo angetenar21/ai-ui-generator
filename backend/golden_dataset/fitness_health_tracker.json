@@ -1,0 +1,161 @@
+{
+  "name": "stack",
+  "templateProps": {
+    "spacing": "large",
+    "children": [
+      {
+        "name": "panel",
+        "templateProps": {
+          "title": "🏃 Fitness & Health Dashboard",
+          "variant": "gradient",
+          "elevation": "floating",
+          "emphasis": "high",
+          "children": [
+            {
+              "name": "grid",
+              "templateProps": {
+                "columns": { "xs": 2, "sm": 2, "md": 4 },
+                "gap": "medium",
+                "children": [
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Steps Today",
+                      "variant": "accent",
+                      "elevation": "floating",
+                      "items": [
+                        { "label": "Daily goal: 10k", "value": "8,420", "change": "+1,240", "changeType": "positive", "subtext": "84% complete" }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Calories Burned",
+                      "variant": "glass",
+                      "elevation": "raised",
+                      "items": [
+                        { "label": "Active burn", "value": "624 kcal", "change": "+84", "changeType": "positive", "subtext": "Goal: 700 kcal" }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Avg Heart Rate",
+                      "variant": "elevated",
+                      "elevation": "raised",
+                      "items": [
+                        { "label": "Today", "value": "72 bpm", "change": "-4 bpm", "changeType": "positive", "subtext": "Resting: 58 bpm" }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Sleep Score",
+                      "variant": "elevated",
+                      "elevation": "raised",
+                      "items": [
+                        { "label": "Last night", "value": "87/100", "change": "+5", "changeType": "positive", "subtext": "7h 48m total" }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "grid",
+        "templateProps": {
+          "columns": { "xs": 1, "md": 3 },
+          "gap": "large",
+          "children": [
+            {
+              "name": "panel",
+              "templateProps": {
+                "title": "Weekly Activity",
+                "variant": "default",
+                "elevation": "raised",
+                "headerVariant": "minimal",
+                "className": "col-span-2",
+                "children": [
+                  {
+                    "name": "bar-chart",
+                    "templateProps": {
+                      "palette": "vibrant",
+                      "height": 260,
+                      "legend": true,
+                      "xAxis": [{ "data": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"], "scaleType": "band" }],
+                      "series": [
+                        { "label": "Steps (hundreds)", "data": [62, 84, 91, 75, 88, 110, 42] },
+                        { "label": "Calories (tens)",  "data": [48, 62, 70, 55, 65, 85, 30] }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "panel",
+              "templateProps": {
+                "title": "Goal Completion",
+                "variant": "default",
+                "elevation": "raised",
+                "headerVariant": "minimal",
+                "children": [
+                  {
+                    "name": "donut-chart",
+                    "templateProps": {
+                      "height": 260,
+                      "innerRadius": 60,
+                      "outerRadius": 90,
+                      "paddingAngle": 4,
+                      "cornerRadius": 4,
+                      "legend": true,
+                      "centerLabel": "71%",
+                      "data": [
+                        { "id": "steps",    "value": 84, "label": "Steps",    "color": "#F97316" },
+                        { "id": "calories", "value": 89, "label": "Calories", "color": "#10B981" },
+                        { "id": "sleep",    "value": 97, "label": "Sleep",    "color": "#6366F1" },
+                        { "id": "water",    "value": 60, "label": "Hydration","color": "#3B82F6" }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "panel",
+        "templateProps": {
+          "title": "Heart Rate — Last 7 Days",
+          "variant": "default",
+          "elevation": "raised",
+          "headerVariant": "minimal",
+          "children": [
+            {
+              "name": "area-chart",
+              "templateProps": {
+                "palette": "gradient",
+                "height": 200,
+                "legend": true,
+                "stack": false,
+                "xAxis": [{ "data": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"], "scaleType": "point" }],
+                "series": [
+                  { "label": "Resting HR",  "data": [58, 60, 57, 62, 59, 56, 58] },
+                  { "label": "Active HR",   "data": [142, 138, 155, 132, 148, 165, 120] },
+                  { "label": "Avg HR",      "data": [72, 74, 78, 69, 75, 82, 68] }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { LineChart as MuiLineChart } from '@mui/x-charts/LineChart';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
 import { useAppStore } from '@/store/appStore';
+import { getSurfaceClasses } from '@/theme/designTokens';
 
 interface TimeSeriesChartProps {
   /** Chart title */
@@ -109,7 +110,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   // Validate
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
-      <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && (
           <h3 className="text-2xl font-display font-semibold text-zinc-900 dark:text-white mb-2">
             {title}
@@ -252,7 +253,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   if (!hasValidData) {
     console.warn('[TimeSeriesChart] No valid data after normalization:', { series });
     return (
-      <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && (
           <h3 className="text-2xl font-display font-semibold text-zinc-900 dark:text-white mb-2">
             {title}
@@ -304,7 +305,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   };
 
   return (
-    <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
       {/* Header */}
       {(title || description) && (
         <div className="mb-6">

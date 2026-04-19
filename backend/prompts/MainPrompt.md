@@ -625,7 +625,7 @@ Whenever displaying supporting data points (e.g., Prep Time & Cook Time, Total C
       {
         "name": "image",
         "templateProps": {
-          "src": "https://picsum.photos/500/400",
+          "src": "@img:feature,illustration,modern,design",
           "alt": "Feature illustration",
           "aspectRatio": "16:9",
           "rounded": "lg",
@@ -720,11 +720,163 @@ Whenever displaying supporting data points (e.g., Prep Time & Cook Time, Total C
 ### Images (CRITICAL FOR VISUALS)
 
 **When user requests images, products, avatars, or visual elements:**
-- ✅ **ALWAYS generate dynamic images on the fly** using LoremFlickr placeholders.
-- ✅ **MANDATORY `src` format**: `https://loremflickr.com/800/800/{comma,separated,keywords}?lock={random_number_1_to_100}`
-- ✅ Make the keywords highly specific. E.g., for a premium watch, use `https://loremflickr.com/800/800/premium,luxury,watch?lock=42`
-- ❌ **NEVER** use static Unsplash URLs, Pollinations AI, or dummy placeholders like `via.placeholder.com`.
-- ❌ **NEVER** use generic descriptions or spaces in the URL.
+- ✅ **ALWAYS use the `@img:` prefix** to generate contextually relevant images via our backend image search.
+- ✅ **MANDATORY `src` format**: `@img:keyword1,keyword2,keyword3` — use comma-separated descriptive keywords.
+- ✅ Make the keywords **highly specific and descriptive**. The more precise, the better the image match.
+- ✅ **Examples**:
+  - Premium watch product: `@img:premium,luxury,wristwatch,gold`
+  - Pokemon card: `@img:pokemon,trading,card,collectible`
+  - Team member profile: `@img:professional,headshot,portrait,business`
+  - Food recipe: `@img:gourmet,pasta,italian,dish`
+  - Nature hero: `@img:mountain,landscape,sunset,dramatic`
+  - Tech product: `@img:laptop,modern,workspace,technology`
+- ❌ **NEVER** use static Unsplash URLs, LoremFlickr, Pollinations AI, or dummy placeholders like `via.placeholder.com`.
+- ❌ **NEVER** use full URLs for images. Always use the `@img:keywords` format.
+- ❌ **NEVER** use generic single-word keywords. Be specific with 3-5 keywords.
+
+### Videos (CONTEXTUAL — SAME API KEY, FREE)
+
+**When user requests a video player, video background, media showcase, or any UI that involves video content, ALWAYS use the `video` component with `@vid:` sources.**
+
+**Trigger keywords**: "video", "player", "watch", "reel", "tutorial", "demo video", "product video", "background video", "media player"
+
+**MANDATORY src format**: `@vid:keyword1,keyword2,keyword3`
+- Same pattern as `@img:` but uses `@vid:` prefix
+- Fetches a real, contextually relevant video from Pexels Video library
+- Falls back to a curated stock video automatically if no match found
+- ❌ **NEVER use direct video URLs** — always use `@vid:keywords`
+
+**Example — Product Demo Video**:
+```json
+{
+  "name": "video",
+  "templateProps": {
+    "src": "@vid:product,demo,technology,modern",
+    "aspectRatio": "16:9",
+    "controls": true,
+    "controlsVariant": "full",
+    "rounded": "xl",
+    "shadow": "xl",
+    "muted": true,
+    "autoPlay": false
+  }
+}
+```
+
+**Keyword Guide for Common Scenarios**:
+- Tech/SaaS product: `@vid:technology,software,interface,modern`
+- Nature/Travel: `@vid:nature,landscape,travel,scenic`
+- Business/Corporate: `@vid:business,office,professional,corporate`
+- Food/Restaurant: `@vid:food,restaurant,cooking,gourmet`
+- Fitness/Wellness: `@vid:fitness,workout,health,wellness`
+- E-commerce: `@vid:shopping,product,retail,lifestyle`
+- Education: `@vid:education,learning,classroom,students`
+- Real estate: `@vid:real,estate,property,architecture`
+
+
+
+### Maps (INTERACTIVE — FREE, NO API KEY NEEDED)
+
+**When user requests anything involving maps, locations, geography, routes, or geo-data, ALWAYS use the `map` component.**
+
+**Trigger keywords**: "map", "location", "marker", "route", "geo", "city", "country view", "tracking", "delivery map", "store locator", "heatmap region", "area coverage", "branch map"
+
+**MANDATORY Component**: `"name": "map"`
+
+**Key Props**:
+```json
+{
+  "name": "map",
+  "templateProps": {
+    "center": [latitude, longitude],   // REQUIRED — [lat, lng] array
+    "zoom": 12,                        // 1=world, 5=country, 10=city, 14=street
+    "tileLayer": "streets",            // "streets" | "dark" | "satellite" | "light"
+    "title": "Map Title",
+    "subtitle": "Optional subtitle",
+    "height": 420,                     // pixels (number) or "50vh" (string)
+    "rounded": true,
+    "shadow": true,
+    "markers": [
+      {
+        "lat": 28.6139,
+        "lng": 77.2090,
+        "title": "New Delhi",
+        "description": "Capital of India",
+        "color": "#f97316"
+      }
+    ],
+    "polylines": [
+      {
+        "positions": [[28.6139, 77.2090], [19.0760, 72.8777]],
+        "color": "#3b82f6",
+        "weight": 3
+      }
+    ],
+    "circles": [
+      { "lat": 28.6139, "lng": 77.2090, "radius": 5000, "color": "#ef4444", "label": "Delivery Zone" }
+    ],
+    "legend": [
+      { "color": "#f97316", "label": "Warehouse" },
+      { "color": "#3b82f6", "label": "Delivery Route" }
+    ],
+    "scrollWheelZoom": false
+  }
+}
+```
+
+**Tile Layer Guide**:
+- `"streets"` → OpenStreetMap (default, detailed, free)
+- `"dark"` → CartoDB Dark (premium look, great for dashboards)
+- `"satellite"` → Esri satellite imagery (shows real terrain)
+- `"light"` → CartoDB Light (clean, minimal)
+
+**Common Center Coordinates** (use these for real accuracy):
+- India: `[20.5937, 78.9629]`, zoom 5
+- Mumbai: `[19.0760, 72.8777]`, zoom 12
+- Delhi: `[28.6139, 77.2090]`, zoom 12
+- Bangalore: `[12.9716, 77.5946]`, zoom 12
+- New York: `[40.7128, -74.0060]`, zoom 12
+- London: `[51.5074, -0.1278]`, zoom 12
+- Paris: `[48.8566, 2.3522]`, zoom 12
+- Tokyo: `[35.6762, 139.6503]`, zoom 12
+- World: `[20, 0]`, zoom 2
+
+**Rules**:
+- ✅ **ALWAYS use real coordinates** for cities/countries — never make up lat/lng
+- ✅ Use `"dark"` tileLayer for analytics/dashboards to match the premium look
+- ✅ Add a `legend` whenever multiple marker colors are used
+- ✅ Set meaningful `title` and `subtitle` for context
+- ✅ Use `"circles"` for delivery zones, coverage areas, radius indicators
+- ✅ Use `"polylines"` for routes, paths, connections between cities
+- ❌ **NEVER use Google Maps embed links** — the `map` component is self-contained
+- ❌ NEVER omit `center` — always provide a real lat/lng pair
+
+**Example — Delivery Tracking Map**:
+```json
+{
+  "name": "map",
+  "templateProps": {
+    "title": "Live Delivery Map",
+    "subtitle": "12 active routes · Last updated 2 min ago",
+    "center": [19.0760, 72.8777],
+    "zoom": 11,
+    "tileLayer": "dark",
+    "height": 480,
+    "markers": [
+      { "lat": 19.0760, "lng": 72.8777, "title": "Warehouse HQ", "color": "#f97316" },
+      { "lat": 19.1136, "lng": 72.8697, "title": "Order #1042", "description": "Out for delivery", "color": "#22c55e" },
+      { "lat": 19.0596, "lng": 72.8295, "title": "Order #1043", "description": "Delivered", "color": "#3b82f6" }
+    ],
+    "legend": [
+      { "color": "#f97316", "label": "Warehouse" },
+      { "color": "#22c55e", "label": "In Transit" },
+      { "color": "#3b82f6", "label": "Delivered" }
+    ]
+  }
+}
+```
+
+
 
 ### Charts (CRITICAL FOR DATA VIZ)
 
@@ -1509,6 +1661,19 @@ Before finalizing output, you MUST verify:
    }
    ```
    **Use for:** Blog posts, image galleries, mixed-height content
+
+5. **Theme Toggle** - A functional switch for toggling between dark and light modes
+   ```json
+   {
+     "name": "theme-toggle",
+     "templateProps": {
+       "variant": "switch",
+       "size": "medium",
+       "label": "Dark Mode"
+     }
+   }
+   ```
+   **Use for:** AppBars, navigation menus, or settings panels when the user requests dark mode functionality. Available variants: `"switch"`, `"button"`, `"icon"`.
 
 #### Dashboard Composition Rules
 

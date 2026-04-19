@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import DummyAppBackground from '../../components/DummyAppBackground';
 
 interface BackdropProps {
   open?: boolean;
@@ -54,6 +55,7 @@ const Backdrop: React.FC<BackdropProps> = ({
   if (!children && !displayContent) {
     return (
       <div className="relative w-full h-48 rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-700 my-4">
+        <DummyAppBackground />
         <div
           className={`absolute inset-0 flex items-center justify-center ${blurClass} rounded-xl`}
           style={{ backgroundColor: `rgba(0, 0, 0, ${opacity})` }}
@@ -64,24 +66,33 @@ const Backdrop: React.FC<BackdropProps> = ({
     );
   }
 
-  if (!isVisible) return null;
+  if (!isVisible) {
+    return (
+      <div className="relative w-full overflow-hidden rounded-2xl min-h-[300px] border border-zinc-200 dark:border-zinc-800">
+        <DummyAppBackground />
+      </div>
+    );
+  }
 
   return (
-    <div
-      className={`fixed inset-0 z-40 flex items-center justify-center ${blurClass}`}
-      style={{ backgroundColor: `rgba(0, 0, 0, ${opacity})` }}
-      onClick={handleClick}
-    >
-      {children && (
-        <div onClick={(e) => e.stopPropagation()}>
-          {children}
-        </div>
-      )}
-      {displayContent && !children && (
-        <div className="text-white text-center" onClick={(e) => e.stopPropagation()}>
-          <div className="text-lg">{displayContent}</div>
-        </div>
-      )}
+    <div className="relative w-full overflow-hidden rounded-2xl min-h-[300px] border border-zinc-200 dark:border-zinc-800">
+      <DummyAppBackground />
+      <div
+        className={`absolute inset-0 z-40 flex items-center justify-center ${blurClass}`}
+        style={{ backgroundColor: `rgba(0, 0, 0, ${opacity})` }}
+        onClick={handleClick}
+      >
+        {children && (
+          <div onClick={(e) => e.stopPropagation()}>
+            {children}
+          </div>
+        )}
+        {displayContent && !children && (
+          <div className="text-white text-center" onClick={(e) => e.stopPropagation()}>
+            <div className="text-lg">{displayContent}</div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

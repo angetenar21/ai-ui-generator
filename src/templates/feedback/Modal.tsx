@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import DummyAppBackground from '../../components/DummyAppBackground';
 
 interface ModalProps {
   title?: string;
@@ -52,10 +53,6 @@ const Modal: React.FC<ModalProps> = ({
     setIsVisible(false);
   };
 
-  if (!isVisible && !triggerText) {
-    return null;
-  }
-
   const sizeClasses = {
     small: 'max-w-md',
     medium: 'max-w-lg',
@@ -64,29 +61,34 @@ const Modal: React.FC<ModalProps> = ({
   };
 
   return (
-    <>
-      {/* Optional Trigger Button */}
-      {triggerText && (
-        <button
-          onClick={() => setIsVisible(true)}
-          className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition-colors border border-transparent"
-        >
-          {triggerText}
-        </button>
+    <div className="relative w-full rounded-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden min-h-[500px]">
+      {/* Dummy UI Background for Context - ALWAYS PRESENT */}
+      <DummyAppBackground />
+
+      {/* Optional Trigger Button inside the preview sandbox */}
+      {!isVisible && triggerText && (
+        <div className="absolute inset-0 flex items-center justify-center z-[10]">
+          <button
+            onClick={() => setIsVisible(true)}
+            className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white rounded-xl shadow-lg font-medium transition-transform active:scale-95 border border-orange-500"
+          >
+            {triggerText}
+          </button>
+        </div>
       )}
 
       {isVisible && (
         <>
-          {/* Backdrop - Fixed positioning for proper overlay */}
+          {/* Backdrop - Absolute positioning for proper overlay within preview */}
           <div
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[9998] transition-opacity duration-300 ease-out"
+            className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm z-[9998] transition-opacity duration-300 ease-out"
             onClick={closable ? handleClose : undefined}
           />
 
           {/* Modal Container */}
-          <div className={`fixed inset-0 flex items-center justify-center ${size === 'fullscreen' ? 'p-2' : 'p-4'} z-[9999] pointer-events-none`}>
+          <div className={`absolute inset-0 flex items-center justify-center ${size === 'fullscreen' ? 'p-2' : 'p-4'} z-[9999] pointer-events-none`}>
             {/* Modal */}
-            <div className={`relative ${sizeClasses[size]} w-full pointer-events-auto bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-700/50 ${size === 'fullscreen' ? 'rounded-xl' : 'rounded-3xl'} shadow-2xl dark:shadow-[0_32px_64px_-12px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden transition-all duration-300 ease-out`}>
+            <div className={`relative ${sizeClasses[size]} w-full pointer-events-auto bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-700/50 ${size === 'fullscreen' ? 'rounded-xl' : 'rounded-3xl'} shadow-2xl dark:shadow-[0_32px_64px_-12px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden max-h-[460px] transition-all duration-300 ease-out`}>
               {/* Header */}
               {(title || description || showCloseButton) && (
                 <div className="flex-shrink-0 p-6 border-b border-zinc-100 dark:border-zinc-800/60 bg-transparent">
@@ -146,7 +148,7 @@ const Modal: React.FC<ModalProps> = ({
           </div>
         </>
       )}
-    </>
+    </div>
   );
 };
 

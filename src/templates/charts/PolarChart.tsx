@@ -1,6 +1,7 @@
 import React from 'react';
-import type { SurfaceVariant, ElevationLevel } from '../core/types';
+import type { SurfaceVariant, ElevationLevel , ChartPaletteType} from '../core/types';
 import { useAppStore } from '@/store/appStore';
+import { getSurfaceClasses , getChartColors} from '@/theme/designTokens';
 import {
   ResponsiveContainer,
   RadarChart,
@@ -44,6 +45,8 @@ interface PolarChartProps {
 
   variant?: SurfaceVariant;
   elevation?: ElevationLevel;
+
+  palette?: ChartPaletteType;
 }
 
 // Color palette - semantic colors that work well in both light and dark modes
@@ -83,7 +86,7 @@ const PolarChart: React.FC<PolarChartProps> = ({
   height = 400,
   variant = 'transparent',
   elevation = 'raised',
-}) => {
+  palette = 'default'}) => {
   // Detect dark mode
   const theme = useAppStore(state => state.theme);
   const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
@@ -99,7 +102,7 @@ const PolarChart: React.FC<PolarChartProps> = ({
   // Validate series
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
-      <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
         <div className="text-center text-zinc-400">
           <p className="text-sm">No series data for polar chart</p>
@@ -127,7 +130,7 @@ const PolarChart: React.FC<PolarChartProps> = ({
 
   if (validSeries.length === 0) {
     return (
-      <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
         <div className="text-center text-zinc-400">
           <p className="text-sm">Invalid series data format</p>
@@ -190,7 +193,7 @@ const PolarChart: React.FC<PolarChartProps> = ({
   const domainMax = Math.ceil(maxValue * 1.1); // Add 10% padding
 
   return (
-    <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
       {title && (
         <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4 text-center">
           {title}
@@ -228,13 +231,13 @@ const PolarChart: React.FC<PolarChartProps> = ({
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: tooltipBg,
-                  border: `1px solid ${tooltipBorder}`,
-                  borderRadius: '8px',
-                  color: tooltipText,
-                  fontSize: '12px',
-                  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                }}
+              backgroundColor: isDarkMode ? 'rgba(31, 41, 55, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(8px)',
+              border: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`,
+              borderRadius: '12px',
+              color: isDarkMode ? '#E5E7EB' : '#111827',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)'
+            }}
               />
               <Legend
                 wrapperStyle={{

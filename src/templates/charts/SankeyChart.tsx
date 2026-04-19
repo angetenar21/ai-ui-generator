@@ -1,7 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Sankey, Tooltip, ResponsiveContainer } from 'recharts';
-import type { SurfaceVariant, ElevationLevel } from '../core/types';
+import type { SurfaceVariant, ElevationLevel , ChartPaletteType} from '../core/types';
 import { useAppStore } from '@/store/appStore';
+import { getSurfaceClasses , getChartColors} from '@/theme/designTokens';
 
 interface SankeyChartProps {
   /** Chart title */
@@ -27,6 +28,8 @@ interface SankeyChartProps {
 
   variant?: SurfaceVariant;
   elevation?: ElevationLevel;
+
+  palette?: ChartPaletteType;
 }
 
 const SankeyChart: React.FC<SankeyChartProps> = ({
@@ -35,7 +38,9 @@ const SankeyChart: React.FC<SankeyChartProps> = ({
   nodes,
   links,
   height = 400,
-}) => {
+  variant = 'transparent',
+  elevation = 'raised',
+  palette = 'default'}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [chartHeight, setChartHeight] = useState(height);
 
@@ -197,13 +202,13 @@ const SankeyChart: React.FC<SankeyChartProps> = ({
                 >
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: isDarkMode ? '#1f2937' : '#ffffff',
-                      border: `1px solid ${isDarkMode ? '#374151' : '#e5e7eb'}`,
-                      borderRadius: '6px',
-                      color: isDarkMode ? '#e5e7eb' : '#1f2937',
-                      fontSize: '12px',
-                      fontWeight: '500',
-                    }}
+              backgroundColor: isDarkMode ? 'rgba(31, 41, 55, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(8px)',
+              border: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`,
+              borderRadius: '12px',
+              color: isDarkMode ? '#E5E7EB' : '#111827',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)'
+            }}
                     cursor={{ fill: isDarkMode ? '#374151' : '#f3f4f6', opacity: 0.3 }}
                     labelStyle={{ color: isDarkMode ? '#e5e7eb' : '#1f2937' }}
                   />

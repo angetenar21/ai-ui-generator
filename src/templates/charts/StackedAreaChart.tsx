@@ -1,7 +1,8 @@
 import React from 'react';
 import { ResponsiveContainer, AreaChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Area } from 'recharts';
-import type { SurfaceVariant, ElevationLevel } from '../core/types';
+import type { SurfaceVariant, ElevationLevel , ChartPaletteType} from '../core/types';
 import { useAppStore } from '@/store/appStore';
+import { getSurfaceClasses , getChartColors} from '@/theme/designTokens';
 
 interface StackedAreaChartProps {
   title?: string;
@@ -15,6 +16,8 @@ interface StackedAreaChartProps {
 
   variant?: SurfaceVariant;
   elevation?: ElevationLevel;
+
+  palette?: ChartPaletteType;
 }
 
 // Color palette for stacked areas
@@ -40,7 +43,7 @@ const StackedAreaChart: React.FC<StackedAreaChartProps> = ({
   series,
   variant = 'transparent',
   elevation = 'raised',
-}) => {
+  palette = 'default'}) => {
   const theme = useAppStore(state => state.theme);
   const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
   const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
@@ -74,7 +77,7 @@ const StackedAreaChart: React.FC<StackedAreaChartProps> = ({
   // Validate data
   if (!data || data.length === 0 || !detectedSeries || detectedSeries.length === 0) {
     return (
-      <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
         {description && <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">{description}</p>}
         <div className="flex items-center justify-center h-64 text-zinc-400 dark:text-zinc-500">
@@ -85,7 +88,7 @@ const StackedAreaChart: React.FC<StackedAreaChartProps> = ({
   }
 
   return (
-    <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
       {(title || description) && (
         <div className="mb-4">
           {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-2">{title}</h3>}
@@ -119,11 +122,12 @@ const StackedAreaChart: React.FC<StackedAreaChartProps> = ({
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: tooltipBg,
-              border: `1px solid ${tooltipBorder}`,
-              borderRadius: '8px',
-              color: tooltipText,
-              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+              backgroundColor: isDarkMode ? 'rgba(31, 41, 55, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(8px)',
+              border: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`,
+              borderRadius: '12px',
+              color: isDarkMode ? '#E5E7EB' : '#111827',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)'
             }}
             labelStyle={{ color: tooltipText, fontWeight: 600 }}
             itemStyle={{ color: tooltipText }}

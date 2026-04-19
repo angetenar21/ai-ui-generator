@@ -1,7 +1,8 @@
 import React from 'react';
 import { ResponsiveContainer, ComposedChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar, Line } from 'recharts';
-import type { SurfaceVariant, ElevationLevel } from '../core/types';
+import type { SurfaceVariant, ElevationLevel , ChartPaletteType} from '../core/types';
 import { useAppStore } from '@/store/appStore';
+import { getSurfaceClasses , getChartColors} from '@/theme/designTokens';
 
 interface MultiAxisChartProps {
   title?: string;
@@ -10,16 +11,19 @@ interface MultiAxisChartProps {
   height?: number;
   variant?: SurfaceVariant;
   elevation?: ElevationLevel;
+
+  palette?: ChartPaletteType;
 }
 
-const COLORS = ['#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
+
 
 const MultiAxisChart: React.FC<MultiAxisChartProps> = ({ title, data, height = 400,
   variant = 'transparent',
   elevation = 'raised',
-}) => {
+  palette = 'default'}) => {
   const theme = useAppStore(state => state.theme);
   const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const colors = getChartColors(palette);
   const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
   const textColor = isDarkMode ? '#E5E7EB' : '#374151';
   const tooltipBg = isDarkMode ? '#1F2937' : '#FFFFFF';
@@ -37,7 +41,7 @@ const MultiAxisChart: React.FC<MultiAxisChartProps> = ({ title, data, height = 4
 
   if (!data || data.length === 0) {
     return (
-      <div className="bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300">
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
         <div className="text-center text-zinc-400"><p className="text-sm">No data available</p></div>
       </div>
@@ -45,7 +49,7 @@ const MultiAxisChart: React.FC<MultiAxisChartProps> = ({ title, data, height = 4
   }
 
   return (
-    <div className="bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300">
+    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
       {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
       <ResponsiveContainer width="100%" height={height}>
         <ComposedChart data={data} margin={{ top: 20, right: 60, bottom: 20, left: 60 }}>
@@ -61,14 +65,21 @@ const MultiAxisChart: React.FC<MultiAxisChartProps> = ({ title, data, height = 4
           )}
 
           <Tooltip
-            contentStyle={{ backgroundColor: tooltipBg, border: `1px solid ${tooltipBorder}`, borderRadius: '8px', color: tooltipText }}
+            contentStyle={{
+              backgroundColor: isDarkMode ? 'rgba(31, 41, 55, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(8px)',
+              border: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`,
+              borderRadius: '12px',
+              color: isDarkMode ? '#E5E7EB' : '#111827',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)'
+            }}
             labelStyle={{ color: tooltipText, fontWeight: 600 }}
           />
           <Legend wrapperStyle={{ color: textColor }} />
           
           {/* First series as bars on left axis */}
           {dataKeys[0] && (
-            <Bar yAxisId="left" dataKey={dataKeys[0]} fill={COLORS[0]} radius={[4, 4, 0, 0]} barSize={30} />
+            <Bar yAxisId="left" dataKey={dataKeys[0]} fill={colors[0]} radius={[4, 4, 0, 0]} barSize={30} />
           )}
           
           {/* Remaining series as lines on right axis */}
@@ -78,9 +89,9 @@ const MultiAxisChart: React.FC<MultiAxisChartProps> = ({ title, data, height = 4
               yAxisId={i === 0 ? 'right' : 'left'}
               type="monotone"
               dataKey={key}
-              stroke={COLORS[(i + 1) % COLORS.length]}
+              stroke={colors[(i + 1) % colors.length]}
               strokeWidth={2}
-              dot={{ r: 3, fill: COLORS[(i + 1) % COLORS.length] }}
+              dot={{ r: 3, fill: colors[(i + 1) % colors.length] }}
             />
           ))}
           

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 interface ImageProps {
   src: string;
@@ -26,6 +26,72 @@ interface ImageProps {
   renderChild?: (child: any) => React.ReactNode;
 }
 
+// ─── Image Resolution Helpers ────────────────────────────────────────────────
+
+const API_BASE_URL = (import.meta as any).env?.VITE_API_BASE_URL || 'http://localhost:4000';
+
+// In-memory client-side cache to avoid duplicate network calls
+const resolvedImageCache = new Map<string, string>();
+
+/**
+ * Detect `@img:keyword1,keyword2` format and resolve to a real image URL
+ * via the backend proxy (which calls Pexels API).
+ */
+async function resolveImageSrc(src: string): Promise<string> {
+  // Not an @img: reference — return as-is
+  if (!src.startsWith('@img:')) {
+    return src;
+  }
+
+  const keywords = src.slice(5).trim(); // Strip "@img:" prefix
+  if (!keywords) return src;
+
+  // Check client cache
+  const cacheKey = keywords.toLowerCase();
+  const cached = resolvedImageCache.get(cacheKey);
+  if (cached) return cached;
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/image-proxy?q=${encodeURIComponent(keywords)}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.url) {
+        resolvedImageCache.set(cacheKey, data.url);
+        return data.url;
+      }
+    }
+  } catch (err) {
+    console.warn('[Image] Failed to resolve @img: src, using fallback', err);
+  }
+
+  // Fallback: deterministic picsum seed from keywords
+  const hash = simpleHash(cacheKey);
+  const fallback = `https://picsum.photos/seed/${hash}/800/600`;
+  resolvedImageCache.set(cacheKey, fallback);
+  return fallback;
+}
+
+function simpleHash(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash) + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash);
+}
+
+/**
+ * Generate a deterministic fallback URL from the alt text.
+ * Uses picsum.photos with a seeded hash for consistent, beautiful stock photos.
+ */
+function getFallbackImage(alt: string): string {
+  const seed = simpleHash((alt || 'abstract').toLowerCase());
+  return `https://picsum.photos/seed/${seed}/800/600`;
+}
+
+
+// ─── Image Component ─────────────────────────────────────────────────────────
+
 const Image: React.FC<ImageProps> = ({
   src,
   alt,
@@ -50,30 +116,40 @@ const Image: React.FC<ImageProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const [currentSrc, setCurrentSrc] = useState('');
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [fallbackFailed, setFallbackFailed] = useState(false);
+  const [isResolving, setIsResolving] = useState(false);
+  const mountedRef = useRef(true);
 
   // Check if this is a map-related image
   const isMapImage = alt?.toLowerCase().includes('map') ||
     src?.toLowerCase().includes('map') ||
     caption?.toLowerCase().includes('map');
 
-  // Dynamic imagery fallbacks using reliable placeholder service
-  const getFallbackImage = (query: string) => {
-    const q = (query || 'abstract,minimal').trim().replace(/\s+/g, ',');
-    return `https://loremflickr.com/800/800/${encodeURIComponent(q)}?lock=${Math.floor(Math.random() * 100)}`;
-  };
+  const defaultFallback = fallbackSrc || getFallbackImage(isMapImage ? 'map visualization' : alt);
 
-  // Assign the optimized default fallback based on alt/caption text
-  const defaultFallback = getFallbackImage(isMapImage ? 'map visualization' : alt);
-
-  const [currentSrc, setCurrentSrc] = useState(src);
-  const [isZoomed, setIsZoomed] = useState(false);
-  const [fallbackFailed, setFallbackFailed] = useState(false);
-
+  // Resolve @img: sources on mount or src change
   useEffect(() => {
-    setCurrentSrc(src);
+    mountedRef.current = true;
     setIsLoading(true);
     setHasError(false);
     setFallbackFailed(false);
+
+    if (src?.startsWith('@img:')) {
+      setIsResolving(true);
+      resolveImageSrc(src).then((resolvedUrl) => {
+        if (mountedRef.current) {
+          setCurrentSrc(resolvedUrl);
+          setIsResolving(false);
+        }
+      });
+    } else {
+      setCurrentSrc(src);
+      setIsResolving(false);
+    }
+
+    return () => { mountedRef.current = false; };
   }, [src]);
 
   const handleLoad = () => {
@@ -91,7 +167,7 @@ const Image: React.FC<ImageProps> = ({
     // Switch to fallback source and restart loading state
     setIsLoading(true);
     setHasError(true);
-    setCurrentSrc(fallbackSrc || defaultFallback);
+    setCurrentSrc(defaultFallback);
     if (onError) onError();
   };
 
@@ -151,8 +227,8 @@ const Image: React.FC<ImageProps> = ({
         style={{ width, height: aspectRatio === 'auto' ? height : undefined }}
         onClick={handleClick}
       >
-        {/* Loading Skeleton */}
-        {isLoading && (
+        {/* Loading Skeleton — shows while resolving @img: or loading */}
+        {(isLoading || isResolving) && (
           <div className="absolute inset-0 bg-zinc-800/50 animate-pulse flex items-center justify-center">
             <svg
               className="w-12 h-12 text-zinc-600 animate-spin"
@@ -176,23 +252,25 @@ const Image: React.FC<ImageProps> = ({
           </div>
         )}
 
-        {/* Image */}
-        <img
-          src={currentSrc}
-          alt={alt}
-          loading={lazyLoad ? 'lazy' : 'eager'}
-          onLoad={handleLoad}
-          onError={handleError}
-          className={`
-            w-full h-full
-            ${objectFitClasses[objectFit]}
-            ${grayscale ? 'grayscale' : ''}
-            ${blur ? 'blur-sm' : ''}
-            ${zoom && !isZoomed ? 'transition-transform duration-300 hover:scale-105' : ''}
-            ${isLoading ? 'opacity-0' : 'opacity-100'}
-            transition-opacity duration-300
-          `.trim().replace(/\s+/g, ' ')}
-        />
+        {/* Image — only render once we have a resolved URL */}
+        {currentSrc && !isResolving && (
+          <img
+            src={currentSrc}
+            alt={alt}
+            loading={lazyLoad ? 'lazy' : 'eager'}
+            onLoad={handleLoad}
+            onError={handleError}
+            className={`
+              w-full h-full
+              ${objectFitClasses[objectFit]}
+              ${grayscale ? 'grayscale' : ''}
+              ${blur ? 'blur-sm' : ''}
+              ${zoom && !isZoomed ? 'transition-transform duration-300 hover:scale-105' : ''}
+              ${isLoading ? 'opacity-0' : 'opacity-100'}
+              transition-opacity duration-300
+            `.trim().replace(/\s+/g, ' ')}
+          />
+        )}
 
         {/* Overlay */}
         {overlay && (

@@ -92,15 +92,19 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
     return 'flex flex-col gap-4';
   };
 
-  // Build classes using design tokens
-  const surfaceClasses = tone
+  // Only apply elevation shadow for surfaces that have an actual fill (accent, glass, gradient).
+  // For transparent/default/elevated, shadow on a see-through card just creates a pale halo.
+  const surfaceClasses = getSurfaceClasses(variant, elevation);
+  const hasFill = !tone && (variant === 'accent' || variant === 'glass' || variant === 'gradient');
+  const shadowlessClasses = surfaceClasses.replace(/shadow-\[[^\]]+\]/g, '').replace(/hover:shadow-\[[^\]]+\]/g, '');
+  const cardClasses = tone
     ? getToneClasses(tone, emphasis)
-    : getSurfaceClasses(variant, elevation);
+    : (hasFill ? surfaceClasses : shadowlessClasses);
 
   return (
-    <div className={`${surfaceClasses} rounded-2xl p-6 transition-all duration-300 h-full flex flex-col`}>
+    <div className={`${cardClasses} rounded-2xl p-6 transition-all duration-300 h-full flex flex-col`}>
       {/* Header */}
-      <div className={`mb-6 pb-4 border-b ${isDarkSurface ? 'border-white/20' : 'border-zinc-100 dark:border-zinc-800'}`}>
+      <div className={`mb-6 pb-4 border-b ${isDarkSurface ? 'border-white/20' : 'border-white/20 dark:border-white/[0.07]'}`}>
         <h3 className={`text-lg font-display font-bold mb-1 leading-snug ${isDarkSurface ? 'text-white' : 'text-zinc-900 dark:text-white'}`}>
           {title}
         </h3>
@@ -118,7 +122,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
             key={index}
             className={`
               ${layout === 'horizontal' ? 'flex-1 min-w-[180px]' : ''}
-              ${layout === 'grid' ? 'p-4 rounded-xl bg-zinc-50/60 dark:bg-zinc-800/40 border border-zinc-100 dark:border-zinc-700/50 hover:scale-[1.02] transition-transform duration-200' : 'py-3'}
+              ${layout === 'grid' ? 'p-4 rounded-xl bg-white/[0.08] dark:bg-white/[0.03] border border-white/15 dark:border-white/[0.05] hover:scale-[1.02] transition-transform duration-200' : 'py-3'}
               group relative
             `}
           >
@@ -154,9 +158,9 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
               {item.change && (
                 <div className={`
                   flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ml-2 flex-shrink-0
-                  ${item.changeType === 'positive' ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400' : ''}
-                  ${item.changeType === 'negative' ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400' : ''}
-                  ${item.changeType === 'neutral' || !item.changeType ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400' : ''}
+                  ${item.changeType === 'positive' ? 'bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400' : ''}
+                  ${item.changeType === 'negative' ? 'bg-red-500/15 dark:bg-red-500/20 text-red-600 dark:text-red-400' : ''}
+                  ${item.changeType === 'neutral' || !item.changeType ? 'bg-zinc-500/10 dark:bg-white/[0.07] text-zinc-500 dark:text-zinc-400' : ''}
                 `}>
                   {getChangeIcon(item.changeType)}
                   <span>{safeStr(item.change)}</span>

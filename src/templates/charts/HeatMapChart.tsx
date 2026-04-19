@@ -1,5 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useAppStore } from '@/store/appStore';
+import { getSurfaceClasses } from '@/theme/designTokens';
+
+
+import type { SurfaceVariant, ElevationLevel } from '../core/types';
 
 interface HeatMapChartProps {
   /** Chart title */
@@ -39,6 +43,9 @@ interface HeatMapChartProps {
   /** Chart height */
   height?: number;
 
+
+  variant?: SurfaceVariant;
+  elevation?: ElevationLevel;
 }
 
 const HeatMapChart: React.FC<HeatMapChartProps> = ({
@@ -49,7 +56,8 @@ const HeatMapChart: React.FC<HeatMapChartProps> = ({
   series,
   visualMap,
   height = 300,
-}) => {
+  variant = 'transparent',
+  elevation = 'raised'}) => {
   // Detect dark mode
   const theme = useAppStore(state => state.theme);
   const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);

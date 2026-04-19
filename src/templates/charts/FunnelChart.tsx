@@ -1,6 +1,10 @@
 import React from 'react';
 import { Funnel, Tooltip, ResponsiveContainer, FunnelChart as RechartsFunnelChart, Cell, LabelList } from 'recharts';
 import { useAppStore } from '@/store/appStore';
+import { getSurfaceClasses , getChartColors} from '@/theme/designTokens';
+
+
+import type { SurfaceVariant, ElevationLevel , ChartPaletteType} from '../core/types';
 
 interface FunnelChartProps {
   title?: string;
@@ -12,33 +16,30 @@ interface FunnelChartProps {
   colors?: string[];
   legend?: boolean;
 
+
+  variant?: SurfaceVariant;
+  elevation?: ElevationLevel;
+
+  palette?: ChartPaletteType;
 }
 
 // Default color palette for funnel segments
-const DEFAULT_COLORS = [
-  '#8b5cf6', // violet
-  '#6366f1', // orange
-  '#3b82f6', // blue
-  '#06b6d4', // cyan
-  '#10b981', // emerald
-  '#22c55e', // green
-  '#eab308', // yellow
-  '#10B981', // emerald
-  '#ef4444', // red
-  '#ec4899', // pink
-];
+
 
 const FunnelChart: React.FC<FunnelChartProps> = ({
   title,
   description,
   data,
   height = 420,
-  colors = DEFAULT_COLORS,
+  
   legend = true,
-}) => {
+  variant = 'transparent',
+  elevation = 'raised',
+  palette = 'default'}) => {
   // Detect dark mode
   const theme = useAppStore(state => state.theme);
   const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const colors = getChartColors(palette);
   const textColor = isDarkMode ? '#D1D5DB' : '#374151';
   const secondaryText = isDarkMode ? '#9CA3AF' : '#6B7280';
 
@@ -133,10 +134,12 @@ const FunnelChart: React.FC<FunnelChartProps> = ({
         <RechartsFunnelChart data={labeledData} margin={{ top: 16, right: 64, bottom: 24, left: 60 }}>
           <Tooltip
             contentStyle={{
-              backgroundColor: isDarkMode ? '#1f2937' : '#ffffff',
-              border: `1px solid ${isDarkMode ? '#374151' : '#e5e7eb'}`,
-              borderRadius: '8px',
-              color: textColor,
+              backgroundColor: isDarkMode ? 'rgba(31, 41, 55, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(8px)',
+              border: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`,
+              borderRadius: '12px',
+              color: isDarkMode ? '#E5E7EB' : '#111827',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)'
             }}
             itemStyle={{ color: textColor }}
             labelStyle={{ color: secondaryText, fontWeight: 600 }}

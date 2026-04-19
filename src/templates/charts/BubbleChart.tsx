@@ -1,7 +1,8 @@
 import React from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
-import type { SurfaceVariant, ElevationLevel } from '../core/types';
+import type { SurfaceVariant, ElevationLevel , ChartPaletteType} from '../core/types';
 import { useAppStore } from '@/store/appStore';
+import { getSurfaceClasses , getChartColors} from '@/theme/designTokens';
 
 interface BubbleChartProps {
   /** Chart title */
@@ -27,6 +28,8 @@ interface BubbleChartProps {
 
   variant?: SurfaceVariant;
   elevation?: ElevationLevel;
+
+  palette?: ChartPaletteType;
 }
 
 const BubbleChart: React.FC<BubbleChartProps> = ({
@@ -37,7 +40,7 @@ const BubbleChart: React.FC<BubbleChartProps> = ({
   height = 400,
   variant = 'transparent',
   elevation = 'raised',
-}) => {
+  palette = 'default'}) => {
   // Detect dark mode (must be before any early returns)
   const theme = useAppStore(state => state.theme);
   const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
@@ -48,7 +51,7 @@ const BubbleChart: React.FC<BubbleChartProps> = ({
   // Validate
   if (!series || !Array.isArray(series) || series.length === 0) {
     return (
-      <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && (
           <h3 className="text-2xl font-display font-semibold text-zinc-900 dark:text-white mb-2">
             {title}
@@ -96,7 +99,7 @@ const BubbleChart: React.FC<BubbleChartProps> = ({
 
   if (transformedData.length === 0) {
     return (
-      <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {title && (
           <h3 className="text-2xl font-display font-semibold text-zinc-900 dark:text-white mb-2">
             {title}
@@ -135,7 +138,7 @@ const BubbleChart: React.FC<BubbleChartProps> = ({
   };
 
   return (
-    <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
       {/* Header */}
       {(title || description) && (
         <div className="mb-6">

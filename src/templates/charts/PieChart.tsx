@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { PieChart as MuiPieChart } from '@mui/x-charts/PieChart';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
 import { useAppStore } from '@/store/appStore';
+import { getSurfaceClasses } from '@/theme/designTokens';
 
 interface PieChartProps {
   /** Chart title */

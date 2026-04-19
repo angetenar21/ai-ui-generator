@@ -103,6 +103,16 @@ export const RenderNode: React.FC<{ spec: ComponentSpec, localData?: Record<stri
       'datepicker': 'date-picker',
       'datetimepicker': 'date-time-picker',
       'box': 'container',
+      'progress': 'circular-progress',
+      'radial-progress': 'circular-progress',
+      'progress-ring': 'circular-progress',
+      // Map aliases
+      'interactive-map': 'map',
+      'leaflet-map': 'map',
+      'location-map': 'map',
+      'geo-map': 'map',
+      'mapview': 'map',
+      'map-view': 'map',
     };
     const mapped = aliases[componentName.toLowerCase()];
     if (mapped) Component = registry.get(mapped);

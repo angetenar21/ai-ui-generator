@@ -5,7 +5,7 @@ import type { SurfaceVariant, ElevationLevel, EmphasisLevel, ToneVariant, Compon
 
 interface PanelProps {
   /** Panel header/title */
-  title: string;
+  title?: string;
 
   /** Panel content */
   content?: string;
@@ -66,14 +66,6 @@ const Panel: React.FC<PanelProps> = ({
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
   const displayContent = content || description;
 
-  if (!title) {
-    return (
-      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4">
-        <div className="text-zinc-500 dark:text-zinc-400 text-sm">Panel requires a title</div>
-      </div>
-    );
-  }
-
   // Build classes using design tokens
   const surfaceClasses = tone
     ? getToneClasses(tone, emphasis)
@@ -86,11 +78,12 @@ const Panel: React.FC<PanelProps> = ({
   return (
     <div className={`${surfaceClasses} rounded-2xl transition-all duration-300 hover:-translate-y-0.5 ${className || 'w-full'} max-w-full ${textColorClass} flex flex-col animate-slide-up`}>
       {/* Header */}
-      <div
+      {title && (
+        <div
         className={`
           px-6 py-5
-          ${headerVariant === 'default' && variant !== 'gradient' && variant !== 'accent' ? 'border-b border-zinc-100/80 dark:border-zinc-800/80' : ''}
-          ${collapsible && variant !== 'gradient' && variant !== 'accent' ? 'cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors' : ''}
+          ${headerVariant === 'default' && variant !== 'gradient' && variant !== 'accent' ? 'border-b border-white/20 dark:border-white/[0.07]' : ''}
+          ${collapsible && variant !== 'gradient' && variant !== 'accent' ? 'cursor-pointer hover:bg-white/10 dark:hover:bg-white/5 transition-colors' : ''}
           ${collapsible && (variant === 'gradient' || variant === 'accent') ? 'cursor-pointer transition-colors' : ''}
           rounded-t-2xl ${isCollapsed && !footer ? 'rounded-b-2xl' : ''}
         `}
@@ -116,6 +109,7 @@ const Panel: React.FC<PanelProps> = ({
           )}
         </div>
       </div>
+      )}
 
       {/* Content */}
       {!isCollapsed && (
@@ -145,7 +139,7 @@ const Panel: React.FC<PanelProps> = ({
 
           {/* Footer */}
           {footer && (
-            <div className={`px-5 py-3 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/30 rounded-b-2xl`}>
+            <div className={`px-5 py-3 border-t border-white/15 dark:border-white/[0.06] bg-white/15 dark:bg-white/[0.03] rounded-b-2xl`}>
               <div className={`${secondaryTextClass} text-xs`}>
                 {footer}
               </div>
@@ -166,7 +160,7 @@ export const metadata = {
   description: 'Panel container with header, content, optional footer, and collapsible functionality. Supports visual variants, elevation, emphasis, and semantic tones.',
   tags: ['panel', 'container', 'collapsible', 'accordion', 'section', 'card'],
   propTypes: {
-    title: 'string (required) - Panel header/title',
+    title: 'string - Optional Panel header/title',
     content: 'string - Main content text',
     footer: 'string - Optional footer content',
     collapsible: 'boolean - Make panel collapsible (default: false)',

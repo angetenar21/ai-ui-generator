@@ -2,6 +2,8 @@ import React, { useRef, useState, useEffect } from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
 import { useAppStore } from '@/store/appStore';
+import { getSurfaceClasses } from '@/theme/designTokens';
+import { getChartTheme, buildChartSx } from '../core/colorUtils';
 
 interface AreaChartProps {
   /** Chart title */
@@ -58,13 +60,21 @@ interface AreaChartProps {
 
   variant?: SurfaceVariant;
   elevation?: ElevationLevel;
+
+  /** Object-array format: [{month: "Jan", revenue: 42000, expenses: 38000}, ...] */
+  data?: Record<string, string | number>[];
+  xKey?: string;
+  seriesKeys?: string[];
 }
 
 const AreaChart: React.FC<AreaChartProps> = ({
   title,
   description,
-  xAxis,
-  series,
+  xAxis: xAxisProp,
+  series: seriesProp,
+  data: rawData,
+  xKey,
+  seriesKeys,
   width: propWidth,
   height: propHeight,
   grid = { horizontal: true, vertical: false },
@@ -75,17 +85,26 @@ const AreaChart: React.FC<AreaChartProps> = ({
   variant = 'transparent',
   elevation = 'raised',
 }) => {
-  // Detect dark mode (must be before any early returns)
+  // Object-array → MUI format transformer
+  let xAxis = xAxisProp;
+  let series = seriesProp;
+  if (rawData && Array.isArray(rawData) && rawData.length > 0 && xKey) {
+    const categories = rawData.map(row => String(row[xKey] ?? ''));
+    const numericKeys = seriesKeys
+      ? seriesKeys
+      : Object.keys(rawData[0]).filter(k => k !== xKey && typeof rawData[0][k] === 'number');
+    xAxis = [{ data: categories, scaleType: 'band' as const }];
+    series = numericKeys.map(key => ({
+      label: key,
+      data: rawData.map(row => (typeof row[key] === 'number' ? (row[key] as number) : 0)),
+    }));
+  }
+
   const theme = useAppStore(state => state.theme);
   const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  const chartColors = {
-    axisLine: isDarkMode ? '#6B7280' : '#9CA3AF',
-    axisTick: isDarkMode ? '#6B7280' : '#9CA3AF',
-    tickLabel: isDarkMode ? '#E5E7EB' : '#1F2937',
-    legendText: isDarkMode ? '#E5E7EB' : '#1F2937',
-    gridLine: isDarkMode ? '#374151' : '#E5E7EB',
-    areaOpacity: isDarkMode ? 0.35 : 0.28,
-  };
+  const ct = getChartTheme(isDarkMode);
+  const areaOpacity = isDarkMode ? 0.35 : 0.28;
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [chartSize, setChartSize] = useState({ width: propWidth || 500, height: propHeight ?? 320 });
 
@@ -129,7 +148,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
   if (!hasValidData) {
     console.warn('[AreaChart] No valid series data provided:', { series });
     return (
-      <div className={`bg-transparent border-transparent rounded-2xl p-6 transition-all duration-300`}>
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
         {(title || description) && (
           <div className="mb-6">
             {title && (
@@ -212,7 +231,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
   };
 
   return (
-    <div className="w-full h-full max-w-full min-w-0 bg-transparent dark:bg-transparent rounded-xl p-4 shadow-none border border-zinc-200 dark:border-zinc-700 overflow-x-auto flex flex-col">
+    <div className="w-full h-full max-w-full min-w-0 bg-transparent dark:bg-transparent rounded-xl p-4 shadow-none border border-white/25 dark:border-white/[0.07] overflow-x-auto flex flex-col">
       {/* Header */}
       {(title || description) && (
         <div className="mb-3 px-1">
@@ -251,75 +270,15 @@ const AreaChart: React.FC<AreaChartProps> = ({
                       }
                       : undefined,
                   }}
-                  sx={{
-                    '& .MuiChartsAxis-line': {
-                      stroke: 'currentColor',
-                      opacity: 0.2,
-                      strokeWidth: 1.5,
-                    },
-                    '& .MuiChartsAxis-tick': {
-                      stroke: 'currentColor',
-                      opacity: 0.2,
-                      strokeWidth: 1,
-                    },
-                    '& .MuiChartsAxis-tickLabel': {
-                      fill: 'currentColor',
-                      fontFamily: 'inherit',
-                      fontSize: '13px',
-                      fontWeight: 500,
-                    },
-                    '& .MuiLineElement-root': {
-                      strokeWidth: 2,
-                    },
-                    '& .MuiChartsLegend-root': {
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      flexWrap: 'wrap',
-                      gap: '10px',
-                    },
-                    '& .MuiChartsLegend-series': {
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                    },
-                    '& .MuiChartsLegend-series text': {
-                      fill: `${chartColors.legendText} !important`,
-                      fontFamily: 'inherit',
-                      fontSize: '12px',
-                      fontWeight: 500,
-                    },
-                    '& .MuiChartsLegend-mark': {
-                      rx: 2,
-                      width: '12px',
-                      height: '12px',
-                    },
-                    '& .MuiChartsGrid-line': {
-                      stroke: 'currentColor', 
-                      strokeDasharray: '4 4',
-                      opacity: 0.8,
-                    },
-                    '& .MuiAreaElement-root': {
-                      fillOpacity: chartColors.areaOpacity,
-                      // Create gradient opacity effect from top to bottom
-                      opacity: 1,
-                    },
-                    '& .MuiAreaElement-root[data-series-id="0"]': {
-                      fillOpacity: gradientOpacity[0],
-                    },
-                    '& .MuiAreaElement-root[data-series-id="1"]': {
-                      fillOpacity: Math.max(gradientOpacity[0] - 0.12, gradientOpacity[1]),
-                    },
-                    '& .MuiAreaElement-root[data-series-id="2"]': {
-                      fillOpacity: Math.max(gradientOpacity[0] - 0.24, gradientOpacity[1]),
-                    },
-                    '& .MuiAreaElement-root[data-series-id="3"]': {
-                      fillOpacity: Math.max(gradientOpacity[0] - 0.36, gradientOpacity[1]),
-                    },
-                    '& .MuiAreaElement-root[data-series-id="4"]': {
-                      fillOpacity: Math.max(gradientOpacity[0] - 0.48, gradientOpacity[1]),
-                    },
-                  }}
+                  sx={buildChartSx(ct, 0, {
+                    '& .MuiLineElement-root': { strokeWidth: 2 },
+                    '& .MuiAreaElement-root': { fillOpacity: areaOpacity, opacity: 1 },
+                    '& .MuiAreaElement-root[data-series-id="0"]': { fillOpacity: gradientOpacity[0] },
+                    '& .MuiAreaElement-root[data-series-id="1"]': { fillOpacity: Math.max(gradientOpacity[0] - 0.12, gradientOpacity[1]) },
+                    '& .MuiAreaElement-root[data-series-id="2"]': { fillOpacity: Math.max(gradientOpacity[0] - 0.24, gradientOpacity[1]) },
+                    '& .MuiAreaElement-root[data-series-id="3"]': { fillOpacity: Math.max(gradientOpacity[0] - 0.36, gradientOpacity[1]) },
+                    '& .MuiAreaElement-root[data-series-id="4"]': { fillOpacity: Math.max(gradientOpacity[0] - 0.48, gradientOpacity[1]) },
+                  })}
                 />
               );
             } catch (error) {

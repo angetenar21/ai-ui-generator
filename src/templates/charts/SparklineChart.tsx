@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 import type { SurfaceVariant, ElevationLevel } from '../core/types';
 import { useAppStore } from '@/store/appStore';
+import { getSurfaceClasses } from '@/theme/designTokens';
 
 interface SparklineChartProps {
   /** Chart title */
@@ -59,7 +60,8 @@ const SparklineChart: React.FC<SparklineChartProps> = ({
   value,
   trend,
   trendPositive = true,
-}) => {
+  variant = 'transparent',
+  elevation = 'raised'}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [chartWidth, setChartWidth] = useState(width);
 

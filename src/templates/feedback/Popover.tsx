@@ -59,33 +59,40 @@ const Popover: React.FC<PopoverProps> = ({
   };
 
   return (
-    <div className="card rounded-card p-6 my-4">
-      <div className="relative inline-block">
+    <div className="relative w-full overflow-hidden rounded-2xl min-h-[300px] border border-zinc-200 dark:border-zinc-800 flex items-center justify-center">
+      {/* Background overlay for Popover preview context */}
+      <div className="absolute inset-0">
+        <div className="w-full h-full bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-900 dark:to-zinc-800 opacity-80" />
+      </div>
+
+      <div className="relative inline-block z-10 w-fit h-fit">
         <button
           onClick={handleToggle}
-          className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition-colors"
+          className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-medium shadow-lg transition-transform active:scale-95 border border-orange-500"
         >
           {triggerLabel}
         </button>
 
         {visible && (
           <>
-            {/* Backdrop */}
+            {/* Popover Backdrop - Absolute bounded instead of fixed */}
+            {/* The backdrop needs to cover the entire simulated screen, so we walk up to the wrapper */}
+            {/* But purely absolute covers only the nearest relative parent, which in this case is the inline-block button wrapper unless we mount the backdrop outside. But since React portals aren't used here, we'll just allow click-away by making a massive absolute invisible plane. */}
             <div
-              className="fixed inset-0 z-[9998]"
+              className="fixed inset-0 z-[9998] cursor-default"
               onClick={() => setVisible(false)}
             />
 
             {/* Popover */}
             <div className={`absolute ${positionClasses[popoverPosition]} z-[9999]`}>
               <div
-                className="relative bg-white dark:bg-zinc-800 border border-zinc-200/60 dark:border-zinc-700 rounded-2xl shadow-xl px-4 py-3 max-w-[240px]"
+                className="relative bg-white dark:bg-zinc-800 border border-zinc-200/60 dark:border-zinc-700 rounded-2xl shadow-[0_16px_32px_-12px_rgba(0,0,0,0.5)] px-5 py-4 max-w-[240px] animate-slide-up"
                 onClick={handleContentClick}
               >
                 {title && (
-                  <h4 className="text-xs font-display font-bold text-zinc-900 dark:text-white mb-1.5 tracking-tight">{title}</h4>
+                  <h4 className="text-sm font-semibold text-zinc-900 dark:text-white mb-1.5 tracking-tight">{title}</h4>
                 )}
-                <div className="text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed whitespace-normal break-words">{popoverContent}</div>
+                <div className="text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed whitespace-normal break-words">{popoverContent}</div>
                 {arrow && (
                   <div className={`absolute ${arrowClasses[popoverPosition]} w-0 h-0`} />
                 )}

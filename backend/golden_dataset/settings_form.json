@@ -58,7 +58,7 @@
                               {
                                 "name": "avatar",
                                 "templateProps": {
-                                  "src": "https://i.pravatar.cc/150?u=5",
+                                  "src": "@img:avatar,portrait,person,professional",
                                   "size": "xl"
                                 }
                               },

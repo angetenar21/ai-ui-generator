@@ -16,25 +16,26 @@
 export type SurfaceVariant = 'default' | 'gradient' | 'accent' | 'glass' | 'elevated' | 'subtle' | 'transparent';
 
 export const surfaces: Record<SurfaceVariant, string> = {
-  // Default: Clean white surface with subtle ring highlight for depth
-  default: 'bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-800 ring-1 ring-black/[0.04] dark:ring-white/[0.04]',
+  // Default: Zero background — the page gradient IS the card background
+  default: 'bg-transparent border border-white/30 dark:border-white/[0.09]',
 
-  // Gradient: Rich warm gradient background for dashboard hero panels
-  gradient: 'bg-gradient-to-br from-orange-100 via-rose-50 to-pink-50/40 dark:from-emerald-950/40 dark:via-gray-900 dark:to-gray-900 border border-orange-200/50 dark:border-emerald-500/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] ring-1 ring-orange-200/20 dark:ring-emerald-500/10',
+  // Gradient: Warm tinted panel for hero / header sections — explicit styling
+  gradient: 'bg-gradient-to-br from-orange-50/90 via-rose-50/80 to-pink-50/70 dark:from-orange-950/60 dark:via-gray-900/80 dark:to-gray-900/90 border border-orange-200/50 dark:border-orange-500/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]',
 
-  // Accent: Vibrant orange border glow for primary KPI emphasis
-  accent: 'bg-white dark:bg-gray-900 border-2 border-orange-500 dark:border-emerald-400 shadow-[0_0_0_4px_rgba(249,115,22,0.08),0_4px_16px_rgba(249,115,22,0.15)] dark:shadow-[0_0_0_4px_rgba(16,185,129,0.15),0_4px_20px_rgba(16,185,129,0.4)]',
+  // Accent: The one surface that intentionally has a fill — orange border glow
+  // Needs backdrop so the orange border reads against any background
+  accent: 'bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl border-2 border-orange-500 dark:border-orange-400 shadow-[0_0_0_4px_rgba(249,115,22,0.08),0_4px_16px_rgba(249,115,22,0.12)] dark:shadow-[0_0_0_4px_rgba(249,115,22,0.12),0_4px_20px_rgba(249,115,22,0.25)]',
 
-  // Glass: Semi-transparent glassmorphism with warm inner glow
-  glass: 'bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl border border-white/40 dark:border-gray-800/40 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)] ring-1 ring-white/20 dark:ring-white/5',
+  // Glass: Explicit frosted glass — blur-heavy opt-in
+  glass: 'bg-white/40 dark:bg-gray-900/40 backdrop-blur-2xl border border-white/30 dark:border-white/[0.07] shadow-[inset_0_1px_0_rgba(255,255,255,0.5)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]',
 
-  // Elevated: Tinted background for section-level depth
-  elevated: 'bg-gray-50/80 dark:bg-gray-800/80 border border-gray-200/80 dark:border-gray-700 ring-1 ring-black/[0.02] dark:ring-white/[0.02]',
+  // Elevated: Zero background — border only, slightly more prominent than default
+  elevated: 'bg-transparent border border-white/25 dark:border-white/[0.07]',
 
-  // Subtle: Minimal visual weight
-  subtle: 'bg-transparent border border-gray-100 dark:border-gray-800',
+  // Subtle: Minimal visual weight — hairline border only
+  subtle: 'bg-transparent border border-white/15 dark:border-white/[0.05]',
 
-  // Transparent: No background or border, seamlessly integrates into parent container
+  // Transparent: Absolutely nothing — seamlessly merges with parent
   transparent: 'bg-transparent border-none shadow-none',
 };
 
@@ -312,10 +313,14 @@ export function getSurfaceClasses(
   variant: SurfaceVariant = 'default',
   elevationLevel: ElevationLevel = 'raised'
 ): string {
-  if (variant === 'transparent') {
-    return surfaces[variant];
+  // Guard against AI hallucinating unsupported variant/elevation values
+  const safeVariant: SurfaceVariant = surfaces[variant] ? variant : 'default';
+  const safeElevation: ElevationLevel = elevation[elevationLevel] ? elevationLevel : 'raised';
+
+  if (safeVariant === 'transparent') {
+    return surfaces[safeVariant];
   }
-  return `${surfaces[variant]} ${elevation[elevationLevel]}`;
+  return `${surfaces[safeVariant]} ${elevation[safeElevation]}`;
 }
 
 /**
@@ -325,8 +330,12 @@ export function getToneClasses(
   tone: ToneVariant = 'neutral',
   emphasisLevel: EmphasisLevel = 'medium'
 ): string {
-  const toneClasses = tones[tone];
-  const emphasisClasses = emphasis[emphasisLevel];
+  // Guard against AI hallucinating unsupported tone/emphasis values
+  const safeTone: ToneVariant = tones[tone] ? tone : 'neutral';
+  const safeEmphasis: EmphasisLevel = emphasis[emphasisLevel] ? emphasisLevel : 'medium';
+
+  const toneClasses = tones[safeTone];
+  const emphasisClasses = emphasis[safeEmphasis];
   return `${toneClasses.bg} ${toneClasses.border} ${toneClasses.text} ${emphasisClasses.border} ${emphasisClasses.scale}`;
 }
 
@@ -334,7 +343,8 @@ export function getToneClasses(
  * Gets chart colors for a specific palette
  */
 export function getChartColors(palette: ChartPaletteType = 'default'): string[] {
-  return chartPalettes[palette];
+  // Guard against unknown palette values
+  return chartPalettes[palette] || chartPalettes['default'];
 }
 
 /**

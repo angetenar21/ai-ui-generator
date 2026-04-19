@@ -53,9 +53,9 @@ const AppBar: React.FC<AppBarProps> = ({
   renderChild,
 }) => {
   const positionClasses = {
-    static: 'relative',
-    fixed: 'fixed top-0 left-0 right-0 z-50',
-    sticky: 'sticky top-0 z-40',
+    static: 'relative w-full rounded-2xl',
+    fixed: 'relative w-full rounded-2xl z-50 overflow-hidden',
+    sticky: 'relative w-full rounded-2xl z-40 overflow-hidden',
   };
 
   const variantClasses = {

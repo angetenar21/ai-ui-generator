@@ -29,6 +29,13 @@ const Avatar: React.FC<AvatarProps> = ({
   fallbackIcon = '👤',
   onClick,
 }) => {
+  // Normalize common AI size aliases to valid AvatarSize keys
+  const sizeAliases: Record<string, AvatarSize> = {
+    sm: 'small', md: 'medium', lg: 'large',
+    s: 'small', m: 'medium', l: 'large', x: 'xs',
+  };
+  const normalizedSize: AvatarSize =
+    sizeAliases[size as string] ?? ((['xs', 'small', 'medium', 'large', 'xl'].includes(size as string) ? size : 'medium') as AvatarSize);
   const sizeStyles: Record<AvatarSize, { container: string; text: string; status: string; badge: string }> = {
     xs: {
       container: 'w-6 h-6 text-xs',
@@ -91,7 +98,7 @@ const Avatar: React.FC<AvatarProps> = ({
       <div
         onClick={onClick}
         className={`
-          ${sizeStyles[size].container}
+          ${sizeStyles[normalizedSize].container}
           ${variantStyles[variant]}
           bg-gradient-to-br from-orange-600 to-purple-600
           flex items-center justify-center
@@ -108,11 +115,11 @@ const Avatar: React.FC<AvatarProps> = ({
             onError={() => setImageError(true)}
           />
         ) : name ? (
-          <span className={`${sizeStyles[size].text} font-semibold text-white`}>
+          <span className={`${sizeStyles[normalizedSize].text} font-semibold text-white`}>
             {getInitials(name)}
           </span>
         ) : (
-          <span className={`${sizeStyles[size].text}`}>{fallbackIcon}</span>
+          <span className={`${sizeStyles[normalizedSize].text}`}>{fallbackIcon}</span>
         )}
       </div>
 
@@ -120,7 +127,7 @@ const Avatar: React.FC<AvatarProps> = ({
         <span
           className={`
             absolute bottom-0 right-0
-            ${sizeStyles[size].status}
+            ${sizeStyles[normalizedSize].status}
             ${statusStyles[status]}
             rounded-full
             ring-2 ring-white dark:ring-zinc-800
@@ -132,7 +139,7 @@ const Avatar: React.FC<AvatarProps> = ({
         <span
           className={`
             absolute -top-1 -right-1
-            ${sizeStyles[size].badge}
+            ${sizeStyles[normalizedSize].badge}
             bg-red-600 text-white
             rounded-full
             flex items-center justify-center

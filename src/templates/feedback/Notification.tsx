@@ -94,7 +94,7 @@ const Notification: React.FC<NotificationProps> = ({
     },
   };
 
-  const config = typeConfig[notificationType];
+  const config = typeConfig[notificationType] || typeConfig['info'];
 
   // Always render inline for preview-safe display
   // (fixed positioning escapes the preview iframe/container, causing off-screen renders)
