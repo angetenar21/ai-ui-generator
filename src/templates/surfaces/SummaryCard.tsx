@@ -83,11 +83,13 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
 
   const getLayoutClasses = () => {
     if (layout === 'horizontal') {
-      return 'flex flex-wrap gap-6';
+      return 'flex flex-wrap gap-4 sm:gap-6';
     }
     if (layout === 'grid') {
-      const gridCols = columns === 2 ? 'grid-cols-2' : columns === 3 ? 'grid-cols-3' : 'grid-cols-4';
-      return `grid ${gridCols} gap-6`;
+      if (columns === 2) return 'grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6';
+      if (columns === 3) return 'grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6';
+      if (columns === 4) return 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6';
+      return 'grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6';
     }
     return 'flex flex-col gap-4';
   };

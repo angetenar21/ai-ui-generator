@@ -263,7 +263,7 @@ const InspectorPage: React.FC = () => {
   const jsonString = selectedComponent ? JSON.stringify(selectedComponent, null, 2) : '';
 
   return (
-    <div className="h-full w-full max-w-[1600px] mx-auto px-3 sm:px-4 md:px-8 pt-4 sm:pt-6 md:pt-8 pb-10 flex flex-col bg-transparent relative z-10">
+    <div className="h-full w-full max-w-page mx-auto px-3 sm:px-4 md:px-6 pt-4 sm:pt-6 md:pt-8 pb-10 flex flex-col bg-transparent relative z-10">
       {/* Header */}
       <div className="mb-6 pl-2">
         <div>

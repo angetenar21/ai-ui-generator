@@ -1,0 +1,103 @@
+{
+  "name": "stack",
+  "templateProps": {
+    "spacing": "large",
+    "children": [
+      {
+        "name": "panel",
+        "templateProps": {
+          "title": "Turn-by-Turn Navigation",
+          "variant": "elevated",
+          "elevation": "floating",
+          "children": [
+            {
+              "name": "flexbox",
+              "templateProps": {
+                "align": "start",
+                "justify": "between",
+                "className": "mb-6",
+                "children": [
+                  {
+                    "name": "stack",
+                    "templateProps": {
+                      "spacing": "none",
+                      "children": [
+                        { "name": "text", "templateProps": { "content": "Lake Tahoe Cabin", "variant": "heading-2" } },
+                        { "name": "text", "templateProps": { "content": "Fastest route, despite usual traffic. Tolls included.", "variant": "caption" } }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "flexbox",
+                    "templateProps": {
+                      "gap": "medium",
+                      "children": [
+                        { "name": "badge", "templateProps": { "label": "4 hr 12 min", "color": "green", "size": "large" } },
+                        { "name": "badge", "templateProps": { "label": "218 miles", "color": "blue", "size": "large" } }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "divider",
+              "templateProps": {}
+            },
+            {
+              "name": "stepper",
+              "templateProps": {
+                "orientation": "vertical",
+                "activeStep": 2,
+                "steps": [
+                  {
+                    "label": "Head north on US-101 N",
+                    "description": "2.4 miles",
+                    "status": "completed"
+                  },
+                  {
+                    "label": "Take exit 414B for I-80 E",
+                    "description": "Towards Oakland/Bay Bridge",
+                    "status": "completed"
+                  },
+                  {
+                    "label": "Keep left to stay on I-80 E",
+                    "description": "Pass through toll plaza ($7.00)",
+                    "status": "active"
+                  },
+                  {
+                    "label": "Merge onto US-50 E",
+                    "description": "Towards Sacramento/South Lake Tahoe",
+                    "status": "pending"
+                  },
+                  {
+                    "label": "Arrive at Destination",
+                    "description": "Your destination will be on the right",
+                    "status": "pending"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "flexbox",
+              "templateProps": {
+                "justify": "between",
+                "className": "mt-8 pt-4 border-t border-stone-200 dark:border-gray-700",
+                "children": [
+                  {
+                    "name": "button",
+                    "templateProps": { "label": "Exit Setup", "variant": "ghost" }
+                  },
+                  {
+                    "name": "button",
+                    "templateProps": { "label": "Start Navigation", "variant": "primary", "size": "large", "icon": "navigation" }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

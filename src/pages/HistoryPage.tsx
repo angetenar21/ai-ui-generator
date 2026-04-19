@@ -180,7 +180,7 @@ const HistoryPage: React.FC = () => {
   }, [threads, searchTerm]);
 
   return (
-    <div className="h-full w-full max-w-[1600px] mx-auto px-3 sm:px-4 md:px-8 pt-4 sm:pt-6 md:pt-8 pb-24 flex flex-col bg-transparent relative z-10 overflow-y-auto scrollbar-thin">
+    <div className="h-full w-full max-w-page mx-auto px-3 sm:px-4 md:px-6 pt-4 sm:pt-6 md:pt-8 pb-24 flex flex-col bg-transparent relative z-10 overflow-y-auto scrollbar-thin">
       {/* Header */}
       <div className="mb-4 sm:mb-6 md:mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4 pl-2">
         <div className="flex-1">

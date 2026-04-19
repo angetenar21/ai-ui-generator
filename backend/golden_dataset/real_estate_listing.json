@@ -1,0 +1,148 @@
+{
+  "name": "stack",
+  "templateProps": {
+    "spacing": "large",
+    "children": [
+      {
+        "name": "panel",
+        "templateProps": {
+          "title": "Luxury Penthouse in Downtown",
+          "variant": "elevated",
+          "elevation": "floating",
+          "children": [
+            {
+              "name": "grid",
+              "templateProps": {
+                "columns": { "xs": 1, "md": 2 },
+                "gap": "medium",
+                "children": [
+                  {
+                    "name": "image",
+                    "templateProps": {
+                      "src": "@img:luxury modern penthouse living room with city view, highly detailed, architectural photography",
+                      "alt": "Living Room",
+                      "height": 400,
+                      "objectFit": "cover"
+                    }
+                  },
+                  {
+                    "name": "stack",
+                    "templateProps": {
+                      "spacing": "medium",
+                      "children": [
+                        {
+                          "name": "text",
+                          "templateProps": {
+                            "content": "$2,450,000",
+                            "variant": "h2",
+                            "weight": "bold",
+                            "color": "primary"
+                          }
+                        },
+                        {
+                          "name": "text",
+                          "templateProps": {
+                            "content": "3 Beds • 3.5 Baths • 3,200 sqft",
+                            "variant": "h4",
+                            "color": "secondary"
+                          }
+                        },
+                        {
+                          "name": "text",
+                          "templateProps": {
+                            "content": "123 Skyline Boulevard, Apt 42A, Metropolis, NY 10001",
+                            "variant": "body",
+                            "color": "secondary"
+                          }
+                        },
+                        {
+                          "name": "flexbox",
+                          "templateProps": {
+                            "gap": "small",
+                            "children": [
+                              { "name": "badge", "templateProps": { "label": "New Construction", "color": "blue" } },
+                              { "name": "badge", "templateProps": { "label": "Pool", "color": "cyan" } },
+                              { "name": "badge", "templateProps": { "label": "Gym", "color": "orange" } }
+                            ]
+                          }
+                        },
+                        {
+                          "name": "panel",
+                          "templateProps": {
+                            "variant": "glass",
+                            "elevation": "raised",
+                            "children": [
+                              {
+                                "name": "flexbox",
+                                "templateProps": {
+                                  "align": "center",
+                                  "justify": "space-between",
+                                  "children": [
+                                    {
+                                      "name": "flexbox",
+                                      "templateProps": {
+                                        "align": "center",
+                                        "gap": "medium",
+                                        "children": [
+                                          {
+                                            "name": "avatar",
+                                            "templateProps": { "src": "@img:professional headshot of a female real estate agent", "alt": "Sarah Jenkins", "size": "large" }
+                                          },
+                                          {
+                                            "name": "stack",
+                                            "templateProps": {
+                                              "spacing": "xs",
+                                              "children": [
+                                                { "name": "text", "templateProps": { "content": "Sarah Jenkins", "weight": "bold", "variant": "body" } },
+                                                { "name": "text", "templateProps": { "content": "Premier Real Estate Group", "variant": "caption", "color": "secondary" } }
+                                              ]
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "name": "button",
+                                      "templateProps": { "label": "Contact Agent", "variant": "primary" }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "panel",
+        "templateProps": {
+          "title": "Property Details",
+          "variant": "default",
+          "elevation": "raised",
+          "children": [
+            {
+              "name": "grid",
+              "templateProps": {
+                "columns": { "xs": 2, "sm": 3, "md": 4 },
+                "gap": "large",
+                "children": [
+                  { "name": "summary-card", "templateProps": { "title": "Property Type", "items": [{ "label": "", "value": "Condo / Penthouse" }] } },
+                  { "name": "summary-card", "templateProps": { "title": "Year Built", "items": [{ "label": "", "value": "2024" }] } },
+                  { "name": "summary-card", "templateProps": { "title": "HOA Dues", "items": [{ "label": "", "value": "$1,200/mo" }] } },
+                  { "name": "summary-card", "templateProps": { "title": "Parking", "items": [{ "label": "", "value": "2 Spaces (Deeded)" }] } }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -29,7 +29,10 @@ const INTENT_KEYWORDS = {
   finance: ['finance', 'financial', 'revenue', 'sales', 'pipeline', 'deals', 'quota', 'forecast', 'profit', 'loss', 'margin', 'conversion', 'crm', 'rep performance', 'b2b', 'enterprise sales'],
   crypto: ['crypto', 'bitcoin', 'ethereum', 'blockchain', 'defi', 'wallet', 'portfolio', 'token', 'coin', 'trading', 'price', 'market cap', 'btc', 'eth', 'solana', 'exchange', 'hodl'],
   devops: ['devops', 'infrastructure', 'api', 'server', 'uptime', 'latency', 'error rate', 'incident', 'alert', 'monitoring', 'health check', 'deployment', 'sre', 'ops', 'observability', 'logs'],
-  fitness: ['fitness', 'health', 'workout', 'steps', 'calories', 'heart rate', 'sleep', 'exercise', 'run', 'gym', 'bpm', 'activity', 'tracker', 'wellness', 'nutrition', 'weight']
+  fitness: ['fitness', 'health', 'workout', 'steps', 'calories', 'heart rate', 'sleep', 'exercise', 'run', 'gym', 'bpm', 'activity', 'tracker', 'wellness', 'nutrition', 'weight'],
+  realestate: ['real estate', 'property', 'listing', 'home', 'apartment', 'house', 'rent', 'buy', 'mortgage', 'agent', 'broker', 'realtor', 'housing', 'zillow', 'estate'],
+  smarthome: ['smart home', 'iot', 'temperature', 'thermostat', 'lights', 'security camera', 'domotics', 'home automation', 'appliance', 'sensor'],
+  hr: ['hr', 'human resources', 'employee directory', 'org chart', 'recruitment', 'candidates', 'payroll', 'benefits', 'onboarding', 'offboarding', 'team directory']
 };
 
 export const INTENT_COMPONENTS = {
@@ -51,7 +54,10 @@ export const INTENT_COMPONENTS = {
   finance: ['panel', 'summary-card', 'area-chart', 'donut-chart', 'bar-chart', 'data-table', 'badge', 'grid', 'stack', 'sparkline-chart'],
   crypto:  ['panel', 'summary-card', 'area-chart', 'donut-chart', 'line-chart', 'data-table', 'badge', 'grid', 'stack', 'sparkline-chart'],
   devops:  ['panel', 'summary-card', 'area-chart', 'bar-chart', 'gauge-chart', 'data-table', 'badge', 'grid', 'stack', 'sparkline-chart'],
-  fitness: ['panel', 'summary-card', 'bar-chart', 'area-chart', 'donut-chart', 'gauge-chart', 'grid', 'stack', 'sparkline-chart', 'badge']
+  fitness: ['panel', 'summary-card', 'bar-chart', 'area-chart', 'donut-chart', 'gauge-chart', 'grid', 'stack', 'sparkline-chart', 'badge'],
+  realestate: ['panel', 'image', 'stack', 'grid', 'badge', 'button', 'text', 'avatar', 'summary-card'],
+  smarthome: ['panel', 'slider', 'switch', 'gauge-chart', 'grid', 'stack', 'badge', 'text', 'sparkline-chart'],
+  hr: ['data-table', 'panel', 'avatar', 'stack', 'grid', 'badge', 'text-field', 'select', 'button']
 };
 
 export function detectIntent(userMessage) {

@@ -1,0 +1,187 @@
+{
+  "name": "stack",
+  "templateProps": {
+    "spacing": "large",
+    "children": [
+      {
+        "name": "panel",
+        "templateProps": {
+          "title": "Smart Home Hub",
+          "variant": "gradient",
+          "elevation": "floating",
+          "emphasis": "high",
+          "children": [
+            {
+              "name": "grid",
+              "templateProps": {
+                "columns": { "xs": 1, "sm": 2, "lg": 4 },
+                "gap": "medium",
+                "children": [
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Indoor Climate",
+                      "variant": "glass",
+                      "elevation": "raised",
+                      "items": [
+                        { "label": "Living Room", "value": "72°F", "subtext": "Heating to 74°F" }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Security",
+                      "variant": "elevated",
+                      "elevation": "raised",
+                      "items": [
+                        { "label": "System Status", "value": "Armed", "change": "Secure", "changeType": "positive" }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Energy Usage",
+                      "variant": "elevated",
+                      "elevation": "raised",
+                      "items": [
+                        { "label": "Today", "value": "14.2 kWh", "change": "-5%", "changeType": "positive", "subtext": "vs Yesterday" }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Active Devices",
+                      "variant": "elevated",
+                      "elevation": "raised",
+                      "items": [
+                        { "label": "Online", "value": "12 / 14", "subtext": "2 Offline" }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "grid",
+        "templateProps": {
+          "columns": { "xs": 1, "md": 2 },
+          "gap": "large",
+          "children": [
+            {
+              "name": "panel",
+              "templateProps": {
+                "title": "Climate Control",
+                "variant": "default",
+                "elevation": "raised",
+                "children": [
+                  {
+                    "name": "stack",
+                    "templateProps": {
+                      "spacing": "medium",
+                      "children": [
+                        {
+                          "name": "flexbox",
+                          "templateProps": {
+                            "justify": "space-between",
+                            "align": "center",
+                            "children": [
+                              { "name": "text", "templateProps": { "content": "Living Room Target", "weight": "bold" } },
+                              { "name": "text", "templateProps": { "content": "74°F", "variant": "h3", "color": "primary" } }
+                            ]
+                          }
+                        },
+                        {
+                          "name": "slider",
+                          "templateProps": { "label": "Temperature Setting", "min": 60, "max": 85, "step": 1, "defaultValue": 74 }
+                        },
+                        {
+                          "name": "flexbox",
+                          "templateProps": {
+                            "gap": "medium",
+                            "children": [
+                              { "name": "button", "templateProps": { "label": "Cool", "variant": "ghost" } },
+                              { "name": "button", "templateProps": { "label": "Heat", "variant": "primary" } },
+                              { "name": "button", "templateProps": { "label": "Auto", "variant": "ghost" } }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "panel",
+              "templateProps": {
+                "title": "Lighting & Scenes",
+                "variant": "default",
+                "elevation": "raised",
+                "children": [
+                  {
+                    "name": "stack",
+                    "templateProps": {
+                      "spacing": "medium",
+                      "children": [
+                        {
+                          "name": "flexbox",
+                          "templateProps": {
+                            "justify": "space-between",
+                            "align": "center",
+                            "children": [
+                              { "name": "text", "templateProps": { "content": "Living Room Lights" } },
+                              { "name": "switch", "templateProps": { "defaultChecked": true } }
+                            ]
+                          }
+                        },
+                        {
+                          "name": "flexbox",
+                          "templateProps": {
+                            "justify": "space-between",
+                            "align": "center",
+                            "children": [
+                              { "name": "text", "templateProps": { "content": "Kitchen Island" } },
+                              { "name": "switch", "templateProps": { "defaultChecked": false } }
+                            ]
+                          }
+                        },
+                        {
+                          "name": "flexbox",
+                          "templateProps": {
+                            "justify": "space-between",
+                            "align": "center",
+                            "children": [
+                              { "name": "text", "templateProps": { "content": "Porch Lights" } },
+                              { "name": "switch", "templateProps": { "defaultChecked": true } }
+                            ]
+                          }
+                        },
+                        {
+                          "name": "grid",
+                          "templateProps": {
+                            "columns": 2,
+                            "gap": "small",
+                            "children": [
+                              { "name": "button", "templateProps": { "label": "Movie Mode", "variant": "outline", "fullWidth": true } },
+                              { "name": "button", "templateProps": { "label": "Goodnight", "variant": "outline", "fullWidth": true } }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

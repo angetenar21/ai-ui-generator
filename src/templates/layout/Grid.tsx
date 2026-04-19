@@ -100,13 +100,13 @@ const Grid: React.FC<GridProps> = ({
     // specific responsive behaviors for single number inputs
     switch (columns) {
       case 1: return 'grid-cols-1';
-      case 2: return 'grid-cols-1 sm:grid-cols-1 md:grid-cols-2';
-      case 3: return 'grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3';
-      case 4: return 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4';
+      case 2: return 'grid-cols-1 lg:grid-cols-2'; // switch to 2 cols later to avoid squeezing charts
+      case 3: return 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3';
+      case 4: return 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4';
       case 5: return 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5';
-      case 6: return 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6';
+      case 6: return 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6';
       case 12: return 'grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-12';
-      default: return 'grid-cols-1 md:grid-cols-2';
+      default: return 'grid-cols-1 lg:grid-cols-2';
     }
   };
 

@@ -7,7 +7,7 @@ import { useTheme } from './hooks/useTheme';
 
 // All pages are lazy-loaded — only downloaded when the user navigates to them.
 // This cuts the initial JS payload from ~761KB to ~150-200KB gzipped.
-const ChatPage     = React.lazy(() => import('./pages/ChatPage'));
+import ChatPage from './pages/ChatPage';
 const GalleryPage  = React.lazy(() => import('./pages/GalleryPage'));
 const InspectorPage = React.lazy(() => import('./pages/InspectorPage'));
 const HistoryPage  = React.lazy(() => import('./pages/HistoryPage'));
@@ -74,7 +74,7 @@ function App() {
       <Routes>
         <Route path="/auth" element={<AuthRoute><AuthPage /></AuthRoute>} />
         <Route path="/" element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
-          <Route index element={<Suspense fallback={<PageLoader />}><ChatPage /></Suspense>} />
+          <Route index element={<ChatPage />} />
           <Route path="gallery" element={<Suspense fallback={<PageLoader />}><GalleryPage /></Suspense>} />
           <Route path="inspector" element={<Suspense fallback={<PageLoader />}><InspectorPage /></Suspense>} />
           <Route path="history" element={<Suspense fallback={<PageLoader />}><HistoryPage /></Suspense>} />

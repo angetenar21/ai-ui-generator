@@ -1,0 +1,84 @@
+{
+  "name": "stack",
+  "templateProps": {
+    "spacing": "large",
+    "children": [
+      {
+        "name": "video",
+        "templateProps": {
+          "src": "@vid:cyberpunk,city,night,cinematic,4k",
+          "aspectRatio": "21:9",
+          "rounded": "xl",
+          "shadow": "2xl"
+        }
+      },
+      {
+        "name": "flexbox",
+        "templateProps": {
+          "justify": "between",
+          "align": "start",
+          "children": [
+            {
+              "name": "stack",
+              "templateProps": {
+                "spacing": "small",
+                "children": [
+                  { "name": "text", "templateProps": { "content": "Neon Echoes: A Look into Cybernetic Architecture", "variant": "heading-1" } },
+                  { "name": "text", "templateProps": { "content": "1.2M views · Premiered 2 hours ago", "variant": "caption" } }
+                ]
+              }
+            },
+            {
+              "name": "flexbox",
+              "templateProps": {
+                "gap": "small",
+                "children": [
+                  { "name": "button", "templateProps": { "icon": "thumbs-up", "label": "42K", "variant": "outline" } },
+                  { "name": "button", "templateProps": { "icon": "thumbs-down", "variant": "outline" } },
+                  { "name": "button", "templateProps": { "icon": "share", "label": "Share", "variant": "outline" } },
+                  { "name": "button", "templateProps": { "icon": "download", "label": "Download", "variant": "outline" } },
+                  { "name": "button", "templateProps": { "icon": "more-horizontal", "variant": "ghost" } }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "divider",
+        "templateProps": {}
+      },
+      {
+        "name": "grid",
+        "templateProps": {
+          "columns": { "xs": 1, "sm": 3 },
+          "gap": "large",
+          "children": [
+            {
+              "name": "summary-card",
+              "templateProps": {
+                "title": "Live Viewers",
+                "variant": "gradient",
+                "items": [{ "label": "Current", "value": "12,482" }, { "label": "Peak", "value": "15,100" }]
+              }
+            },
+            {
+              "name": "summary-card",
+              "templateProps": {
+                "title": "Audience Retention",
+                "items": [{ "label": "Average", "value": "78%" }, { "label": "vs Previous", "value": "+12%" }]
+              }
+            },
+            {
+              "name": "summary-card",
+              "templateProps": {
+                "title": "Monetization",
+                "items": [{ "label": "Est. Revenue", "value": "$1,420" }, { "label": "CPM", "value": "$8.40" }]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

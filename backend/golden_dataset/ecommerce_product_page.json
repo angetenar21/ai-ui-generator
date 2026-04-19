@@ -1,0 +1,148 @@
+{
+  "name": "stack",
+  "templateProps": {
+    "spacing": "large",
+    "children": [
+      {
+        "name": "panel",
+        "templateProps": {
+          "variant": "default",
+          "elevation": "floating",
+          "headerVariant": "minimal",
+          "children": [
+            {
+              "name": "grid",
+              "templateProps": {
+                "columns": { "xs": 1, "md": 2 },
+                "gap": "xlarge",
+                "children": [
+                  {
+                    "name": "stack",
+                    "templateProps": {
+                      "spacing": "medium",
+                      "children": [
+                        {
+                          "name": "image",
+                          "templateProps": {
+                            "src": "@img:minimalist high end mechanical keyboard, studio lighting, product photography",
+                            "alt": "Mechanical Keyboard",
+                            "height": 500,
+                            "objectFit": "cover",
+                            "borderRadius": "large"
+                          }
+                        },
+                        {
+                          "name": "grid",
+                          "templateProps": {
+                            "columns": 4,
+                            "gap": "small",
+                            "children": [
+                              { "name": "image", "templateProps": { "src": "@img:mechanical keyboard keycaps close up", "height": 100, "objectFit": "cover" } },
+                              { "name": "image", "templateProps": { "src": "@img:mechanical keyboard switches close up", "height": 100, "objectFit": "cover" } },
+                              { "name": "image", "templateProps": { "src": "@img:mechanical keyboard side profile", "height": 100, "objectFit": "cover" } },
+                              { "name": "image", "templateProps": { "src": "@img:mechanical keyboard angled view", "height": 100, "objectFit": "cover" } }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "stack",
+                    "templateProps": {
+                      "spacing": "large",
+                      "children": [
+                        {
+                          "name": "stack",
+                          "templateProps": {
+                            "spacing": "small",
+                            "children": [
+                              { "name": "badge", "templateProps": { "label": "Best Seller", "color": "orange" } },
+                              { "name": "text", "templateProps": { "content": "K75 Pro Mechanical Keyboard", "variant": "h2", "weight": "bold" } },
+                              { "name": "text", "templateProps": { "content": "Premium 75% hot-swappable mechanical keyboard with tri-mode connectivity, RGB backlight, and pre-lubed silent switches.", "variant": "body", "color": "secondary" } },
+                              {
+                                "name": "flexbox",
+                                "templateProps": {
+                                  "align": "center",
+                                  "gap": "small",
+                                  "children": [
+                                    { "name": "text", "templateProps": { "content": "$149.99", "variant": "h3", "color": "primary" } },
+                                    { "name": "text", "templateProps": { "content": "$189.99", "variant": "body", "color": "secondary", "style": { "textDecoration": "line-through" } } }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "name": "stack",
+                          "templateProps": {
+                            "spacing": "medium",
+                            "children": [
+                              {
+                                "name": "select",
+                                "templateProps": {
+                                  "label": "Switch Type",
+                                  "options": [
+                                    { "label": "Linear (Red)", "value": "red" },
+                                    { "label": "Tactile (Brown)", "value": "brown" },
+                                    { "label": "Clicky (Blue)", "value": "blue" }
+                                  ]
+                                }
+                              },
+                              {
+                                "name": "select",
+                                "templateProps": {
+                                  "label": "Color",
+                                  "options": [
+                                    { "label": "Midnight Black", "value": "black" },
+                                    { "label": "Polar White", "value": "white" }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "name": "flexbox",
+                          "templateProps": {
+                            "gap": "medium",
+                            "children": [
+                              { "name": "button", "templateProps": { "label": "Add to Cart", "variant": "primary", "fullWidth": true } },
+                              { "name": "button", "templateProps": { "label": "Buy Now", "variant": "outline", "fullWidth": true } }
+                            ]
+                          }
+                        },
+                        {
+                          "name": "panel",
+                          "templateProps": {
+                            "variant": "glass",
+                            "elevation": "raised",
+                            "headerVariant": "minimal",
+                            "children": [
+                              {
+                                "name": "stack",
+                                "templateProps": {
+                                  "spacing": "small",
+                                  "children": [
+                                    { "name": "text", "templateProps": { "content": "✓ Free standard shipping on orders over $100" } },
+                                    { "name": "text", "templateProps": { "content": "✓ 30-day money-back guarantee" } },
+                                    { "name": "text", "templateProps": { "content": "✓ 1-year limited warranty" } }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
