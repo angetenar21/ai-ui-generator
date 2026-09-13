@@ -20,7 +20,7 @@ dotenv.config({ path: path.join(__dirname_temp, '../.env'), override: true }); /
 Logger.info('Backend server initializing...');
 
 const APP_PORT = Number(process.env.BACKEND_PORT || 4000);
-const GROQ_MODEL = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
+const GROQ_MODEL = process.env.GROQ_MODEL || 'qwen/qwen3.8-27b';
 const GROQ_API_KEY = process.env.GROQ_API_KEY || '';
 
 // Keep legacy variable names so the rest of the code that logs them still works
