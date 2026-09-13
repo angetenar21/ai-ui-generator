@@ -786,7 +786,12 @@ const ChatPage: React.FC = () => {
                           </div>
                         ) : (
                           <div
-                            className="w-full relative mt-2"
+                            className="w-full relative mt-2 rounded-xl overflow-hidden shadow-sm border border-stone-100 dark:border-stone-800"
+                            style={{ 
+                              // Scale down the generated component so it looks like a preview widget
+                              zoom: 0.8,
+                              transformOrigin: 'top left' 
+                            }}
                           >
                             <ErrorBoundary fallbackTitle="AI Component Error">
                               <ResponsiveComponentWrapper alignLeft={true} spec={message.content as ComponentSpec}>
