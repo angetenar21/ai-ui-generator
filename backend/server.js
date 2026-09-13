@@ -737,10 +737,9 @@ async function callGemini(userMessage, context = '', signal) {
         maxOutputTokens: 16384,
         topP: 0.85,
         topK: 20,
-        // gemini-2.5-* models spend output budget on hidden "thinking" tokens by default,
-        // which can return `parts: []` with finishReason=MAX_TOKENS. Disable thinking so the
-        // full budget goes to actual output / tool calls.
-        thinkingConfig: { thinkingBudget: 0 },
+        // thinkingConfig is only supported on gemini-2.5-* models.
+        // Gemini 3.x and others reject it with a 400 INVALID_ARGUMENT error.
+        ...(GEMINI_MODEL.startsWith('gemini-2.5') ? { thinkingConfig: { thinkingBudget: 0 } } : {}),
       },
     };
 
@@ -1902,10 +1901,9 @@ app.post('/api/agent/stream', requireAuth, async (req, res) => {
         maxOutputTokens: 16384,
         topP: 0.85,
         topK: 20,
-        // Disable thinking so the full output budget goes to actual text tokens.
-        // Without this, Gemini 2.5 spends 5-10s on silent reasoning before
-        // emitting any text, causing an unnecessarily long skeleton phase.
-        thinkingConfig: { thinkingBudget: 0 },
+        // thinkingConfig is only supported on gemini-2.5-* models.
+        // Gemini 3.x and others reject it with a 400 INVALID_ARGUMENT error.
+        ...(GEMINI_MODEL.startsWith('gemini-2.5') ? { thinkingConfig: { thinkingBudget: 0 } } : {}),
       },
     };
 
