@@ -20,12 +20,12 @@ dotenv.config({ path: path.join(__dirname_temp, '../.env'), override: true }); /
 Logger.info('Backend server initializing...');
 
 const APP_PORT = Number(process.env.BACKEND_PORT || 4000);
-const GROQ_MODEL = process.env.GROQ_MODEL || 'qwen/qwen3.8-27b';
-const GROQ_API_KEY = process.env.GROQ_API_KEY || '';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.5-flash';
+// Convert comma-separated string to array, remove empties, and trim spaces
+const rawApiKeys = process.env.GEMINI_API_KEYS || process.env.GEMINI_API_KEY || '';
+const API_KEYS_POOL = rawApiKeys.split(',').map(k => k.trim()).filter(Boolean);
 
-// Keep legacy variable names so the rest of the code that logs them still works
-const GEMINI_MODEL = GROQ_MODEL;
-const API_KEYS_POOL = GROQ_API_KEY ? [GROQ_API_KEY] : [];
+let currentKeyIndex = 0; // State variable to track the current active key in the pool
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const schemaPath = path.join(__dirname, 'docs', 'component-library-schema.json');
@@ -563,20 +563,16 @@ function executeToolCall(toolCall) {
 }
 
 function buildGeminiRequestConfig() {
-  const currentKey = GROQ_API_KEY;
+  const currentKey = API_KEYS_POOL[currentKeyIndex];
   const hasApiKey = Boolean(currentKey);
 
   if (!hasApiKey) {
-    Logger.error('No Groq API key provided');
-    throw new Error('Groq API key is required. Set GROQ_API_KEY in .env.');
+    Logger.error('No Gemini API key provided');
+    throw new Error('Gemini API key is required. Set GEMINI_API_KEY (or comma-separated GEMINI_API_KEYS) in .env.');
   }
 
-  const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${currentKey}`,
-  };
-  // Groq uses OpenAI-compatible chat completions endpoint
-  const endpoint = `https://api.groq.com/openai/v1/chat/completions`;
+  const headers = { 'Content-Type': 'application/json' };
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${currentKey}`;
 
   return { endpoint, headers, hasApiKey, currentKey };
 }
@@ -629,35 +625,53 @@ function scoreOutputSpec(rawText) {
   return issues;
 }
 
-
 async function callGemini(userMessage, context = '', signal) {
   const config = buildGeminiRequestConfig();
-  const { endpoint, headers } = config;
+
+  let { endpoint, headers } = config;
 
   // Track the last validated spec as a fallback
   let lastValidatedSpec = null;
 
-  // Build OpenAI-compatible messages array
-  // System prompt goes in the 'system' role
-  const messages = [
-    { role: 'system', content: SYSTEM_PROMPT },
+  // Build conversation history
+  const contents = [
+    {
+      role: 'user',
+      parts: [{ text: SYSTEM_PROMPT }],
+    },
+    {
+      role: 'model',
+      parts: [{ text: 'I understand. I will use the tools to discover components, get their schemas, build the JSON response, and validate it before returning.' }],
+    },
   ];
 
   // Add context if provided
   if (context) {
-    messages.push({ role: 'user', content: `Context: ${context}` });
-    messages.push({ role: 'assistant', content: 'Understood. I will use this context when building the component.' });
+    contents.push({
+      role: 'user',
+      parts: [{ text: `Context: ${context}` }],
+    });
   }
 
   // ── IMPROVEMENT 1: Dynamic Few-Shot Injection ────────────────────────────
+  // Inject a golden example before the user message so Gemini has a concrete
+  // pattern to follow, not just abstract rules.
   const fewShotPrompt = await getFewShotForMessage(userMessage, config);
   if (fewShotPrompt) {
-    messages.push({ role: 'user', content: fewShotPrompt });
-    messages.push({ role: 'assistant', content: 'Understood. I have studied this golden example and will apply the same design quality.' });
+    contents.push({
+      role: 'user',
+      parts: [{ text: fewShotPrompt }],
+    });
+    contents.push({
+      role: 'model',
+      parts: [{ text: 'Understood. I have studied this golden example and will apply the same quality: gradient hero, varied variants, proper elevation hierarchy, and visual contrast. I will NOT copy the example literally but follow its design standard.' }],
+    });
     Logger.info('[FewShot] Injected golden example for intent', { intent: userMessage.substring(0, 60) });
   }
 
   // ── IMPROVEMENT 2: Component-Scoped Retrieval ────────────────────────────
+  // Pre-load relevant component schemas based on detected intent so Gemini
+  // has focused context without wasting token budget on irrelevant components.
   const relevantComponentNames = getRelevantComponents(userMessage);
   if (relevantComponentNames && relevantComponentNames.length > 0) {
     const scopedSchemas = {};
@@ -665,49 +679,69 @@ async function callGemini(userMessage, context = '', signal) {
       if (components[name]) scopedSchemas[name] = components[name];
     }
     if (Object.keys(scopedSchemas).length > 0) {
-      messages.push({
+      contents.push({
         role: 'user',
-        content: `## PRE-LOADED COMPONENT SCHEMAS\n\nI have pre-loaded the schemas for the components most likely needed for this request:\n\n${JSON.stringify(scopedSchemas, null, 2)}\n\nYou may call get_component_schema for any additional components you need.`,
+        parts: [{ text: `## PRE-LOADED COMPONENT SCHEMAS\n\nI have pre-loaded the schemas for the components most likely needed for this request:\n\n${JSON.stringify(scopedSchemas, null, 2)}\n\nYou may call get_component_schema for any additional components you need.` }],
       });
-      messages.push({ role: 'assistant', content: 'Thank you. I have the component schemas and will use them.' });
+      contents.push({
+        role: 'model',
+        parts: [{ text: 'Thank you. I have the component schemas. I will use these along with any additional schemas I need.' }],
+      });
       Logger.info('[ScopedRetrieval] Pre-loaded schemas', { components: relevantComponentNames });
     }
   }
 
   // Add user message
-  messages.push({ role: 'user', content: userMessage });
+  contents.push({
+    role: 'user',
+    parts: [{ text: userMessage }],
+  });
 
-  // Convert Gemini-style tool declarations to OpenAI tool format
-  const toolDecls = getToolDeclarations();
-  const tools = toolDecls.map(decl => ({
-    type: 'function',
-    function: {
-      name: decl.name,
-      description: decl.description,
-      parameters: decl.parameters,
+  const tools = [{
+    functionDeclarations: getToolDeclarations(),
+  }];
+
+  // Configure tool calling mode to ensure proper function calling
+  const toolConfig = {
+    functionCallingConfig: {
+      mode: 'AUTO', // Let model decide when to use functions
     },
-  }));
+  };
 
-  Logger.geminiRequest(GROQ_MODEL, userMessage, context);
+  Logger.geminiRequest(GEMINI_MODEL, userMessage, context);
 
-  let maxIterations = 16;
+  // Function calling loop - balanced for reliability and speed
+  // Most requests should complete in 3-5 iterations:
+  // 1. get_components (optional for modifications)
+  // 2. get_component_schema (batch call)
+  // 3. validate (once)
+  // 4-5. Fix validation errors if needed
+  // Complex layouts with sidebars, toggles, and multiple sections may need more iterations
+  let maxIterations = 16; // Increased for complex layouts with sidebars and nested components
   let iterations = 0;
+  let delay = 1000;
   let emptyResponseRetries = 0;
   const MAX_EMPTY_RESPONSE_RETRIES = 2;
 
-  Logger.info(`Starting Groq tool-calling loop (maxIterations: ${maxIterations})`);
+  Logger.info(`Starting Gemini tool-calling loop (maxIterations: ${maxIterations})`);
 
   while (iterations < maxIterations) {
     iterations++;
 
     const body = {
-      model: GROQ_MODEL,
-      messages,
+      contents,
       tools,
-      tool_choice: 'auto',
-      temperature: 0.3,
-      max_tokens: 16384,
-      top_p: 0.85,
+      toolConfig,
+      generationConfig: {
+        temperature: 0.3,
+        maxOutputTokens: 16384,
+        topP: 0.85,
+        topK: 20,
+        // gemini-2.5-* models spend output budget on hidden "thinking" tokens by default,
+        // which can return `parts: []` with finishReason=MAX_TOKENS. Disable thinking so the
+        // full budget goes to actual output / tool calls.
+        thinkingConfig: { thinkingBudget: 0 },
+      },
     };
 
     let response;
@@ -719,8 +753,8 @@ async function callGemini(userMessage, context = '', signal) {
         signal,
       });
     } catch (err) {
-      Logger.error('Network error while calling Groq', { error: err?.message ?? err });
-      throw new Error('Network error while calling Groq');
+      Logger.error('Network error while calling Gemini', { error: err?.message ?? err });
+      throw new Error('Network error while calling Gemini');
     }
 
     let data;
@@ -728,142 +762,293 @@ async function callGemini(userMessage, context = '', signal) {
       data = await response.json();
     } catch (err) {
       const text = await response.text().catch(() => '<unreadable body>');
-      Logger.error('Failed to parse JSON response from Groq', {
+      Logger.error('Failed to parse JSON response from Gemini', {
         status: response.status,
         bodyText: text,
       });
-      throw new Error(`Invalid JSON response from Groq (status ${response.status})`);
+      throw new Error(`Invalid JSON response from Gemini (status ${response.status})`);
     }
 
     if (!response.ok) {
       const errorMessage = data?.error?.message || `HTTP ${response.status}`;
-      Logger.error('Groq API error', { status: response.status, error: errorMessage });
+      const errorObj = data?.error || {};
+      Logger.geminiError(GEMINI_MODEL, new Error(errorMessage), data);
 
-      if (response.status === 429) {
-        throw new Error(`Groq API rate limit exceeded. Please try again later.`);
+      // Handle key exhaustion/rotation
+      if (
+        errorObj.code === 429 &&
+        errorObj.status === 'RESOURCE_EXHAUSTED' &&
+        API_KEYS_POOL.length > 1 &&
+        config.hasApiKey
+      ) {
+        if (!config.keyRotationsThisRequest) config.keyRotationsThisRequest = 0;
+
+        if (config.keyRotationsThisRequest < API_KEYS_POOL.length) {
+          // Depletion happens across keys when pooling, quickly swap to next!
+          currentKeyIndex = (currentKeyIndex + 1) % API_KEYS_POOL.length;
+          Logger.warn(`API Key depleted/rate limited! Rotating to key index ${currentKeyIndex}/${API_KEYS_POOL.length - 1} and retrying...`);
+
+          // Re-build config so the endpoint picks up the new currentKeyIndex
+          const oldRotations = config.keyRotationsThisRequest;
+          const nextConfig = buildGeminiRequestConfig();
+          nextConfig.keyRotationsThisRequest = oldRotations + 1;
+          endpoint = nextConfig.endpoint;
+          headers = nextConfig.headers;
+          Object.assign(config, nextConfig);
+
+          // Reset delay so we don't punish UX for back-end rotation
+          delay = 1000;
+          continue;
+        } else {
+          Logger.error('All API keys in the pool are depleted!');
+        }
       }
-      throw new Error(`Groq API error: ${errorMessage}`);
+
+      // Check for API key issues
+      if (response.status === 400 && errorMessage.includes('API key')) {
+        throw new Error(`Gemini API key error: ${errorMessage}. Please check your GEMINI_API_KEY in .env file.`);
+      }
+
+      // Check for quota/rate limit issues
+      if (response.status === 429) {
+        throw new Error(`Gemini API rate limit exceeded. Please try again later.`);
+      }
+
+      throw new Error(`Gemini API error: ${errorMessage}`);
     }
 
-    const choice = data?.choices?.[0];
-    if (!choice) {
-      Logger.error('Groq response missing choice', { fullResponse: data });
-      throw new Error('Groq response missing choice');
+    const candidate = data?.candidates?.[0];
+    if (!candidate) {
+      Logger.error('Gemini response missing candidate', { fullResponse: data });
+
+      // Check if content was blocked by safety filters
+      if (data?.promptFeedback?.blockReason) {
+        throw new Error(`Content blocked by safety filters: ${data.promptFeedback.blockReason}. Please rephrase your request.`);
+      }
+
+      throw new Error('Gemini response missing candidate');
     }
 
-    const assistantMessage = choice.message;
-    const finishReason = choice.finish_reason;
-    const toolCalls = assistantMessage?.tool_calls || [];
-    const textContent = assistantMessage?.content || '';
+    // Check for blocked content
+    if (candidate.finishReason === 'SAFETY' || candidate.finishReason === 'RECITATION') {
+      Logger.warn('Content blocked by Gemini safety filters', {
+        finishReason: candidate.finishReason,
+        safetyRatings: candidate.safetyRatings
+      });
+      throw new Error(`Content blocked: ${candidate.finishReason}. Please rephrase your request to avoid triggering safety filters.`);
+    }
 
-    // Empty response guard
-    if (!textContent && toolCalls.length === 0) {
-      emptyResponseRetries++;
-      Logger.warn('Groq returned an empty response. Prompting for retry.', {
-        iterationCount: iterations,
-        emptyResponseRetries,
-        finishReason,
+    // Check for malformed function call
+    if (candidate.finishReason === 'MALFORMED_FUNCTION_CALL') {
+      Logger.warn('Gemini generated malformed function call', {
+        finishReason: candidate.finishReason,
+        finishMessage: candidate.finishMessage,
+        iterationCount: iterations
       });
 
-      if (finishReason === 'length') {
+      // Check if it's trying to use Python syntax
+      const isPythonSyntax = candidate.finishMessage && (
+        candidate.finishMessage.includes('print(') ||
+        candidate.finishMessage.includes('default_api.') ||
+        candidate.finishMessage.includes('spec =') ||
+        candidate.finishMessage.includes('def ') ||
+        candidate.finishMessage.includes('import ')
+      );
+
+      // Send specific error feedback to Gemini to retry with correct format
+      contents.push({
+        role: 'model',
+        parts: [{ text: 'MALFORMED_FUNCTION_CALL' }]
+      });
+      contents.push({
+        role: 'user',
+        parts: [{
+          text: isPythonSyntax
+            ? `CRITICAL ERROR: You are using Python code syntax which is COMPLETELY WRONG.
+
+THIS IS NOT A PYTHON ENVIRONMENT. You must use the native Gemini function calling interface.
+
+❌ WRONG SYNTAX (Python):
+❌ print(default_api.validate_component(spec = {...}))
+❌ spec = {"name": "stack", ...}
+❌ result = default_api.get_component_schema(...)
+❌ Any Python code: import, def, print, etc.
+
+✅ CORRECT SYNTAX (Gemini function calling):
+Request functions by name in the function call section. Do NOT write code.
+
+The system will automatically execute the tool and return the result.
+
+RESUME YOUR RESPONSE using the correct function calling format. Do NOT repeat this error.`
+            : `ERROR: Malformed function call detected at iteration ${iterations}.
+
+The function declaration is not properly formatted. Ensure:
+- All JSON is properly formatted with double quotes
+- No trailing commas
+- Proper nesting of objects and arrays
+- No Python syntax (print, def, import, etc.)
+- Use only the native function calling interface
+
+RESTART and use the correct format for function calls.`
+        }]
+      });
+      continue; // Try again in next iteration
+    }
+
+    // Check for function calls
+    const parts = candidate.content?.parts || [];
+    const functionCalls = parts.filter(part => part.functionCall);
+
+    const isCompletelyEmptyText = parts.length === 1 && parts[0].text && !parts[0].text.trim();
+
+    if (parts.length === 0 || isCompletelyEmptyText) {
+      emptyResponseRetries++;
+      Logger.warn('Gemini returned an empty response. Prompting for retry.', {
+        iterationCount: iterations,
+        isCompletelyEmptyText,
+        emptyResponseRetries,
+        finishReason: candidate.finishReason,
+        finishMessage: candidate.finishMessage,
+        usageMetadata: data?.usageMetadata,
+      });
+
+      // If thinking/output exhausted the token budget, retrying won't help — abort fast.
+      if (candidate.finishReason === 'MAX_TOKENS') {
         if (lastValidatedSpec) return JSON.stringify(lastValidatedSpec, null, 2);
-        throw new Error('Groq hit max_tokens with no usable output. Try reducing complexity.');
+        throw new Error(
+          `Gemini hit MAX_TOKENS with no usable output. ` +
+          `Thinking tokens: ${data?.usageMetadata?.thoughtsTokenCount ?? 'n/a'}, ` +
+          `candidates tokens: ${data?.usageMetadata?.candidatesTokenCount ?? 'n/a'}. ` +
+          `Either increase maxOutputTokens or lower thinkingBudget.`
+        );
       }
 
       if (emptyResponseRetries > MAX_EMPTY_RESPONSE_RETRIES) {
         if (lastValidatedSpec) {
-          Logger.warn('Too many empty responses, returning last validated spec', { emptyResponseRetries });
+          Logger.warn('Too many empty responses, returning last validated spec', {
+            emptyResponseRetries,
+          });
           return JSON.stringify(lastValidatedSpec, null, 2);
         }
-        throw new Error(`Groq returned empty responses ${emptyResponseRetries} times. Aborting.`);
+        throw new Error(`Gemini returned empty responses ${emptyResponseRetries} times in a row. Aborting to avoid burning API quota.`);
       }
 
-      messages.push({ role: 'assistant', content: '' });
-      messages.push({
+      // CRITICAL: Do NOT push candidate.content to contents if it's completely empty.
+      // Doing so breaks Gemini's chat history constraints and locks it in an empty-response loop.
+      contents.push({
         role: 'user',
-        content: 'Your last response was completely empty. You MUST either call a tool (validate_component, get_components, get_component_schema) or return the final JSON component.',
+        parts: [{
+          text: 'Your last response was completely empty. You MUST either call a function (validate_component, get_components, get_component_schema) or return the final JSON component.'
+        }]
       });
       continue;
     }
 
-    // Add assistant message to conversation history
-    messages.push(assistantMessage);
+    // Add model's valid response to conversation
+    contents.push(candidate.content);
 
-    if (toolCalls.length > 0) {
-      // Execute all tool calls and add their results
-      const toolMessages = [];
-      for (const toolCall of toolCalls) {
-        let args;
-        try {
-          args = JSON.parse(toolCall.function.arguments);
-        } catch {
-          args = {};
-        }
+    if (functionCalls.length === 0) {
+      // No more function calls - extract final text response
+      const textPart = parts.find(part => part.text);
 
-        const result = executeToolCall({ name: toolCall.function.name, args });
-
-        // Track last validated spec for fallback
-        if (toolCall.function.name === 'validate_component' && result.valid && args?.spec) {
-          lastValidatedSpec = normalizeSpec(args.spec);
-          Logger.info('Stored validated spec as fallback', { componentName: lastValidatedSpec?.name || result.componentName });
-        }
-
-        toolMessages.push({
-          role: 'tool',
-          tool_call_id: toolCall.id,
-          content: JSON.stringify(result),
+      if (!textPart || !textPart.text.trim()) {
+        Logger.error('Gemini Candidate has NO function calls and NO text parts', {
+          candidateContent: JSON.stringify(candidate.content, null, 2),
+          allParts: JSON.stringify(parts, null, 2)
         });
+
+        // Check if we have a validated spec as fallback
+        if (lastValidatedSpec) {
+          Logger.warn('Empty response after validation, using fallback validated spec', {
+            componentName: lastValidatedSpec.name,
+            iterationCount: iterations
+          });
+          // Return the validated spec as JSON
+          return JSON.stringify(lastValidatedSpec, null, 2);
+        }
+
+        // Prompt Gemini one more time to return the JSON if we reached here unexpectedly
+        Logger.warn('Empty text response unexpectedly reached, prompting Gemini to return JSON', {
+          iterationCount: iterations
+        });
+
+        contents.push({
+          role: 'user',
+          parts: [{
+            text: 'You must now return the complete JSON object. Do not use any function calls. Return only the JSON object you validated earlier, nothing else.'
+          }]
+        });
+        continue; // Try again
       }
 
-      // Add all tool results to messages
-      for (const tm of toolMessages) {
-        messages.push(tm);
-      }
-      continue; // Loop to let model process tool results
-    }
-
-    // No tool calls — this is the final text response
-    if (!textContent.trim()) {
-      Logger.error('Groq returned no tool calls and no text', { finishReason });
-
-      if (lastValidatedSpec) {
-        Logger.warn('Empty final response, using fallback validated spec');
+      // Check if the response is conversational (no JSON artifact)
+      if (!textPart.text.includes('{') && lastValidatedSpec) {
+        Logger.warn('Gemini returned conversational text instead of JSON. Falling back to lastValidatedSpec.', {
+          text: textPart.text,
+          iterationCount: iterations
+        });
         return JSON.stringify(lastValidatedSpec, null, 2);
       }
 
-      messages.push({ role: 'user', content: 'Return the complete JSON component you validated. Output ONLY the raw JSON object.' });
-      continue;
+      Logger.geminiResponse(GEMINI_MODEL, response, textPart.text);
+
+      // ── IMPROVEMENT 3: Output Scoring / Auto-Feedback ──────────────────────
+      // Before returning, check if the output meets visual quality standards.
+      // If not, give Gemini one correction chance.
+      const qualityIssues = scoreOutputSpec(textPart.text);
+      if (qualityIssues.length > 0 && iterations < maxIterations) {
+        Logger.warn('[OutputScore] Quality issues detected, requesting correction', { issues: qualityIssues });
+        contents.push(candidate.content);
+        contents.push({
+          role: 'user',
+          parts: [{
+            text: `QUALITY CHECK FAILED. The output has visual hierarchy problems:\n\n${qualityIssues.map((q, i) => `${i + 1}. ${q}`).join('\n')}\n\nFix ALL of these issues and return the corrected JSON. Remember:\n- Use variant: "gradient" or variant: "accent" on the main container (NOT variant: "default")
+- Add elevation: "floating" or elevation: "raised" to panels\n- Ensure the submit/primary button is fullWidth: true for forms\n- Use spacing: "large" on the root stack`
+          }]
+        });
+        continue; // Let Gemini fix it in one more iteration
+      }
+
+      return textPart.text;
     }
 
-    // Check for conversational-only response (no JSON)
-    if (!textContent.includes('{') && lastValidatedSpec) {
-      Logger.warn('Groq returned conversational text instead of JSON. Using lastValidatedSpec.', { text: textContent });
-      return JSON.stringify(lastValidatedSpec, null, 2);
-    }
+    // Execute all function calls and add responses
+    const functionResponses = [];
+    for (const part of functionCalls) {
+      const toolCall = part.functionCall;
+      const result = executeToolCall(toolCall);
 
-    Logger.geminiResponse(GROQ_MODEL, response, textContent);
+      // Track last validated spec for fallback
+      if (toolCall.name === 'validate_component' && result.valid && toolCall.args?.spec) {
+        lastValidatedSpec = normalizeSpec(toolCall.args.spec);
+        Logger.info('Stored validated spec as fallback', { componentName: lastValidatedSpec?.name || result.componentName });
+      }
 
-    // ── IMPROVEMENT 3: Output Scoring / Auto-Feedback ─────────────────────
-    const qualityIssues = scoreOutputSpec(textContent);
-    if (qualityIssues.length > 0 && iterations < maxIterations) {
-      Logger.warn('[OutputScore] Quality issues detected, requesting correction', { issues: qualityIssues });
-      messages.push({
-        role: 'user',
-        content: `QUALITY CHECK FAILED. The output has visual hierarchy problems:\n\n${qualityIssues.map((q, i) => `${i + 1}. ${q}`).join('\n')}\n\nFix ALL of these issues and return the corrected JSON. Remember:\n- Use variant: "gradient" or variant: "accent" on the main container\n- Add elevation: "floating" or elevation: "raised" to panels\n- Ensure the submit/primary button is fullWidth: true for forms\n- Use spacing: "large" on the root stack`,
+      functionResponses.push({
+        functionResponse: {
+          name: toolCall.name,
+          response: { result },
+        },
       });
-      continue;
     }
 
-    return textContent;
+    // Add function responses to conversation
+    contents.push({
+      role: 'user',
+      parts: functionResponses,
+    });
   }
 
-  Logger.error('Max iterations reached', { maxIterations, messagesLength: messages.length });
-  throw new Error(`Max iterations (${maxIterations}) reached in tool-calling loop`);
+  Logger.error('Max iterations reached', {
+    maxIterations,
+    conversationLength: contents.length,
+    lastFewMessages: contents.slice(-3).map(c => ({
+      role: c.role,
+      partTypes: c.parts?.map(p => Object.keys(p)[0])
+    }))
+  });
+  throw new Error(`Max iterations (${maxIterations}) reached in function calling loop`);
 }
-
-
-
-
 
 /**
  * Attempts to repair a truncated JSON string by closing open braces and brackets.
@@ -1636,35 +1821,53 @@ app.post('/api/agent/stream', requireAuth, async (req, res) => {
   });
 
   try {
-    // Validate Groq API key
-    if (!GROQ_API_KEY) {
-      sendSSE({ error: 'No Groq API key configured. Set GROQ_API_KEY in .env.' });
+    // Build the API key and endpoint for streaming
+    const currentKey = API_KEYS_POOL[currentKeyIndex];
+    if (!currentKey) {
+      sendSSE({ error: 'No Gemini API key configured' });
       sendSSE('[DONE]');
       clearInterval(heartbeatTimer);
       return res.end();
     }
 
-    const streamEndpoint = `https://api.groq.com/openai/v1/chat/completions`;
+    const streamEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:streamGenerateContent?alt=sse&key=${currentKey}`;
 
-    // Build OpenAI-compatible messages for streaming
+    // Build conversation contents
+    // For streaming, we use a simplified prompt without function-calling tools.
+    // The system prompt instructs Gemini to output directly.
     const streamingSystemPrompt = SYSTEM_PROMPT + `\n\n## STREAMING MODE ACTIVE\nYou are in streaming mode. Return your complete JSON component specification directly.\nDo NOT call any functions. Do NOT use markdown code blocks.\nReturn ONLY the raw JSON object starting with { and ending with }.\nThe response will be streamed to the client in real-time.`;
 
-    const messages = [
-      { role: 'system', content: streamingSystemPrompt },
-      { role: 'assistant', content: 'I understand. I will output the component JSON directly as a raw JSON object.' },
+    const contents = [
+      {
+        role: 'user',
+        parts: [{ text: streamingSystemPrompt }],
+      },
+      {
+        role: 'model',
+        parts: [{ text: 'I understand. I will output the component JSON directly without function calls, formatted as a raw JSON object.' }],
+      },
     ];
 
     // Add context if provided
     if (context) {
-      messages.push({ role: 'user', content: `Context: ${typeof context === 'string' ? context : JSON.stringify(context)}` });
+      contents.push({
+        role: 'user',
+        parts: [{ text: `Context: ${typeof context === 'string' ? context : JSON.stringify(context)}` }],
+      });
     }
 
-    // Inject few-shot examples for quality
+    // Inject few-shot examples for quality (reuse existing infrastructure)
     const config = buildGeminiRequestConfig();
     const fewShotPrompt = await getFewShotForMessage(message, config);
     if (fewShotPrompt) {
-      messages.push({ role: 'user', content: fewShotPrompt });
-      messages.push({ role: 'assistant', content: 'Understood. I will follow the design quality of this example.' });
+      contents.push({
+        role: 'user',
+        parts: [{ text: fewShotPrompt }],
+      });
+      contents.push({
+        role: 'model',
+        parts: [{ text: 'Understood. I will follow the design quality of this example.' }],
+      });
     }
 
     // Pre-load relevant component schemas
@@ -1675,55 +1878,74 @@ app.post('/api/agent/stream', requireAuth, async (req, res) => {
         if (components[name]) scopedSchemas[name] = components[name];
       }
       if (Object.keys(scopedSchemas).length > 0) {
-        messages.push({ role: 'user', content: `## PRE-LOADED COMPONENT SCHEMAS\n\n${JSON.stringify(scopedSchemas, null, 2)}` });
-        messages.push({ role: 'assistant', content: 'I have the component schemas ready.' });
+        contents.push({
+          role: 'user',
+          parts: [{ text: `## PRE-LOADED COMPONENT SCHEMAS\n\n${JSON.stringify(scopedSchemas, null, 2)}` }],
+        });
+        contents.push({
+          role: 'model',
+          parts: [{ text: 'I have the component schemas ready.' }],
+        });
       }
     }
 
     // Add the user's message
-    messages.push({ role: 'user', content: message });
+    contents.push({
+      role: 'user',
+      parts: [{ text: message }],
+    });
 
     const requestBody = {
-      model: GROQ_MODEL,
-      messages,
-      stream: true,
-      temperature: 0.3,
-      max_tokens: 16384,
-      top_p: 0.85,
+      contents,
+      generationConfig: {
+        temperature: 0.3,
+        maxOutputTokens: 16384,
+        topP: 0.85,
+        topK: 20,
+        // Disable thinking so the full output budget goes to actual text tokens.
+        // Without this, Gemini 2.5 spends 5-10s on silent reasoning before
+        // emitting any text, causing an unnecessarily long skeleton phase.
+        thinkingConfig: { thinkingBudget: 0 },
+      },
     };
 
-    Logger.info('[Stream] Starting SSE stream via Groq', {
+    Logger.info('[Stream] Starting SSE stream', {
       sessionId,
       threadId,
       messagePreview: message.substring(0, 80),
-      model: GROQ_MODEL,
+      model: GEMINI_MODEL,
     });
 
-    // Call Groq's streaming endpoint
-    const groqResponse = await fetch(streamEndpoint, {
+    // Call Gemini's streaming endpoint
+    const geminiResponse = await fetch(streamEndpoint, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${GROQ_API_KEY}`,
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(requestBody),
       signal: controller.signal,
     });
 
-    if (!groqResponse.ok) {
-      const errorBody = await groqResponse.text();
-      Logger.error('[Stream] Groq API error', {
-        status: groqResponse.status,
+    if (!geminiResponse.ok) {
+      const errorBody = await geminiResponse.text();
+      Logger.error('[Stream] Gemini API error', {
+        status: geminiResponse.status,
         body: errorBody.substring(0, 500),
       });
-      sendSSE({ error: `Groq API error (${groqResponse.status}): ${errorBody.substring(0, 200)}` });
+
+      // Rotate API key on 429 rate limit
+      if (geminiResponse.status === 429 && API_KEYS_POOL.length > 1) {
+        currentKeyIndex = (currentKeyIndex + 1) % API_KEYS_POOL.length;
+        Logger.warn('[Stream] Rotated to next API key', { newIndex: currentKeyIndex });
+      }
+
+      sendSSE({ error: `Gemini API error (${geminiResponse.status}): ${errorBody.substring(0, 200)}` });
       sendSSE('[DONE]');
       clearInterval(heartbeatTimer);
       return res.end();
     }
 
-    // Parse the SSE stream from Groq (OpenAI-compatible format)
-    const reader = groqResponse.body.getReader();
+    // Parse the SSE stream from Gemini
+    // Note: Node.js fetch returns a Web ReadableStream — must use getReader()
+    const reader = geminiResponse.body.getReader();
     const decoder = new TextDecoder();
     let accumulatedText = '';
     let sseBuffer = '';
@@ -1741,13 +1963,14 @@ app.post('/api/agent/stream', requireAuth, async (req, res) => {
 
       // Debug: log first few raw chunks
       if (chunkCount <= 3) {
-        Logger.info(`[Stream] Raw chunk #${chunkCount}`, {
+        Logger.info(`[Stream] Raw chunk #${chunkCount}`, { 
           length: chunkStr.length,
           preview: chunkStr.substring(0, 300),
         });
       }
 
-      // Process complete SSE frames (normalize line endings)
+      // Process complete SSE frames
+      // Gemini uses \r\n line endings — normalize to \n before splitting
       sseBuffer = sseBuffer.replace(/\r\n/g, '\n');
       const frames = sseBuffer.split('\n\n');
       sseBuffer = frames.pop() || ''; // Keep incomplete last frame in buffer
@@ -1755,41 +1978,57 @@ app.post('/api/agent/stream', requireAuth, async (req, res) => {
       for (const frame of frames) {
         if (!frame.trim()) continue;
 
+        // Extract the data line from the SSE frame
         const dataLine = frame.split('\n').find(line => line.startsWith('data: '));
         if (!dataLine) continue;
 
         const jsonStr = dataLine.slice(6).trim(); // Remove "data: " prefix
-        if (!jsonStr || jsonStr === '[DONE]') {
-          // Stream finished
-          sendSSE({
-            text: '',
-            accumulated: accumulatedText.length,
-            done: true,
-            finishReason: 'STOP',
-          });
-          continue;
-        }
+        if (!jsonStr || jsonStr === '[DONE]') continue;
 
         try {
-          // Groq/OpenAI streaming chunk format:
-          // { choices: [{ delta: { content: "..." }, finish_reason: null|"stop" }] }
-          const groqChunk = JSON.parse(jsonStr);
-          const choice = groqChunk?.choices?.[0];
-          if (!choice) continue;
+          const geminiChunk = JSON.parse(jsonStr);
+          const candidate = geminiChunk?.candidates?.[0];
 
-          const deltaText = choice.delta?.content || '';
-          const finishReason = choice.finish_reason;
+          if (!candidate) continue;
 
-          if (deltaText) {
-            accumulatedText += deltaText;
-            sendSSE({
-              text: deltaText,
-              accumulated: accumulatedText.length,
-              done: false,
+          // Check for safety blocks
+          if (candidate.finishReason === 'SAFETY' || candidate.finishReason === 'RECITATION') {
+            sendSSE({ error: `Content blocked: ${candidate.finishReason}` });
+            continue;
+          }
+
+          // Extract text from parts
+          const parts = candidate.content?.parts || [];
+
+          // Debug: log first candidate structure
+          if (chunkCount <= 2) {
+            Logger.info('[Stream] Candidate structure', {
+              partsCount: parts.length,
+              partTypes: parts.map(p => ({
+                hasText: !!p.text,
+                textLen: p.text?.length || 0,
+                thought: p.thought || false,
+              })),
+              finishReason: candidate.finishReason,
             });
           }
 
-          if (finishReason === 'stop') {
+          for (const part of parts) {
+            // Skip thinking parts (gemini-2.5-flash internal reasoning)
+            if (part.thought) continue;
+
+            if (part.text) {
+              accumulatedText += part.text;
+              sendSSE({
+                text: part.text,
+                accumulated: accumulatedText.length,
+                done: false,
+              });
+            }
+          }
+
+          // Check if this is the final chunk
+          if (candidate.finishReason === 'STOP') {
             sendSSE({
               text: '',
               accumulated: accumulatedText.length,
@@ -1798,7 +2037,7 @@ app.post('/api/agent/stream', requireAuth, async (req, res) => {
             });
           }
         } catch (parseErr) {
-          Logger.warn('[Stream] Failed to parse Groq SSE chunk', {
+          Logger.warn('[Stream] Failed to parse Gemini SSE chunk', {
             error: parseErr.message,
             raw: jsonStr.substring(0, 200),
           });
@@ -1808,6 +2047,7 @@ app.post('/api/agent/stream', requireAuth, async (req, res) => {
     }
 
     reader.releaseLock();
+
     // Stream finished
     Logger.info('[Stream] Stream completed', {
       sessionId,
