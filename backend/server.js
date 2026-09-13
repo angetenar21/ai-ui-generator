@@ -737,9 +737,14 @@ async function callGemini(userMessage, context = '', signal) {
         maxOutputTokens: 16384,
         topP: 0.85,
         topK: 20,
-        // thinkingConfig is only supported on gemini-2.5-* models.
-        // Gemini 3.x and others reject it with a 400 INVALID_ARGUMENT error.
-        ...(GEMINI_MODEL.startsWith('gemini-2.5') ? { thinkingConfig: { thinkingBudget: 0 } } : {}),
+        // Gemini 2.5: disable thinking with integer budget to maximize output tokens.
+        // Gemini 3.x: use string-based thinkingLevel enum (thinkingBudget no longer valid).
+        // Other models: omit thinkingConfig entirely.
+        ...(GEMINI_MODEL.startsWith('gemini-2.5')
+          ? { thinkingConfig: { thinkingBudget: 0 } }
+          : GEMINI_MODEL.startsWith('gemini-3')
+          ? { thinkingConfig: { thinkingLevel: 'minimal' } }
+          : {}),
       },
     };
 
@@ -1901,9 +1906,14 @@ app.post('/api/agent/stream', requireAuth, async (req, res) => {
         maxOutputTokens: 16384,
         topP: 0.85,
         topK: 20,
-        // thinkingConfig is only supported on gemini-2.5-* models.
-        // Gemini 3.x and others reject it with a 400 INVALID_ARGUMENT error.
-        ...(GEMINI_MODEL.startsWith('gemini-2.5') ? { thinkingConfig: { thinkingBudget: 0 } } : {}),
+        // Gemini 2.5: disable thinking with integer budget to maximize output tokens.
+        // Gemini 3.x: use string-based thinkingLevel enum (thinkingBudget no longer valid).
+        // Other models: omit thinkingConfig entirely.
+        ...(GEMINI_MODEL.startsWith('gemini-2.5')
+          ? { thinkingConfig: { thinkingBudget: 0 } }
+          : GEMINI_MODEL.startsWith('gemini-3')
+          ? { thinkingConfig: { thinkingLevel: 'minimal' } }
+          : {}),
       },
     };
 
