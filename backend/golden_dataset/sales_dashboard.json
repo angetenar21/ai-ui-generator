@@ -1,0 +1,196 @@
+{
+  "name": "stack",
+  "templateProps": {
+    "spacing": "large",
+    "children": [
+      {
+        "name": "panel",
+        "templateProps": {
+          "title": "📊 Sales Performance — Q4 2024",
+          "variant": "gradient",
+          "elevation": "floating",
+          "emphasis": "high",
+          "children": [
+            {
+              "name": "grid",
+              "templateProps": {
+                "columns": { "xs": 2, "sm": 2, "md": 4 },
+                "gap": "medium",
+                "children": [
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Total Revenue",
+                      "variant": "accent",
+                      "elevation": "floating",
+                      "items": [
+                        { "label": "Q4 2024", "value": "$4.28M", "change": "+22.4%", "changeType": "positive", "subtext": "vs Q4 2023" }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Deals Closed",
+                      "variant": "glass",
+                      "elevation": "raised",
+                      "items": [
+                        { "label": "Quarter", "value": "1,840", "change": "+15%", "changeType": "positive", "subtext": "Goal: 1,700" }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Avg Deal Size",
+                      "variant": "elevated",
+                      "elevation": "raised",
+                      "items": [
+                        { "label": "Per close", "value": "$2,326", "change": "+6.3%", "changeType": "positive", "subtext": "↑ from $2,188" }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Pipeline Health",
+                      "variant": "elevated",
+                      "elevation": "raised",
+                      "items": [
+                        { "label": "Conversion", "value": "34.2%", "change": "-1.8%", "changeType": "negative", "subtext": "Below target 36%" }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "grid",
+        "templateProps": {
+          "columns": { "xs": 1, "md": 3 },
+          "gap": "large",
+          "children": [
+            {
+              "name": "panel",
+              "templateProps": {
+                "title": "Monthly Revenue vs Target",
+                "variant": "default",
+                "elevation": "raised",
+                "headerVariant": "minimal",
+                "className": "col-span-2",
+                "children": [
+                  {
+                    "name": "area-chart",
+                    "templateProps": {
+                      "palette": "gradient",
+                      "height": 280,
+                      "legend": true,
+                      "stack": false,
+                      "xAxis": [{ "data": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], "scaleType": "point" }],
+                      "series": [
+                        { "label": "Actual Revenue", "data": [310000, 285000, 340000, 390000, 425000, 460000, 430000, 475000, 510000, 540000, 580000, 428000] },
+                        { "label": "Target",         "data": [300000, 300000, 350000, 380000, 400000, 440000, 440000, 460000, 490000, 520000, 560000, 420000] }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "panel",
+              "templateProps": {
+                "title": "Revenue by Region",
+                "variant": "default",
+                "elevation": "raised",
+                "headerVariant": "minimal",
+                "children": [
+                  {
+                    "name": "donut-chart",
+                    "templateProps": {
+                      "height": 280,
+                      "innerRadius": 55,
+                      "outerRadius": 90,
+                      "paddingAngle": 3,
+                      "cornerRadius": 4,
+                      "legend": true,
+                      "centerLabel": "$4.28M",
+                      "data": [
+                        { "id": "na",   "value": 42, "label": "North America", "color": "#F97316" },
+                        { "id": "eu",   "value": 28, "label": "Europe",        "color": "#3B82F6" },
+                        { "id": "apac", "value": 18, "label": "APAC",          "color": "#10B981" },
+                        { "id": "latam","value": 8,  "label": "LATAM",         "color": "#8B5CF6" },
+                        { "id": "mea",  "value": 4,  "label": "MEA",           "color": "#F43F5E" }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "grid",
+        "templateProps": {
+          "columns": { "xs": 1, "md": 2 },
+          "gap": "large",
+          "children": [
+            {
+              "name": "panel",
+              "templateProps": {
+                "title": "Top Deals This Quarter",
+                "variant": "default",
+                "elevation": "raised",
+                "headerVariant": "minimal",
+                "children": [
+                  {
+                    "name": "data-table",
+                    "templateProps": {
+                      "searchable": false,
+                      "sortable": true,
+                      "columns": ["Company", "Owner", "Value", "Stage", "Close Date"],
+                      "rows": [
+                        ["Acme Corp",      "Sarah Chen",  "$285,000", { "type": "badge", "label": "Won",         "color": "green"  }, "Dec 12"],
+                        ["NovaTech",       "James Liu",   "$210,500", { "type": "badge", "label": "Negotiation", "color": "yellow" }, "Dec 18"],
+                        ["GlobalEdge",     "Priya Singh", "$195,000", { "type": "badge", "label": "Won",         "color": "green"  }, "Dec 8"],
+                        ["Stratosphere",   "Tom Rivera",  "$182,000", { "type": "badge", "label": "Proposal",    "color": "blue"   }, "Dec 28"],
+                        ["ZephyrSystems",  "Maria Costa", "$164,500", { "type": "badge", "label": "Won",         "color": "green"  }, "Nov 30"]
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "panel",
+              "templateProps": {
+                "title": "Rep Performance",
+                "variant": "default",
+                "elevation": "raised",
+                "headerVariant": "minimal",
+                "children": [
+                  {
+                    "name": "bar-chart",
+                    "templateProps": {
+                      "layout": "horizontal",
+                      "palette": "vibrant",
+                      "height": 280,
+                      "legend": false,
+                      "xAxis": [{ "data": ["Sarah C", "James L", "Priya S", "Tom R", "Maria C"], "scaleType": "band" }],
+                      "series": [
+                        { "label": "Quota Attainment %", "data": [118, 104, 97, 89, 112] }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

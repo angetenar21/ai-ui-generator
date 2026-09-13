@@ -1,0 +1,157 @@
+{
+  "name": "stack",
+  "templateProps": {
+    "spacing": "large",
+    "children": [
+      {
+        "name": "panel",
+        "templateProps": {
+          "title": "🌐 API & Infrastructure Monitor",
+          "variant": "gradient",
+          "elevation": "floating",
+          "emphasis": "high",
+          "children": [
+            {
+              "name": "grid",
+              "templateProps": {
+                "columns": { "xs": 2, "sm": 2, "md": 4 },
+                "gap": "medium",
+                "children": [
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "System Uptime",
+                      "variant": "accent",
+                      "elevation": "floating",
+                      "tone": "success",
+                      "items": [
+                        { "label": "Last 30 days", "value": "99.98%", "change": "+0.01%", "changeType": "positive", "subtext": "SLA: 99.9%" }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Avg Response Time",
+                      "variant": "glass",
+                      "elevation": "raised",
+                      "items": [
+                        { "label": "P95 Latency", "value": "42ms", "change": "-8ms", "changeType": "positive", "subtext": "vs last week" }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Error Rate",
+                      "variant": "elevated",
+                      "elevation": "raised",
+                      "tone": "error",
+                      "items": [
+                        { "label": "24h average", "value": "0.04%", "change": "+0.01%", "changeType": "negative", "subtext": "Threshold: 0.1%" }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Requests / min",
+                      "variant": "elevated",
+                      "elevation": "raised",
+                      "items": [
+                        { "label": "Current rate", "value": "24,840", "change": "+12%", "changeType": "positive", "subtext": "Peak: 31.2k" }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "grid",
+        "templateProps": {
+          "columns": { "xs": 1, "md": 2 },
+          "gap": "large",
+          "children": [
+            {
+              "name": "panel",
+              "templateProps": {
+                "title": "Request Volume — Last 24h",
+                "variant": "default",
+                "elevation": "raised",
+                "headerVariant": "minimal",
+                "children": [
+                  {
+                    "name": "area-chart",
+                    "templateProps": {
+                      "palette": "gradient",
+                      "height": 260,
+                      "legend": true,
+                      "stack": false,
+                      "xAxis": [{ "data": ["00", "02", "04", "06", "08", "10", "12", "14", "16", "18", "20", "22"], "scaleType": "point" }],
+                      "series": [
+                        { "label": "API Requests", "data": [8200, 6100, 5400, 7800, 14200, 21500, 24800, 23100, 22600, 25400, 19800, 15200] },
+                        { "label": "Errors",        "data": [12, 8, 6, 10, 18, 24, 30, 27, 25, 32, 20, 14] }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "panel",
+              "templateProps": {
+                "title": "Latency Distribution (ms)",
+                "variant": "default",
+                "elevation": "raised",
+                "headerVariant": "minimal",
+                "children": [
+                  {
+                    "name": "bar-chart",
+                    "templateProps": {
+                      "palette": "semantic",
+                      "height": 260,
+                      "legend": false,
+                      "xAxis": [{ "data": ["p50", "p75", "p90", "p95", "p99", "p999"], "scaleType": "band" }],
+                      "series": [
+                        { "label": "Latency ms", "data": [18, 28, 36, 42, 89, 240] }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "panel",
+        "templateProps": {
+          "title": "Recent Incidents & Alerts",
+          "variant": "default",
+          "elevation": "raised",
+          "headerVariant": "minimal",
+          "children": [
+            {
+              "name": "data-table",
+              "templateProps": {
+                "searchable": true,
+                "sortable": true,
+                "columns": ["Incident ID", "Service", "Severity", "Status", "Duration", "Resolved At"],
+                "rows": [
+                  ["INC-4821", "Auth API",      { "type": "badge", "label": "Critical", "color": "red"    }, { "type": "badge", "label": "Resolved",    "color": "green"  }, "4m 12s", "Today 09:42"],
+                  ["INC-4820", "Payment Gateway",{ "type": "badge", "label": "High",    "color": "orange" }, { "type": "badge", "label": "Resolved",    "color": "green"  }, "11m 08s","Today 08:15"],
+                  ["INC-4819", "CDN Edge Node", { "type": "badge", "label": "Medium",  "color": "yellow" }, { "type": "badge", "label": "Monitoring",  "color": "yellow" }, "28m",    "Ongoing"],
+                  ["INC-4818", "Email Service", { "type": "badge", "label": "Low",     "color": "blue"   }, { "type": "badge", "label": "Resolved",    "color": "green"  }, "2m 44s", "Yesterday"],
+                  ["INC-4817", "Search Index",  { "type": "badge", "label": "High",    "color": "orange" }, { "type": "badge", "label": "Resolved",    "color": "green"  }, "6m 30s", "Yesterday"]
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

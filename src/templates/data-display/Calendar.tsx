@@ -1,0 +1,267 @@
+import React, { useState } from 'react';
+
+type CalendarView = 'month' | 'week' | 'day';
+
+interface CalendarEvent {
+  id: string;
+  date: string; // YYYY-MM-DD
+  title: string;
+  color?: string;
+}
+
+interface CalendarProps {
+  title?: string;
+  events?: CalendarEvent[];
+  view?: CalendarView;
+  selectedDate?: Date;
+  onDateSelect?: (date: Date) => void;
+  onEventClick?: (event: CalendarEvent) => void;
+  minDate?: Date;
+  maxDate?: Date;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
+}
+
+const Calendar: React.FC<CalendarProps> = ({
+  title = 'Calendar',
+  events = [],
+  view: _view = 'month',
+  selectedDate,
+  onDateSelect,
+  onEventClick,
+  minDate,
+  maxDate,
+}) => {
+  const [currentDate, setCurrentDate] = useState(selectedDate || new Date());
+  const [selected, setSelected] = useState<Date | null>(selectedDate || null);
+
+  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December',
+  ];
+
+  const getDaysInMonth = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    return new Date(year, month + 1, 0).getDate();
+  };
+
+  const getFirstDayOfMonth = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    return new Date(year, month, 1).getDay();
+  };
+
+  const getEventsForDate = (date: Date): CalendarEvent[] => {
+    const dateStr = date.toISOString().split('T')[0];
+    return events.filter((event) => event.date === dateStr);
+  };
+
+  const isDateDisabled = (date: Date): boolean => {
+    if (minDate && date < minDate) return true;
+    if (maxDate && date > maxDate) return true;
+    return false;
+  };
+
+  const isSameDay = (date1: Date | null, date2: Date): boolean => {
+    if (!date1) return false;
+    return (
+      date1.getDate() === date2.getDate() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getFullYear() === date2.getFullYear()
+    );
+  };
+
+  const isToday = (date: Date): boolean => {
+    return isSameDay(new Date(), date);
+  };
+
+  const handlePrevMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
+  };
+
+  const handleNextMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
+  };
+
+  const handleDateClick = (date: Date) => {
+    if (isDateDisabled(date)) return;
+    setSelected(date);
+    onDateSelect?.(date);
+  };
+
+  const renderMonthView = () => {
+    const daysInMonth = getDaysInMonth(currentDate);
+    const firstDay = getFirstDayOfMonth(currentDate);
+    const days: (Date | null)[] = [];
+
+    // Add empty cells for days before the first day of month
+    for (let i = 0; i < firstDay; i++) {
+      days.push(null);
+    }
+
+    // Add all days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      days.push(new Date(currentDate.getFullYear(), currentDate.getMonth(), day));
+    }
+
+    return (
+      <div className="grid grid-cols-7 gap-1">
+        {daysOfWeek.map((day) => (
+          <div
+            key={day}
+            className="text-center text-[11px] uppercase tracking-widest font-semibold text-zinc-400 py-2"
+          >
+            {day}
+          </div>
+        ))}
+        {days.map((date, index) => {
+          if (!date) {
+            return <div key={`empty-${index}`} className="aspect-square" />;
+          }
+
+          const dayEvents = getEventsForDate(date);
+          const isSelected = isSameDay(selected, date);
+          const isCurrentDay = isToday(date);
+          const isDisabled = isDateDisabled(date);
+
+          return (
+            <div
+              key={index}
+              onClick={() => handleDateClick(date)}
+              className={`
+                aspect-square p-1 rounded-xl
+                transition-all duration-300 transform hover:scale-[1.02]
+                ${isDisabled ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer hover:bg-orange-50 dark:hover:bg-zinc-800/80'}
+                ${isSelected ? 'bg-orange-500 text-white shadow-md shadow-orange-500/25 ring-2 ring-orange-500 ring-offset-2 ring-offset-white dark:ring-offset-zinc-900' : ''}
+                ${isCurrentDay && !isSelected ? 'ring-1 ring-inset ring-zinc-200 dark:ring-zinc-700 bg-zinc-50 dark:bg-zinc-800/30' : ''}
+              `}
+            >
+              <div className="flex flex-col h-full">
+                <div className={`text-sm text-center py-1 mt-1 font-medium ${isSelected ? 'text-white' : 'text-zinc-700 dark:text-zinc-300'}`}>
+                  {date.getDate()}
+                </div>
+                {dayEvents.length > 0 && (
+                  <div className="flex-1 flex items-end justify-center gap-0.5 pb-1">
+                    {dayEvents.slice(0, 3).map((event) => (
+                      <div
+                        key={event.id}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onEventClick?.(event);
+                        }}
+                        className={`w-1.5 h-1.5 rounded-full ${
+                          event.color || 'bg-orange-400'
+                        }`}
+                        title={event.title}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  return (
+    <div className="card border border-zinc-200/60 dark:border-zinc-700 rounded-2xl p-6 my-4 shadow-sm">
+      <div className="flex items-center justify-between mb-8">
+        <h3 className="text-xl font-display font-bold tracking-tight text-zinc-900 dark:text-white">
+          {title}
+        </h3>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={handlePrevMonth}
+            className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800/50 rounded-xl transition-all duration-200"
+          >
+            <svg
+              className="w-5 h-5 text-zinc-400 dark:text-zinc-300"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </button>
+          <div className="text-lg font-display font-bold tracking-tight text-zinc-900 dark:text-white min-w-[180px] text-center">
+            {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+          </div>
+          <button
+            onClick={handleNextMonth}
+            className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800/50 rounded-xl transition-all duration-200"
+          >
+            <svg
+              className="w-5 h-5 text-zinc-400 dark:text-zinc-300"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {renderMonthView()}
+
+      {selected && (
+        <div className="mt-6 pt-6 border-t border-zinc-200/60 dark:border-zinc-700/50">
+          <div className="text-[11px] uppercase tracking-widest font-semibold text-zinc-400 mb-2">
+            Selected: {selected.toLocaleDateString()}
+          </div>
+          {getEventsForDate(selected).length > 0 && (
+            <div className="space-y-2">
+              {getEventsForDate(selected).map((event) => (
+                <div
+                  key={event.id}
+                  onClick={() => onEventClick?.(event)}
+                  className="p-3 bg-zinc-50 dark:bg-zinc-800/30 rounded-xl cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800/50 transition-all duration-200 border border-zinc-100/80 dark:border-zinc-700/30"
+                >
+                  <div className="flex items-center gap-2">
+                    <div className={`w-2 h-2 rounded-full ${event.color || 'bg-orange-400'}`} />
+                    <span className="text-white text-sm">{event.title}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Calendar;
+
+export const metadata = {
+  name: 'calendar',
+  category: 'data-display' as const,
+  component: Calendar,
+  description: 'Interactive calendar with event support and date selection',
+  tags: ['calendar', 'date', 'events', 'schedule', 'picker'],
+  propTypes: {
+    title: 'string',
+    events: 'CalendarEvent[]',
+    view: "'month' | 'week' | 'day'",
+    selectedDate: 'Date',
+    onDateSelect: '(date: Date) => void',
+    onEventClick: '(event: CalendarEvent) => void',
+    minDate: 'Date',
+    maxDate: 'Date',
+  },
+};

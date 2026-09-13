@@ -1,0 +1,44 @@
+{
+  "name": "modal",
+  "templateProps": {
+    "isOpen": true,
+    "title": "Delete System Logs",
+    "size": "md",
+    "children": [
+      {
+        "name": "stack",
+        "templateProps": {
+          "spacing": "large",
+          "children": [
+            {
+              "name": "text",
+              "templateProps": {
+                "content": "Are you sure you want to permanently delete all system logs for the past 30 days? This action cannot be undone.",
+                "variant": "body"
+              }
+            },
+            {
+               "name": "callout",
+               "templateProps": {
+                 "title": "Warning",
+                 "content": "This will free up 24GB of storage but remove historical compliance data.",
+                 "type": "warning"
+               }
+            },
+            {
+              "name": "flexbox",
+              "templateProps": {
+                "justify": "flex-end",
+                "gap": "medium",
+                "children": [
+                  { "name": "button", "templateProps": { "label": "Cancel", "variant": "ghost" } },
+                  { "name": "button", "templateProps": { "label": "Delete Data", "variant": "danger" } }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

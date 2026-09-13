@@ -1,0 +1,110 @@
+import React, { useState } from 'react';
+import DynamicIcon from '../core/Icon';
+
+interface AlertProps {
+  message?: string;
+  title?: string;
+  description?: string;
+  severity?: 'info' | 'success' | 'warning' | 'error';
+  variant?: 'filled' | 'outlined' | 'standard';
+  icon?: string;
+  closable?: boolean;
+  onClose?: () => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
+}
+
+const Alert: React.FC<AlertProps> = ({
+  message,
+  title,
+  description,
+  severity = 'info',
+  variant = 'filled',
+  icon,
+  closable = false,
+  onClose,
+}) => {
+  const [dismissed, setDismissed] = useState(false);
+  const content = message || description || 'Alert message';
+  if (dismissed) return null;
+
+  const severityConfig = {
+    info: {
+      icon: 'info',
+      bg: 'bg-orange-50/80 dark:bg-orange-900/20',
+      border: 'border-orange-200/50 dark:border-orange-500/30',
+      text: 'text-orange-800 dark:text-orange-300',
+      filled: 'bg-orange-600 dark:bg-orange-500 text-white',
+    },
+    success: {
+      icon: 'check-circle',
+      bg: 'bg-green-50/80 dark:bg-green-900/20',
+      border: 'border-green-200/50 dark:border-green-500/30',
+      text: 'text-green-800 dark:text-green-300',
+      filled: 'bg-green-600 dark:bg-green-500 text-white',
+    },
+    warning: {
+      icon: 'alert-triangle',
+      bg: 'bg-orange-50/80 dark:bg-orange-900/20',
+      border: 'border-orange-200/50 dark:border-orange-500/30',
+      text: 'text-orange-800 dark:text-orange-300',
+      filled: 'bg-orange-500 dark:bg-orange-500 text-white',
+    },
+    error: {
+      icon: 'x-circle',
+      bg: 'bg-red-50/80 dark:bg-red-900/20',
+      border: 'border-red-200/50 dark:border-red-500/30',
+      text: 'text-red-800 dark:text-red-300',
+      filled: 'bg-red-600 dark:bg-red-500 text-white',
+    },
+  };
+
+  const config = severityConfig[severity];
+  const displayIcon = icon || config.icon;
+
+  const variantClasses = {
+    filled: `${config.filled} border border-transparent shadow-sm`,
+    outlined: `${config.bg} border-2 ${config.border} ${config.text} shadow-sm backdrop-blur-sm`,
+    standard: `${config.bg} border ${config.border} ${config.text} backdrop-blur-sm`,
+  };
+
+  return (
+    <div className={`rounded-2xl p-5 my-2 flex items-start gap-4 border-l-4 ${variantClasses[variant]} transition-all duration-300 ease-out`}>
+      {displayIcon && (
+        <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${variant === 'filled' ? 'bg-white/15 text-white' : `${config.bg} ${config.text}`}`}>
+          <DynamicIcon name={displayIcon} size={20} />
+        </div>
+      )}
+
+      <div className="flex-1 min-w-0">
+        {title && (
+          <div className="font-display font-bold tracking-tight mb-1">{title}</div>
+        )}
+        <div className={`text-sm ${variant === 'filled' ? 'text-white/90' : 'opacity-90'} leading-relaxed`}>{content}</div>
+      </div>
+
+      {closable && (
+        <button
+          onClick={() => { setDismissed(true); if (onClose) onClose(); }}
+          className={`flex-shrink-0 p-2 -mt-1 -mr-1 rounded-full flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/10 transition-all duration-300 ease-out ${variant === 'filled' ? 'text-white/80 hover:text-white' : 'opacity-70 hover:opacity-100'}`}
+          aria-label="Close alert"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      )}
+    </div>
+  );
+};
+
+export default Alert;
+
+export const metadata = {
+  name: 'alert',
+  category: 'feedback' as const,
+  component: Alert,
+  description: 'Alert message component with multiple severity levels and variants',
+  tags: ['ui', 'feedback', 'notification'],
+};

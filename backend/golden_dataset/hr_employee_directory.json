@@ -1,0 +1,155 @@
+{
+  "name": "stack",
+  "templateProps": {
+    "spacing": "large",
+    "children": [
+      {
+        "name": "panel",
+        "templateProps": {
+          "title": "Employee Directory",
+          "variant": "default",
+          "elevation": "floating",
+          "children": [
+            {
+              "name": "flexbox",
+              "templateProps": {
+                "justify": "space-between",
+                "align": "center",
+                "wrap": "wrap",
+                "gap": "medium",
+                "children": [
+                  {
+                    "name": "text-field",
+                    "templateProps": { "placeholder": "Search by name or role...", "type": "text" }
+                  },
+                  {
+                    "name": "flexbox",
+                    "templateProps": {
+                      "gap": "small",
+                      "children": [
+                        {
+                          "name": "select",
+                          "templateProps": {
+                            "label": "",
+                            "options": [
+                              { "label": "All Departments", "value": "all" },
+                              { "label": "Engineering", "value": "eng" },
+                              { "label": "Design", "value": "des" },
+                              { "label": "Marketing", "value": "mktg" }
+                            ]
+                          }
+                        },
+                        { "name": "button", "templateProps": { "label": "Add Employee", "variant": "primary" } }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "grid",
+        "templateProps": {
+          "columns": { "xs": 1, "sm": 2, "md": 3, "lg": 4 },
+          "gap": "medium",
+          "children": [
+            {
+              "name": "panel",
+              "templateProps": {
+                "variant": "elevated",
+                "elevation": "raised",
+                "children": [
+                  {
+                    "name": "stack",
+                    "templateProps": {
+                      "align": "center",
+                      "spacing": "medium",
+                      "children": [
+                        { "name": "avatar", "templateProps": { "src": "@img:professional headshot of software engineer, male", "size": "xlarge" } },
+                        { "name": "text", "templateProps": { "content": "James Miller", "weight": "bold", "variant": "h4" } },
+                        { "name": "text", "templateProps": { "content": "Senior Frontend Engineer", "variant": "body", "color": "secondary" } },
+                        { "name": "badge", "templateProps": { "label": "Engineering", "color": "blue" } },
+                        { "name": "button", "templateProps": { "label": "View Profile", "variant": "outline", "fullWidth": true } }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "panel",
+              "templateProps": {
+                "variant": "elevated",
+                "elevation": "raised",
+                "children": [
+                  {
+                    "name": "stack",
+                    "templateProps": {
+                      "align": "center",
+                      "spacing": "medium",
+                      "children": [
+                        { "name": "avatar", "templateProps": { "src": "@img:professional headshot of product designer, female", "size": "xlarge" } },
+                        { "name": "text", "templateProps": { "content": "Elena Rodriguez", "weight": "bold", "variant": "h4" } },
+                        { "name": "text", "templateProps": { "content": "Lead UX Designer", "variant": "body", "color": "secondary" } },
+                        { "name": "badge", "templateProps": { "label": "Design", "color": "purple" } },
+                        { "name": "button", "templateProps": { "label": "View Profile", "variant": "outline", "fullWidth": true } }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "panel",
+              "templateProps": {
+                "variant": "elevated",
+                "elevation": "raised",
+                "children": [
+                  {
+                    "name": "stack",
+                    "templateProps": {
+                      "align": "center",
+                      "spacing": "medium",
+                      "children": [
+                        { "name": "avatar", "templateProps": { "src": "@img:professional headshot of marketing manager, male", "size": "xlarge" } },
+                        { "name": "text", "templateProps": { "content": "Marcus Chen", "weight": "bold", "variant": "h4" } },
+                        { "name": "text", "templateProps": { "content": "Growth Marketing Manager", "variant": "body", "color": "secondary" } },
+                        { "name": "badge", "templateProps": { "label": "Marketing", "color": "green" } },
+                        { "name": "button", "templateProps": { "label": "View Profile", "variant": "outline", "fullWidth": true } }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "panel",
+              "templateProps": {
+                "variant": "elevated",
+                "elevation": "raised",
+                "children": [
+                  {
+                    "name": "stack",
+                    "templateProps": {
+                      "align": "center",
+                      "spacing": "medium",
+                      "children": [
+                        { "name": "avatar", "templateProps": { "src": "@img:professional headshot of engineering director, female", "size": "xlarge" } },
+                        { "name": "text", "templateProps": { "content": "Sarah Jenkins", "weight": "bold", "variant": "h4" } },
+                        { "name": "text", "templateProps": { "content": "Director of Engineering", "variant": "body", "color": "secondary" } },
+                        { "name": "badge", "templateProps": { "label": "Engineering", "color": "blue" } },
+                        { "name": "button", "templateProps": { "label": "View Profile", "variant": "outline", "fullWidth": true } }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

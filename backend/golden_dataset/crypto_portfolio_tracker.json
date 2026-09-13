@@ -1,0 +1,163 @@
+{
+  "name": "stack",
+  "templateProps": {
+    "spacing": "large",
+    "children": [
+      {
+        "name": "panel",
+        "templateProps": {
+          "title": "💰 Crypto Portfolio — Live Tracker",
+          "variant": "gradient",
+          "elevation": "floating",
+          "emphasis": "high",
+          "children": [
+            {
+              "name": "grid",
+              "templateProps": {
+                "columns": { "xs": 2, "sm": 2, "md": 4 },
+                "gap": "medium",
+                "children": [
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Portfolio Value",
+                      "variant": "accent",
+                      "elevation": "floating",
+                      "items": [
+                        { "label": "Total", "value": "$84,240", "change": "+6.8%", "changeType": "positive", "subtext": "24h change" }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Best Performer",
+                      "variant": "glass",
+                      "elevation": "raised",
+                      "items": [
+                        { "label": "SOL", "value": "+14.2%", "change": "$142.80", "changeType": "positive", "subtext": "24h return" }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Unrealized P&L",
+                      "variant": "elevated",
+                      "elevation": "raised",
+                      "items": [
+                        { "label": "All positions", "value": "+$5,384", "change": "+6.83%", "changeType": "positive", "subtext": "This week" }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "BTC Dominance",
+                      "variant": "elevated",
+                      "elevation": "raised",
+                      "items": [
+                        { "label": "Market share", "value": "52.4%", "change": "-0.8%", "changeType": "negative", "subtext": "vs yesterday" }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "grid",
+        "templateProps": {
+          "columns": { "xs": 1, "md": 3 },
+          "gap": "large",
+          "children": [
+            {
+              "name": "panel",
+              "templateProps": {
+                "title": "7-Day Portfolio Performance",
+                "variant": "default",
+                "elevation": "raised",
+                "headerVariant": "minimal",
+                "className": "col-span-2",
+                "children": [
+                  {
+                    "name": "area-chart",
+                    "templateProps": {
+                      "palette": "vibrant",
+                      "height": 280,
+                      "legend": true,
+                      "stack": false,
+                      "xAxis": [{ "data": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"], "scaleType": "point" }],
+                      "series": [
+                        { "label": "BTC",  "data": [38200, 39100, 37800, 40200, 41500, 43200, 42800] },
+                        { "label": "ETH",  "data": [22400, 23100, 22800, 24000, 25200, 26100, 25900] },
+                        { "label": "SOL",  "data": [12500, 13200, 12900, 14100, 15200, 16400, 15800] }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "panel",
+              "templateProps": {
+                "title": "Allocation",
+                "variant": "default",
+                "elevation": "raised",
+                "headerVariant": "minimal",
+                "children": [
+                  {
+                    "name": "donut-chart",
+                    "templateProps": {
+                      "height": 280,
+                      "innerRadius": 55,
+                      "outerRadius": 90,
+                      "paddingAngle": 3,
+                      "cornerRadius": 4,
+                      "legend": true,
+                      "centerLabel": "$84.2K",
+                      "data": [
+                        { "id": "btc",  "value": 51, "label": "Bitcoin",  "color": "#F59E0B" },
+                        { "id": "eth",  "value": 31, "label": "Ethereum", "color": "#6366F1" },
+                        { "id": "sol",  "value": 12, "label": "Solana",   "color": "#10B981" },
+                        { "id": "other","value": 6,  "label": "Others",   "color": "#94A3B8" }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "panel",
+        "templateProps": {
+          "title": "Holdings",
+          "variant": "default",
+          "elevation": "raised",
+          "headerVariant": "minimal",
+          "children": [
+            {
+              "name": "data-table",
+              "templateProps": {
+                "searchable": false,
+                "sortable": true,
+                "columns": ["Asset", "Price", "24h %", "Holdings", "Value", "P&L"],
+                "rows": [
+                  ["₿ Bitcoin (BTC)",   "$42,800", { "type": "badge", "label": "+2.1%", "color": "green"  }, "1.24 BTC",  "$53,072", { "type": "badge", "label": "+$1,126", "color": "green" }],
+                  ["Ξ Ethereum (ETH)",  "$2,590",  { "type": "badge", "label": "+3.4%", "color": "green"  }, "10.1 ETH", "$26,159", { "type": "badge", "label": "+$862",  "color": "green" }],
+                  ["◎ Solana (SOL)",    "$142.80", { "type": "badge", "label": "+14.2%","color": "green"  }, "34 SOL",   "$4,855",  { "type": "badge", "label": "+$612",  "color": "green" }],
+                  ["● MATIC",           "$0.84",   { "type": "badge", "label": "-3.1%", "color": "red"    }, "154 MATIC","$129",    { "type": "badge", "label": "-$24",   "color": "red"   }],
+                  ["◆ Chainlink (LINK)","$14.20",  { "type": "badge", "label": "+1.8%", "color": "green"  }, "3.5 LINK", "$49.70",  { "type": "badge", "label": "+$8",    "color": "green" }]
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

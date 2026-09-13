@@ -1,0 +1,200 @@
+{
+  "name": "stack",
+  "templateProps": {
+    "spacing": "large",
+    "children": [
+      {
+        "name": "panel",
+        "templateProps": {
+          "title": "📈 Advanced Statistics & Data Insights",
+          "variant": "gradient",
+          "elevation": "floating",
+          "emphasis": "high",
+          "children": [
+            {
+              "name": "grid",
+              "templateProps": {
+                "columns": { "xs": 1, "sm": 3, "md": 3 },
+                "gap": "medium",
+                "children": [
+                  {
+                    "name": "sparkline-chart",
+                    "templateProps": {
+                      "title": "Revenue Growth",
+                      "value": "$24,500",
+                      "trend": "+12.5%",
+                      "trendPositive": true,
+                      "data": [12000, 15000, 14500, 18000, 22000, 21500, 24500],
+                      "color": "#10B981",
+                      "area": true,
+                      "variant": "elevated",
+                      "elevation": "raised"
+                    }
+                  },
+                  {
+                    "name": "sparkline-chart",
+                    "templateProps": {
+                      "title": "Active Users",
+                      "value": "1,248",
+                      "trend": "-2.1%",
+                      "trendPositive": false,
+                      "data": [1400, 1350, 1300, 1280, 1320, 1260, 1248],
+                      "color": "#ef4444",
+                      "area": true,
+                      "variant": "elevated",
+                      "elevation": "raised"
+                    }
+                  },
+                  {
+                    "name": "gauge-chart",
+                    "templateProps": {
+                      "title": "System Uptime",
+                      "value": 98,
+                      "maxValue": 100,
+                      "color": "#3B82F6",
+                      "size": 180,
+                      "thickness": 12,
+                      "variant": "elevated",
+                      "elevation": "raised"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "grid",
+        "templateProps": {
+          "columns": { "xs": 1, "md": 3 },
+          "gap": "large",
+          "children": [
+            {
+              "name": "panel",
+              "templateProps": {
+                "title": "Revenue vs Spend — 12 Month Trend",
+                "variant": "default",
+                "elevation": "raised",
+                "headerVariant": "minimal",
+                "className": "col-span-2",
+                "children": [
+                  {
+                    "name": "area-chart",
+                    "templateProps": {
+                      "palette": "gradient",
+                      "height": 300,
+                      "legend": true,
+                      "stack": false,
+                      "xAxis": [{ "data": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], "scaleType": "point" }],
+                      "series": [
+                        { "label": "Revenue",     "data": [42000, 55000, 48000, 71000, 92000, 115000, 128000, 118000, 135000, 142000, 158000, 172000] },
+                        { "label": "Expenses",    "data": [38000, 42000, 40000, 55000, 72000, 88000, 95000, 91000, 102000, 108000, 118000, 128000] }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "panel",
+              "templateProps": {
+                "title": "Traffic Sources",
+                "variant": "default",
+                "elevation": "raised",
+                "headerVariant": "minimal",
+                "children": [
+                  {
+                    "name": "donut-chart",
+                    "templateProps": {
+                      "height": 300,
+                      "innerRadius": 55,
+                      "outerRadius": 90,
+                      "paddingAngle": 3,
+                      "cornerRadius": 4,
+                      "legend": true,
+                      "centerLabel": "100%",
+                      "data": [
+                        { "id": "organic", "value": 45, "label": "Organic",  "color": "#10B981" },
+                        { "id": "direct",  "value": 25, "label": "Direct",   "color": "#3B82F6" },
+                        { "id": "social",  "value": 15, "label": "Social",   "color": "#F97316" },
+                        { "id": "paid",    "value": 10, "label": "Paid",     "color": "#8B5CF6" },
+                        { "id": "ref",     "value": 5,  "label": "Referral", "color": "#F43F5E" }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "grid",
+        "templateProps": {
+          "columns": { "xs": 1, "md": 2 },
+          "gap": "large",
+          "children": [
+            {
+              "name": "panel",
+              "templateProps": {
+                "title": "Sales Conversion Funnel",
+                "variant": "default",
+                "elevation": "raised",
+                "headerVariant": "minimal",
+                "children": [
+                  {
+                    "name": "funnel-chart",
+                    "templateProps": {
+                      "title": "",
+                      "data": [
+                        { "name": "Website Visits",   "value": 50000 },
+                        { "name": "Product Views",    "value": 32000 },
+                        { "name": "Add to Cart",      "value": 14000 },
+                        { "name": "Checkout Started", "value": 7500  },
+                        { "name": "Purchase",         "value": 3200  }
+                      ],
+                      "palette": "vibrant",
+                      "variant": "transparent",
+                      "elevation": "raised",
+                      "height": 320
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "panel",
+              "templateProps": {
+                "title": "Team Skills Radar",
+                "variant": "default",
+                "elevation": "raised",
+                "headerVariant": "minimal",
+                "children": [
+                  {
+                    "name": "radar-chart",
+                    "templateProps": {
+                      "title": "",
+                      "data": [
+                        { "subject": "Frontend",      "score": 90 },
+                        { "subject": "Backend",       "score": 85 },
+                        { "subject": "DevOps",        "score": 70 },
+                        { "subject": "Database",      "score": 80 },
+                        { "subject": "Security",      "score": 65 },
+                        { "subject": "System Design", "score": 75 }
+                      ],
+                      "palette": "gradient",
+                      "variant": "transparent",
+                      "elevation": "raised",
+                      "height": 320
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

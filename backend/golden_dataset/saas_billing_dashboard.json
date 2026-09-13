@@ -1,0 +1,124 @@
+{
+  "name": "stack",
+  "templateProps": {
+    "spacing": "large",
+    "children": [
+      {
+        "name": "panel",
+        "templateProps": {
+          "title": "Billing & Subscription",
+          "variant": "gradient",
+          "elevation": "floating",
+          "emphasis": "high",
+          "children": [
+            {
+              "name": "grid",
+              "templateProps": {
+                "columns": { "xs": 1, "md": 3 },
+                "gap": "medium",
+                "children": [
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Current Plan",
+                      "variant": "glass",
+                      "elevation": "raised",
+                      "items": [
+                        { "label": "Enterprise Tier", "value": "$999.00", "subtext": "per month" }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Next Invoice",
+                      "variant": "elevated",
+                      "elevation": "raised",
+                      "items": [
+                        { "label": "Due Date", "value": "Oct 1, 2024", "subtext": "Auto-pay enabled" }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Active Seats",
+                      "variant": "elevated",
+                      "elevation": "raised",
+                      "items": [
+                        { "label": "Licensed Users", "value": "42 / 50", "subtext": "8 remaining" }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "panel",
+        "templateProps": {
+          "title": "Payment Method",
+          "variant": "default",
+          "elevation": "raised",
+          "children": [
+            {
+              "name": "flexbox",
+              "templateProps": {
+                "justify": "space-between",
+                "align": "center",
+                "children": [
+                  {
+                    "name": "flexbox",
+                    "templateProps": {
+                      "gap": "medium",
+                      "align": "center",
+                      "children": [
+                        { "name": "badge", "templateProps": { "label": "VISA", "color": "blue" } },
+                        {
+                          "name": "stack",
+                          "templateProps": {
+                            "spacing": "xs",
+                            "children": [
+                              { "name": "text", "templateProps": { "content": "Visa ending in 4242", "weight": "bold" } },
+                              { "name": "text", "templateProps": { "content": "Expires 12/2026", "variant": "caption", "color": "secondary" } }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  { "name": "button", "templateProps": { "label": "Update", "variant": "outline" } }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "panel",
+        "templateProps": {
+          "title": "Billing History",
+          "variant": "default",
+          "elevation": "raised",
+          "children": [
+            {
+              "name": "data-table",
+              "templateProps": {
+                "searchable": false,
+                "sortable": true,
+                "columns": ["Date", "Description", "Amount", "Status", "Receipt"],
+                "rows": [
+                  ["Sep 1, 2024", "Enterprise Plan Base (Monthly)", "$999.00", { "type": "badge", "label": "Paid", "color": "green" }, { "type": "button", "label": "Download", "variant": "ghost", "size": "small" }],
+                  ["Aug 1, 2024", "Enterprise Plan Base (Monthly)", "$999.00", { "type": "badge", "label": "Paid", "color": "green" }, { "type": "button", "label": "Download", "variant": "ghost", "size": "small" }],
+                  ["Jul 1, 2024", "Enterprise Plan Base (Monthly)", "$999.00", { "type": "badge", "label": "Paid", "color": "green" }, { "type": "button", "label": "Download", "variant": "ghost", "size": "small" }]
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

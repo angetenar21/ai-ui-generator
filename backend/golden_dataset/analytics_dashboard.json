@@ -1,0 +1,171 @@
+{
+  "name": "stack",
+  "templateProps": {
+    "spacing": "large",
+    "children": [
+      {
+        "name": "panel",
+        "templateProps": {
+          "title": "Global Analytics Dashboard",
+          "variant": "gradient",
+          "elevation": "floating",
+          "emphasis": "high",
+          "children": [
+            {
+              "name": "text",
+              "templateProps": {
+                "variant": "body",
+                "content": "Real-time overview of business performance and key metrics.",
+                "align": "left",
+                "className": "text-emerald-100/80 mb-6"
+              }
+            },
+            {
+              "name": "grid",
+              "templateProps": {
+                "columns": { "xs": 1, "sm": 2, "md": 4 },
+                "gap": "medium",
+                "children": [
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Total Revenue",
+                      "variant": "accent",
+                      "elevation": "floating",
+                      "items": [
+                        { "label": "YTD", "value": "$1,284,500", "change": "+14.5%", "changeType": "positive" }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Active Users",
+                      "variant": "glass",
+                      "elevation": "raised",
+                      "items": [
+                        { "label": "Monthly", "value": "124.5k", "change": "+8.2%", "changeType": "positive" }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Avg. Session",
+                      "variant": "elevated",
+                      "elevation": "raised",
+                      "items": [
+                        { "label": "Duration", "value": "4m 12s", "change": "-1.5%", "changeType": "negative" }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "summary-card",
+                    "templateProps": {
+                      "title": "Conversion",
+                      "variant": "elevated",
+                      "elevation": "raised",
+                      "items": [
+                        { "label": "Purchase Rate", "value": "3.84%", "change": "+0.4%", "changeType": "positive" }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "grid",
+        "templateProps": {
+          "columns": { "xs": 1, "md": 2 },
+          "gap": "large",
+          "children": [
+            {
+              "name": "panel",
+              "templateProps": {
+                "title": "Revenue vs Target",
+                "variant": "elevated",
+                "elevation": "raised",
+                "headerVariant": "minimal",
+                "emphasis": "medium",
+                "children": [
+                  {
+                    "name": "area-chart",
+                    "templateProps": {
+                      "palette": "gradient",
+                      "height": 340,
+                      "xAxis": { "data": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"] },
+                      "series": [
+                        { "name": "Actual Revenue", "data": [42000, 55000, 48000, 71000, 92000, 115000, 128450] },
+                        { "name": "Target", "data": [40000, 50000, 60000, 70000, 80000, 100000, 120000] }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "panel",
+              "templateProps": {
+                "title": "Traffic Sources",
+                "variant": "default",
+                "elevation": "raised",
+                "headerVariant": "minimal",
+                "emphasis": "medium",
+                "children": [
+                  {
+                    "name": "pie-chart",
+                    "templateProps": {
+                      "palette": "vibrant",
+                      "height": 340,
+                      "series": [
+                        {
+                          "name": "Sources",
+                          "data": [
+                            { "name": "Organic Search", "value": 45 },
+                            { "name": "Direct", "value": 25 },
+                            { "name": "Social Media", "value": 15 },
+                            { "name": "Paid Ads", "value": 10 },
+                            { "name": "Referral", "value": 5 }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "panel",
+        "templateProps": {
+          "title": "Recent Transactions",
+          "variant": "default",
+          "elevation": "raised",
+          "headerVariant": "minimal",
+          "children": [
+            {
+              "name": "data-table",
+              "templateProps": {
+                "searchable": true,
+                "sortable": true,
+                "columns": ["Transaction ID", "Customer Name", "Amount", "Status", "Date"],
+                "rows": [
+                  ["TRX-9482", "Emma Watson", "$1,450.00", { "type": "badge", "label": "Completed", "color": "green" }, "2025-07-15"],
+                  ["TRX-9483", "John Krasinski", "$85.50", { "type": "badge", "label": "Pending", "color": "yellow" }, "2025-07-15"],
+                  ["TRX-9484", "Emily Blunt", "$3,200.00", { "type": "badge", "label": "Completed", "color": "green" }, "2025-07-14"],
+                  ["TRX-9485", "Tom Holland", "$450.00", { "type": "badge", "label": "Cancelled", "color": "red" }, "2025-07-14"],
+                  ["TRX-9486", "Zendaya", "$120.75", { "type": "badge", "label": "Completed", "color": "green" }, "2025-07-13"]
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

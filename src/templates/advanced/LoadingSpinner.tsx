@@ -1,0 +1,176 @@
+import React from 'react';
+import { Loader2, RefreshCw } from 'lucide-react';
+
+interface LoadingSpinnerProps {
+  /** Size variant */
+  size?: 'small' | 'medium' | 'large' | 'xlarge';
+
+  /** Color variant */
+  color?: 'primary' | 'secondary' | 'accent' | 'success' | 'warning' | 'error';
+
+  /** Spinner style/animation */
+  variant?: 'spin' | 'pulse' | 'dots' | 'bars';
+
+  /** Optional loading text */
+  label?: string;
+
+  /** Center in container */
+  centered?: boolean;
+
+  /** Full screen overlay */
+  fullScreen?: boolean;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
+}
+
+const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
+  size = 'medium',
+  color = 'primary',
+  variant = 'spin',
+  label,
+  centered = false,
+  fullScreen = false,
+}) => {
+  const sizeClasses = {
+    small: 'w-4 h-4',
+    medium: 'w-8 h-8',
+    large: 'w-12 h-12',
+    xlarge: 'w-16 h-16',
+  };
+
+  const colorClasses = {
+    primary: 'text-orange-600 dark:text-orange-400',
+    secondary: 'text-zinc-600 dark:text-zinc-300',
+    accent: 'text-orange-500 dark:text-orange-400',
+    success: 'text-green-600 dark:text-green-400',
+    warning: 'text-orange-600 dark:text-orange-400',
+    error: 'text-red-600 dark:text-red-400',
+  };
+
+  const renderSpinner = () => {
+    const spinnerSize = sizeClasses[size];
+    const spinnerColor = colorClasses[color];
+
+    switch (variant) {
+      case 'pulse':
+        return (
+          <div className={`${spinnerSize} ${spinnerColor} animate-pulse`}>
+            <RefreshCw className="w-full h-full" />
+          </div>
+        );
+
+      case 'dots':
+        const dotSize = size === 'small' ? '6px' : size === 'medium' ? '8px' : size === 'large' ? '10px' : '12px';
+        return (
+          <div className="flex gap-2">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className={`rounded-full ${spinnerColor} bg-current`}
+                style={{
+                  width: dotSize,
+                  height: dotSize,
+                  animation: `pulse 1.5s ease-in-out ${i * 0.2}s infinite`,
+                }}
+              />
+            ))}
+          </div>
+        );
+
+      case 'bars':
+        const barHeight = size === 'small' ? '12px' : size === 'medium' ? '20px' : size === 'large' ? '28px' : '36px';
+        return (
+          <div className="flex gap-1 items-end">
+            {[0, 1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className={`w-1 ${spinnerColor} bg-current rounded`}
+                style={{
+                  height: barHeight,
+                  animation: `loading-bars 1s ease-in-out ${i * 0.1}s infinite`,
+                }}
+              />
+            ))}
+          </div>
+        );
+
+      case 'spin':
+      default:
+        return (
+          <div className={`${spinnerSize} ${spinnerColor} animate-spin drop-shadow-sm`}>
+            <Loader2 className="w-full h-full" />
+          </div>
+        );
+    }
+  };
+
+  const content = (
+    <div
+      className={`
+        flex flex-col items-center justify-center gap-3
+        ${centered ? 'min-h-[200px]' : ''}
+      `}
+    >
+      {renderSpinner()}
+      {label && (
+        <div className="text-zinc-500 dark:text-zinc-400 text-sm font-medium tracking-tight">
+          {label}
+        </div>
+      )}
+    </div>
+  );
+
+  if (fullScreen) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md">
+        {content}
+      </div>
+    );
+  }
+
+  if (centered) {
+    return (
+      <div className="flex items-center justify-center p-8 my-2">
+        {content}
+      </div>
+    );
+  }
+
+  return (
+    <div className="inline-flex items-center gap-3 p-2">
+      {content}
+    </div>
+  );
+};
+
+export default LoadingSpinner;
+
+// Add CSS animations
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes loading-bars {
+    0%, 100% { transform: scaleY(0.5); opacity: 0.5; }
+    50% { transform: scaleY(1); opacity: 1; }
+  }
+`;
+if (typeof document !== 'undefined' && !document.getElementById('loading-spinner-styles')) {
+  style.id = 'loading-spinner-styles';
+  document.head.appendChild(style);
+}
+
+export const metadata = {
+  name: 'loading-spinner',
+  category: 'advanced' as const,
+  component: LoadingSpinner,
+  description: 'Customizable loading spinner with multiple styles, sizes, and colors',
+  tags: ['loading', 'spinner', 'loader', 'progress', 'waiting', 'animation'],
+  propTypes: {
+    size: 'string - Size: small, medium, large, xlarge (default: medium)',
+    color: 'string - Color: primary, secondary, accent, success, warning, error (default: primary)',
+    variant: 'string - Animation style: spin, pulse, dots, bars (default: spin)',
+    label: 'string - Optional loading text to display',
+    centered: 'boolean - Center in container (default: false)',
+    fullScreen: 'boolean - Show as full-screen overlay (default: false)',
+  },
+};

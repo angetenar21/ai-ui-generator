@@ -1,0 +1,106 @@
+{
+  "name": "stack",
+  "templateProps": {
+    "spacing": "large",
+    "children": [
+      {
+        "name": "panel",
+        "templateProps": {
+          "variant": "glass",
+          "elevation": "raised",
+          "children": [
+            {
+              "name": "flexbox",
+              "templateProps": {
+                "justify": "between",
+                "align": "center",
+                "children": [
+                  {
+                    "name": "flexbox",
+                    "templateProps": {
+                      "gap": "medium",
+                      "align": "center",
+                      "children": [
+                        {
+                          "name": "image",
+                          "templateProps": {
+                            "src": "@img:avatar,woman,travel,influencer",
+                            "size": "small",
+                            "rounded": "full"
+                          }
+                        },
+                        {
+                          "name": "stack",
+                          "templateProps": {
+                            "spacing": "none",
+                            "children": [
+                              { "name": "text", "templateProps": { "content": "Elena Adventures", "variant": "heading-3" } },
+                              { "name": "text", "templateProps": { "content": "2 hours ago in Tokyo, Japan", "variant": "caption" } }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "button",
+                    "templateProps": {
+                      "icon": "more-vertical",
+                      "variant": "ghost"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "text",
+              "templateProps": {
+                "content": "Exploring the neon streets of Shinjuku! The energy here is absolutely incredible. 🌃🎌 Check out this snippet from my upcoming vlog.",
+                "variant": "body",
+                "className": "my-4"
+              }
+            },
+            {
+              "name": "video",
+              "templateProps": {
+                "src": "@vid:tokyo,cyberpunk,neon,night,city",
+                "aspectRatio": "16:9",
+                "rounded": "lg",
+                "shadow": "lg",
+                "className": "mb-4"
+              }
+            },
+            {
+              "name": "divider",
+              "templateProps": {}
+            },
+            {
+              "name": "flexbox",
+              "templateProps": {
+                "justify": "between",
+                "className": "mt-2 pt-2",
+                "children": [
+                  {
+                    "name": "flexbox",
+                    "templateProps": {
+                      "gap": "medium",
+                      "children": [
+                        { "name": "button", "templateProps": { "icon": "heart", "label": "12.4K", "variant": "ghost", "color": "orange" } },
+                        { "name": "button", "templateProps": { "icon": "message-circle", "label": "342", "variant": "ghost" } },
+                        { "name": "button", "templateProps": { "icon": "share-2", "variant": "ghost" } }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "button",
+                    "templateProps": { "icon": "bookmark", "variant": "ghost" }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

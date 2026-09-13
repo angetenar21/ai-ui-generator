@@ -1,0 +1,129 @@
+import React from 'react';
+import type { ComponentSpec } from '../core/types';
+
+interface StackProps {
+  /** Stack direction */
+  direction?: 'vertical' | 'horizontal';
+
+  /** Spacing between items */
+  spacing?: 'none' | 'small' | 'medium' | 'large' | 'xlarge';
+
+  /** Alignment of items along the cross axis */
+  align?: 'start' | 'center' | 'end' | 'stretch';
+
+  /** Justification of items along the main axis */
+  justify?: 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly';
+
+  /** Wrap items to next line */
+  wrap?: boolean;
+
+  /** Divider between items */
+  divider?: boolean;
+
+  /** Full width */
+  fullWidth?: boolean;
+
+  /** Child components */
+  children?: ComponentSpec[];
+
+  /** Function to render child components */
+  renderChild?: (child: ComponentSpec) => React.ReactNode;
+}
+
+const Stack: React.FC<StackProps> = ({
+  direction = 'vertical',
+  spacing = 'medium',
+  align = 'stretch',
+  justify = 'start',
+  wrap = false,
+  divider = false,
+  fullWidth = true,
+  children,
+  renderChild,
+}) => {
+  const spacingClasses = {
+    none: 'gap-0',
+    small: 'gap-3',
+    medium: 'gap-5',
+    large: 'gap-7',
+    xlarge: 'gap-10',
+  };
+
+  const alignClasses = {
+    start: 'items-start',
+    center: 'items-center',
+    end: 'items-end',
+    stretch: 'items-stretch',
+  };
+
+  const justifyClasses = {
+    start: 'justify-start',
+    center: 'justify-center',
+    end: 'justify-end',
+    between: 'justify-between',
+    around: 'justify-around',
+    evenly: 'justify-evenly',
+  };
+
+  const directionClass = direction === 'vertical' ? 'flex-col' : 'flex-row';
+  const wrapClass = wrap ? 'flex-wrap' : '';
+  const widthClass = fullWidth ? 'w-full' : '';
+
+  // Get divider classes based on direction
+  const getDividerClasses = () => {
+    if (direction === 'vertical') {
+      return 'h-[2px] w-full bg-zinc-200 dark:bg-zinc-700 my-1';
+    }
+    return 'w-[2px] self-stretch bg-zinc-200 dark:bg-zinc-700 mx-1';
+  };
+
+  // Get child wrapper classes
+  const getChildWrapperClasses = () => {
+    const classes = ['min-w-0'];
+    if (direction === 'horizontal' && !wrap) {
+      classes.push('flex-shrink-0');
+    }
+    return classes.join(' ');
+  };
+
+  const safeChildren = Array.isArray(children) ? children : (children ? [children] : []);
+
+  return (
+    <div
+      className={`flex ${directionClass} ${spacingClasses[spacing]} ${alignClasses[align]} ${justifyClasses[justify]} ${wrapClass} ${widthClass} max-w-full overflow-visible`}
+    >
+      {safeChildren.length > 0 && renderChild ? (
+        safeChildren.map((child, index) => (
+          <React.Fragment key={index}>
+            <div className={`${getChildWrapperClasses()} overflow-visible`}>
+              {renderChild(child)}
+            </div>
+            {divider && index < safeChildren.length - 1 && (
+              <div className={getDividerClasses()} />
+            )}
+          </React.Fragment>
+        ))
+      ) : null}
+    </div>
+  );
+};
+
+export default Stack;
+
+export const metadata = {
+  name: 'stack',
+  category: 'layout' as const,
+  component: Stack,
+  description: 'Vertical or horizontal stacking layout with configurable spacing, alignment, and optional dividers between items.',
+  tags: ['layout', 'stack', 'flex', 'container'],
+  propTypes: {
+    direction: '"vertical" | "horizontal"',
+    spacing: '"none" | "small" | "medium" | "large" | "xlarge"',
+    align: '"start" | "center" | "end" | "stretch"',
+    justify: '"start" | "center" | "end" | "between" | "around" | "evenly"',
+    wrap: 'boolean',
+    divider: 'boolean',
+    fullWidth: 'boolean',
+    children: 'ComponentSpec[]',
+  },
+};

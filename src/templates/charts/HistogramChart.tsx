@@ -1,0 +1,223 @@
+import React from 'react';
+import { ResponsiveContainer, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar } from 'recharts';
+import type { SurfaceVariant, ElevationLevel , ChartPaletteType} from '../core/types';
+import { useAppStore } from '@/store/appStore';
+import { getSurfaceClasses , getChartColors} from '@/theme/designTokens';
+
+interface HistogramChartPropsOld {
+  /** Chart title */
+  title?: string;
+
+  /** Data in simple Recharts format */
+  data: Array<{ name: string; value: number;[key: string]: any }>;
+
+  /** Chart width */
+  width?: number;
+
+  /** Chart height */
+  height?: number;
+  
+  variant?: SurfaceVariant;
+  elevation?: ElevationLevel;
+}
+
+interface HistogramChartPropsNew {
+  /** Chart title */
+  title?: string;
+
+  /** Chart description */
+  description?: string;
+
+  /** Series data with histogram bins */
+  series: Array<{
+    name: string;
+    data: Array<[string, number]>; // [label, value] pairs
+    type?: string;
+    color?: string;
+  }>;
+
+  /** Chart width */
+  width?: number;
+
+  /** Chart height */
+  height?: number;
+  
+  variant?: SurfaceVariant;
+  elevation?: ElevationLevel;
+}
+
+type HistogramChartProps = HistogramChartPropsOld | HistogramChartPropsNew;
+
+const HistogramChart: React.FC<HistogramChartProps> = (props) => {
+  const { 
+    title, 
+    height = 400,
+    variant = 'transparent',
+    elevation = 'raised',
+  } = props;
+
+  // Detect dark mode (must be before any early returns)
+  const theme = useAppStore(state => state.theme);
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
+  const textColor = isDarkMode ? '#E5E7EB' : '#9CA3AF';
+  const tooltipBg = isDarkMode ? '#1F2937' : '#FFFFFF';
+  const tooltipBorder = isDarkMode ? '#374151' : '#E5E7EB';
+  const tooltipText = isDarkMode ? '#E5E7EB' : '#1F2937';
+
+  let chartData: Array<{ name: string;[key: string]: any }>;
+  let description: string | undefined;
+  let seriesKeys: Array<{ key: string; name: string; color?: string }> = [];
+
+  // Check which format is being used
+  if ('series' in props && props.series) {
+    // New format: series with [label, value] pairs
+    const { series } = props;
+    description = 'description' in props ? props.description : undefined;
+
+    // Validate
+    if (!series || !Array.isArray(series) || series.length === 0) {
+      return (
+        <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
+          {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
+          <div className="text-center text-zinc-400">
+            <p className="text-sm">No series data for histogram</p>
+          </div>
+        </div>
+      );
+    }
+
+    // Transform series data to Recharts format
+    // Collect all unique labels first
+    const labelSet = new Set<string>();
+    series.forEach((s) => {
+      if (s.data && Array.isArray(s.data)) {
+        s.data.forEach((point) => {
+          if (Array.isArray(point) && point.length >= 2) {
+            labelSet.add(String(point[0]));
+          }
+        });
+      }
+    });
+
+    const labels = Array.from(labelSet);
+
+    // Create data points with all series values
+    chartData = labels.map((label) => {
+      const dataPoint: { name: string;[key: string]: any } = { name: label };
+
+      series.forEach((s) => {
+        const point = s.data?.find((p) => Array.isArray(p) && String(p[0]) === label);
+        dataPoint[s.name] = point && Array.isArray(point) ? Number(point[1]) || 0 : 0;
+      });
+
+      return dataPoint;
+    });
+
+    // Create series keys for rendering
+    seriesKeys = series.map((s) => ({
+      key: s.name,
+      name: s.name,
+      color: s.color,
+    }));
+  } else if ('data' in props && props.data) {
+    // Old format: simple data array
+    chartData = props.data;
+
+    // Validate
+    if (!chartData || !Array.isArray(chartData) || chartData.length === 0) {
+      return (
+        <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
+          {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
+          <div className="text-center text-zinc-400">
+            <p className="text-sm">No data available for histogram</p>
+          </div>
+        </div>
+      );
+    }
+
+    seriesKeys = [{ key: 'value', name: 'Value', color: '#8b5cf6' }];
+  } else {
+    // Invalid format
+    return (
+      <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
+        {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">{title}</h3>}
+        <div className="text-center text-zinc-400">
+          <p className="text-sm">Invalid histogram configuration</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={`${getSurfaceClasses(variant, elevation)} rounded-2xl p-6 transition-all duration-300`}>
+      {title && <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4 text-center">{title}</h3>}
+      {description && (
+        <p className="text-sm text-zinc-400 mb-4 text-center">{description}</p>
+      )}
+      <ResponsiveContainer width="100%" height={height}>
+            <BarChart
+              data={chartData}
+              margin={{ top: 20, right: 20, bottom: 20, left: 60 }}
+              barCategoryGap="0%"
+              barGap={0}
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+              <XAxis
+                dataKey="name"
+                tick={{ fill: textColor, fontSize: 12 }}
+                label={{ value: 'Bins', position: 'insideBottom', offset: -10, fill: textColor }}
+                interval={0}
+              />
+              <YAxis
+                tick={{ fill: textColor }}
+                label={{ value: 'Frequency', angle: -90, position: 'insideLeft', fill: textColor }}
+              />
+              <Tooltip
+                contentStyle={{
+              backgroundColor: isDarkMode ? 'rgba(31, 41, 55, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(8px)',
+              border: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`,
+              borderRadius: '12px',
+              color: isDarkMode ? '#E5E7EB' : '#111827',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)'
+            }}
+                labelStyle={{ color: tooltipText, fontWeight: 600 }}
+                formatter={(value: any) => [`Frequency: ${value}`, '']}
+              />
+              <Legend wrapperStyle={{ color: textColor }} />
+              {seriesKeys.map((sk, index) => (
+                <Bar
+                  key={sk.key}
+                  dataKey={sk.key}
+                  name={sk.name}
+                  fill={sk.color || `hsl(${(index * 360) / seriesKeys.length}, 70%, 60%)`}
+                  radius={[0, 0, 0, 0]}
+                  isAnimationActive={false}
+                />
+              ))}
+            </BarChart>
+          </ResponsiveContainer>
+    </div>
+  );
+};
+
+export default HistogramChart;
+
+export const metadata = {
+  name: 'histogram-chart',
+  category: 'charts' as const,
+  component: HistogramChart,
+  description: 'Histogram for distribution visualization. Supports series format with [label, value] pairs.',
+  tags: ['chart', 'histogram', 'distribution', 'bar'],
+  propTypes: {
+    title: 'string',
+    description: 'string',
+    // New format
+    series: 'Array<{ name, data: [[label, value], ...], type?, color? }>',
+    // Old format
+    data: 'Array<{ name, value, ... }>',
+    width: 'number',
+    height: 'number',
+  },
+};

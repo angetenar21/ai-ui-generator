@@ -1,0 +1,224 @@
+import React, { useState, useRef, useEffect } from 'react';
+
+interface AutocompleteOption {
+  value: string | number;
+  label: string;
+}
+
+interface AutocompleteProps {
+  label?: string;
+  placeholder?: string;
+  value?: string | number;
+  defaultValue?: string | number;
+  options?: AutocompleteOption[];
+  items?: AutocompleteOption[];
+  suggestions?: AutocompleteOption[];
+  variant?: 'outlined' | 'filled' | 'standard';
+  size?: 'small' | 'medium' | 'large';
+  fullWidth?: boolean;
+  disabled?: boolean;
+  required?: boolean;
+  error?: boolean;
+  helperText?: string;
+  errorMessage?: string;
+  filterOnType?: boolean;
+  caseSensitive?: boolean;
+  onChange?: (value: string | number) => void;
+  onInputChange?: (inputValue: string) => void;
+  onBlur?: () => void;
+  onFocus?: () => void;
+
+  children?: React.ReactNode;
+  renderChild?: (child: any) => React.ReactNode;
+}
+
+const Autocomplete: React.FC<AutocompleteProps> = ({
+  label,
+  placeholder = 'Type to search...',
+  value,
+  defaultValue,
+  options,
+  items,
+  suggestions,
+  variant = 'outlined',
+  size = 'medium',
+  fullWidth = false,
+  disabled = false,
+  required = false,
+  error = false,
+  helperText,
+  errorMessage,
+  filterOnType = true,
+  caseSensitive = false,
+  onChange,
+  onInputChange,
+  onBlur,
+  onFocus,
+}) => {
+  const [internalValue, setInternalValue] = useState<string | number>(defaultValue || '');
+  const [inputValue, setInputValue] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const displayValue = value !== undefined ? value : internalValue;
+  const autocompleteOptions = (options || items || suggestions || []).filter(opt => opt && typeof opt === 'object');
+
+  useEffect(() => {
+    const selectedOption = autocompleteOptions.find(opt => opt.value === displayValue);
+    if (selectedOption) {
+      setInputValue(selectedOption.label);
+    }
+  }, [displayValue, autocompleteOptions]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const filteredOptions = filterOnType
+    ? autocompleteOptions.filter(option =>
+      caseSensitive
+        ? option.label.includes(inputValue)
+        : option.label.toLowerCase().includes(inputValue.toLowerCase())
+    )
+    : autocompleteOptions;
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setInputValue(newValue);
+    setIsOpen(true);
+    setHighlightedIndex(-1);
+    if (onInputChange) onInputChange(newValue);
+  };
+
+  const handleOptionClick = (option: AutocompleteOption) => {
+    setInputValue(option.label);
+    setInternalValue(option.value);
+    setIsOpen(false);
+    if (onChange) onChange(option.value);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!isOpen) {
+      if (e.key === 'ArrowDown' || e.key === 'Enter') {
+        setIsOpen(true);
+      }
+      return;
+    }
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setHighlightedIndex(prev =>
+          prev < filteredOptions.length - 1 ? prev + 1 : prev
+        );
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setHighlightedIndex(prev => prev > 0 ? prev - 1 : -1);
+        break;
+      case 'Enter':
+        e.preventDefault();
+        if (highlightedIndex >= 0 && filteredOptions[highlightedIndex]) {
+          handleOptionClick(filteredOptions[highlightedIndex]);
+        }
+        break;
+      case 'Escape':
+        setIsOpen(false);
+        setHighlightedIndex(-1);
+        break;
+    }
+  };
+
+  const sizeClasses = {
+    small: 'px-3 py-2 text-sm',
+    medium: 'px-4 py-2.5 text-base',
+    large: 'px-5 py-3 text-lg',
+  };
+
+  const variantClasses = {
+    outlined: `border ${error ? 'border-red-400 ring-2 ring-red-500/10' : 'border-zinc-200 dark:border-zinc-700'} bg-white dark:bg-zinc-900`,
+    filled: `border-b-2 ${error ? 'border-red-400' : 'border-zinc-200 dark:border-zinc-700'} bg-zinc-50 dark:bg-zinc-800/50`,
+    standard: `border-b-2 ${error ? 'border-red-400' : 'border-zinc-200 dark:border-zinc-700'} bg-transparent`,
+  };
+
+  return (
+    <div className={`my-4 relative ${isOpen ? 'z-50' : 'z-10'} ${fullWidth ? 'w-full' : 'max-w-md'}`} ref={wrapperRef}>
+      {label && (
+        <label className="block text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-2">
+          {label}
+          {required && <span className="text-red-500 dark:text-red-400 ml-1">*</span>}
+        </label>
+      )}
+      <div className="relative">
+        <input
+          type="text"
+          value={inputValue}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+          onFocus={() => {
+            setIsOpen(true);
+            if (onFocus) onFocus();
+          }}
+          onBlur={onBlur}
+          placeholder={placeholder}
+          disabled={disabled}
+          required={required}
+          className={`
+            ${sizeClasses[size]}
+            ${variantClasses[variant]}
+            ${fullWidth ? 'w-full' : 'w-full'}
+            pr-10
+            rounded-xl text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-500
+            focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500
+            disabled:opacity-60 disabled:cursor-not-allowed
+            transition-all duration-200
+          `.trim().replace(/\s+/g, ' ')}
+        />
+        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none">
+          <svg className={`w-5 h-5 transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+        {isOpen && filteredOptions.length > 0 && (
+          <div className="absolute z-50 w-full mt-1.5 bg-white dark:bg-zinc-800 border border-zinc-200/60 dark:border-zinc-700/60 rounded-xl shadow-xl shadow-black/8 dark:shadow-black/30 max-h-60 overflow-auto py-1">
+            {filteredOptions.map((option, index) => (
+              <div
+                key={index}
+                onClick={() => handleOptionClick(option)}
+                className={`
+                  px-3 py-2.5 cursor-pointer transition-colors rounded-lg mx-1 text-sm
+                  ${highlightedIndex === index ? 'bg-orange-50 text-orange-600 dark:bg-orange-900/20 dark:text-orange-400' : 'text-zinc-800 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700/50'}
+                `.trim().replace(/\s+/g, ' ')}
+              >
+                {option.label}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      {(helperText || (error && errorMessage)) && (
+        <p className={`mt-1.5 text-xs ${error ? 'text-red-400' : 'text-zinc-400'}`}>
+          {error && errorMessage ? errorMessage : helperText}
+        </p>
+      )}
+    </div>
+  );
+};
+
+export default Autocomplete;
+
+export const metadata = {
+  name: 'autocomplete',
+  category: 'inputs' as const,
+  component: Autocomplete,
+  description: 'Autocomplete input with dropdown suggestions, keyboard navigation, and filtering. Supports custom options and validation.',
+  tags: ['ui', 'input', 'form', 'autocomplete', 'search', 'suggestions'],
+};

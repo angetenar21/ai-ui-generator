@@ -1,0 +1,118 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    app: backend
+    tier: api
+spec:
+  # Number of pod replicas (copies) to run
+  replicas: 2
+
+  # How to find pods managed by this deployment
+  selector:
+    matchLabels:
+      app: backend
+
+  # Template for creating pods
+  template:
+    metadata:
+      labels:
+        app: backend
+        tier: api
+    spec:
+      containers:
+      - name: backend
+        # IMPORTANT: Replace YOUR_DOCKERHUB_USERNAME with your actual username
+        image: YOUR_DOCKERHUB_USERNAME/ai-ui-backend:latest
+
+        # Pull policy - always get latest image
+        imagePullPolicy: Always
+
+        ports:
+        - containerPort: 4000
+          name: http
+          protocol: TCP
+
+        # Environment variables
+        env:
+        - name: BACKEND_PORT
+          value: "4000"
+        - name: NODE_ENV
+          value: "production"
+        - name: GEMINI_MODEL
+          value: "gemini-2.5-pro"
+
+        # Secret environment variables (API keys)
+        envFrom:
+        - secretRef:
+            name: backend-secrets
+
+        # Resource limits (prevent one pod from using all cluster resources)
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+
+        # Health checks
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 4000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 4000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+
+        # Volume mounts for logs (optional)
+        volumeMounts:
+        - name: logs
+          mountPath: /app/logs
+
+      # Volumes
+      volumes:
+      - name: logs
+        emptyDir: {}
+
+      # Restart policy
+      restartPolicy: Always
+
+---
+# Horizontal Pod Autoscaler (HPA)
+# Automatically scales pods based on CPU usage
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: backend-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: backend-deployment
+  minReplicas: 2
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80

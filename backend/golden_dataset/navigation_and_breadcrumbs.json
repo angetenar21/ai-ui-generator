@@ -1,0 +1,98 @@
+{
+  "name": "stack",
+  "templateProps": {
+    "direction": "vertical",
+    "spacing": "large",
+    "children": [
+      {
+        "name": "panel",
+        "templateProps": {
+          "title": "Navigation Elements",
+          "variant": "glass",
+          "elevation": "raised",
+          "children": [
+            {
+              "name": "stack",
+              "templateProps": {
+                "direction": "vertical",
+                "spacing": "large",
+                "children": [
+                  {
+                    "name": "breadcrumbs",
+                    "templateProps": {
+                      "separator": "chevron",
+                      "size": "medium",
+                      "showHome": true,
+                      "items": [
+                        { "label": "Dashboard", "href": "/dashboard", "icon": "🏠" },
+                        { "label": "Settings", "href": "/dashboard/settings" },
+                        { "label": "Profile" }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "stepper",
+                    "templateProps": {
+                      "orientation": "horizontal",
+                      "activeStep": 1,
+                      "showNumbers": true,
+                      "variant": "default",
+                      "size": "medium",
+                      "steps": [
+                        { "label": "Account Setup", "description": "Create username", "status": "completed" },
+                        { "label": "Personal Profile", "description": "Add details", "status": "active" },
+                        { "label": "Billing config", "description": "Add payment", "status": "pending" },
+                        { "label": "Review", "description": "Confirm details", "status": "pending" }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "tabs",
+                    "templateProps": {
+                      "defaultTab": "profile",
+                      "variant": "underline",
+                      "items": [
+                        {
+                          "label": "Profile",
+                          "value": "profile",
+                          "content": {
+                            "name": "text",
+                            "templateProps": { "content": "Profile settings go here." }
+                          }
+                        },
+                        {
+                          "label": "Password",
+                          "value": "password",
+                          "content": {
+                            "name": "text",
+                            "templateProps": { "content": "Security settings go here." }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "bottom-navigation",
+        "templateProps": {
+          "showLabels": true,
+          "variant": "elevated",
+          "activeColor": "primary",
+          "defaultValue": "home",
+          "items": [
+            { "label": "Home", "value": "home", "icon": "🏠" },
+            { "label": "Search", "value": "search", "icon": "🔍" },
+            { "label": "Add", "value": "add", "icon": "➕" },
+            { "label": "Activity", "value": "activity", "icon": "❤️", "badge": 3 },
+            { "label": "Settings", "value": "settings", "icon": "⚙️" }
+          ]
+        }
+      }
+    ]
+  }
+}
